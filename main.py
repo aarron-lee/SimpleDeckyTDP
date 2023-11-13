@@ -37,7 +37,7 @@ class Plugin:
     async def log_info(self, info):
         logging.info(info)
 
-    async def get_tdp_range(self):
+    async def get_settings(self):
         try:
             current_settings = setting_file.read()
             return setting_file.settings

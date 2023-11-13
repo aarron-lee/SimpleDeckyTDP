@@ -13,14 +13,15 @@ import {
   staticClasses,
 } from "decky-frontend-lib";
 // import useForm from "./hooks/useForm";
-import { VFC, useEffect } from "react";
+import { VFC } from "react";
 import { FaShip } from "react-icons/fa";
 // import { useEffect } from 'react';
 import TdpRange from './molecules/TdpRange'
 import { store } from './redux-modules/store'
 import { Provider } from 'react-redux'
 import { createServerApiHelpers } from './backend/utils'
-
+// import { useInitialLoad, useSettingsState } from './hooks/useInitialLoad'
+import { useInitialState } from './hooks/useInitialState'
 // import logo from "../assets/logo.png";
 
 // interface AddMethodArgs {
@@ -30,16 +31,10 @@ import { createServerApiHelpers } from './backend/utils'
 
 
 const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
+  const { setSetting } = createServerApiHelpers(serverAPI)
 
-  const { logInfo, getSettings, setSetting } = createServerApiHelpers(serverAPI)
+  const loading = useInitialState(serverAPI)
 
-  useEffect(() => {
-    getSettings().then((result) => {
-       if(result.success) {
-        logInfo(`initial load ${JSON.stringify(result)}`)
-      }
-    })
-  }, [])
 
   const onFieldChange = async (
     fieldName: string,
@@ -48,9 +43,13 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
     return await setSetting({ fieldName, fieldValue })
   }
 
+  // if(loading) {
+  //   return <div>Loading<div/>
+  // }
+
   return (
     <>
-    <TdpRange onFieldChange={onFieldChange} logInfo={logInfo}/>
+     {!loading && <TdpRange onFieldChange={onFieldChange} />}
     </>
   );
 };
