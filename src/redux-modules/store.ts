@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import tdpRangeReducer from './tdpRangeSlice'
+import settingsReducer from './settingsSlice'
 
 export const store = configureStore({
   reducer: {
-  	tdpRange: tdpRangeReducer
+  	settings: settingsReducer
   },
 })
 

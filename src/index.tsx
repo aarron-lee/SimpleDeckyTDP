@@ -19,8 +19,6 @@ import { FaShip } from "react-icons/fa";
 import TdpRange from './molecules/TdpRange'
 import { store } from './redux-modules/store'
 import { Provider } from 'react-redux'
-import { useSelector } from 'react-redux'
-import { minTdpSelector, maxTdpSelector } from './redux-modules/tdpRangeSlice'
 import { createServerApiHelpers } from './backend/utils'
 
 // import logo from "../assets/logo.png";
@@ -32,8 +30,6 @@ import { createServerApiHelpers } from './backend/utils'
 
 
 const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
-  const minTdp = useSelector(minTdpSelector);
-  const maxTdp = useSelector(maxTdpSelector);
 
   const { logInfo, getSettings, setSetting } = createServerApiHelpers(serverAPI)
 
@@ -54,7 +50,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
 
   return (
     <>
-    <TdpRange minTdp={minTdp} maxTdp={maxTdp} onFieldChange={onFieldChange} logInfo={logInfo}/>
+    <TdpRange onFieldChange={onFieldChange} logInfo={logInfo}/>
     </>
   );
 };

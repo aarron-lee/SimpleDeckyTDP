@@ -5,14 +5,13 @@ import {
   PanelSectionRow,
 } from "decky-frontend-lib";
 import TdpDropdown from '../components/TdpDropdown'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateMinTdp, updateMaxTdp, tdpRangeSelector } from '../redux-modules/tdpRangeSlice'
+import { useMinTdp, useMaxTdp } from '../hooks/useTdpRange'
 
-const TdpRange = ({ minTdp, maxTdp, logInfo, onFieldChange }: { minTdp: number, maxTdp: number, logInfo: any, onFieldChange: any}) => {
-  const dispatch = useDispatch()
-  const tdpState = useSelector(tdpRangeSelector)
+const TdpRange = ({ logInfo, onFieldChange }: { logInfo: any, onFieldChange: any}) => {
+  const [minTdp, setMinTdp] = useMinTdp();
+  const [maxTdp, setMaxTdp] = useMaxTdp();
 
-  logInfo(`${minTdp} ${maxTdp} ${JSON.stringify(tdpState)}`)
+  logInfo(`${minTdp} ${maxTdp}`)
 
   return (
       <PanelSection title="TDP Range">
@@ -23,7 +22,7 @@ const TdpRange = ({ minTdp, maxTdp, logInfo, onFieldChange }: { minTdp: number, 
             name="minTdp"
             selected={minTdp}
             onChange={({ data: value }: { data: number}) => {
-                dispatch(updateMinTdp(value));
+                setMinTdp(value)
                 onFieldChange(
                   "minTdp",
                   value
@@ -40,7 +39,7 @@ const TdpRange = ({ minTdp, maxTdp, logInfo, onFieldChange }: { minTdp: number, 
             name="maxTdp"
             selected={maxTdp}
             onChange={({ data: value }: { data: number}) => {
-                dispatch(updateMaxTdp(value))
+                setMaxTdp(value)
                 onFieldChange(
                   "maxTdp",
                   value

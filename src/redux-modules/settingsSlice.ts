@@ -11,8 +11,8 @@ const initialState: TdpRangeState = {
   maxTdp: 15
 }
 
-export const tdpRangeSlice = createSlice({
-  name: 'tdpRange',
+export const settingsSlice = createSlice({
+  name: 'settings',
   initialState,
   reducers: {
     updateMinTdp: (state, action: PayloadAction<number>) => {
@@ -24,11 +24,11 @@ export const tdpRangeSlice = createSlice({
   },
 })
 
-export const minTdpSelector = (state: any) => state.tdpRange.minTdp
-export const maxTdpSelector = (state: any) => state.tdpRange.maxTdp
+export const minTdpSelector = (state: any) => state.settings.minTdp
+export const maxTdpSelector = (state: any) => state.settings.maxTdp
 export const tdpRangeSelector = (state: any) => state
 
 // Action creators are generated for each case reducer function
-export const { updateMinTdp, updateMaxTdp } = tdpRangeSlice.actions
+export const { updateMinTdp, updateMaxTdp } = settingsSlice.actions
 
-export default tdpRangeSlice.reducer
+export default settingsSlice.reducer
