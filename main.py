@@ -5,11 +5,51 @@ import os
 # or add the `decky-loader/plugin` path to `python.analysis.extraPaths` in `.vscode/settings.json`
 import decky_plugin
 
+import logging
+import subprocess
+import glob
+import os
+
+try:
+    LOG_LOCATION = f"/tmp/simpleTDP.log"
+    logging.basicConfig(
+        level = logging.INFO,
+        filename = LOG_LOCATION,
+        format="[%(asctime)s | %(filename)s:%(lineno)s:%(funcName)s] %(levelname)s: %(message)s",
+        filemode = 'w',
+        force = True)
+except Exception as e:
+    logging.error(f"exception|{e}")
+
+
+
+from settings import SettingsManager
+
+settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
+settings_path = os.path.join(settings_directory, 'settings.json')
+setting_file = SettingsManager(name="settings", settings_directory=settings_directory)
 
 class Plugin:
     # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
     async def add(self, left, right):
         return left + right
+
+    async def log_info(self, info):
+        logging.info(info)
+        decky_plugin.logger.info(info)
+
+    async def get_settings(self):
+        try:
+            current_settings = setting_file.read()
+            return current_settings
+        except Exception as e:
+            logging.error(e)
+
+    async def set_setting(self, name: str, value):
+        try:
+            return setting_file.setSetting(name, value)
+        except Exception as e:
+            logging.error(e)
 
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):

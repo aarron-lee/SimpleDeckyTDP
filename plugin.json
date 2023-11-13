@@ -1,10 +1,10 @@
 {
-  "name": "Example Plugin",
-  "author": "John Doe",
-  "flags": ["debug", "_root"],
+  "name": "SimpleDeckyTDP",
+  "author": "Aarron Lee",
+  "flags": ["debug", "root"],
   "publish": {
-    "tags": ["template", "root"],
-    "description": "Decky example plugin.",
+    "tags": ["tdp", "root", "non-deck"],
+    "description": "Simple TDP slider for non-Deck PC handhelds",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }
