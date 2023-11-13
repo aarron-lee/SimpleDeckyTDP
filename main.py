@@ -22,12 +22,12 @@ except Exception as e:
     logging.error(f"exception|{e}")
 
 
-
 from settings import SettingsManager
 
 settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
 settings_path = os.path.join(settings_directory, 'settings.json')
 setting_file = SettingsManager(name="settings", settings_directory=settings_directory)
+setting_file.read()
 
 class Plugin:
     # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
@@ -36,12 +36,11 @@ class Plugin:
 
     async def log_info(self, info):
         logging.info(info)
-        decky_plugin.logger.info(info)
 
-    async def get_settings(self):
+    async def get_tdp_range(self):
         try:
             current_settings = setting_file.read()
-            return current_settings
+            return setting_file.settings
         except Exception as e:
             logging.error(e)
 

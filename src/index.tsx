@@ -13,7 +13,7 @@ import {
   staticClasses,
 } from "decky-frontend-lib";
 // import useForm from "./hooks/useForm";
-import { VFC } from "react";
+import { VFC, useEffect } from "react";
 import { FaShip } from "react-icons/fa";
 // import { useEffect } from 'react';
 import TdpRange from './molecules/TdpRange'
@@ -21,6 +21,7 @@ import { store } from './redux-modules/store'
 import { Provider } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { minTdpSelector, maxTdpSelector } from './redux-modules/tdpRangeSlice'
+import { createServerApiHelpers } from './backend/utils'
 
 // import logo from "../assets/logo.png";
 
@@ -30,43 +31,29 @@ import { minTdpSelector, maxTdpSelector } from './redux-modules/tdpRangeSlice'
 // }
 
 
-enum ServerAPIMethods {
-  SET_SETTING = "set_setting",
-  GET_SETTINGS = "get_settings",
-  LOG_INFO = "log_info"
-}
-
 const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
   const minTdp = useSelector(minTdpSelector);
   const maxTdp = useSelector(maxTdpSelector);
-  const logInfo = async (info: any) => {
-    await serverAPI.callPluginMethod(ServerAPIMethods.LOG_INFO, { info })
-  }
 
-  // useEffect(() => {
-  //   serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {}).then((result) => {
-  //      if(result.success) {
-  //       logInfo(JSON.stringify(result))
-  //     }
-  //   })
-  // }, [])
+  const { logInfo, getSettings, setSetting } = createServerApiHelpers(serverAPI)
+
+  useEffect(() => {
+    getSettings().then((result) => {
+       if(result.success) {
+        logInfo(`initial load ${JSON.stringify(result)}`)
+      }
+    })
+  }, [])
 
   const onFieldChange = async (
     fieldName: string,
     fieldValue?: string | number
   ) => {
-    return await serverAPI.callPluginMethod(
-      ServerAPIMethods.SET_SETTING,
-      {
-        name: fieldName,
-        value: fieldValue,
-      }
-    );
+    return await setSetting({ fieldName, fieldValue })
   }
 
   return (
     <>
-    <input type="number"/>
     <TdpRange minTdp={minTdp} maxTdp={maxTdp} onFieldChange={onFieldChange} logInfo={logInfo}/>
     </>
   );
