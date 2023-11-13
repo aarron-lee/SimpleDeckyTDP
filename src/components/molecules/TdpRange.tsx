@@ -4,8 +4,8 @@ import {
   PanelSection,
   PanelSectionRow,
 } from "decky-frontend-lib";
-import TdpDropdown from '../components/TdpDropdown'
-import { useMinTdp, useMaxTdp } from '../hooks/useTdpRange'
+import TdpDropdown from '../atoms/TdpDropdown'
+import { useMinTdp, useMaxTdp } from '../../hooks/useTdpRange'
 
 const TdpRange = ({ logInfo, onFieldChange }: { logInfo?: any, onFieldChange: any}) => {
   const [minTdp, setMinTdp] = useMinTdp();
@@ -19,7 +19,6 @@ const TdpRange = ({ logInfo, onFieldChange }: { logInfo?: any, onFieldChange: an
           <TdpDropdown
             tdpRange={[3,12]}
             label="Minimum TDP"
-            name="minTdp"
             selected={minTdp}
             onChange={({ data: value }: { data: number}) => {
                 setMinTdp(value)
@@ -36,7 +35,6 @@ const TdpRange = ({ logInfo, onFieldChange }: { logInfo?: any, onFieldChange: an
           <TdpDropdown
             tdpRange={[15,30]}
             label="Max TDP"
-            name="maxTdp"
             selected={maxTdp}
             onChange={({ data: value }: { data: number}) => {
                 setMaxTdp(value)

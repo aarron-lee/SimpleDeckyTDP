@@ -16,7 +16,8 @@ import {
 import { VFC } from "react";
 import { FaShip } from "react-icons/fa";
 // import { useEffect } from 'react';
-import TdpRange from './molecules/TdpRange'
+import TdpRange from './components/molecules/TdpRange'
+import { TdpSlider } from './components/molecules/TdpSlider'
 import { store } from './redux-modules/store'
 import { Provider } from 'react-redux'
 import { createServerApiHelpers } from './backend/utils'
@@ -49,7 +50,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
 
   return (
     <>
-     {!loading && <TdpRange onFieldChange={onFieldChange} />}
+     {!loading && <>
+       <TdpSlider />
+       <TdpRange onFieldChange={onFieldChange} />
+       </>}
     </>
   );
 };

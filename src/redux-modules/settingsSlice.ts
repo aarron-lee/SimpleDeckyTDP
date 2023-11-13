@@ -37,7 +37,8 @@ export const settingsSlice = createSlice({
 export const minTdpSelector = (state: any) => state.settings.minTdp
 export const maxTdpSelector = (state: any) => state.settings.maxTdp
 export const initialLoadSelector = (state: any) => state.settings.initialLoad
-export const tdpRangeSelector = (state: any) => state
+export const allStateSelector = (state: any) => state
+export const tdpRangeSelector = (state: any) => [state.settings.minTdp, state.settings.maxTdp]
 
 // Action creators are generated for each case reducer function
 export const { updateMinTdp, updateMaxTdp, updateInitialLoad } = settingsSlice.actions

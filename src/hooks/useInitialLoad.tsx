@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { updateInitialLoad, initialLoadSelector, TdpRangeState, tdpRangeSelector } from '../redux-modules/settingsSlice';
+import { updateInitialLoad, initialLoadSelector, TdpRangeState, allStateSelector } from '../redux-modules/settingsSlice';
 
 export const useInitialLoad = () => {
 	const dispatch = useDispatch()
@@ -9,4 +9,4 @@ export const useInitialLoad = () => {
 
 export const useIsInitiallyLoading = () => useSelector(initialLoadSelector)
 
-export const useSettingsState = () => useSelector(tdpRangeSelector)
+export const useSettingsState = () => useSelector(allStateSelector)

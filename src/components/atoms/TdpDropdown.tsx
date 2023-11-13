@@ -7,7 +7,6 @@ import { range } from "lodash"
 type PropType = {
  tdpRange: number[],
  label: string,
- name: string,
  description?: string,
  selected?: number,
  onChange: any,
@@ -17,7 +16,6 @@ type PropType = {
 const TdpDropdown = ({
 	tdpRange,
 	label,
-	name,
 	description,
 	selected,
 	onChange,
