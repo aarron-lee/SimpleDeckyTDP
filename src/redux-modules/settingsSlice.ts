@@ -49,9 +49,7 @@ export const settingsSlice = createSlice({
       state.maxTdp = action.payload.maxTdp;
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) =>{
-      const newState = merge(state.tdpProfiles, action.payload)
-
-      state.tdpProfiles = newState
+      merge(state.tdpProfiles, action.payload)
     }
   },
 })

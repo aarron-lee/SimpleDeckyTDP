@@ -5,7 +5,8 @@ import {
 export enum ServerAPIMethods {
   SET_SETTING = "set_setting",
   GET_SETTINGS = "get_settings",
-  LOG_INFO = "log_info"
+  LOG_INFO = "log_info",
+  SET_TDP = "set_tdp",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -27,10 +28,21 @@ export const createGetSettings = (serverAPI: ServerAPI) => async() => {
 	return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {})
 }
 
+export const createSetDefaultTdp = (serverAPI: ServerAPI) => async (tdp: number) => {
+	return await serverAPI.callPluginMethod(
+		ServerAPIMethods.SET_TDP,
+		{
+			profileName: 'default',
+			value: tdp
+		}
+	)
+}
+
 export const createServerApiHelpers = (serverAPI: ServerAPI) => {
 	return {
 		getSettings: createGetSettings(serverAPI),
 		setSetting: createSetSetting(serverAPI),
-		logInfo: createLogInfo(serverAPI)
+		logInfo: createLogInfo(serverAPI),
+		setDefaultTdp: createSetDefaultTdp(serverAPI)
 	}
 }

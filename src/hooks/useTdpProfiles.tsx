@@ -1,17 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { defaultTdpSelector, updateTdpProfiles } from '../redux-modules/settingsSlice'
-
-
-
-// export const useTdpRange = () => {
-// 	return useSelector(tdpRangeSelector);
-// }
+import { defaultTdpSelector, updateTdpProfiles, TdpProfiles } from '../redux-modules/settingsSlice'
 
 export const useDefaultTdp = () => {
   const dispatch = useDispatch()
 
   const dispatcher = (tdp: number) =>  {
-	const payload = {
+	const payload: TdpProfiles = {
 	  default: {
 	  	tdp
 	  }
@@ -21,9 +15,3 @@ export const useDefaultTdp = () => {
 
   return [useSelector(defaultTdpSelector), dispatcher]
 }
-
-// export const useMaxTdp = () => {
-//   const dispatch = useDispatch()
-
-//   return [useSelector(maxTdpSelector), (value: number) => dispatch(updateMaxTdp(value))]
-// }

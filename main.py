@@ -10,6 +10,9 @@ import subprocess
 import glob
 import os
 
+RYZENADJ = "/usr/sbin/ryzenadj"
+SUDO = "/usr/bin/sudo"
+
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
     logging.basicConfig(
@@ -47,6 +50,30 @@ class Plugin:
     async def set_setting(self, name: str, value):
         try:
             return setting_file.setSetting(name, value)
+        except Exception as e:
+            logging.error(e)
+
+    async def set_tdp(self, profileName: str, value):
+        try:
+            # save to settings file
+            # setting_file.read()
+            # logging.info(setting_file.settings)
+            # if not setting_file.settings['tdpProfiles']:
+            #     setting_file.setSetting('tdpProfiles', {})
+            # setting_file.read()
+
+            # setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
+            # setting_file.commit()
+
+            # set tdp via ryzenadj
+            tdp = value*1000
+
+            commands = [RYZENADJ, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
+
+            command = " ".join(commands)
+            results = os.system(command)
+
+            return True
         except Exception as e:
             logging.error(e)
 

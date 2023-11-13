@@ -4,11 +4,18 @@ import {
   PanelSectionRow,
 } from "decky-frontend-lib";
 import { useTdpRange } from '../../hooks/useTdpRange'
+import { useEffect } from 'react'
 import { useDefaultTdp } from '../../hooks/useTdpProfiles'
 
-export function TdpSlider() {
+export function TdpSlider({ persistToSettings }: { persistToSettings?: any }) {
   const [minTdp, maxTdp] = useTdpRange();
   const [defaultTdp, setDefaultTdp] = useDefaultTdp()
+
+  useEffect(() => {
+  	if(defaultTdp && persistToSettings) {
+  		persistToSettings(defaultTdp)
+  	}
+  }, [defaultTdp])
 
 
   return  (<PanelSection title="TDP">
