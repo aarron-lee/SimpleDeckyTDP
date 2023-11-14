@@ -4,7 +4,10 @@ import { updateInitialLoad, initialLoadSelector, TdpRangeState, allStateSelector
 export const useInitialLoad = () => {
 	const dispatch = useDispatch()
 
-	return [useSelector(initialLoadSelector), ({minTdp, maxTdp}: TdpRangeState) => dispatch(updateInitialLoad({minTdp, maxTdp}))]
+	return [
+	  useSelector(initialLoadSelector),
+	  ({minTdp, maxTdp, pollState }: TdpRangeState & { pollState: boolean }) => dispatch(updateInitialLoad({minTdp, maxTdp, pollState}))
+	]
 }
 
 export const useIsInitiallyLoading = () => useSelector(initialLoadSelector)

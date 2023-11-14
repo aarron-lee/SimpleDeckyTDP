@@ -1,15 +1,20 @@
 import {
   ToggleField,
-  TextField,
   PanelSection,
   PanelSectionRow,
 } from "decky-frontend-lib";
+import { useEffect } from 'react';
 import { usePollInfo, useSetPoll } from '../../hooks/usePollState'
 
 
-export function PollToggle() {
+export function PollToggle({ persistPollState }: { persistPollState: any }) {
   const { enabled } = usePollInfo()
   const setPoll = useSetPoll()
+
+  useEffect(() => {
+    // persist to backend settings.json
+    persistPollState('pollEnabled', enabled);
+  }, [enabled])
 
 
   return  (<PanelSection title="Poll TDP">
@@ -17,7 +22,10 @@ export function PollToggle() {
       <ToggleField
         label="Enable Polling"
         checked={enabled}
-        onChange={setPoll}
+        onChange={(enabled: boolean) => {
+            setPoll(enabled)
+          }
+        }
         highlightOnFocus
       />
     </PanelSectionRow>

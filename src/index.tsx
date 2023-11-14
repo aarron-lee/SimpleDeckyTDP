@@ -32,7 +32,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = memo(({serverAPI}) => {
      {!loading && <>
        <TdpSlider persistToSettings={setDefaultTdp}/>
        <TdpRange onFieldChange={onFieldChange} />
-       <PollToggle />
+       <PollToggle persistPollState={onFieldChange}/>
        </>}
     </>
   );

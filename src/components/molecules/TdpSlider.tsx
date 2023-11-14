@@ -19,15 +19,18 @@ export function TdpSlider({ persistToSettings }: { persistToSettings?: any }) {
   useEffect(() => {
   	if(defaultTdp && persistToSettings) {
   		persistToSettings(defaultTdp)
-  		if(intervalId) {
-  			clearInterval(intervalId)
-  		}
   		if(pollEnabled && pollRate) {
 	  		intervalId = window.setInterval(() => {
 	  			persistToSettings(defaultTdp)
 	  		}, pollRate)
   		}
   	}
+
+	return () => {
+  		if(intervalId) {
+  			clearInterval(intervalId)
+  		}
+	}
   }, [defaultTdp, pollRate, pollEnabled])
 
 

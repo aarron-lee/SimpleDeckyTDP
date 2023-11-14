@@ -54,10 +54,11 @@ export const settingsSlice = createSlice({
     updateMaxTdp: (state, action: PayloadAction<number>) => {
       state.maxTdp = action.payload
     },
-    updateInitialLoad: (state, action: PayloadAction<TdpRangeState>) => {
+    updateInitialLoad: (state, action: PayloadAction<TdpRangeState & { pollState: boolean }>) => {
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp;
       state.maxTdp = action.payload.maxTdp;
+      state.poll.enabled = action.payload.pollState;
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) =>{
       merge(state.tdpProfiles, action.payload)
