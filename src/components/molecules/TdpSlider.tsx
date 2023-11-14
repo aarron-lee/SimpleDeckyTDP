@@ -4,34 +4,14 @@ import {
   PanelSectionRow,
 } from "decky-frontend-lib";
 import { useTdpRange } from '../../hooks/useTdpRange'
-import { useEffect } from 'react'
 import { useDefaultTdp } from '../../hooks/useTdpProfiles'
-import { usePollInfo } from '../../hooks/usePollState'
-
-
-let intervalId: number | undefined;
+import { usePollTdpEffect } from '../../hooks/usePollState'
 
 export function TdpSlider({ persistToSettings }: { persistToSettings?: any }) {
   const [minTdp, maxTdp] = useTdpRange();
   const [defaultTdp, setDefaultTdp] = useDefaultTdp()
-  const { enabled: pollEnabled, pollRate } = usePollInfo()
 
-  useEffect(() => {
-  	if(defaultTdp && persistToSettings) {
-  		persistToSettings(defaultTdp)
-  		if(pollEnabled && pollRate) {
-	  		intervalId = window.setInterval(() => {
-	  			persistToSettings(defaultTdp)
-	  		}, pollRate)
-  		}
-  	}
-
-	return () => {
-  		if(intervalId) {
-  			clearInterval(intervalId)
-  		}
-	}
-  }, [defaultTdp, pollRate, pollEnabled])
+  usePollTdpEffect(defaultTdp, persistToSettings);
 
 
   return  (<PanelSection title="TDP">
