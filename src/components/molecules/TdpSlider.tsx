@@ -19,9 +19,10 @@ export const TdpSlider: FC<{
   const { id, tdp, displayName } = useSelector(
     getCurrentTdpInfoSelector
   );
-  const title = Boolean(displayName)
-    ? `${displayName} TDP`
-    : `Default TDP`;
+  const title =
+    Boolean(displayName) && displayName.toLowerCase() !== 'default'
+      ? `TDP - ${displayName.substring(0, 20)}...`
+      : `TDP - Default`;
 
   useEffect(() => {
     saveTdp(id, tdp);
@@ -34,6 +35,7 @@ export const TdpSlider: FC<{
       <PanelSectionRow>
         <SliderField
           value={tdp}
+          label="Watts"
           min={minTdp}
           max={maxTdp}
           step={1}

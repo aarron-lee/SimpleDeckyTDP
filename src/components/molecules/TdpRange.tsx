@@ -32,7 +32,7 @@ const TdpRange = ({
 
       <PanelSectionRow>
         <TdpDropdown
-          tdpRange={[15, 30]}
+          tdpRange={[15, 40]}
           label="Max TDP"
           selected={maxTdp}
           onChange={({ data: value }: { data: number }) => {

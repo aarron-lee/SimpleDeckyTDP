@@ -54,7 +54,7 @@ export function PollTdp({
       <PanelSectionRow>
         <DropdownItem
           label="Poll Rate"
-          description="Rate in Seconds"
+          description={`Set TDP every ${pollRate / 1000} seconds`}
           menuLabel="Poll Rate"
           rgOptions={dropdownOptions.map((o) => {
             return {
