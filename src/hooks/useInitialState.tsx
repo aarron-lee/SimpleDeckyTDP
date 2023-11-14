@@ -1,6 +1,9 @@
 import { ServerAPI } from 'decky-frontend-lib';
 import { useEffect } from 'react';
-import { createServerApiHelpers } from '../backend/utils';
+import {
+  createSaveGameInfo,
+  createServerApiHelpers,
+} from '../backend/utils';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   updateInitialLoad,
@@ -8,6 +11,7 @@ import {
   InitialStateType,
   allStateSelector,
 } from '../redux-modules/settingsSlice';
+import { useCurrentGameInfoListener } from './useCurrentGameInfoListener';
 
 export const useInitialLoad = () => {
   const dispatch = useDispatch();
@@ -41,6 +45,7 @@ export const useSettingsState = () => useSelector(allStateSelector);
 // bootstrap initial state from python backend
 export const useInitialState = (serverAPI: ServerAPI) => {
   const [loading, setInitialLoad] = useInitialLoad();
+  const saveGameInfo = createSaveGameInfo(serverAPI);
   const allSettings = useSettingsState();
 
   const { logInfo, getSettings } = createServerApiHelpers(serverAPI);
@@ -58,6 +63,8 @@ export const useInitialState = (serverAPI: ServerAPI) => {
       }
     });
   }, []);
+
+  useCurrentGameInfoListener({ logInfo, saveGameInfo });
 
   logInfo(`reduxState = ${JSON.stringify(allSettings)}`);
   return loading;

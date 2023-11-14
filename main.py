@@ -42,6 +42,27 @@ class Plugin:
 
     async def log_info(self, info):
         logging.info(info)
+    
+    async def set_game_info(self, currentGameId: str, displayName: str):
+        try:
+            # save to settings file
+            setting_file.read()
+
+            if currentGameId == '0' or currentGameId == "undefined":
+                currentGameId = 'default'
+                displayName = 'Default'
+
+            setting_file.setSetting('currentGameId', currentGameId)
+
+            if not setting_file.settings.get('gameDisplayNames'):
+                setting_file.settings['gameDisplayNames'] = {};
+
+            setting_file.settings['gameDisplayNames'][currentGameId] = displayName
+            setting_file.commit()
+
+            return True
+        except Exception as e:
+            logging.error(e)        
 
     async def get_settings(self):
         try:
