@@ -3,19 +3,19 @@ import {
   ServerAPI,
   staticClasses,
 } from 'decky-frontend-lib';
-import { VFC, memo } from 'react';
+import { FC, memo } from 'react';
 import { FaShip } from 'react-icons/fa';
 import TdpRange from './components/molecules/TdpRange';
 import { TdpSlider } from './components/molecules/TdpSlider';
-import { PollToggle } from './components/molecules/PollToggle';
+import { PollTdp } from './components/molecules/PollTdp';
 import { store } from './redux-modules/store';
 import { Provider } from 'react-redux';
 import { createServerApiHelpers } from './backend/utils';
 import { useInitialState } from './hooks/useInitialState';
 
-const Content: VFC<{ serverAPI: ServerAPI }> = memo(
+const Content: FC<{ serverAPI: ServerAPI }> = memo(
   ({ serverAPI }) => {
-    const { setSetting, setDefaultTdp, logInfo } =
+    const { setSetting, setDefaultTdp } =
       createServerApiHelpers(serverAPI);
 
     const loading = useInitialState(serverAPI);
@@ -33,10 +33,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = memo(
           <>
             <TdpSlider persistToSettings={setDefaultTdp} />
             <TdpRange onFieldChange={onFieldChange} />
-            <PollToggle
-              persistPollState={onFieldChange}
-              logInfo={logInfo}
-            />
+            <PollTdp persistPollState={onFieldChange} />
           </>
         )}
       </>
@@ -44,10 +41,8 @@ const Content: VFC<{ serverAPI: ServerAPI }> = memo(
   }
 );
 
-const ContentContainer = ({
+const ContentContainer: FC<{ serverAPI: ServerAPI }> = ({
   serverAPI,
-}: {
-  serverAPI: ServerAPI;
 }) => {
   return (
     <Provider store={store}>

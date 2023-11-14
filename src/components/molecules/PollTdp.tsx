@@ -12,7 +12,7 @@ import {
 } from '../../hooks/usePollState';
 import { range } from 'lodash';
 
-export function PollToggle({
+export function PollTdp({
   persistPollState,
   logInfo,
 }: {
