@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { merge } from 'lodash';
+import { get, merge } from 'lodash';
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -142,6 +142,25 @@ export const currentGameDisplayNameSelector = (state: any) => {
 // enableTdpProfiles selectors
 export const tdpProfilesEnabled = (state: any) =>
   state.settings.enableTdpProfiles;
+export const getCurrentTdpSelector = (state: any) => {
+  const { settings } = state;
+  const defaultTdp = get(settings, 'tdpProfiles.default.tdp');
+
+  if (settings.enableTdpProfiles) {
+    const { currentGameId } = settings;
+    // tdp from game tdp profile
+    const gameTdp = get(
+      settings,
+      `tdpProfiles.${currentGameId}.tdp`,
+      // default if it doesn't exist yet
+      defaultTdp
+    );
+    return gameTdp;
+  } else {
+    // tdp from default profile
+    return defaultTdp;
+  }
+};
 
 // Action creators are generated for each case reducer function
 export const {
