@@ -28,11 +28,15 @@ export interface PollState {
 export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean;
   tdpProfiles: TdpProfiles;
+  currentGameId: string | undefined;
+  gameDisplayNames: { [key: string]: string };
 }
 
 export type InitialStateType = Partial<SettingsState>;
 
 const initialState: SettingsState = {
+  currentGameId: 'default',
+  gameDisplayNames: {},
   minTdp: 3,
   maxTdp: 15,
   initialLoad: true,
@@ -67,6 +71,12 @@ export const settingsSlice = createSlice({
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
+      if (action.payload.gameDisplayNames) {
+        merge(
+          state.gameDisplayNames,
+          action.payload.gameDisplayNames
+        );
+      }
     },
     updateTdpProfiles: (
       state,
@@ -79,6 +89,14 @@ export const settingsSlice = createSlice({
     },
     setPolling: (state, action: PayloadAction<boolean>) => {
       state.pollEnabled = action.payload;
+    },
+    setCurrentGameInfo: (
+      state,
+      action: PayloadAction<{ id: string; displayName: string }>
+    ) => {
+      const { id, displayName } = action.payload;
+      state.currentGameId = id;
+      state.gameDisplayNames[id] = displayName;
     },
   },
 });
@@ -105,6 +123,15 @@ export const pollRateSelector = (state: any) =>
 export const pollEnabledSelector = (state: any) =>
   state.settings.pollEnabled;
 
+// currentGameId selector
+export const currentGameIdSelector = (state: any) =>
+  state.settings.currentGameId;
+export const currentGameDisplayNameSelector = (state: any) => {
+  const { currentGameId } = state.settings;
+
+  return state.settings.gameDisplayNames[currentGameId];
+};
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -113,6 +140,7 @@ export const {
   updateTdpProfiles,
   updatePollRate,
   setPolling,
+  setCurrentGameInfo,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

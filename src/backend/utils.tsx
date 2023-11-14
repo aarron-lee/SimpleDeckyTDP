@@ -5,28 +5,12 @@ export enum ServerAPIMethods {
   GET_SETTINGS = 'get_settings',
   LOG_INFO = 'log_info',
   SET_TDP = 'set_tdp',
-  SET_GAME_INFO = 'set_game_info',
 }
 
 export const createLogInfo =
   (serverAPI: ServerAPI) => async (info: any) => {
     await serverAPI.callPluginMethod(ServerAPIMethods.LOG_INFO, {
       info,
-    });
-  };
-
-export const createSaveGameInfo =
-  (serverAPI: ServerAPI) =>
-  async ({
-    currentGameId,
-    displayName,
-  }: {
-    currentGameId: string;
-    displayName: string;
-  }) => {
-    await serverAPI.callPluginMethod(ServerAPIMethods.SET_GAME_INFO, {
-      currentGameId,
-      displayName,
     });
   };
 

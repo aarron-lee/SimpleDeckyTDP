@@ -1,20 +1,11 @@
 import os
 import shutil
-
-# The decky plugin module is located at decky-loader/plugin
-# For easy intellisense checkout the decky-loader code one directory up
-# or add the `decky-loader/plugin` path to `python.analysis.extraPaths` in `.vscode/settings.json`
 import decky_plugin
-
 import logging
-import subprocess
-import glob
 import os
+from settings import SettingsManager
 
-# bazzite
-# RYZENADJ = "/usr/sbin/ryzenadj"
 RYZENADJ_PATH = shutil.which('ryzenadj')
-
 
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
@@ -26,9 +17,6 @@ try:
         force = True)
 except Exception as e:
     logging.error(f"exception|{e}")
-
-
-from settings import SettingsManager
 
 settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
 settings_path = os.path.join(settings_directory, 'settings.json')
@@ -42,27 +30,6 @@ class Plugin:
 
     async def log_info(self, info):
         logging.info(info)
-    
-    async def set_game_info(self, currentGameId: str, displayName: str):
-        try:
-            # save to settings file
-            setting_file.read()
-
-            if currentGameId == '0' or currentGameId == "undefined":
-                currentGameId = 'default'
-                displayName = 'Default'
-
-            setting_file.setSetting('currentGameId', currentGameId)
-
-            if not setting_file.settings.get('gameDisplayNames'):
-                setting_file.settings['gameDisplayNames'] = {};
-
-            setting_file.settings['gameDisplayNames'][currentGameId] = displayName
-            setting_file.commit()
-
-            return True
-        except Exception as e:
-            logging.error(e)        
 
     async def get_settings(self):
         try:
@@ -79,7 +46,6 @@ class Plugin:
 
     async def set_tdp(self, profileName: str, value):
         try:
-            # save to settings file
             setting_file.read()
             logging.info(setting_file.settings)
             if not setting_file.settings.get('tdpProfiles'):
@@ -89,6 +55,8 @@ class Plugin:
                 tdp_profiles[profileName] = {}
 
             setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
+            
+            # save to settings file
             setting_file.commit()
 
             # set tdp via ryzenadj
