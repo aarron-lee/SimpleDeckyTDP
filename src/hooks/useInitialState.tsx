@@ -12,12 +12,12 @@ export const useInitialLoad = () => {
 
   return [
     useSelector(initialLoadSelector),
-    ({minTdp, maxTdp, pollState, tdpProfiles, pollRate }: InitialStateType ) => 
+    ({minTdp, maxTdp, pollEnabled, tdpProfiles, pollRate }: InitialStateType ) => 
       dispatch(
         updateInitialLoad({
           minTdp,
           maxTdp,
-          pollState,
+          pollEnabled,
           tdpProfiles,
           pollRate
         })

@@ -2,6 +2,10 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { merge } from "lodash";
 
+type Partial<T> = {
+    [P in keyof T]?: T[P];
+};
+
 export interface TdpRangeState {
   minTdp: number,
   maxTdp: number
@@ -13,18 +17,8 @@ export type TdpProfile = {
 }
 
 export type TdpProfiles = {
-  default: TdpProfile,
   [key:string]: TdpProfile
 }
-
-export interface InitialStateType { 
-  minTdp?: number,
-  maxTdp?: number
-  pollState?: boolean
-  tdpProfiles?: TdpProfiles
-  pollRate?: number
-}
-
 
 export interface PollState {
   pollEnabled: boolean,
@@ -35,6 +29,8 @@ export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean
   tdpProfiles: TdpProfiles
 }
+
+export type InitialStateType = Partial<SettingsState>
 
 const initialState: SettingsState = {
   minTdp: 3,
@@ -63,7 +59,7 @@ export const settingsSlice = createSlice({
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
-      state.pollEnabled = action.payload.pollState || false;
+      state.pollEnabled = action.payload.pollEnabled || false;
       state.pollRate = action.payload.pollRate || 5000;
       if(action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles)
