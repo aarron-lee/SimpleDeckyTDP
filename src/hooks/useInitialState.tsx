@@ -3,7 +3,6 @@ import {
 } from "decky-frontend-lib";
 import { useEffect } from 'react';
 import { createServerApiHelpers } from '../backend/utils'
-import { get } from 'lodash'
 import { useSelector, useDispatch } from 'react-redux';
 import { updateInitialLoad, initialLoadSelector, InitialStateType, allStateSelector } from '../redux-modules/settingsSlice';
 
@@ -16,11 +15,11 @@ export const useInitialLoad = () => {
     ({minTdp, maxTdp, pollState, tdpProfiles, pollRate }: InitialStateType ) => 
       dispatch(
         updateInitialLoad({
-        minTdp,
-        maxTdp,
-        pollState,
-        tdpProfiles,
-        pollRate
+          minTdp,
+          maxTdp,
+          pollState,
+          tdpProfiles,
+          pollRate
         })
       )
     ]
@@ -43,15 +42,11 @@ export const useInitialState = (serverAPI: ServerAPI) => {
   useEffect(() => {
     getSettings().then((result) => {
        if(result.success) {
-        const { minTdp, maxTdp } = result.result as { minTdp: number, maxTdp: number };
-
-        const pollState = Boolean(get(result, 'result.pollEnabled'));
-
-        const tdpProfiles: undefined | { [profileName:string]: {tdp: number} } = get(result, 'result.tdpProfiles');
+        const results = result.result || {};
 
         // logInfo(`intiialload result ${JSON.stringify(result)}`)
 
-        setInitialLoad({ minTdp, maxTdp, pollState, tdpProfiles })
+        setInitialLoad({ ...results })
       }
     })
   }, [])
