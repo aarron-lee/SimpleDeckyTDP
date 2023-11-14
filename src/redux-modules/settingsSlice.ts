@@ -17,9 +17,12 @@ export type TdpProfiles = {
   [key:string]: TdpProfile
 }
 
-export interface InitialStateType extends TdpRangeState { 
-  pollState: boolean
-  tdpProfiles: undefined | TdpProfiles
+export interface InitialStateType { 
+  minTdp?: number,
+  maxTdp?: number
+  pollState?: boolean
+  tdpProfiles?: TdpProfiles
+  pollRate?: number
 }
 
 
@@ -58,9 +61,10 @@ export const settingsSlice = createSlice({
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       state.initialLoad = false;
-      state.minTdp = action.payload.minTdp;
-      state.maxTdp = action.payload.maxTdp;
-      state.pollEnabled = action.payload.pollState;
+      state.minTdp = action.payload.minTdp || 3;
+      state.maxTdp = action.payload.maxTdp || 15;
+      state.pollEnabled = action.payload.pollState || false;
+      state.pollRate = action.payload.pollRate || 5000;
       if(action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles)
       }

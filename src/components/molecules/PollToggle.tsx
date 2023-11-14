@@ -17,6 +17,7 @@ export function PollToggle({ persistPollState }: { persistPollState: any }) {
   useEffect(() => {
     // persist to backend settings.json
     persistPollState('pollEnabled', enabled);
+    persistPollState('pollRate', pollRate);
   }, [enabled])
 
   const dropdownOptions = range(1, 21).map(seconds => {
