@@ -13,6 +13,8 @@ import os
 
 # bazzite
 # RYZENADJ = "/usr/sbin/ryzenadj"
+RYZENADJ_PATH = shutil.which('ryzenadj')
+
 
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
@@ -57,19 +59,20 @@ class Plugin:
     async def set_tdp(self, profileName: str, value):
         try:
             # save to settings file
-            # setting_file.read()
-            # logging.info(setting_file.settings)
-            # if not setting_file.settings['tdpProfiles']:
-            #     setting_file.setSetting('tdpProfiles', {})
-            # setting_file.read()
+            setting_file.read()
+            logging.info(setting_file.settings)
+            if not setting_file.settings.get('tdpProfiles'):
+                setting_file.settings['tdpProfiles'] = {};
+            tdp_profiles = setting_file.settings['tdpProfiles']
+            if not tdp_profiles.get(profileName):
+                tdp_profiles[profileName] = {}
 
-            # setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
-            # setting_file.commit()
+            setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
+            setting_file.commit()
 
             # set tdp via ryzenadj
             tdp = value*1000
 
-            RYZENADJ_PATH = shutil.which('ryzenadj')
 
             if RYZENADJ_PATH:
                 commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
