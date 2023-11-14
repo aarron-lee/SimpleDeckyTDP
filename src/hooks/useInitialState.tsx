@@ -3,16 +3,20 @@ import {
 } from "decky-frontend-lib";
 import { useEffect } from 'react';
 import { createServerApiHelpers } from '../backend/utils'
-import { useInitialLoad, useSettingsState } from './useInitialLoad'
+import { 
+  useInitialLoad,
+ // useSettingsState
+} from './useInitialLoad'
 import { get } from 'lodash'
 
 
 // bootstrap initial state from python backend
 export const useInitialState = (serverAPI: ServerAPI) => {
   const [loading, setInitialLoad] = useInitialLoad()
-  const allSettings = useSettingsState()
+  // const allSettings = useSettingsState()
 
-  const { logInfo, getSettings } = createServerApiHelpers(serverAPI)
+  // const { logInfo, getSettings } = createServerApiHelpers(serverAPI)
+  const { getSettings } = createServerApiHelpers(serverAPI)
 
   // persist settings from backend to redux state
   useEffect(() => {
@@ -24,13 +28,13 @@ export const useInitialState = (serverAPI: ServerAPI) => {
 
         const tdpProfiles: undefined | { [profileName:string]: {tdp: number} } = get(result, 'result.tdpProfiles');
 
-        logInfo(`intiialload result ${JSON.stringify(result)}`)
+        // logInfo(`intiialload result ${JSON.stringify(result)}`)
 
         setInitialLoad({ minTdp, maxTdp, pollState, tdpProfiles })
       }
     })
   }, [])
 
-   logInfo(`reduxState = ${JSON.stringify(allSettings)}`)
+  //  logInfo(`reduxState = ${JSON.stringify(allSettings)}`)
    return loading
 }
