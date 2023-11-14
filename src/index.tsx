@@ -7,6 +7,7 @@ import { VFC, memo } from "react";
 import { FaShip } from "react-icons/fa";
 import TdpRange from './components/molecules/TdpRange'
 import { TdpSlider } from './components/molecules/TdpSlider'
+import { PollToggle } from './components/molecules/PollToggle'
 import { store } from './redux-modules/store'
 import { Provider } from 'react-redux'
 import { createServerApiHelpers } from './backend/utils'
@@ -31,6 +32,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = memo(({serverAPI}) => {
      {!loading && <>
        <TdpSlider persistToSettings={setDefaultTdp}/>
        <TdpRange onFieldChange={onFieldChange} />
+       <PollToggle />
        </>}
     </>
   );

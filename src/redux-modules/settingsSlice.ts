@@ -17,7 +17,14 @@ export type TdpProfiles = {
   [key:string]: TdpProfile
 }
 
-export interface SettingsState extends TdpRangeState {
+export interface PollState {
+  poll: {
+    rate: number,
+    enabled: boolean
+  }
+}
+
+export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean
   tdpProfiles: TdpProfiles
 }
@@ -30,6 +37,10 @@ const initialState: SettingsState = {
     default: {
       tdp: 12
     },
+  },
+  poll: {
+    rate: 1000,
+    enabled: false,
   }
 }
 
@@ -50,6 +61,12 @@ export const settingsSlice = createSlice({
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) =>{
       merge(state.tdpProfiles, action.payload)
+    },
+    updatePollRate: (state, action: PayloadAction<number>) => {
+      state.poll.rate = action.payload
+    },
+    setPolling: (state, action: PayloadAction<boolean>) => {
+      state.poll.enabled = action.payload
     }
   },
 })
@@ -65,8 +82,19 @@ export const tdpRangeSelector = (state: any) => [state.settings.minTdp, state.se
 // tdp profile selectors
 export const defaultTdpSelector = (state: any) => state.settings.tdpProfiles.default.tdp;
 
+// poll rate selectors
+export const pollRateSelector = (state: any) => state.settings.poll.rate;
+export const pollEnabledSelector = (state: any) => state.settings.poll.enabled;
+
 
 // Action creators are generated for each case reducer function
-export const { updateMinTdp, updateMaxTdp, updateInitialLoad, updateTdpProfiles } = settingsSlice.actions
+export const {
+  updateMinTdp,
+  updateMaxTdp,
+  updateInitialLoad,
+  updateTdpProfiles,
+  updatePollRate,
+  setPolling,
+} = settingsSlice.actions
 
 export default settingsSlice.reducer
