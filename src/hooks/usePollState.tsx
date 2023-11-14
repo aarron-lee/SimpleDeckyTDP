@@ -8,7 +8,7 @@ export const usePollInfo = () => {
 }
 
 
-export const useUpdatePollRate = () => {
+export const useSetPollRate = () => {
 	const dispatch = useDispatch()
 
 	return (pollRate: number) => {
@@ -32,6 +32,9 @@ export const usePollTdpEffect = (tdp: number, persistToSettings: any) => {
 
   useEffect(() => {
   	if(tdp && persistToSettings) {
+  		if(intervalId) {
+  		  clearInterval(intervalId)
+  		}
   		persistToSettings(tdp)
   		if(pollEnabled && pollRate) {
 	  		intervalId = window.setInterval(() => {
@@ -39,12 +42,5 @@ export const usePollTdpEffect = (tdp: number, persistToSettings: any) => {
 	  		}, pollRate)
   		}
   	}
-
-  	// cleanup func on unmount
-	return () => {
-  		if(intervalId) {
-  			clearInterval(intervalId)
-  		}
-	}
   }, [tdp, pollRate, pollEnabled, persistToSettings])
 }

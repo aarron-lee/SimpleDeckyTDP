@@ -24,10 +24,8 @@ export interface InitialStateType extends TdpRangeState {
 
 
 export interface PollState {
-  poll: {
-    rate: number,
-    enabled: boolean
-  }
+  pollEnabled: boolean,
+  pollRate: number
 }
 
 export interface SettingsState extends TdpRangeState, PollState {
@@ -44,10 +42,8 @@ const initialState: SettingsState = {
       tdp: 12
     },
   },
-  poll: {
-    rate: 1000,
-    enabled: false,
-  }
+  pollEnabled: false,
+  pollRate: 5000, // milliseconds
 }
 
 export const settingsSlice = createSlice({
@@ -64,7 +60,7 @@ export const settingsSlice = createSlice({
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp;
       state.maxTdp = action.payload.maxTdp;
-      state.poll.enabled = action.payload.pollState;
+      state.pollEnabled = action.payload.pollState;
       if(action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles)
       }
@@ -73,10 +69,16 @@ export const settingsSlice = createSlice({
       merge(state.tdpProfiles, action.payload)
     },
     updatePollRate: (state, action: PayloadAction<number>) => {
-      state.poll.rate = action.payload
+      state.pollRate = action.payload
     },
     setPolling: (state, action: PayloadAction<boolean>) => {
-      state.poll.enabled = action.payload
+      state.pollEnabled = action.payload
+    },
+    setSetting: (state, action: PayloadAction<{ key: string, value: any }) => {
+      const { key, value } = action.payload;
+      if(state[key]) {
+        state[key] = value
+      }
     }
   },
 })
@@ -93,8 +95,8 @@ export const tdpRangeSelector = (state: any) => [state.settings.minTdp, state.se
 export const defaultTdpSelector = (state: any) => state.settings.tdpProfiles.default.tdp;
 
 // poll rate selectors
-export const pollRateSelector = (state: any) => state.settings.poll.rate;
-export const pollEnabledSelector = (state: any) => state.settings.poll.enabled;
+export const pollRateSelector = (state: any) => state.settings.pollRate;
+export const pollEnabledSelector = (state: any) => state.settings.pollEnabled;
 
 
 // Action creators are generated for each case reducer function
