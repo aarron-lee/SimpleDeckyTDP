@@ -22,9 +22,11 @@ export const useInitialState = (serverAPI: ServerAPI) => {
 
         const pollState = Boolean(get(result, 'result.pollEnabled'));
 
-        // logInfo(`intiialload result ${JSON.stringify(result)}`)
+        const tdpProfiles: undefined | { [profileName:string]: {tdp: number} } = get(result, 'result.tdpProfiles');
 
-        setInitialLoad({ minTdp, maxTdp, pollState })
+        logInfo(`intiialload result ${JSON.stringify(result)}`)
+
+        setInitialLoad({ minTdp, maxTdp, pollState, tdpProfiles })
       }
     })
   }, [])

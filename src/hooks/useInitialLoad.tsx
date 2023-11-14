@@ -1,12 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { updateInitialLoad, initialLoadSelector, TdpRangeState, allStateSelector } from '../redux-modules/settingsSlice';
+import { updateInitialLoad, initialLoadSelector, InitialStateType, allStateSelector } from '../redux-modules/settingsSlice';
+
+
+
 
 export const useInitialLoad = () => {
 	const dispatch = useDispatch()
 
 	return [
 	  useSelector(initialLoadSelector),
-	  ({minTdp, maxTdp, pollState }: TdpRangeState & { pollState: boolean }) => dispatch(updateInitialLoad({minTdp, maxTdp, pollState}))
+	  ({minTdp, maxTdp, pollState, tdpProfiles }: InitialStateType ) => dispatch(updateInitialLoad({minTdp, maxTdp, pollState, tdpProfiles}))
 	]
 }
 
