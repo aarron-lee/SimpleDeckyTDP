@@ -30,6 +30,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   tdpProfiles: TdpProfiles;
   currentGameId: string | undefined;
   gameDisplayNames: { [key: string]: string };
+  enableTdpProfiles: boolean;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -40,6 +41,7 @@ const initialState: SettingsState = {
   minTdp: 3,
   maxTdp: 15,
   initialLoad: true,
+  enableTdpProfiles: false,
   tdpProfiles: {
     default: {
       tdp: 12,
@@ -67,6 +69,8 @@ export const settingsSlice = createSlice({
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
       state.pollEnabled = action.payload.pollEnabled || false;
+      state.enableTdpProfiles =
+        action.payload.enableTdpProfiles || false;
       state.pollRate = action.payload.pollRate || 5000;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
@@ -86,6 +90,9 @@ export const settingsSlice = createSlice({
     },
     updatePollRate: (state, action: PayloadAction<number>) => {
       state.pollRate = action.payload;
+    },
+    setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
+      state.enableTdpProfiles = action.payload;
     },
     setPolling: (state, action: PayloadAction<boolean>) => {
       state.pollEnabled = action.payload;
@@ -132,6 +139,10 @@ export const currentGameDisplayNameSelector = (state: any) => {
   return state.settings.gameDisplayNames[currentGameId];
 };
 
+// enableTdpProfiles selectors
+export const tdpProfilesEnabled = (state: any) =>
+  state.settings.enableTdpProfiles;
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -141,6 +152,7 @@ export const {
   updatePollRate,
   setPolling,
   setCurrentGameInfo,
+  setEnableTdpProfiles,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

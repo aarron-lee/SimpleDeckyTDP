@@ -12,6 +12,7 @@ import { store } from './redux-modules/store';
 import { Provider } from 'react-redux';
 import { createServerApiHelpers } from './backend/utils';
 import { useInitialState } from './hooks/useInitialState';
+import { TdpProfiles } from './components/molecules/TdpProfiles';
 
 const Content: FC<{ serverAPI: ServerAPI }> = memo(
   ({ serverAPI }) => {
@@ -32,6 +33,7 @@ const Content: FC<{ serverAPI: ServerAPI }> = memo(
         {!loading && (
           <>
             <TdpSlider persistToSettings={setDefaultTdp} />
+            <TdpProfiles persistState={onFieldChange} />
             <TdpRange onFieldChange={onFieldChange} />
             <PollTdp persistPollState={onFieldChange} />
           </>

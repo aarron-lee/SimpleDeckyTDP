@@ -21,6 +21,7 @@ export const useInitialLoad = () => {
       pollEnabled,
       tdpProfiles,
       pollRate,
+      enableTdpProfiles,
     }: InitialStateType) =>
       dispatch(
         updateInitialLoad({
@@ -29,6 +30,7 @@ export const useInitialLoad = () => {
           pollEnabled,
           tdpProfiles,
           pollRate,
+          enableTdpProfiles,
         })
       ),
   ];
