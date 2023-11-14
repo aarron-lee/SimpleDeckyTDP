@@ -9,7 +9,7 @@ import { usePollInfo, useSetPoll, useSetPollRate } from '../../hooks/usePollStat
 import { range } from 'lodash';
 
 
-export function PollToggle({ persistPollState }: { persistPollState: any }) {
+export function PollToggle({ persistPollState, logInfo }: { persistPollState: any, logInfo?: any }) {
   const { enabled, pollRate } = usePollInfo()
   const setPoll = useSetPoll()
   const setPollRate = useSetPollRate()
@@ -18,7 +18,7 @@ export function PollToggle({ persistPollState }: { persistPollState: any }) {
     // persist to backend settings.json
     persistPollState('pollEnabled', enabled);
     persistPollState('pollRate', pollRate);
-  }, [enabled])
+  }, [enabled, pollRate])
 
   const dropdownOptions = range(1, 21).map(seconds => {
     return {
@@ -27,6 +27,8 @@ export function PollToggle({ persistPollState }: { persistPollState: any }) {
       value: seconds
     }
   })
+
+  logInfo && logInfo(pollRate)
 
   return  (<PanelSection title="Poll TDP">
     <PanelSectionRow>

@@ -78,12 +78,6 @@ export const settingsSlice = createSlice({
     setPolling: (state, action: PayloadAction<boolean>) => {
       state.pollEnabled = action.payload
     },
-    setSetting: (state, action: PayloadAction<{ key: string, value: any }) => {
-      const { key, value } = action.payload;
-      if(state[key]) {
-        state[key] = value
-      }
-    }
   },
 })
 

@@ -15,7 +15,7 @@ import { useInitialState } from './hooks/useInitialState'
 
 
 const Content: VFC<{ serverAPI: ServerAPI }> = memo(({serverAPI}) => {
-  const { setSetting, setDefaultTdp } = createServerApiHelpers(serverAPI)
+  const { setSetting, setDefaultTdp, logInfo } = createServerApiHelpers(serverAPI)
 
   const loading = useInitialState(serverAPI)
 
@@ -32,7 +32,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = memo(({serverAPI}) => {
      {!loading && <>
        <TdpSlider persistToSettings={setDefaultTdp}/>
        <TdpRange onFieldChange={onFieldChange} />
-       <PollToggle persistPollState={onFieldChange}/>
+       <PollToggle persistPollState={onFieldChange} logInfo={logInfo} />
        </>}
     </>
   );
