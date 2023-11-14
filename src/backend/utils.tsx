@@ -5,6 +5,7 @@ export enum ServerAPIMethods {
   GET_SETTINGS = 'get_settings',
   LOG_INFO = 'log_info',
   SET_TDP = 'set_tdp',
+  SAVE_TDP = 'save_tdp',
 }
 
 export const createLogInfo =
@@ -36,10 +37,20 @@ export const createGetSettings =
     );
   };
 
-export const createSetDefaultTdp =
+export const createSetTdp =
   (serverAPI: ServerAPI) => async (tdp: number) => {
     return await serverAPI.callPluginMethod(
       ServerAPIMethods.SET_TDP,
+      {
+        tdp,
+      }
+    );
+  };
+
+export const createSaveTdp =
+  (serverAPI: ServerAPI) => async (tdp: number) => {
+    return await serverAPI.callPluginMethod(
+      ServerAPIMethods.SAVE_TDP,
       {
         profileName: 'default',
         value: tdp,
@@ -52,6 +63,6 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
     getSettings: createGetSettings(serverAPI),
     setSetting: createSetSetting(serverAPI),
     logInfo: createLogInfo(serverAPI),
-    setDefaultTdp: createSetDefaultTdp(serverAPI),
+    saveTdp: createSaveTdp(serverAPI),
   };
 };
