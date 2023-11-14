@@ -1,4 +1,5 @@
 import os
+import shutil
 
 # The decky plugin module is located at decky-loader/plugin
 # For easy intellisense checkout the decky-loader code one directory up
@@ -10,8 +11,8 @@ import subprocess
 import glob
 import os
 
-RYZENADJ = "/usr/sbin/ryzenadj"
-SUDO = "/usr/bin/sudo"
+# bazzite
+# RYZENADJ = "/usr/sbin/ryzenadj"
 
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
@@ -68,12 +69,17 @@ class Plugin:
             # set tdp via ryzenadj
             tdp = value*1000
 
-            commands = [RYZENADJ, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
+            RYZENADJ_PATH = shutil.which('ryzenadj')
 
-            command = " ".join(commands)
-            results = os.system(command)
+            if RYZENADJ_PATH:
+                commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
 
-            return True
+                command = " ".join(commands)
+                results = os.system(command)
+
+                return True
+
+            return False
         except Exception as e:
             logging.error(e)
 
