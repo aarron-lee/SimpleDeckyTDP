@@ -64,5 +64,6 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
     setSetting: createSetSetting(serverAPI),
     logInfo: createLogInfo(serverAPI),
     saveTdp: createSaveTdp(serverAPI),
+    setTdp: createSetTdp(serverAPI),
   };
 };

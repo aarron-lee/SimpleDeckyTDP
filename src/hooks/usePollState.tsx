@@ -35,7 +35,8 @@ let intervalId: number | undefined;
 /// persists tdp to backend settings.json and sets up interval for polling
 export const usePollTdpEffect = (
   tdp: number,
-  persistToSettings: any
+  persistToSettings: any,
+  setTdp: (tdp: number) => void
 ) => {
   const { enabled: pollEnabled, pollRate } = usePollInfo();
 
@@ -47,7 +48,8 @@ export const usePollTdpEffect = (
       persistToSettings(tdp);
       if (pollEnabled && pollRate) {
         intervalId = window.setInterval(() => {
-          persistToSettings(tdp);
+          // setTdp via ryzenadj on backend
+          setTdp(tdp);
         }, pollRate);
       }
     }
