@@ -48,11 +48,11 @@ export const createSetTdp =
   };
 
 export const createSaveTdp =
-  (serverAPI: ServerAPI) => async (tdp: number) => {
+  (serverAPI: ServerAPI) => async (gameId: string, tdp: number) => {
     return await serverAPI.callPluginMethod(
       ServerAPIMethods.SAVE_TDP,
       {
-        profileName: 'default',
+        profileName: gameId,
         value: tdp,
       }
     );

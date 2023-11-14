@@ -16,8 +16,11 @@ import { TdpProfiles } from './components/molecules/TdpProfiles';
 
 const Content: FC<{ serverAPI: ServerAPI }> = memo(
   ({ serverAPI }) => {
-    const { setSetting, saveTdp, setTdp } =
-      createServerApiHelpers(serverAPI);
+    const {
+      setSetting,
+      saveTdp,
+      setTdp: setRyzenadjTdp,
+    } = createServerApiHelpers(serverAPI);
 
     const loading = useInitialState(serverAPI);
 
@@ -32,7 +35,10 @@ const Content: FC<{ serverAPI: ServerAPI }> = memo(
       <>
         {!loading && (
           <>
-            <TdpSlider saveTdp={saveTdp} setTdp={setTdp} />
+            <TdpSlider
+              saveTdp={saveTdp}
+              setRyzenadjTdp={setRyzenadjTdp}
+            />
             <TdpProfiles persistState={onFieldChange} />
             <TdpRange onFieldChange={onFieldChange} />
             <PollTdp persistPollState={onFieldChange} />

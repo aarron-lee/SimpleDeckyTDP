@@ -2,41 +2,46 @@ import {
   SliderField,
   PanelSection,
   PanelSectionRow,
-  TextField,
 } from 'decky-frontend-lib';
 import { useTdpRange } from '../../hooks/useTdpRange';
-import { useDefaultTdp } from '../../hooks/useTdpProfiles';
+import { useSetTdp } from '../../hooks/useTdpProfiles';
 import { usePollTdpEffect } from '../../hooks/usePollState';
 import { useSelector } from 'react-redux';
-import { currentGameDisplayNameSelector } from '../../redux-modules/settingsSlice';
-import { FC } from 'react';
+import { getCurrentTdpInfoSelector } from '../../redux-modules/settingsSlice';
+import { FC, useEffect } from 'react';
 
 export const TdpSlider: FC<{
-  saveTdp: (tdp: number) => void;
-  setTdp: (tdp: number) => void;
-}> = ({ saveTdp, setTdp }) => {
+  saveTdp: (gameId: string, tdp: number) => void;
+  setRyzenadjTdp: (tdp: number) => void;
+}> = ({ saveTdp, setRyzenadjTdp }) => {
   const [minTdp, maxTdp] = useTdpRange();
-  const [defaultTdp, setDefaultTdp] = useDefaultTdp();
-  const currentGame = useSelector(currentGameDisplayNameSelector);
+  const setReduxTdp = useSetTdp();
+  const { id, tdp, displayName } = useSelector(
+    getCurrentTdpInfoSelector
+  );
+  const title = Boolean(displayName)
+    ? `${displayName} TDP`
+    : `Default TDP`;
 
-  usePollTdpEffect(defaultTdp, saveTdp, setTdp);
+  useEffect(() => {
+    saveTdp(id, tdp);
+  }, [id, tdp]);
+
+  usePollTdpEffect(tdp, setRyzenadjTdp);
 
   return (
-    <PanelSection title="TDP">
+    <PanelSection title={title}>
       <PanelSectionRow>
         <SliderField
-          value={defaultTdp}
+          value={tdp}
           min={minTdp}
           max={maxTdp}
           step={1}
-          onChange={setDefaultTdp}
+          onChange={(newTdp) => setReduxTdp(id, newTdp)}
           notchTicksVisible
           showValue
         />
       </PanelSectionRow>
-      <PanelSection>
-        <TextField value={currentGame} disabled />
-      </PanelSection>
     </PanelSection>
   );
 };

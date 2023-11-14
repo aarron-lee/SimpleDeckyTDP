@@ -1,21 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
-  defaultTdpSelector,
   updateTdpProfiles,
   TdpProfiles,
 } from '../redux-modules/settingsSlice';
 
-export const useDefaultTdp = () => {
+export const useSetTdp = () => {
   const dispatch = useDispatch();
 
-  const dispatcher = (tdp: number) => {
+  const dispatcher = (gameId: string, tdp: number) => {
     const payload: TdpProfiles = {
-      default: {
+      [gameId]: {
         tdp,
       },
     };
     return dispatch(updateTdpProfiles(payload));
   };
 
-  return [useSelector(defaultTdpSelector), dispatcher];
+  return dispatcher;
 };

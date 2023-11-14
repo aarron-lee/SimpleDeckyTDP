@@ -152,10 +152,15 @@ export const getCurrentTdpInfoSelector = (state: any) => {
       // default if it doesn't exist yet
       defaultTdp
     );
-    return { id: currentGameId, tdp: gameTdp };
+    const displayName = get(
+      settings,
+      `gameDisplayNames.${currentGameId}`,
+      ''
+    );
+    return { id: currentGameId, tdp: gameTdp, displayName };
   } else {
     // tdp from default profile
-    return { id: 'default', defaultTdp };
+    return { id: 'default', tdp: defaultTdp, displayName: 'Default' };
   }
 };
 
