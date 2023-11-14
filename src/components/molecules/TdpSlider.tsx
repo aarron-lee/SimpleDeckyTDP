@@ -12,14 +12,14 @@ import { currentGameDisplayNameSelector } from '../../redux-modules/settingsSlic
 import { FC } from 'react';
 
 export const TdpSlider: FC<{
-  persistToSettings?: any;
+  saveTdp: (tdp: number) => void;
   setTdp: (tdp: number) => void;
-}> = ({ persistToSettings, setTdp }) => {
+}> = ({ saveTdp, setTdp }) => {
   const [minTdp, maxTdp] = useTdpRange();
   const [defaultTdp, setDefaultTdp] = useDefaultTdp();
   const currentGame = useSelector(currentGameDisplayNameSelector);
 
-  usePollTdpEffect(defaultTdp, persistToSettings, setTdp);
+  usePollTdpEffect(defaultTdp, saveTdp, setTdp);
 
   return (
     <PanelSection title="TDP">

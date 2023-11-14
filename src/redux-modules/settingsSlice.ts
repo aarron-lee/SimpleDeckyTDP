@@ -75,12 +75,6 @@ export const settingsSlice = createSlice({
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
-      if (action.payload.gameDisplayNames) {
-        merge(
-          state.gameDisplayNames,
-          action.payload.gameDisplayNames
-        );
-      }
     },
     updateTdpProfiles: (
       state,
@@ -142,12 +136,15 @@ export const currentGameDisplayNameSelector = (state: any) => {
 // enableTdpProfiles selectors
 export const tdpProfilesEnabled = (state: any) =>
   state.settings.enableTdpProfiles;
-export const getCurrentTdpSelector = (state: any) => {
+export const getCurrentTdpInfoSelector = (state: any) => {
   const { settings } = state;
   const defaultTdp = get(settings, 'tdpProfiles.default.tdp');
+  const { currentGameId } = settings;
 
-  if (settings.enableTdpProfiles) {
-    const { currentGameId } = settings;
+  if (
+    settings.enableTdpProfiles &&
+    `${currentGameId}` !== 'undefined'
+  ) {
     // tdp from game tdp profile
     const gameTdp = get(
       settings,
@@ -155,10 +152,10 @@ export const getCurrentTdpSelector = (state: any) => {
       // default if it doesn't exist yet
       defaultTdp
     );
-    return gameTdp;
+    return { id: currentGameId, tdp: gameTdp };
   } else {
     // tdp from default profile
-    return defaultTdp;
+    return { id: 'default', defaultTdp };
   }
 };
 
