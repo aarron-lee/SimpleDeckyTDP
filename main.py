@@ -72,17 +72,9 @@ class Plugin:
 
     async def set_tdp(self, tdp: int):
             # set tdp via ryzenadj
-            tdp = tdp*1000
+            return ryzenadj(tdp)
 
-            if RYZENADJ_PATH:
-                commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-                command = " ".join(commands)
-                results = os.system(command)
-
-                return True
-
-    async def save_tdp(self, profileName: str, value):
+    async def save_tdp(self, profileName: str, tdp):
         try:
             setting_file.read()
             if not setting_file.settings.get('tdpProfiles'):
@@ -91,23 +83,13 @@ class Plugin:
             if not tdp_profiles.get(profileName):
                 tdp_profiles[profileName] = {}
 
-            setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
+            setting_file.settings['tdpProfiles'][profileName]['tdp'] = tdp
             
             # save to settings file
             setting_file.commit()
 
             # set tdp via ryzenadj
-            tdp = value*1000
-
-            if RYZENADJ_PATH:
-                commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-                command = " ".join(commands)
-                results = os.system(command)
-
-                return True
-
-            return False
+            return ryzenadj(tdp)
         except Exception as e:
             logging.error(e)
 
