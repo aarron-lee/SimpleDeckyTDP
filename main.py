@@ -1,4 +1,5 @@
 import os
+import asyncio
 import shutil
 import decky_plugin
 import logging
@@ -6,6 +7,16 @@ import os
 from settings import SettingsManager
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
+
+def ryzenadj(tdp: int):
+    t = tdp*1000
+    if RYZENADJ_PATH:
+        commands = [RYZENADJ_PATH, '--stapm-limit', f"{t}", '--fast-limit', f"{t}", '--slow-limit', f"{t}"]
+
+        command = " ".join(commands)
+        results = os.system(command)
+        return True
+    return False
 
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
@@ -24,7 +35,6 @@ setting_file = SettingsManager(name="settings", settings_directory=settings_dire
 setting_file.read()
 
 class Plugin:
-    # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
     async def add(self, left, right):
         return left + right
 
@@ -85,9 +95,38 @@ class Plugin:
         except Exception as e:
             logging.error(e)
 
+    @asyncio.coroutine
+    async def watchdog(self):
+        logging.info('watchdog started')
+        poll_rate = 3
+
+        while True:
+            # do stuff
+            logging.info('loop!')
+
+            setting_file.read()
+
+            settings = setting_file.settings
+
+            if settings.get('pollEnabled'):
+                poll_rate = settings.get('pollRate')/1000
+                gameId = 'default'
+                tdpProfiles = settings.get('tdpProfiles', {})
+                tdpProfile = tdpProfiles.get(gameId, {})
+
+                tdp = tdpProfile.get('tdp', 12)
+
+                ryzenadj(tdp)
+
+            logging.info(settings)
+
+            await asyncio.sleep(poll_rate)
+
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
         decky_plugin.logger.info("Hello World!")
+        loop = asyncio.get_event_loop()
+        self._watch_task = loop.create_task(Plugin.watchdog(self))
 
     # Function called first during the unload process, utilize this to handle your plugin being removed
     async def _unload(self):

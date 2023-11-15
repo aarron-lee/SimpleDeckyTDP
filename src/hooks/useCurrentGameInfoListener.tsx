@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentGameInfo } from '../redux-modules/settingsSlice';
 
-let id: number | undefined;
+let id: any;
 
 function useInterval(callback: any, delay: number) {
   const savedCallback = useRef<any>();
@@ -22,7 +22,7 @@ function useInterval(callback: any, delay: number) {
       if (id) {
         clearInterval(id);
       }
-      id = window.setInterval(tick, delay);
+      id = setInterval(tick, delay);
       // return () => clearInterval(id);
     }
   }, [delay]);

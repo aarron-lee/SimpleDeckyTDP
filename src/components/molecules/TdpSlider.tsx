@@ -5,15 +5,13 @@ import {
 } from 'decky-frontend-lib';
 import { useTdpRange } from '../../hooks/useTdpRange';
 import { useSetTdp } from '../../hooks/useTdpProfiles';
-import { usePollTdpEffect } from '../../hooks/usePollState';
 import { useSelector } from 'react-redux';
 import { getCurrentTdpInfoSelector } from '../../redux-modules/settingsSlice';
 import { FC, useEffect } from 'react';
 
 export const TdpSlider: FC<{
   saveTdp: (gameId: string, tdp: number) => void;
-  setRyzenadjTdp: (tdp: number) => void;
-}> = ({ saveTdp, setRyzenadjTdp }) => {
+}> = ({ saveTdp }) => {
   const [minTdp, maxTdp] = useTdpRange();
   const setReduxTdp = useSetTdp();
   const { id, tdp, displayName } = useSelector(
@@ -27,8 +25,6 @@ export const TdpSlider: FC<{
   useEffect(() => {
     saveTdp(id, tdp);
   }, [id, tdp]);
-
-  usePollTdpEffect(tdp, setRyzenadjTdp);
 
   return (
     <PanelSection title={title}>

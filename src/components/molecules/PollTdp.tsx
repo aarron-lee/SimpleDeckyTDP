@@ -27,14 +27,13 @@ export function PollTdp({
     persistPollState('pollRate', pollRate);
   }, [enabled, pollRate]);
 
-  const dropdownOptions = range(1, 21).map((seconds) => {
+  const dropdownOptions = range(1, 6).map((seconds) => {
     return {
       data: seconds,
       label: `${seconds} seconds`,
       value: seconds,
     };
   });
-
 
   return (
     <PanelSection title="Poll TDP">
