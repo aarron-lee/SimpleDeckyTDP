@@ -29,27 +29,3 @@ export const useSetPoll = () => {
     return dispatch(setPolling(enabled));
   };
 };
-
-let intervalId: any;
-
-/// persists tdp to backend settings.json and sets up interval for polling
-export const usePollTdpEffect = (
-  tdp: number,
-  setTdp: (tdp: number) => void // sets tdp via ryzenadj, no saving of data
-) => {
-  const { enabled: pollEnabled, pollRate } = usePollInfo();
-
-  useEffect(() => {
-    if (tdp) {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-      if (pollEnabled && pollRate) {
-        intervalId = setInterval(() => {
-          // setTdp via ryzenadj on backend
-          setTdp(tdp);
-        }, pollRate);
-      }
-    }
-  }, [tdp, pollRate, pollEnabled]);
-};
