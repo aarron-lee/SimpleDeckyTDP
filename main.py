@@ -59,7 +59,6 @@ class Plugin:
     async def save_tdp(self, profileName: str, value):
         try:
             setting_file.read()
-            logging.info(setting_file.settings)
             if not setting_file.settings.get('tdpProfiles'):
                 setting_file.settings['tdpProfiles'] = {};
             tdp_profiles = setting_file.settings['tdpProfiles']

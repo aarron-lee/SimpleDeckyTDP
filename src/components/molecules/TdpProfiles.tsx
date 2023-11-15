@@ -10,7 +10,6 @@ export function TdpProfiles({
   persistState,
 }: {
   persistState: any;
-  logInfo?: any;
 }) {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] =
     useTdpProfilesEnabled();

@@ -8,7 +8,6 @@ type PropType = {
   description?: string;
   selected?: number;
   onChange: any;
-  logInfo?: any;
 };
 
 const TdpDropdown = ({
@@ -17,7 +16,6 @@ const TdpDropdown = ({
   description,
   selected,
   onChange,
-  logInfo,
 }: PropType) => {
   const [min, max] = tdpRange;
 
@@ -28,8 +26,6 @@ const TdpDropdown = ({
       value: tdpValue,
     };
   });
-
-  logInfo && logInfo(`selected ${selected}`);
 
   return (
     <DropdownItem

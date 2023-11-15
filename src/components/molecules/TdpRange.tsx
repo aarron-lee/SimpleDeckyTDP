@@ -5,16 +5,12 @@ import TdpDropdown from '../atoms/TdpDropdown';
 import { useMinTdp, useMaxTdp } from '../../hooks/useTdpRange';
 
 const TdpRange = ({
-  logInfo,
   onFieldChange,
 }: {
-  logInfo?: any;
   onFieldChange: any;
 }) => {
   const [minTdp, setMinTdp] = useMinTdp();
   const [maxTdp, setMaxTdp] = useMaxTdp();
-
-  logInfo && logInfo(`${minTdp} ${maxTdp}`);
 
   return (
     <PanelSection title="TDP Range">

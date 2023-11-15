@@ -14,10 +14,8 @@ import { range } from 'lodash';
 
 export function PollTdp({
   persistPollState,
-  logInfo,
 }: {
   persistPollState: any;
-  logInfo?: any;
 }) {
   const { enabled, pollRate } = usePollInfo();
   const setPoll = useSetPoll();
@@ -37,7 +35,6 @@ export function PollTdp({
     };
   });
 
-  logInfo && logInfo(pollRate);
 
   return (
     <PanelSection title="Poll TDP">
