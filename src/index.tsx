@@ -13,14 +13,11 @@ import { Provider } from 'react-redux';
 import { createServerApiHelpers } from './backend/utils';
 import { useInitialState } from './hooks/useInitialState';
 import { TdpProfiles } from './components/molecules/TdpProfiles';
+import { handleTdpPolling } from './handlePolling';
 
 const Content: FC<{ serverAPI: ServerAPI }> = memo(
   ({ serverAPI }) => {
-    const {
-      setSetting,
-      saveTdp,
-      setTdp: setRyzenadjTdp,
-    } = createServerApiHelpers(serverAPI);
+    const { setSetting, saveTdp } = createServerApiHelpers(serverAPI);
 
     const loading = useInitialState(serverAPI);
 
@@ -35,10 +32,7 @@ const Content: FC<{ serverAPI: ServerAPI }> = memo(
       <>
         {!loading && (
           <>
-            <TdpSlider
-              saveTdp={saveTdp}
-              setRyzenadjTdp={setRyzenadjTdp}
-            />
+            <TdpSlider saveTdp={saveTdp} />
             <TdpProfiles persistState={onFieldChange} />
             <TdpRange onFieldChange={onFieldChange} />
             <PollTdp persistPollState={onFieldChange} />
@@ -60,9 +54,16 @@ const ContentContainer: FC<{ serverAPI: ServerAPI }> = ({
 };
 
 export default definePlugin((serverApi: ServerAPI) => {
+  const result = handleTdpPolling(serverApi);
+
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
+    onDismount: () => {
+      if (result) {
+        result.then((cleanup) => cleanup());
+      }
+    },
   };
 });

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentGameInfo } from '../redux-modules/settingsSlice';
 
-let id: number | undefined;
+let id: any;
 
 function useInterval(callback: any, delay: number) {
   const savedCallback = useRef<any>();
@@ -19,12 +19,11 @@ function useInterval(callback: any, delay: number) {
       savedCallback.current && savedCallback.current();
     }
     if (delay !== null) {
-      if (id) {
-        clearInterval(id);
-      }
-      id = window.setInterval(tick, delay);
-      // return () => clearInterval(id);
+      id = setInterval(tick, delay);
     }
+    return () => {
+      if (id) clearInterval(id);
+    };
   }, [delay]);
 }
 
@@ -39,5 +38,5 @@ export const useCurrentGameInfoListener = () => {
       }`,
     };
     dispatch(setCurrentGameInfo(results));
-  }, 2000);
+  }, 500);
 };

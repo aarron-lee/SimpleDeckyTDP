@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { get, merge } from 'lodash';
+import {
+  DEFAULT_POLL_RATE,
+  DEFAULT_START_TDP,
+} from '../utils/constants';
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -44,11 +48,11 @@ const initialState: SettingsState = {
   enableTdpProfiles: false,
   tdpProfiles: {
     default: {
-      tdp: 12,
+      tdp: DEFAULT_START_TDP,
     },
   },
   pollEnabled: false,
-  pollRate: 5000, // milliseconds
+  pollRate: DEFAULT_POLL_RATE, // milliseconds
 };
 
 export const settingsSlice = createSlice({
