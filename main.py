@@ -1,9 +1,12 @@
+import subprocess
 import os
 import asyncio
 import shutil
 import decky_plugin
+from pathlib import Path
 import logging
 import os
+
 from settings import SettingsManager
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
@@ -28,6 +31,19 @@ try:
         force = True)
 except Exception as e:
     logging.error(f"exception|{e}")
+
+def in_game_mode():
+    cmd = "cat /proc/*/comm | grep gamescope-ses*"
+    output = subprocess.Popen(cmd,
+                              stdout=subprocess.PIPE,
+                              encoding='utf-8',
+                              shell=True
+                            ).communicate()[0]
+    running_gamescope = len(output.strip()) > 0
+    if(running_gamescope):
+        return True
+    
+    return False
 
 settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
 settings_path = os.path.join(settings_directory, 'settings.json')
@@ -97,30 +113,37 @@ class Plugin:
 
     @asyncio.coroutine
     async def watchdog(self):
+
         logging.info('watchdog started')
         poll_rate = 3
+        gamescope_session_is_running = in_game_mode()
 
-        while True:
-            # do stuff
-            logging.info('loop!')
+        try:
+            while gamescope_session_is_running:
+                gamescope_session_is_running = in_game_mode()
+                # do stuff
+                logging.info('loop!')
 
-            setting_file.read()
+                setting_file.read()
 
-            settings = setting_file.settings
+                settings = setting_file.settings
 
-            if settings.get('pollEnabled'):
-                poll_rate = settings.get('pollRate')/1000
-                gameId = 'default'
-                tdpProfiles = settings.get('tdpProfiles', {})
-                tdpProfile = tdpProfiles.get(gameId, {})
+                if settings.get('pollEnabled'):
+                    poll_rate = settings.get('pollRate')/1000
+                    gameId = 'default'
+                    tdpProfiles = settings.get('tdpProfiles', {})
+                    tdpProfile = tdpProfiles.get(gameId, {})
 
-                tdp = tdpProfile.get('tdp', 12)
+                    tdp = tdpProfile.get('tdp', 12)
 
-                ryzenadj(tdp)
+                    ryzenadj(tdp)
 
-            logging.info(settings)
+                logging.info(settings)
 
-            await asyncio.sleep(poll_rate)
+                await asyncio.sleep(poll_rate)
+            logging.info("gamescope-session no longer running")
+        except Exception as e:
+            logging.error(e)
 
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
