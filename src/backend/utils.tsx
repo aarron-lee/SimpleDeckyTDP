@@ -54,7 +54,7 @@ export const createSaveTdp =
       ServerAPIMethods.SAVE_TDP,
       {
         profileName: gameId,
-        value: tdp,
+        tdp,
       }
     );
   };

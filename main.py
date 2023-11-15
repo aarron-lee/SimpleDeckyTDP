@@ -21,6 +21,11 @@ def ryzenadj(tdp: int):
         return True
     return False
 
+def extract_tdp_from_settings(gameId, settings):
+    tdpProfiles = settings.get('tdpProfiles', {})
+    tdpProfile = tdpProfiles.get(gameId, {})
+    return tdpProfile["tdp"]
+
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
     logging.basicConfig(
@@ -87,8 +92,6 @@ class Plugin:
             
             # save to settings file
             setting_file.commit()
-
-            logging.info(f"saved {gameId}")
         except Exception as e:
             logging.error(e)
 
@@ -129,15 +132,20 @@ class Plugin:
 
                     if settings.get('pollEnabled'):
                         poll_rate = settings.get('pollRate')/1000
-                        gameId = 'default'
-                        tdpProfiles = settings.get('tdpProfiles', {})
-                        tdpProfile = tdpProfiles.get(gameId, {})
 
-                        tdp = tdpProfile.get('tdp', 12)
+                        tdp_profiles_enabled = settings.get('enableTdpProfiles', False)
+                        current_game_id = settings.get('currentGameId', 'default')
 
-                        ryzenadj(tdp)
+                        default_tdp = extract_tdp_from_settings('default', settings) or 12
 
-                    logging.info(settings)
+                        if tdp_profiles_enabled and current_game_id:
+                            # tdp from game tdp profile
+                            game_tdp = extract_tdp_from_settings(current_game_id, settings) or default_tdp
+
+                            ryzenadj(game_tdp)
+                        else:
+                            # tdp from default profile
+                            ryzenadj(default_tdp)
 
                     await asyncio.sleep(poll_rate)
                 else:
