@@ -1,42 +1,70 @@
-# React-Frontend Plugin Template [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://deckbrew.xyz/discord)
+# SimpleDeckyTDP
 
-Reference example for using [decky-frontend-lib](https://github.com/SteamDeckHomebrew/decky-frontend-lib) in a [decky-loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin.
+This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
-### **Please also refer to the [wiki](https://wiki.deckbrew.xyz/en/user-guide/home#plugin-development) for important information on plugin development and submissions/updates. currently documentation is split between this README and the wiki which is something we are hoping to rectify in the future.**  
+## Requirements
 
-## Developers
+### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
-### Dependencies
+To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
-This template relies on the user having Node.js v16.14+ and `pnpm` (v8.5.1) installed on their system.  
-Please make sure to install pnpm v8.5.1 to prevent issues with CI during plugin submission.  
-`pnpm` can be downloaded from `npm` itself which is recommended.
+e.g.
 
-#### Linux
-
-```bash
-sudo npm i -g pnpm@8.5.1
+```
+$ which ryzenadj
+/usr/bin/ryzenadj
 ```
 
-If you would like to build plugins that have their own custom backends, Docker is required as it is used by the Decky CLI tool.
+If not have ryzenadj installed, you will need to get a working copy installed onto your machine.
 
+To test your ryzenadj to make sure that it's functional, run the following:
 
+```
+$ sudo ryzenadj -i
+```
 
-### Making your own plugin
+This should print out a table that looks something like the following:
 
-If you use VSCode or it's derivatives (we suggest [VSCodium](https://vscodium.com/)!) just run the `setup` and `build` tasks. It's really that simple.
+```
+CPU Family: Rembrandt
+SMU BIOS Interface Version: 18
+Version: v0.13.0 
+PM Table Version: 450005
+|        Name         |   Value   |     Parameter      |
+|---------------------|-----------|--------------------|
+| STAPM LIMIT         |     8.000 | stapm-limit        |
+| STAPM VALUE         |     0.062 |                    |
+```
 
-1. You can fork this repo or utilize the "Use this template" button on Github.
-2. In your local fork/own plugin-repository run these commands:
-   1. ``pnpm i``
-   2. ``pnpm run build``
-   - These setup pnpm and build the frontend code for testing.
-3. Consult the [decky-frontend-lib](https://github.com/SteamDeckHomebrew/decky-frontend-lib) repository for ways to accomplish your tasks.
-   - Documentation and examples are still rough, 
-   - While decky-loader primarily targets Steam Deck hardware so keep this in mind when developing your plugin.
-4. Run the `setup` and `build` and `deploy` vscode tasks, or you can derive your own makefile or just manually utilize the scripts for these commands as you see fit.
+If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your machine.
 
-If you use VSCode or it's derivatives (we suggest [VSCodium](https://vscodium.com/)!) just run the `setup` and `build` tasks. It's really that simple.
+## Dependencies:
+
+- Node.js v16.14+ and pnpm installed
+- fully functional ryzenadj
+
+## Manual build + install
+
+```bash
+git clone https://github.com/aarron-lee/SimpleDeckyTDP.git
+
+cd SimpleDeckyTDP
+
+# if pnpm not already installed
+npm install -g pnpm
+
+pnpm install
+pnpm update decky-frontend-lib --latest
+pnpm run build
+```
+
+Afterwards, you can place the entire `SimpleDeckyTDP` folder in the `~/homebrew/plugins` directly, then restart your plugin service
+
+```bash
+sudo systemctl restart plugin_loader.service
+
+sudo systemctl reboot
+```
 
 #### Other important information
 

@@ -1,7 +1,7 @@
 {
   "name": "decky-plugin-template",
   "version": "0.0.1",
-  "description": "A template to quickly create decky plugins from scratch, based on TypeScript and webpack",
+  "description": "Very simple RyzenAdj Decky plugin",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
     "watch": "rollup -c -w",
