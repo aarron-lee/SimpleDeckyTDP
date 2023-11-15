@@ -73,6 +73,24 @@ class Plugin:
     async def set_tdp(self, tdp: int):
             # set tdp via ryzenadj
             return ryzenadj(tdp)
+    
+    # async def save_current_game_info(self, changes):#gameId: str, displayName: str):
+    async def save_current_game_info(self, gameId: str, displayName: str):
+        try:
+            setting_file.read()
+
+            setting_file.settings['currentGameId'] = gameId
+            if not setting_file.settings.get('gameDisplayNames'):
+                setting_file.settings['gameDisplayNames'] = {};
+
+            setting_file.settings['gameDisplayNames'][gameId] = displayName
+            
+            # save to settings file
+            setting_file.commit()
+
+            logging.info(f"saved {gameId}")
+        except Exception as e:
+            logging.error(e)
 
     async def save_tdp(self, profileName: str, tdp):
         try:
@@ -104,8 +122,6 @@ class Plugin:
             while True:
                 if gamescope_session_is_running:
                     gamescope_session_is_running = in_game_mode()
-                    # do stuff
-                    logging.info('loop!')
 
                     setting_file.read()
 
@@ -133,12 +149,15 @@ class Plugin:
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
         decky_plugin.logger.info("Hello World!")
-        loop = asyncio.get_event_loop()
-        self._watch_task = loop.create_task(Plugin.watchdog(self))
+        setting_file.setSetting('currentGameId', 'default')
+        self._loop = asyncio.get_event_loop()
+        self._watch_task = self._loop.create_task(Plugin.watchdog(self))
 
     # Function called first during the unload process, utilize this to handle your plugin being removed
     async def _unload(self):
         decky_plugin.logger.info("Goodbye World!")
+        self._watch_task.cancel()
+        self._loop.close()
         pass
 
     # Migrations that should be performed before entering `_main()`.

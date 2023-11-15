@@ -19,12 +19,13 @@ function useInterval(callback: any, delay: number) {
       savedCallback.current && savedCallback.current();
     }
     if (delay !== null) {
+      id = setInterval(tick, delay);
+    }
+    return () => {
       if (id) {
         clearInterval(id);
       }
-      id = setInterval(tick, delay);
-      // return () => clearInterval(id);
-    }
+    };
   }, [delay]);
 }
 

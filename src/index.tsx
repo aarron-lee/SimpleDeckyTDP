@@ -2,6 +2,7 @@ import {
   definePlugin,
   ServerAPI,
   staticClasses,
+  Router,
 } from 'decky-frontend-lib';
 import { FC, memo } from 'react';
 import { FaShip } from 'react-icons/fa';
@@ -52,10 +53,27 @@ const ContentContainer: FC<{ serverAPI: ServerAPI }> = ({
   );
 };
 
+let intervalId: any;
+
 export default definePlugin((serverApi: ServerAPI) => {
+  const { logInfo, saveCurrentGameInfo } =
+    createServerApiHelpers(serverApi);
+
+  intervalId = setInterval(() => {
+    const id = `${Router.MainRunningApp?.appid || 'default'}`;
+    const displayName = `${
+      Router.MainRunningApp?.display_name || 'default'
+    }`;
+    logInfo(`frontend detect ${id} ${displayName}`);
+    saveCurrentGameInfo(id, displayName);
+  }, 1500);
+
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
+    onDismount() {
+      if (intervalId) clearInterval(intervalId);
+    },
   };
 });

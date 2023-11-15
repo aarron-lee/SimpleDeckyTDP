@@ -6,6 +6,7 @@ export enum ServerAPIMethods {
   LOG_INFO = 'log_info',
   SET_TDP = 'set_tdp',
   SAVE_TDP = 'save_tdp',
+  SAVE_CURRENT_GAME_INFO = 'save_current_game_info',
 }
 
 export const createLogInfo =
@@ -58,6 +59,18 @@ export const createSaveTdp =
     );
   };
 
+export const createSaveCurrentGameInfo =
+  (serverAPI: ServerAPI) =>
+  async (gameId: string, displayName: string) => {
+    return await serverAPI.callPluginMethod(
+      ServerAPIMethods.SAVE_CURRENT_GAME_INFO,
+      {
+        gameId,
+        displayName,
+      }
+    );
+  };
+
 export const createServerApiHelpers = (serverAPI: ServerAPI) => {
   return {
     getSettings: createGetSettings(serverAPI),
@@ -65,5 +78,6 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
     logInfo: createLogInfo(serverAPI),
     saveTdp: createSaveTdp(serverAPI),
     setTdp: createSetTdp(serverAPI),
+    saveCurrentGameInfo: createSaveCurrentGameInfo(serverAPI),
   };
 };
