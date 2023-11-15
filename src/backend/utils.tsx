@@ -7,6 +7,7 @@ export enum ServerAPIMethods {
   SET_TDP = 'set_tdp',
   SAVE_TDP = 'save_tdp',
   SAVE_CURRENT_GAME_INFO = 'save_current_game_info',
+  GET_IN_GAME_MODE = 'get_in_game_mode',
 }
 
 export const createLogInfo =
@@ -34,6 +35,14 @@ export const createGetSettings =
   (serverAPI: ServerAPI) => async () => {
     return await serverAPI.callPluginMethod(
       ServerAPIMethods.GET_SETTINGS,
+      {}
+    );
+  };
+
+export const createIsGameMode =
+  (serverAPI: ServerAPI) => async () => {
+    return await serverAPI.callPluginMethod(
+      ServerAPIMethods.GET_IN_GAME_MODE,
       {}
     );
   };

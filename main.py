@@ -69,6 +69,12 @@ class Plugin:
         except Exception as e:
             logging.error(e)
 
+    async def get_in_game_mode(self):
+        try:
+            return in_game_mode()
+        except Exception as e:
+            logging.error(e)
+
     async def set_setting(self, name: str, value):
         try:
             return setting_file.setSetting(name, value)
