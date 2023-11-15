@@ -2,6 +2,8 @@
 
 This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
+![plugin image](./img/plugin_img.png)
+
 ## Requirements
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
