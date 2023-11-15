@@ -101,29 +101,32 @@ class Plugin:
         gamescope_session_is_running = in_game_mode()
 
         try:
-            while gamescope_session_is_running:
-                gamescope_session_is_running = in_game_mode()
-                # do stuff
-                logging.info('loop!')
+            while True:
+                if gamescope_session_is_running:
+                    gamescope_session_is_running = in_game_mode()
+                    # do stuff
+                    logging.info('loop!')
 
-                setting_file.read()
+                    setting_file.read()
 
-                settings = setting_file.settings
+                    settings = setting_file.settings
 
-                if settings.get('pollEnabled'):
-                    poll_rate = settings.get('pollRate')/1000
-                    gameId = 'default'
-                    tdpProfiles = settings.get('tdpProfiles', {})
-                    tdpProfile = tdpProfiles.get(gameId, {})
+                    if settings.get('pollEnabled'):
+                        poll_rate = settings.get('pollRate')/1000
+                        gameId = 'default'
+                        tdpProfiles = settings.get('tdpProfiles', {})
+                        tdpProfile = tdpProfiles.get(gameId, {})
 
-                    tdp = tdpProfile.get('tdp', 12)
+                        tdp = tdpProfile.get('tdp', 12)
 
-                    ryzenadj(tdp)
+                        ryzenadj(tdp)
 
-                logging.info(settings)
+                    logging.info(settings)
 
-                await asyncio.sleep(poll_rate)
-            logging.info("gamescope-session no longer running")
+                    await asyncio.sleep(poll_rate)
+                else:
+                    logging.info("gamescope-session no longer running. entering slower sleep cycles")
+                    await asyncio.sleep(15)
         except Exception as e:
             logging.error(e)
 
