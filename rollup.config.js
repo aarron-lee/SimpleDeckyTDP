@@ -35,4 +35,5 @@ export default defineConfig({
     format: 'iife',
     exports: 'default',
   },
+  onwarn: () => undefined
 });

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Very simple RyzenAdj Decky plugin",
   "scripts": {
-    "build": "shx rm -rf dist && rollup -c",
+    "build": "shx rm -rf dist && rollup -c --silent",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

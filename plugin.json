@@ -1,7 +1,7 @@
 {
   "name": "SimpleDeckyTDP",
   "author": "Aarron Lee",
-  "flags": ["root", "debug"],
+  "flags": ["root"],
   "publish": {
     "tags": ["tdp", "root", "non-deck"],
     "description": "Simple TDP slider for non-Deck PC handhelds",
