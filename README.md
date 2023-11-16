@@ -4,13 +4,18 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
 ![plugin image](./img/plugin_img.png)
 
+## Compatibility
+
+Tested on ChimeraOS Stable (44-1 and 43-1) and Bazzite Deck Edition.
+
+Currently has issues on ChimeraOS unstable, other distros are not tested yet.
+
+However, Bazzite may require you to configure `iomem=relaxed` as an additional kernel parameter.
+
 ## Requirements
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
-ChimeraOS and Bazzite Deck Edition should already have ryzenadj installed.
-
-However, Bazzite may require you to configure `iomem=relaxed` as an additional kernel parameter.
 
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
