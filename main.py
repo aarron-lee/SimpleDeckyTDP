@@ -1,4 +1,5 @@
-import os
+# import os
+import subprocess
 import shutil
 import decky_plugin
 import logging
@@ -17,6 +18,16 @@ try:
         force = True)
 except Exception as e:
     logging.error(f"exception|{e}")
+
+
+def ryzenadj(tdp: int):
+    tdp = tdp*1000
+
+    if RYZENADJ_PATH:
+        commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
+
+        results = subprocess.call(commands)
+        return results
 
 settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
 settings_path = os.path.join(settings_directory, 'settings.json')
@@ -51,10 +62,25 @@ class Plugin:
             if RYZENADJ_PATH:
                 commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
 
-                command = " ".join(commands)
-                results = os.system(command)
+                # command = " ".join(commands)
+                # results = os.system(command)
+                results = subprocess.call(commands)
 
                 return True
+            
+    async def set_poll_tdp(self, currentGameId: str):
+            setting_file.read()
+            settings = setting_file.settings
+
+            default_tdp = settings.get('tdpProfiles', {}).get('default', {}).get('tdp', 12)
+
+            if settings.get('enableTdpProfiles'):
+                game_tdp = settings.get('tdpProfiles', {}).get(currentGameId, {}).get('tdp', default_tdp)
+                ryzenadj(game_tdp)
+            else:
+                ryzenadj(default_tdp)
+
+            return True            
 
     async def save_tdp(self, profileName: str, value):
         try:
@@ -76,8 +102,9 @@ class Plugin:
             if RYZENADJ_PATH:
                 commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
 
-                command = " ".join(commands)
-                results = os.system(command)
+                # command = " ".join(commands)
+                # results = os.system(command)
+                reesults = subprocess.call(commands)
 
                 return True
 

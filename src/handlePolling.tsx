@@ -9,29 +9,36 @@ import {
 // this interval polls ryzenadj
 let pollTdpIntervalId: any;
 let previousPollRate: number | undefined;
+let previousGameId: string | undefined;
 
 // this interval periodically checks for if TDP polling is enabled on the backed
 let handlePollingIntervalId: any;
 
 export const handleTdpPolling = async (serverAPI: ServerAPI) => {
-  const { getSettings, setTdp: ryzenadj } =
+  const { getSettings, setPollTdp } =
     createServerApiHelpers(serverAPI);
 
   handlePollingIntervalId = setInterval(() => {
     getSettings().then((result) => {
       const settings = result.result || {};
 
+      const currentGameId = `${
+        Router.MainRunningApp?.appid || 'default'
+      }`;
+
       if (
         settings['pollEnabled'] &&
-        settings['pollRate'] !== previousPollRate
+        (settings['pollRate'] !== previousPollRate ||
+          currentGameId !== previousGameId)
       ) {
         // polling TDP is enabled, handle for it
+        previousGameId = currentGameId;
 
         if (pollTdpIntervalId) {
           clearInterval(pollTdpIntervalId);
         }
 
-        pollTdp(settings, ryzenadj);
+        pollTdp(settings, setPollTdp);
       } else if (!settings['pollEnabled']) {
         if (pollTdpIntervalId) {
           clearInterval(pollTdpIntervalId);
@@ -49,7 +56,10 @@ export const handleTdpPolling = async (serverAPI: ServerAPI) => {
   };
 };
 
-function pollTdp(settings: any, ryzenadj: (tdp: number) => void) {
+function pollTdp(
+  settings: any,
+  setPollTdp: (gameId: string) => void
+) {
   previousPollRate = settings.pollRate;
 
   if (pollTdpIntervalId) {
@@ -57,27 +67,10 @@ function pollTdp(settings: any, ryzenadj: (tdp: number) => void) {
   }
 
   pollTdpIntervalId = setInterval(() => {
-    const defaultTdp = get(
-      settings,
-      'tdpProfiles.default.tdp',
-      DEFAULT_START_TDP
-    );
     const currentGameId = `${
       Router.MainRunningApp?.appid || 'default'
     }`;
 
-    if (settings.enableTdpProfiles) {
-      // tdp from game tdp profile
-      const gameTdp = get(
-        settings,
-        `tdpProfiles.${currentGameId}.tdp`,
-        // default if it doesn't exist yet
-        defaultTdp
-      );
-
-      ryzenadj(gameTdp);
-    } else {
-      ryzenadj(defaultTdp);
-    }
+    setPollTdp(currentGameId);
   }, settings.pollRate || DEFAULT_POLL_RATE);
 }
