@@ -8,6 +8,10 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
+ChimeraOS and Bazzite Deck Edition should already have ryzenadj installed.
+
+However, Bazzite may require you to configure `iomem=relaxed` as an additional kernel parameter.
+
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
 e.g.
@@ -44,7 +48,7 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 Download the latest release from the [releases page](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
-Unzip the `tar.gz` file, and move the `SimpleDeckyTDP` folder to your `~/homebrew/plugins` directory
+Unzip the `tar.gz` file, and move the `SimpleDeckyTDP` folder to your `$HOME/homebrew/plugins` directory
 
 then run:
 
