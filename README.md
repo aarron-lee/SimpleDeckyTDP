@@ -17,7 +17,7 @@ $ which ryzenadj
 /usr/bin/ryzenadj
 ```
 
-If not have ryzenadj installed, you will need to get a working copy installed onto your machine.
+If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
 
 To test your ryzenadj to make sure that it's functional, run the following:
 
@@ -38,7 +38,7 @@ PM Table Version: 450005
 | STAPM VALUE         |     0.062 |                    |
 ```
 
-If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your machine.
+If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel.
 
 # Install
 
