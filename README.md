@@ -6,11 +6,11 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
 ## Compatibility
 
-Tested on ChimeraOS Stable (44-1 and 43-1) and Bazzite Deck Edition.
+Tested on ChimeraOS Stable (44-1 and 43-1), ChimeraOS 45 unstable, and Bazzite Deck Edition.
 
-Currently has issues on ChimeraOS unstable, other distros are not tested yet.
+Other distros not tested.
 
-However, Bazzite may require you to configure `iomem=relaxed` as an additional kernel parameter.
+Bazzite may require you to configure `iomem=relaxed` as an additional kernel parameter.
 
 ## Requirements
 
