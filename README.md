@@ -46,6 +46,14 @@ Download the latest release from the [releases page](https://github.com/aarron-l
 
 Unzip the `tar.gz` file, and move the `SimpleDeckyTDP` folder to your `~/homebrew/plugins` directory
 
+then run:
+
+```
+sudo systemctl restart plugin_loader.service
+```
+
+then reboot your machine.
+
 ## Manual build
 
 Dependencies:
