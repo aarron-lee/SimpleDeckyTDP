@@ -4,6 +4,7 @@ import { get, merge } from 'lodash';
 import {
   DEFAULT_POLL_RATE,
   DEFAULT_START_TDP,
+  extractCurrentGameId,
 } from '../utils/constants';
 
 type Partial<T> = {
@@ -79,6 +80,7 @@ export const settingsSlice = createSlice({
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
+      state.currentGameId = extractCurrentGameId()
     },
     updateTdpProfiles: (
       state,

@@ -1,9 +1,8 @@
 import { ServerAPI, Router } from 'decky-frontend-lib';
 import { createServerApiHelpers } from './backend/utils';
-import { get } from 'lodash';
 import {
-  DEFAULT_POLL_RATE,
-  DEFAULT_START_TDP,
+  DEFAULT_POLL_RATE, extractCurrentGameId,
+  // DEFAULT_START_TDP,
 } from './utils/constants';
 
 // this interval polls ryzenadj
@@ -22,9 +21,7 @@ export const handleTdpPolling = async (serverAPI: ServerAPI) => {
     getSettings().then((result) => {
       const settings = result.result || {};
 
-      const currentGameId = `${
-        Router.MainRunningApp?.appid || 'default'
-      }`;
+      const currentGameId = extractCurrentGameId()
 
       if (
         settings['pollEnabled'] &&
