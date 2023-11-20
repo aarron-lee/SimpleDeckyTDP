@@ -57,16 +57,7 @@ class Plugin:
 
     async def set_tdp(self, tdp: int):
             # set tdp via ryzenadj
-            tdp = tdp*1000
-
-            if RYZENADJ_PATH:
-                commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-                # command = " ".join(commands)
-                # results = os.system(command)
-                results = subprocess.call(commands)
-
-                return True
+            return ryzenadj(tdp)
             
     async def set_poll_tdp(self, currentGameId: str):
             setting_file.read()
@@ -97,18 +88,7 @@ class Plugin:
             setting_file.commit()
 
             # set tdp via ryzenadj
-            tdp = value*1000
-
-            if RYZENADJ_PATH:
-                commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-                # command = " ".join(commands)
-                # results = os.system(command)
-                reesults = subprocess.call(commands)
-
-                return True
-
-            return False
+            return ryzenadj(value)
         except Exception as e:
             logging.error(e)
 
