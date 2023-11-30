@@ -7,15 +7,15 @@ import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
 import { createServerApiHelpers, saveServerApi } from "./backend/utils";
-import { useInitialState } from "./hooks/useInitialState";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
-import { handleTdpPolling } from "./handlePolling";
+import { currentGameInfoListener, handleTdpPolling } from "./handlePolling";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
+import { useIsInitiallyLoading } from "./hooks/useInitialState";
 
 const Content: FC<{ serverAPI: ServerAPI }> = memo(({ serverAPI }) => {
   const { setSetting, saveTdp } = createServerApiHelpers(serverAPI);
 
-  const loading = useInitialState();
+  const loading = useIsInitiallyLoading();
 
   const onFieldChange = async (
     fieldName: string,
@@ -64,6 +64,8 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
+  const onUnmount = currentGameInfoListener();
+
   const result = handleTdpPolling(serverApi);
 
   return {
@@ -74,6 +76,7 @@ export default definePlugin((serverApi: ServerAPI) => {
       if (result) {
         result.then((cleanup) => cleanup());
       }
+      if (onUnmount) onUnmount();
     },
   };
 });
