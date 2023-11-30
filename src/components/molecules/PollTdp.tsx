@@ -3,29 +3,18 @@ import {
   PanelSection,
   PanelSectionRow,
   DropdownItem,
-} from 'decky-frontend-lib';
-import { useEffect } from 'react';
+} from "decky-frontend-lib";
 import {
   usePollInfo,
   useSetPoll,
   useSetPollRate,
-} from '../../hooks/usePollState';
-import { range } from 'lodash';
+} from "../../hooks/usePollState";
+import { range } from "lodash";
 
-export function PollTdp({
-  persistPollState,
-}: {
-  persistPollState: any;
-}) {
+export function PollTdp() {
   const { enabled, pollRate } = usePollInfo();
   const setPoll = useSetPoll();
   const setPollRate = useSetPollRate();
-
-  useEffect(() => {
-    // persist to backend settings.json
-    persistPollState('pollEnabled', enabled);
-    persistPollState('pollRate', pollRate);
-  }, [enabled, pollRate]);
 
   const dropdownOptions = range(1, 21).map((seconds) => {
     return {
@@ -34,7 +23,6 @@ export function PollTdp({
       value: seconds,
     };
   });
-
 
   return (
     <PanelSection title="Poll TDP">

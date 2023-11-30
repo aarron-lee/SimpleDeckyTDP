@@ -2,8 +2,10 @@ import { Dispatch } from "redux";
 import { RootState } from "./store";
 import {
   setEnableTdpProfiles,
+  setPolling,
   updateMaxTdp,
   updateMinTdp,
+  updatePollRate,
 } from "./settingsSlice";
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -33,6 +35,20 @@ export const settingsMiddleware =
     if (action.type === updateMaxTdp.type) {
       setSetting({
         fieldName: "maxTdp",
+        fieldValue: action.payload,
+      });
+    }
+    if (action.type === updatePollRate.type) {
+      // action.type == number (rate in ms)
+      setSetting({
+        fieldName: "pollRate",
+        fieldValue: action.payload,
+      });
+    }
+    if (action.type === setPolling.type) {
+      // action.type = boolean
+      setSetting({
+        fieldName: "pollEnabled",
         fieldValue: action.payload,
       });
     }
