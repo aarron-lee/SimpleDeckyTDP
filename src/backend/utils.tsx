@@ -1,4 +1,4 @@
-import { Router, ServerAPI } from "decky-frontend-lib";
+import { ServerAPI } from "decky-frontend-lib";
 
 export enum ServerAPIMethods {
   SET_SETTING = "set_setting",
