@@ -1,14 +1,10 @@
 // tdp range
 // import { useEffect } from 'react'
-import { PanelSection, PanelSectionRow } from 'decky-frontend-lib';
-import TdpDropdown from '../atoms/TdpDropdown';
-import { useMinTdp, useMaxTdp } from '../../hooks/useTdpRange';
+import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
+import TdpDropdown from "../atoms/TdpDropdown";
+import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
 
-const TdpRange = ({
-  onFieldChange,
-}: {
-  onFieldChange: any;
-}) => {
+const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
   const [maxTdp, setMaxTdp] = useMaxTdp();
 
@@ -21,7 +17,6 @@ const TdpRange = ({
           selected={minTdp}
           onChange={({ data: value }: { data: number }) => {
             setMinTdp(value);
-            onFieldChange('minTdp', value);
           }}
         />
       </PanelSectionRow>
@@ -33,7 +28,6 @@ const TdpRange = ({
           selected={maxTdp}
           onChange={({ data: value }: { data: number }) => {
             setMaxTdp(value);
-            onFieldChange('maxTdp', value);
           }}
         />
       </PanelSectionRow>

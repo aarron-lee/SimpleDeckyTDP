@@ -30,7 +30,7 @@ const Content: FC<{ serverAPI: ServerAPI }> = memo(({ serverAPI }) => {
         <>
           <TdpSlider saveTdp={saveTdp} />
           <TdpProfiles />
-          <TdpRange onFieldChange={onFieldChange} />
+          <TdpRange />
           <PollTdp persistPollState={onFieldChange} />
         </>
       )}
