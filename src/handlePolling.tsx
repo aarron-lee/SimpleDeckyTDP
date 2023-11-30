@@ -1,8 +1,9 @@
-import { ServerAPI, Router } from "decky-frontend-lib";
+import { ServerAPI } from "decky-frontend-lib";
 import { createServerApiHelpers } from "./backend/utils";
 import {
   DEFAULT_POLL_RATE,
   extractCurrentGameId,
+  extractCurrentGameInfo,
   // DEFAULT_START_TDP,
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
@@ -63,7 +64,7 @@ function pollTdp(settings: any, setPollTdp: (gameId: string) => void) {
   }
 
   pollTdpIntervalId = setInterval(() => {
-    const currentGameId = `${Router.MainRunningApp?.appid || "default"}`;
+    const currentGameId = extractCurrentGameId();
 
     setPollTdp(currentGameId);
   }, settings.pollRate || DEFAULT_POLL_RATE);
@@ -73,11 +74,14 @@ let currentGameInfoListenerIntervalId: undefined | number;
 
 export const currentGameInfoListener = () => {
   currentGameInfoListenerIntervalId = window.setInterval(() => {
-    const results = {
-      id: `${Router.MainRunningApp?.appid || "default"}`,
-      displayName: `${Router.MainRunningApp?.display_name || "default"}`,
-    };
-    store.dispatch(setCurrentGameInfo(results));
+    const results = extractCurrentGameInfo();
+
+    const { settings } = store.getState();
+
+    if (settings.currentGameId !== results.id) {
+      // new currentGameId, dispatch to the store
+      store.dispatch(setCurrentGameInfo(results));
+    }
   }, 500);
 
   return () => {
