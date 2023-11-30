@@ -1,30 +1,18 @@
-import {
-  SliderField,
-  PanelSection,
-  PanelSectionRow,
-} from 'decky-frontend-lib';
-import { useTdpRange } from '../../hooks/useTdpRange';
-import { useSetTdp } from '../../hooks/useTdpProfiles';
-import { useSelector } from 'react-redux';
-import { getCurrentTdpInfoSelector } from '../../redux-modules/settingsSlice';
-import { FC, useEffect } from 'react';
+import { SliderField, PanelSection, PanelSectionRow } from "decky-frontend-lib";
+import { useTdpRange } from "../../hooks/useTdpRange";
+import { useSetTdp } from "../../hooks/useTdpProfiles";
+import { useSelector } from "react-redux";
+import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
+import { FC } from "react";
 
-export const TdpSlider: FC<{
-  saveTdp: (gameId: string, tdp: number) => void;
-}> = ({ saveTdp }) => {
+export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
   const setReduxTdp = useSetTdp();
-  const { id, tdp, displayName } = useSelector(
-    getCurrentTdpInfoSelector
-  );
+  const { id, tdp, displayName } = useSelector(getCurrentTdpInfoSelector);
   const title =
-    Boolean(displayName) && displayName.toLowerCase() !== 'default'
+    Boolean(displayName) && displayName.toLowerCase() !== "default"
       ? `TDP - ${displayName.substring(0, 20)}...`
       : `TDP - Default`;
-
-  useEffect(() => {
-    saveTdp(id, tdp);
-  }, [id, tdp]);
 
   return (
     <PanelSection title={title}>

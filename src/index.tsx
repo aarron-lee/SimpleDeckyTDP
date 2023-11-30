@@ -12,16 +12,14 @@ import { currentGameInfoListener, handleTdpPolling } from "./handlePolling";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 
-const Content: FC<{ serverAPI: ServerAPI }> = memo(({ serverAPI }) => {
-  const { saveTdp } = createServerApiHelpers(serverAPI);
-
+const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   const loading = useIsInitiallyLoading();
 
   return (
     <>
       {!loading && (
         <>
-          <TdpSlider saveTdp={saveTdp} />
+          <TdpSlider />
           <TdpProfiles />
           <TdpRange />
           <PollTdp />
