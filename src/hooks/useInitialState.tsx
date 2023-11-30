@@ -1,14 +1,14 @@
-import { ServerAPI } from 'decky-frontend-lib';
-import { useEffect } from 'react';
-import { createServerApiHelpers } from '../backend/utils';
-import { useSelector, useDispatch } from 'react-redux';
+import { ServerAPI } from "decky-frontend-lib";
+import { useEffect } from "react";
+import { createServerApiHelpers } from "../backend/utils";
+import { useSelector, useDispatch } from "react-redux";
 import {
   updateInitialLoad,
   initialLoadSelector,
   InitialStateType,
   allStateSelector,
-} from '../redux-modules/settingsSlice';
-import { useCurrentGameInfoListener } from './useCurrentGameInfoListener';
+} from "../redux-modules/settingsSlice";
+import { useCurrentGameInfoListener } from "./useCurrentGameInfoListener";
 
 export const useInitialLoad = () => {
   const dispatch = useDispatch();
@@ -36,26 +36,13 @@ export const useInitialLoad = () => {
   ];
 };
 
-export const useIsInitiallyLoading = () =>
-  useSelector(initialLoadSelector);
+export const useIsInitiallyLoading = () => useSelector(initialLoadSelector);
 
 export const useSettingsState = () => useSelector(allStateSelector);
 
 // bootstrap initial state from python backend
-export const useInitialState = (serverAPI: ServerAPI) => {
-  const [loading, setInitialLoad] = useInitialLoad();
-  const { getSettings } = createServerApiHelpers(serverAPI);
-
-  // persist settings from backend to redux state
-  useEffect(() => {
-    getSettings().then((result) => {
-      if (result.success) {
-        const results = result.result || {};
-
-        setInitialLoad({ ...results });
-      }
-    });
-  }, []);
+export const useInitialState = () => {
+  const [loading] = useInitialLoad();
 
   // start listener for active app changes
   useCurrentGameInfoListener();
