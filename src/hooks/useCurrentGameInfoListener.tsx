@@ -1,7 +1,7 @@
-import { Router } from 'decky-frontend-lib';
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { setCurrentGameInfo } from '../redux-modules/settingsSlice';
+import { Router } from "decky-frontend-lib";
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentGameInfo } from "../redux-modules/settingsSlice";
 
 let id: any;
 
@@ -26,17 +26,3 @@ function useInterval(callback: any, delay: number) {
     };
   }, [delay]);
 }
-
-export const useCurrentGameInfoListener = () => {
-  const dispatch = useDispatch();
-
-  useInterval(() => {
-    const results = {
-      id: `${Router.MainRunningApp?.appid || 'default'}`,
-      displayName: `${
-        Router.MainRunningApp?.display_name || 'default'
-      }`,
-    };
-    dispatch(setCurrentGameInfo(results));
-  }, 500);
-};

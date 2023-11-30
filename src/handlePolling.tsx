@@ -1,9 +1,13 @@
-import { ServerAPI, Router } from 'decky-frontend-lib';
-import { createServerApiHelpers } from './backend/utils';
+import { ServerAPI } from "decky-frontend-lib";
+import { createServerApiHelpers } from "./backend/utils";
 import {
-  DEFAULT_POLL_RATE, extractCurrentGameId,
+  DEFAULT_POLL_RATE,
+  extractCurrentGameId,
+  extractCurrentGameInfo,
   // DEFAULT_START_TDP,
-} from './utils/constants';
+} from "./utils/constants";
+import { store } from "./redux-modules/store";
+import { setCurrentGameInfo } from "./redux-modules/settingsSlice";
 
 // this interval polls ryzenadj
 let pollTdpIntervalId: any;
@@ -14,18 +18,17 @@ let previousGameId: string | undefined;
 let handlePollingIntervalId: any;
 
 export const handleTdpPolling = async (serverAPI: ServerAPI) => {
-  const { getSettings, setPollTdp } =
-    createServerApiHelpers(serverAPI);
+  const { getSettings, setPollTdp } = createServerApiHelpers(serverAPI);
 
   handlePollingIntervalId = setInterval(() => {
     getSettings().then((result) => {
       const settings = result.result || {};
 
-      const currentGameId = extractCurrentGameId()
+      const currentGameId = extractCurrentGameId();
 
       if (
-        settings['pollEnabled'] &&
-        (settings['pollRate'] !== previousPollRate ||
+        settings["pollEnabled"] &&
+        (settings["pollRate"] !== previousPollRate ||
           currentGameId !== previousGameId)
       ) {
         // polling TDP is enabled, handle for it
@@ -36,7 +39,7 @@ export const handleTdpPolling = async (serverAPI: ServerAPI) => {
         }
 
         pollTdp(settings, setPollTdp);
-      } else if (!settings['pollEnabled']) {
+      } else if (!settings["pollEnabled"]) {
         if (pollTdpIntervalId) {
           clearInterval(pollTdpIntervalId);
         }
@@ -53,10 +56,7 @@ export const handleTdpPolling = async (serverAPI: ServerAPI) => {
   };
 };
 
-function pollTdp(
-  settings: any,
-  setPollTdp: (gameId: string) => void
-) {
+function pollTdp(settings: any, setPollTdp: (gameId: string) => void) {
   previousPollRate = settings.pollRate;
 
   if (pollTdpIntervalId) {
@@ -64,10 +64,29 @@ function pollTdp(
   }
 
   pollTdpIntervalId = setInterval(() => {
-    const currentGameId = `${
-      Router.MainRunningApp?.appid || 'default'
-    }`;
+    const currentGameId = extractCurrentGameId();
 
     setPollTdp(currentGameId);
   }, settings.pollRate || DEFAULT_POLL_RATE);
 }
+
+let currentGameInfoListenerIntervalId: undefined | number;
+
+export const currentGameInfoListener = () => {
+  currentGameInfoListenerIntervalId = window.setInterval(() => {
+    const results = extractCurrentGameInfo();
+
+    const { settings } = store.getState();
+
+    if (settings.currentGameId !== results.id) {
+      // new currentGameId, dispatch to the store
+      store.dispatch(setCurrentGameInfo(results));
+    }
+  }, 500);
+
+  return () => {
+    if (currentGameInfoListenerIntervalId) {
+      clearInterval(currentGameInfoListenerIntervalId);
+    }
+  };
+};
