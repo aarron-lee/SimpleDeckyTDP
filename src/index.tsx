@@ -13,25 +13,18 @@ import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 
 const Content: FC<{ serverAPI: ServerAPI }> = memo(({ serverAPI }) => {
-  const { setSetting, saveTdp } = createServerApiHelpers(serverAPI);
+  const { saveTdp } = createServerApiHelpers(serverAPI);
 
   const loading = useIsInitiallyLoading();
-
-  const onFieldChange = async (
-    fieldName: string,
-    fieldValue?: string | number
-  ) => {
-    return await setSetting({ fieldName, fieldValue });
-  };
 
   return (
     <>
       {!loading && (
         <>
           <TdpSlider saveTdp={saveTdp} />
-          <TdpProfiles persistState={onFieldChange} />
-          <TdpRange onFieldChange={onFieldChange} />
-          <PollTdp persistPollState={onFieldChange} />
+          <TdpProfiles />
+          <TdpRange />
+          <PollTdp />
         </>
       )}
     </>
