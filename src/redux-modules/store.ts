@@ -1,10 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
-import settingsReducer from './settingsSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import settingsReducer from "./settingsSlice";
+import { settingsMiddleware } from "./settingsMiddleware";
 
 export const store = configureStore({
   reducer: {
     settings: settingsReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([
+      settingsMiddleware,
+      // logger
+    ]),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
