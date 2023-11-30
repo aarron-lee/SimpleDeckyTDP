@@ -7,6 +7,7 @@ import {
   updateMaxTdp,
   updateMinTdp,
   updatePollRate,
+  updateTdpProfiles,
 } from "./settingsSlice";
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -16,6 +17,7 @@ import { extractCurrentGameId } from "../utils/constants";
 const resetTdpPollingActionTypes = [
   setCurrentGameInfo.type,
   setEnableTdpProfiles.type,
+  updateTdpProfiles.type,
   updatePollRate.type,
   setPolling.type,
 ];
@@ -27,6 +29,11 @@ export const settingsMiddleware =
       createServerApiHelpers(serverApi as ServerAPI);
 
     const result = dispatch(action);
+
+    if (action.type === updateTdpProfiles.type) {
+      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
+      saveTdp(id, tdp);
+    }
 
     if (action.type === setCurrentGameInfo.type) {
       const {

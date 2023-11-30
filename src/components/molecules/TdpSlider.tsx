@@ -7,7 +7,7 @@ import { FC } from "react";
 
 export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
-  const setReduxTdp = useSetTdp();
+  const setTdp = useSetTdp();
   const { id, tdp, displayName } = useSelector(getCurrentTdpInfoSelector);
   const title =
     Boolean(displayName) && displayName.toLowerCase() !== "default"
@@ -23,7 +23,7 @@ export const TdpSlider: FC = () => {
           min={minTdp}
           max={maxTdp}
           step={1}
-          onChange={(newTdp) => setReduxTdp(id, newTdp)}
+          onChange={(newTdp) => setTdp(id, newTdp)}
           notchTicksVisible
           showValue
         />
