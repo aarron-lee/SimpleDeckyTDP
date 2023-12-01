@@ -1,9 +1,12 @@
 import { Dispatch } from "redux";
 import {
   getCurrentTdpInfoSelector,
+  pollEnabledSelector,
+  pollRateSelector,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setPolling,
+  updateInitialLoad,
   updateMaxTdp,
   updateMinTdp,
   updatePollRate,
@@ -13,6 +16,7 @@ import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
+import { cleanupAction } from "./extraActions";
 
 const resetTdpPollingActionTypes = [
   setCurrentGameInfo.type,
@@ -20,15 +24,44 @@ const resetTdpPollingActionTypes = [
   updateTdpProfiles.type,
   updatePollRate.type,
   setPolling.type,
-];
+  updateInitialLoad.type,
+] as string[];
+
+let pollIntervalId: undefined | number;
+
+const resetPolling = (store: any) => {
+  if (pollIntervalId) {
+    clearInterval(pollIntervalId);
+  }
+  const state = store.getState();
+  const pollEnabled = pollEnabledSelector(state);
+
+  if (pollEnabled) {
+    const pollRate = pollRateSelector(state);
+
+    pollIntervalId = window.setInterval(() => {
+      const serverApi = getServerApi();
+      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+      const currentGameId = extractCurrentGameId();
+
+      setPollTdp(currentGameId);
+    }, pollRate);
+  }
+};
 
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdp, setPollTdp, getSettings, logInfo } =
-      createServerApiHelpers(serverApi as ServerAPI);
+    const { setSetting, saveTdp } = createServerApiHelpers(
+      serverApi as ServerAPI
+    );
 
     const result = dispatch(action);
+
+    if (action.type === updateTdpProfiles.type) {
+      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
+      saveTdp(id, tdp);
+    }
 
     if (action.type === updateTdpProfiles.type) {
       const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
@@ -79,6 +112,24 @@ export const settingsMiddleware =
         fieldName: "pollEnabled",
         fieldValue: action.payload,
       });
+    }
+
+    if (resetTdpPollingActionTypes.includes(action.type)) {
+      resetPolling(store);
+    }
+    // const pollEnabled = pollEnabledSelector(store.getState());
+
+    // if (!pollIntervalId && pollEnabled) {
+    //   // no polling, but it should be. most likely initial load, so start polling
+    //   if (pollEnabled) {
+    //     resetPolling(store);
+    //   }
+    // }
+
+    if (action.type === cleanupAction.type) {
+      if (pollIntervalId) {
+        clearInterval(pollIntervalId);
+      }
     }
 
     return result;
