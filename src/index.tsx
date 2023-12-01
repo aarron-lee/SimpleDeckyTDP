@@ -8,9 +8,10 @@ import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
 import { createServerApiHelpers, saveServerApi } from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
-import { currentGameInfoListener, handleTdpPolling } from "./handlePolling";
+import { currentGameInfoListener } from "./handlePolling";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
+import { cleanupAction } from "./redux-modules/extraActions";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   const loading = useIsInitiallyLoading();
@@ -57,17 +58,13 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const onUnmount = currentGameInfoListener();
 
-  const result = handleTdpPolling(serverApi);
-
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
     onDismount: () => {
-      if (result) {
-        result.then((cleanup) => cleanup());
-      }
       if (onUnmount) onUnmount();
+      store.dispatch(cleanupAction());
     },
   };
 });
