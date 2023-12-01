@@ -58,7 +58,7 @@ export const settingsMiddleware =
 
     const result = dispatch(action);
 
-    if (action.type === updateTdpProfiles.type) {
+    if (action.type === updateInitialLoad.type) {
       const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
       saveTdp(id, tdp);
     }
