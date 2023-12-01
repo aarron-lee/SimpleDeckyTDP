@@ -18,7 +18,7 @@ import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
 import { cleanupAction } from "./extraActions";
 
-const resetTdpPollingActionTypes = [
+const resetTdpActionTypes = [
   setCurrentGameInfo.type,
   setEnableTdpProfiles.type,
   updateTdpProfiles.type,
@@ -57,11 +57,6 @@ export const settingsMiddleware =
     );
 
     const result = dispatch(action);
-
-    if (action.type === updateInitialLoad.type) {
-      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-      saveTdp(id, tdp);
-    }
 
     if (action.type === updateTdpProfiles.type) {
       const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
@@ -114,17 +109,11 @@ export const settingsMiddleware =
       });
     }
 
-    if (resetTdpPollingActionTypes.includes(action.type)) {
+    if (resetTdpActionTypes.includes(action.type)) {
+      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
+      saveTdp(id, tdp);
       resetPolling(store);
     }
-    // const pollEnabled = pollEnabledSelector(store.getState());
-
-    // if (!pollIntervalId && pollEnabled) {
-    //   // no polling, but it should be. most likely initial load, so start polling
-    //   if (pollEnabled) {
-    //     resetPolling(store);
-    //   }
-    // }
 
     if (action.type === cleanupAction.type) {
       if (pollIntervalId) {
