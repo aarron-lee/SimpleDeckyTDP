@@ -42,7 +42,7 @@ const resetPolling = (store: any) => {
     pollIntervalId = window.setInterval(() => {
       const serverApi = getServerApi();
       const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const currentGameId = extractCurrentGameId();
+      const currentGameId = state.settings.currentGameId;
 
       setPollTdp(currentGameId);
     }, pollRate);

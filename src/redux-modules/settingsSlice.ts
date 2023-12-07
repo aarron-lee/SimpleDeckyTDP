@@ -35,7 +35,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean;
   tdpProfiles: TdpProfiles;
   previousGameId: string | undefined;
-  currentGameId: string | undefined;
+  currentGameId: string;
   gameDisplayNames: { [key: string]: string };
   enableTdpProfiles: boolean;
 }
@@ -44,8 +44,10 @@ export type InitialStateType = Partial<SettingsState>;
 
 const initialState: SettingsState = {
   previousGameId: undefined,
-  currentGameId: undefined,
-  gameDisplayNames: {},
+  currentGameId: 'default',
+  gameDisplayNames: {
+    default: 'default'
+  },
   minTdp: 3,
   maxTdp: 15,
   initialLoad: true,
@@ -139,7 +141,7 @@ export const tdpProfilesEnabled = (state: any) =>
 export const getCurrentTdpInfoSelector = (state: RootState) => {
   const { settings } = state;
   const defaultTdp = get(settings, "tdpProfiles.default.tdp");
-  const currentGameId = extractCurrentGameId();
+  const currentGameId = state.settings.currentGameId;
 
   if (settings.enableTdpProfiles) {
     // tdp from game tdp profile
