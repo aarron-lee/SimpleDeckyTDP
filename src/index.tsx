@@ -8,7 +8,7 @@ import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
 import { createServerApiHelpers, saveServerApi } from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
-import { currentGameInfoListener } from "./handlePolling";
+import { currentGameInfoListener, registerForAppLifetimeNotifications } from "./handlePolling";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
@@ -56,15 +56,17 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
-  const onUnmount = currentGameInfoListener();
+  // const onUnmount = currentGameInfoListener();
+  const unregister = registerForAppLifetimeNotifications()
 
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
     onDismount: () => {
-      if (onUnmount) onUnmount();
+      // if (onUnmount) onUnmount();
       store.dispatch(cleanupAction());
+      unregister()
     },
   };
 });

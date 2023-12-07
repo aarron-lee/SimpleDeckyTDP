@@ -68,3 +68,10 @@ export const saveServerApi = (s: ServerAPI) => {
 export const getServerApi = () => {
   return serverApi;
 };
+
+export const getLogInfo = () => {
+  if(serverApi) {
+    return createLogInfo(serverApi)
+  }
+  return
+}
