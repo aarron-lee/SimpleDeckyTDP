@@ -10,11 +10,14 @@ AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 def ryzenadj(tdp: int):
     tdp = tdp*1000
 
-    if RYZENADJ_PATH:
-        commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
+    try:
+        if RYZENADJ_PATH:
+            commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
 
-        results = subprocess.call(commands)
-        return results
+            results = subprocess.call(commands)
+            return results
+    except Exception as e:
+        logging.error(e)
 
 def set_cpu_boost(enabled = True):
     try:

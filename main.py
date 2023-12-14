@@ -2,8 +2,8 @@
 import decky_plugin
 import logging
 import os
-from plugin_settings import setting_file
-from cpu_utils import ryzenadj
+from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile
+from cpu_utils import ryzenadj, set_cpu_boost
 
 
 class Plugin:
@@ -16,47 +16,43 @@ class Plugin:
 
     async def get_settings(self):
         try:
-            current_settings = setting_file.read()
-            return setting_file.settings
+            return get_saved_settings()
         except Exception as e:
             logging.error(e)
 
     async def set_setting(self, name: str, value):
         try:
-            return setting_file.setSetting(name, value)
+            return set_setting(name, value)
         except Exception as e:
             logging.error(e)
             
     async def set_poll_tdp(self, currentGameId: str):
-            setting_file.read()
-            settings = setting_file.settings
+            settings = get_saved_settings()
 
-            default_tdp = settings.get('tdpProfiles', {}).get('default', {}).get('tdp', 12)
+            default_tdp_profile = settings.get('tdpProfiles', {}).get('default', {})
+            default_cpu_boost = default_tdp_profile.get('cpu_boost', True)
+            default_tdp = default_tdp_profile.get('tdp', 12)
 
             if settings.get('enableTdpProfiles'):
-                game_tdp = settings.get('tdpProfiles', {}).get(currentGameId, {}).get('tdp', default_tdp)
+                tdp_profile = settings.get('tdpProfiles', {}).get(currentGameId, {})
+                cpu_boost = tdp_profile.get('cpu_boost', default_cpu_boost)
+                game_tdp = tdp_profile.get('tdp', default_tdp)
                 ryzenadj(game_tdp)
+                # set_cpu_boost(cpu_boost)
             else:
                 ryzenadj(default_tdp)
+                # set_cpu_boost(default_cpu_boost)
 
             return True            
 
-    async def save_tdp(self, profileName: str, value):
+    async def save_tdp(self, tdpProfiles, currentGameId):
+        set_all_tdp_profiles(tdpProfiles)
         try:
-            setting_file.read()
-            if not setting_file.settings.get('tdpProfiles'):
-                setting_file.settings['tdpProfiles'] = {};
-            tdp_profiles = setting_file.settings['tdpProfiles']
-            if not tdp_profiles.get(profileName):
-                tdp_profiles[profileName] = {}
-
-            setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
-            
-            # save to settings file
-            setting_file.commit()
+            tdp_profile = get_tdp_profile(currentGameId)
+            tdp = tdp_profile.get('tdp', 12)
 
             # set tdp via ryzenadj
-            return ryzenadj(value)
+            return ryzenadj(tdp)
         except Exception as e:
             logging.error(e)
 
