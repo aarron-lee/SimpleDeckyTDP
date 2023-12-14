@@ -1,38 +1,10 @@
 # import os
-import subprocess
-import shutil
 import decky_plugin
 import logging
 import os
-from settings import SettingsManager
+from plugin_settings import setting_file
+from cpu_utils import ryzenadj
 
-RYZENADJ_PATH = shutil.which('ryzenadj')
-
-try:
-    LOG_LOCATION = f"/tmp/simpleTDP.log"
-    logging.basicConfig(
-        level = logging.INFO,
-        filename = LOG_LOCATION,
-        format="[%(asctime)s | %(filename)s:%(lineno)s:%(funcName)s] %(levelname)s: %(message)s",
-        filemode = 'w',
-        force = True)
-except Exception as e:
-    logging.error(f"exception|{e}")
-
-
-def ryzenadj(tdp: int):
-    tdp = tdp*1000
-
-    if RYZENADJ_PATH:
-        commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-        results = subprocess.call(commands)
-        return results
-
-settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
-settings_path = os.path.join(settings_directory, 'settings.json')
-setting_file = SettingsManager(name="settings", settings_directory=settings_directory)
-setting_file.read()
 
 class Plugin:
     # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
