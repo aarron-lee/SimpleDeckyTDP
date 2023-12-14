@@ -1,38 +1,10 @@
 # import os
-import subprocess
-import shutil
 import decky_plugin
 import logging
 import os
-from settings import SettingsManager
+from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile
+from cpu_utils import ryzenadj, set_cpu_boost
 
-RYZENADJ_PATH = shutil.which('ryzenadj')
-
-try:
-    LOG_LOCATION = f"/tmp/simpleTDP.log"
-    logging.basicConfig(
-        level = logging.INFO,
-        filename = LOG_LOCATION,
-        format="[%(asctime)s | %(filename)s:%(lineno)s:%(funcName)s] %(levelname)s: %(message)s",
-        filemode = 'w',
-        force = True)
-except Exception as e:
-    logging.error(f"exception|{e}")
-
-
-def ryzenadj(tdp: int):
-    tdp = tdp*1000
-
-    if RYZENADJ_PATH:
-        commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
-
-        results = subprocess.call(commands)
-        return results
-
-settings_directory = os.environ["DECKY_PLUGIN_SETTINGS_DIR"]
-settings_path = os.path.join(settings_directory, 'settings.json')
-setting_file = SettingsManager(name="settings", settings_directory=settings_directory)
-setting_file.read()
 
 class Plugin:
     # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
@@ -44,51 +16,43 @@ class Plugin:
 
     async def get_settings(self):
         try:
-            current_settings = setting_file.read()
-            return setting_file.settings
+            return get_saved_settings()
         except Exception as e:
             logging.error(e)
 
     async def set_setting(self, name: str, value):
         try:
-            return setting_file.setSetting(name, value)
+            return set_setting(name, value)
         except Exception as e:
             logging.error(e)
-
-    async def set_tdp(self, tdp: int):
-            # set tdp via ryzenadj
-            return ryzenadj(tdp)
             
     async def set_poll_tdp(self, currentGameId: str):
-            setting_file.read()
-            settings = setting_file.settings
+            settings = get_saved_settings()
 
-            default_tdp = settings.get('tdpProfiles', {}).get('default', {}).get('tdp', 12)
+            default_tdp_profile = settings.get('tdpProfiles', {}).get('default', {})
+            default_cpu_boost = default_tdp_profile.get('cpu_boost', True)
+            default_tdp = default_tdp_profile.get('tdp', 12)
 
             if settings.get('enableTdpProfiles'):
-                game_tdp = settings.get('tdpProfiles', {}).get(currentGameId, {}).get('tdp', default_tdp)
+                tdp_profile = settings.get('tdpProfiles', {}).get(currentGameId, {})
+                cpu_boost = tdp_profile.get('cpu_boost', default_cpu_boost)
+                game_tdp = tdp_profile.get('tdp', default_tdp)
                 ryzenadj(game_tdp)
+                # set_cpu_boost(cpu_boost)
             else:
                 ryzenadj(default_tdp)
+                # set_cpu_boost(default_cpu_boost)
 
             return True            
 
-    async def save_tdp(self, profileName: str, value):
+    async def save_tdp(self, tdpProfiles, currentGameId):
+        set_all_tdp_profiles(tdpProfiles)
         try:
-            setting_file.read()
-            if not setting_file.settings.get('tdpProfiles'):
-                setting_file.settings['tdpProfiles'] = {};
-            tdp_profiles = setting_file.settings['tdpProfiles']
-            if not tdp_profiles.get(profileName):
-                tdp_profiles[profileName] = {}
-
-            setting_file.settings['tdpProfiles'][profileName]['tdp'] = value
-            
-            # save to settings file
-            setting_file.commit()
+            tdp_profile = get_tdp_profile(currentGameId)
+            tdp = tdp_profile.get('tdp', 12)
 
             # set tdp via ryzenadj
-            return ryzenadj(value)
+            return ryzenadj(tdp)
         except Exception as e:
             logging.error(e)
 

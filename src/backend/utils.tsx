@@ -27,17 +27,17 @@ export const createGetSettings = (serverAPI: ServerAPI) => async () => {
   return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {});
 };
 
-export const createSetTdp = (serverAPI: ServerAPI) => async (tdp: number) => {
-  return await serverAPI.callPluginMethod(ServerAPIMethods.SET_TDP, {
-    tdp,
-  });
-};
-
 export const createSaveTdp =
   (serverAPI: ServerAPI) => async (gameId: string, tdp: number) => {
+    const tdpProfiles = {
+      [gameId]: {
+        tdp,
+      },
+    };
+
     return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
-      profileName: gameId,
-      value: tdp,
+      tdpProfiles,
+      currentGameId: gameId,
     });
   };
 
@@ -54,7 +54,6 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
     setSetting: createSetSetting(serverAPI),
     logInfo: createLogInfo(serverAPI),
     saveTdp: createSaveTdp(serverAPI),
-    setTdp: createSetTdp(serverAPI),
     setPollTdp: createSetPollTdp(serverAPI),
   };
 };
