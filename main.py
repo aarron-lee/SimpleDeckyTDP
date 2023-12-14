@@ -26,10 +26,6 @@ class Plugin:
             return setting_file.setSetting(name, value)
         except Exception as e:
             logging.error(e)
-
-    async def set_tdp(self, tdp: int):
-            # set tdp via ryzenadj
-            return ryzenadj(tdp)
             
     async def set_poll_tdp(self, currentGameId: str):
             setting_file.read()
