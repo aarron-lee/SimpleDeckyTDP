@@ -27,14 +27,6 @@ def set_cpu_boost(enabled = True):
             pstate = 'active' if enabled else 'passive'
             open(AMD_PSTATE_PATH, 'w').write(pstate)
 
-            os.system("modprobe acpi_cpufreq")
-            result = subprocess.run(["modprobe", "acpi_cpufreq"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-            if result.stderr:
-                logging.error(f"modprobe acpi_cpufreq error:\n{result.stderr}")
-                open(AMD_PSTATE_PATH, 'w').write('active')
-                return False
-
         if os.path.exists(BOOST_PATH):
             with open(BOOST_PATH, 'w') as file:
                 if enabled:
