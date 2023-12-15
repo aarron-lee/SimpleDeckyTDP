@@ -4,18 +4,18 @@ permissions:
   contents: write
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - 'main'
-        tags:
-            - 'v*.*.*'
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*.*.*"
 
 jobs:
   build_plugin:
     runs-on: ubuntu-latest
     container:
-        image: archlinux:latest
+      image: archlinux:latest
     steps:
       - name: set git global safe directory
         run: |
@@ -30,13 +30,13 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm update decky-frontend-lib --latest
           pnpm run build
-          tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist backend bin *.py *.json *.md *.js LICENSE
+          tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist backend py_modules bin *.py *.json *.md *.js LICENSE
         continue-on-error: true
-      
+
       - name: show files
         run: |
           tar -tzvf SimpleDeckyTDP.tar.gz
-      
+
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -62,8 +62,8 @@ jobs:
         with:
           files: /tmp/artifacts/SimpleDeckyTDP/SimpleDeckyTDP.tar.gz
           tag_name: ${{ github.ref_name }}
-          body:  |
-           SimpleDeckyTDP 
+          body: |
+            SimpleDeckyTDP
           draft: false
           prerelease: contains(github.ref, 'pre')
         env:
