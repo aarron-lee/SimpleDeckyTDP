@@ -94,15 +94,24 @@ export const settingsSlice = createSlice({
     },
     setCpuBoost: (state, action: PayloadAction<boolean>) => {
       const cpuBoost = action.payload;
-      const { currentGameId } = state;
+      const { currentGameId, enableTdpProfiles } = state;
 
-      set(state.tdpProfiles, `${currentGameId}.cpuBoost`, cpuBoost);
+      if(enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.cpuBoost`, cpuBoost);
+      } else {
+        set(state.tdpProfiles, `default.cpuBoost`, cpuBoost);
+      }
     },
     setSmt: (state, action: PayloadAction<boolean>) => {
       const smt = action.payload;
-      const { currentGameId } = state;
+      const { currentGameId, enableTdpProfiles } = state;
 
-      set(state.tdpProfiles, `${currentGameId}.smt`, smt);
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.smt`, smt);
+      }
+      else {
+        set(state.tdpProfiles, `default.smt`, smt);
+      }
     },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
