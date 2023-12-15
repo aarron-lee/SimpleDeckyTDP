@@ -1,4 +1,5 @@
 import { ServerAPI } from "decky-frontend-lib";
+import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum ServerAPIMethods {
   SET_SETTING = "set_setting",
@@ -6,7 +7,8 @@ export enum ServerAPIMethods {
   LOG_INFO = "log_info",
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
-  SET_POLL_TDP = "set_poll_tdp",
+  POLL_TDP = "poll_tdp",
+  SAVE_CPU_BOOST = "save_cpu_boost",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -41,20 +43,39 @@ export const createSaveTdp =
     });
   };
 
-export const createSetPollTdp =
-  (serverAPI: ServerAPI) => async (currentGameId: string) => {
-    return await serverAPI.callPluginMethod(ServerAPIMethods.SET_POLL_TDP, {
+export const createSaveTdpProfiles =
+  (serverAPI: ServerAPI) =>
+  async (tdpProfiles: TdpProfiles, currentGameId: string) => {
+    return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
+      tdpProfiles,
       currentGameId,
     });
   };
 
+export const createPollTdp =
+  (serverAPI: ServerAPI) => async (currentGameId: string) => {
+    return await serverAPI.callPluginMethod(ServerAPIMethods.POLL_TDP, {
+      currentGameId,
+    });
+  };
+
+export const createSaveCpuBoost =
+  (serverAPI: ServerAPI) =>
+  async (currentGameId: string, cpuBoost: boolean) => {
+    return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_CPU_BOOST, {
+      currentGameId,
+      cpuBoost,
+    });
+  };
 export const createServerApiHelpers = (serverAPI: ServerAPI) => {
   return {
     getSettings: createGetSettings(serverAPI),
     setSetting: createSetSetting(serverAPI),
     logInfo: createLogInfo(serverAPI),
     saveTdp: createSaveTdp(serverAPI),
-    setPollTdp: createSetPollTdp(serverAPI),
+    setPollTdp: createPollTdp(serverAPI),
+    saveCpuBoost: createSaveCpuBoost(serverAPI),
+    saveTdpProfiles: createSaveTdpProfiles(serverAPI),
   };
 };
 

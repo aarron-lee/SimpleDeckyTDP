@@ -1,8 +1,9 @@
 import { Dispatch } from "redux";
 import {
-  getCurrentTdpInfoSelector,
+  activeGameIdSelector,
   pollEnabledSelector,
   pollRateSelector,
+  setCpuBoost,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setPolling,
@@ -15,7 +16,6 @@ import {
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
-import { extractCurrentGameId } from "../utils/constants";
 import { cleanupAction } from "./extraActions";
 
 const resetTdpActionTypes = [
@@ -25,6 +25,7 @@ const resetTdpActionTypes = [
   updatePollRate.type,
   setPolling.type,
   updateInitialLoad.type,
+  setCpuBoost.type,
 ] as string[];
 
 let pollIntervalId: undefined | number;
@@ -52,28 +53,28 @@ const resetPolling = (store: any) => {
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdp } = createServerApiHelpers(
+    const { setSetting, saveTdpProfiles } = createServerApiHelpers(
       serverApi as ServerAPI
     );
 
     const result = dispatch(action);
 
-    if (action.type === updateTdpProfiles.type) {
-      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-      saveTdp(id, tdp);
-    }
+    const state = store.getState();
+    const activeGameId = activeGameIdSelector(state);
 
     if (action.type === setCurrentGameInfo.type) {
       const {
         settings: { previousGameId },
-      } = store.getState();
+      } = state;
 
-      const currentGameId = extractCurrentGameId();
-      if (previousGameId !== currentGameId) {
+      if (previousGameId !== state.currentGameId) {
         // update TDP to new game's TDP value, if appropriate to do so
-        const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-        saveTdp(id, tdp);
+        saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       }
+    }
+
+    if (action.type === updateTdpProfiles.type) {
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 
     if (action.type === setEnableTdpProfiles.type) {
@@ -110,8 +111,7 @@ export const settingsMiddleware =
     }
 
     if (resetTdpActionTypes.includes(action.type)) {
-      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-      saveTdp(id, tdp);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       resetPolling(store);
     }
 

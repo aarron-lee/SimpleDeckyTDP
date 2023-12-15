@@ -25,23 +25,33 @@ class Plugin:
             return set_setting(name, value)
         except Exception as e:
             logging.error(e)
-            
-    async def set_poll_tdp(self, currentGameId: str):
-            settings = get_saved_settings()
 
-            default_tdp_profile = settings.get('tdpProfiles', {}).get('default', {})
-            default_cpu_boost = default_tdp_profile.get('cpu_boost', True)
+    async def save_cpu_boost(self, currentGameId, cpuBoost):
+        # tdp_profile gets merged into tdpProfiles
+        tdp_profile = {
+            f"{currentGameId}": {
+                cpuBoost: cpuBoost
+            }
+        }
+        set_all_tdp_profiles(tdp_profile)
+        
+            
+    async def poll_tdp(self, currentGameId: str):
+            settings = get_saved_settings()
+            default_tdp_profile = get_tdp_profile('default')
+            default_cpu_boost = default_tdp_profile.get('cpuBoost', True)
             default_tdp = default_tdp_profile.get('tdp', 12)
 
             if settings.get('enableTdpProfiles'):
-                tdp_profile = settings.get('tdpProfiles', {}).get(currentGameId, {})
-                cpu_boost = tdp_profile.get('cpu_boost', default_cpu_boost)
+                tdp_profile = get_tdp_profile(currentGameId)
+                cpu_boost = tdp_profile.get('cpuBoost', default_cpu_boost)
                 game_tdp = tdp_profile.get('tdp', default_tdp)
+
+                set_cpu_boost(cpu_boost)
                 ryzenadj(game_tdp)
-                # set_cpu_boost(cpu_boost)
             else:
+                set_cpu_boost(default_cpu_boost)
                 ryzenadj(default_tdp)
-                # set_cpu_boost(default_cpu_boost)
 
             return True            
 
@@ -50,6 +60,9 @@ class Plugin:
         try:
             tdp_profile = get_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
+            cpu_boost = tdp_profile.get('cpuBoost', True)
+
+            set_cpu_boost(cpu_boost)
 
             # set tdp via ryzenadj
             return ryzenadj(tdp)
