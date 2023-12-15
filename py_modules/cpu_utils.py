@@ -6,6 +6,7 @@ import logging
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
+AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
 
 def ryzenadj(tdp: int):
     tdp = tdp*1000
@@ -33,6 +34,22 @@ def set_cpu_boost(enabled = True):
                     file.write('1')
                 else:
                     file.write('0')
+
+        return True
+    except Exception as e:
+        logging.error(e)
+        return False
+
+def set_smt(enabled = True):
+    try:
+        logging.debug(f"set_smt to {enabled}")
+
+        if os.path.exists(AMD_SMT_PATH):
+            with open(AMD_SMT_PATH, 'w') as file:
+                if enabled:
+                    file.write('on')
+                else:
+                    file.write('off')
 
         return True
     except Exception as e:

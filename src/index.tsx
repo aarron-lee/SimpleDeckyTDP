@@ -12,7 +12,7 @@ import { currentGameInfoListener } from "./handlePolling";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
-import { CpuBoostToggle } from "./components/molecules/CpuBoostToggle";
+import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   const loading = useIsInitiallyLoading();
@@ -23,7 +23,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
         <>
           <TdpSlider />
           <TdpProfiles />
-          <CpuBoostToggle />
+          <CpuFeatureToggles />
           <TdpRange />
           <PollTdp />
         </>
