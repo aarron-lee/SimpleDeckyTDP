@@ -7,6 +7,7 @@ import {
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setPolling,
+  setSmt,
   updateInitialLoad,
   updateMaxTdp,
   updateMinTdp,
@@ -25,8 +26,12 @@ const resetTdpActionTypes = [
   updatePollRate.type,
   setPolling.type,
   updateInitialLoad.type,
-  setCpuBoost.type,
 ] as string[];
+
+const changeCpuStateTypes = [
+  setCpuBoost.type,
+  setSmt.type
+] as string[]
 
 let pollIntervalId: undefined | number;
 
@@ -113,6 +118,11 @@ export const settingsMiddleware =
     if (resetTdpActionTypes.includes(action.type)) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       resetPolling(store);
+    }
+
+    if(changeCpuStateTypes.includes(action.type)) {
+      // save tdp profiles, but polling reset is unnecessary
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 
     if (action.type === cleanupAction.type) {

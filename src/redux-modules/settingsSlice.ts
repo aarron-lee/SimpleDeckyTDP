@@ -20,6 +20,7 @@ export interface TdpRangeState {
 export type TdpProfile = {
   tdp: number;
   cpuBoost: boolean;
+  smt: boolean;
 };
 
 export type TdpProfiles = {
@@ -56,6 +57,7 @@ const initialState: SettingsState = {
     default: {
       tdp: DEFAULT_START_TDP,
       cpuBoost: true,
+      smt: true,
     },
   },
   pollEnabled: false,
@@ -95,6 +97,12 @@ export const settingsSlice = createSlice({
       const { currentGameId } = state;
 
       set(state.tdpProfiles, `${currentGameId}.cpuBoost`, cpuBoost);
+    },
+    setSmt: (state, action: PayloadAction<boolean>) => {
+      const smt = action.payload;
+      const { currentGameId } = state;
+
+      set(state.tdpProfiles, `${currentGameId}.smt`, smt);
     },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
@@ -175,6 +183,12 @@ export const getCurrentCpuBoostSelector = (state: RootState) => {
   return Boolean(activeTdpProfile.cpuBoost);
 };
 
+export const getCurrentSmtSelector = (state: RootState) => {
+  const { tdpProfile: activeTdpProfile } = activeTdpProfileSelector(state);
+
+  return Boolean(activeTdpProfile.smt);
+};
+
 export const getCurrentTdpInfoSelector = (state: RootState) => {
   const { settings } = state;
   const { activeGameId, tdpProfile: activeTdpProfile } =
@@ -202,6 +216,7 @@ export const {
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setCpuBoost,
+  setSmt,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
