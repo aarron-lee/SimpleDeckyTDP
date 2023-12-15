@@ -1,7 +1,6 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
-  getCurrentTdpInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
   setCpuBoost,
@@ -17,7 +16,6 @@ import {
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
-import { extractCurrentGameId } from "../utils/constants";
 import { cleanupAction } from "./extraActions";
 
 const resetTdpActionTypes = [
@@ -64,10 +62,6 @@ export const settingsMiddleware =
     const state = store.getState();
     const activeGameId = activeGameIdSelector(state);
 
-    if (action.type === updateTdpProfiles.type) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
-    }
-
     if (action.type === setCurrentGameInfo.type) {
       const {
         settings: { previousGameId },
@@ -77,6 +71,10 @@ export const settingsMiddleware =
         // update TDP to new game's TDP value, if appropriate to do so
         saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       }
+    }
+
+    if (action.type === updateTdpProfiles.type) {
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 
     if (action.type === setEnableTdpProfiles.type) {

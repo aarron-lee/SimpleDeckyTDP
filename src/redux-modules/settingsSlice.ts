@@ -110,6 +110,11 @@ export const settingsSlice = createSlice({
       state.previousGameId = state.currentGameId;
       state.currentGameId = id;
       state.gameDisplayNames[id] = displayName;
+      // bootstrap initial TDP profile if it doesn't exist
+      if (!state.tdpProfiles[id]) {
+        const defaultTdpProfile = state.tdpProfiles.default;
+        state.tdpProfiles[id] = defaultTdpProfile;
+      }
     },
   },
 });
