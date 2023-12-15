@@ -1,8 +1,10 @@
 import { Dispatch } from "redux";
 import {
+  activeGameIdSelector,
   getCurrentTdpInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
+  setCpuBoost,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setPolling,
@@ -25,6 +27,7 @@ const resetTdpActionTypes = [
   updatePollRate.type,
   setPolling.type,
   updateInitialLoad.type,
+  setCpuBoost.type,
 ] as string[];
 
 let pollIntervalId: undefined | number;
@@ -52,27 +55,27 @@ const resetPolling = (store: any) => {
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdp } = createServerApiHelpers(
+    const { setSetting, saveTdpProfiles } = createServerApiHelpers(
       serverApi as ServerAPI
     );
 
     const result = dispatch(action);
 
+    const state = store.getState();
+    const activeGameId = activeGameIdSelector(state);
+
     if (action.type === updateTdpProfiles.type) {
-      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-      saveTdp(id, tdp);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 
     if (action.type === setCurrentGameInfo.type) {
       const {
         settings: { previousGameId },
-      } = store.getState();
+      } = state;
 
-      const currentGameId = extractCurrentGameId();
-      if (previousGameId !== currentGameId) {
+      if (previousGameId !== state.currentGameId) {
         // update TDP to new game's TDP value, if appropriate to do so
-        const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-        saveTdp(id, tdp);
+        saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       }
     }
 
@@ -110,8 +113,7 @@ export const settingsMiddleware =
     }
 
     if (resetTdpActionTypes.includes(action.type)) {
-      const { id, tdp } = getCurrentTdpInfoSelector(store.getState());
-      saveTdp(id, tdp);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
       resetPolling(store);
     }
 

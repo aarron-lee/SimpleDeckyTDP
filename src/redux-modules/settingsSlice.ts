@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { get, merge } from "lodash";
+import { get, merge, set } from "lodash";
 import {
   DEFAULT_POLL_RATE,
   DEFAULT_START_TDP,
@@ -19,7 +19,7 @@ export interface TdpRangeState {
 
 export type TdpProfile = {
   tdp: number;
-  [key: string]: number;
+  cpuBoost: boolean;
 };
 
 export type TdpProfiles = {
@@ -44,9 +44,9 @@ export type InitialStateType = Partial<SettingsState>;
 
 const initialState: SettingsState = {
   previousGameId: undefined,
-  currentGameId: 'default',
+  currentGameId: "default",
   gameDisplayNames: {
-    default: 'default'
+    default: "default",
   },
   minTdp: 3,
   maxTdp: 15,
@@ -55,6 +55,7 @@ const initialState: SettingsState = {
   tdpProfiles: {
     default: {
       tdp: DEFAULT_START_TDP,
+      cpuBoost: true,
     },
   },
   pollEnabled: false,
@@ -88,6 +89,12 @@ export const settingsSlice = createSlice({
     },
     updatePollRate: (state, action: PayloadAction<number>) => {
       state.pollRate = action.payload;
+    },
+    setCpuBoost: (state, action: PayloadAction<boolean>) => {
+      const cpuBoost = action.payload;
+      const { currentGameId } = state;
+
+      set(state.tdpProfiles, `${currentGameId}.cpuBoost`, cpuBoost);
     },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
@@ -126,36 +133,56 @@ export const defaultTdpSelector = (state: any) =>
 export const pollRateSelector = (state: any) => state.settings.pollRate;
 export const pollEnabledSelector = (state: any) => state.settings.pollEnabled;
 
-// currentGameId selector
-export const currentGameIdSelector = (state: any) =>
-  state.settings.currentGameId;
-export const currentGameDisplayNameSelector = (state: any) => {
-  const { currentGameId } = state.settings;
-
-  return state.settings.gameDisplayNames[currentGameId];
-};
-
 // enableTdpProfiles selectors
 export const tdpProfilesEnabled = (state: any) =>
   state.settings.enableTdpProfiles;
+
+export const activeGameIdSelector = (state: RootState) => {
+  const { settings } = state;
+  const activeGameId = state.settings.currentGameId;
+
+  if (settings.enableTdpProfiles) {
+    return activeGameId;
+  } else {
+    return "default";
+  }
+};
+
+export const activeTdpProfileSelector = (state: RootState) => {
+  const { settings } = state;
+  const activeGameId = state.settings.currentGameId;
+
+  if (settings.enableTdpProfiles) {
+    const tdpProfile = settings.tdpProfiles[activeGameId];
+    return { activeGameId, tdpProfile };
+  } else {
+    // tdp from default profile
+    return {
+      activeGameId: "default",
+      tdpProfile: settings.tdpProfiles.default,
+    };
+  }
+};
+
+export const getCurrentCpuBoostSelector = (state: RootState) => {
+  const { tdpProfile: activeTdpProfile } = activeTdpProfileSelector(state);
+
+  return Boolean(activeTdpProfile.cpuBoost);
+};
+
 export const getCurrentTdpInfoSelector = (state: RootState) => {
   const { settings } = state;
-  const defaultTdp = get(settings, "tdpProfiles.default.tdp");
-  const currentGameId = state.settings.currentGameId;
+  const { activeGameId, tdpProfile: activeTdpProfile } =
+    activeTdpProfileSelector(state);
+  const tdp = activeTdpProfile.tdp;
 
   if (settings.enableTdpProfiles) {
     // tdp from game tdp profile
-    const gameTdp = get(
-      settings,
-      `tdpProfiles.${currentGameId}.tdp`,
-      // default if it doesn't exist yet
-      defaultTdp
-    );
-    const displayName = get(settings, `gameDisplayNames.${currentGameId}`, "");
-    return { id: currentGameId, tdp: gameTdp, displayName };
+    const displayName = get(settings, `gameDisplayNames.${activeGameId}`, "");
+    return { id: activeGameId, tdp, displayName };
   } else {
     // tdp from default profile
-    return { id: "default", tdp: defaultTdp, displayName: "Default" };
+    return { id: "default", tdp, displayName: "Default" };
   }
 };
 
@@ -169,6 +196,7 @@ export const {
   setPolling,
   setCurrentGameInfo,
   setEnableTdpProfiles,
+  setCpuBoost,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
