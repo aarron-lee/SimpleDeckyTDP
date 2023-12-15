@@ -25,15 +25,6 @@ class Plugin:
             return set_setting(name, value)
         except Exception as e:
             logging.error(e)
-
-    async def save_cpu_boost(self, currentGameId, cpuBoost):
-        # tdp_profile gets merged into tdpProfiles
-        tdp_profile = {
-            f"{currentGameId}": {
-                cpuBoost: cpuBoost
-            }
-        }
-        set_all_tdp_profiles(tdp_profile)
         
             
     async def poll_tdp(self, currentGameId: str):

@@ -8,7 +8,6 @@ export enum ServerAPIMethods {
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
   POLL_TDP = "poll_tdp",
-  SAVE_CPU_BOOST = "save_cpu_boost",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -59,14 +58,6 @@ export const createPollTdp =
     });
   };
 
-export const createSaveCpuBoost =
-  (serverAPI: ServerAPI) =>
-  async (currentGameId: string, cpuBoost: boolean) => {
-    return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_CPU_BOOST, {
-      currentGameId,
-      cpuBoost,
-    });
-  };
 export const createServerApiHelpers = (serverAPI: ServerAPI) => {
   return {
     getSettings: createGetSettings(serverAPI),
@@ -74,7 +65,6 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
     logInfo: createLogInfo(serverAPI),
     saveTdp: createSaveTdp(serverAPI),
     setPollTdp: createPollTdp(serverAPI),
-    saveCpuBoost: createSaveCpuBoost(serverAPI),
     saveTdpProfiles: createSaveTdpProfiles(serverAPI),
   };
 };
