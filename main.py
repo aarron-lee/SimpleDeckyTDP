@@ -3,7 +3,7 @@ import decky_plugin
 import logging
 import os
 from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile
-from cpu_utils import ryzenadj, set_cpu_boost
+from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 
 
 class Plugin:
@@ -30,6 +30,7 @@ class Plugin:
     async def poll_tdp(self, currentGameId: str):
             settings = get_saved_settings()
             default_tdp_profile = get_tdp_profile('default')
+            default_smt = default_tdp_profile.get('smt', True)
             default_cpu_boost = default_tdp_profile.get('cpuBoost', True)
             default_tdp = default_tdp_profile.get('tdp', 12)
 
@@ -37,10 +38,13 @@ class Plugin:
                 tdp_profile = get_tdp_profile(currentGameId)
                 cpu_boost = tdp_profile.get('cpuBoost', default_cpu_boost)
                 game_tdp = tdp_profile.get('tdp', default_tdp)
+                game_smt = tdp_profile.get('smt', default_smt)
 
                 set_cpu_boost(cpu_boost)
+                set_smt(game_smt)
                 ryzenadj(game_tdp)
             else:
+                set_smt(default_smt)
                 set_cpu_boost(default_cpu_boost)
                 ryzenadj(default_tdp)
 
@@ -51,8 +55,10 @@ class Plugin:
         try:
             tdp_profile = get_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
+            smt = tdp_profile.get('smt', True)
             cpu_boost = tdp_profile.get('cpuBoost', True)
 
+            set_smt(smt)
             set_cpu_boost(cpu_boost)
 
             # set tdp via ryzenadj
