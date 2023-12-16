@@ -28,10 +28,7 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
 ] as string[];
 
-const changeCpuStateTypes = [
-  setCpuBoost.type,
-  setSmt.type
-] as string[]
+const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
 
 let pollIntervalId: undefined | number;
 
@@ -48,7 +45,7 @@ const resetPolling = (store: any) => {
     pollIntervalId = window.setInterval(() => {
       const serverApi = getServerApi();
       const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const activeGameId = activeGameIdSelector(store.getState())
+      const activeGameId = activeGameIdSelector(store.getState());
 
       setPollTdp(activeGameId);
     }, pollRate);
@@ -67,9 +64,9 @@ export const settingsMiddleware =
     const state = store.getState();
     const activeGameId = activeGameIdSelector(state);
 
-    if(action.type === suspendAction.type) {
+    if (action.type === suspendAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
-      setPollTdp(activeGameId)
+      setPollTdp(activeGameId);
     }
 
     if (action.type === setCurrentGameInfo.type) {
@@ -125,7 +122,7 @@ export const settingsMiddleware =
       resetPolling(store);
     }
 
-    if(changeCpuStateTypes.includes(action.type)) {
+    if (changeCpuStateTypes.includes(action.type)) {
       // save tdp profiles, but polling reset is unnecessary
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }

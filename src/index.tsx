@@ -8,7 +8,10 @@ import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
 import { createServerApiHelpers, saveServerApi } from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
-import { currentGameInfoListener, suspendEventListener } from "./steamListeners";
+import {
+  currentGameInfoListener,
+  suspendEventListener,
+} from "./steamListeners";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
@@ -67,7 +70,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     icon: <FaShip />,
     onDismount: () => {
       if (onUnmount) onUnmount();
-      if(unregisterSuspendListener) unregisterSuspendListener();
+      if (unregisterSuspendListener) unregisterSuspendListener();
       store.dispatch(cleanupAction());
     },
   };

@@ -27,15 +27,16 @@ export const currentGameInfoListener = () => {
   };
 };
 
-
 export const suspendEventListener = () => {
   try {
-    const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(async () => {
-      store.dispatch(suspendAction())
-    });
+    const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
+      async () => {
+        store.dispatch(suspendAction());
+      }
+    );
 
-    return unregister
+    return unregister;
   } catch (e) {
     console.log(e);
   }
-}
+};
