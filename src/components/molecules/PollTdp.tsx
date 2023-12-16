@@ -1,28 +1,19 @@
 import {
   ToggleField,
+  SliderField,
   PanelSection,
   PanelSectionRow,
-  DropdownItem,
 } from "decky-frontend-lib";
 import {
   usePollInfo,
   useSetPoll,
   useSetPollRate,
 } from "../../hooks/usePollState";
-import { range } from "lodash";
 
 export function PollTdp() {
   const { enabled, pollRate } = usePollInfo();
   const setPoll = useSetPoll();
   const setPollRate = useSetPollRate();
-
-  const dropdownOptions = range(1, 21).map((seconds) => {
-    return {
-      data: seconds,
-      label: `${seconds} seconds`,
-      value: seconds,
-    };
-  });
 
   return (
     <PanelSection title="Poll TDP">
@@ -36,28 +27,21 @@ export function PollTdp() {
           highlightOnFocus
         />
       </PanelSectionRow>
-      <PanelSectionRow>
-        <DropdownItem
-          label="Poll Rate"
-          description={`Set TDP every ${pollRate / 1000} seconds`}
-          menuLabel="Poll Rate"
-          rgOptions={dropdownOptions.map((o) => {
-            return {
-              data: o.data,
-              label: o.label,
-              value: o.value,
-            };
-          })}
-          selectedOption={
-            dropdownOptions.find((o) => {
-              return o.data === pollRate / 1000;
-            })?.data || 0
-          }
-          onChange={({ data: seconds }) => {
-            setPollRate(seconds * 1000);
-          }}
-        />
-      </PanelSectionRow>
+      {enabled && (
+        <PanelSectionRow>
+          <SliderField
+            label="Poll Rate"
+            description={`Set TDP every ${pollRate / 1000} seconds`}
+            value={pollRate / 1000}
+            step={1}
+            showValue
+            min={1}
+            max={20}
+            bottomSeparator="none"
+            onChange={(rate_in_sec) => setPollRate(rate_in_sec * 1000)}
+          />
+        </PanelSectionRow>
+      )}
     </PanelSection>
   );
 }
