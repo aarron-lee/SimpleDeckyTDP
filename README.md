@@ -6,7 +6,7 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
 ## Compatibility
 
-Tested on ChimeraOS Stable (44-1 and 43-1), ChimeraOS 45 unstable, and Bazzite Deck Edition.
+Tested on ChimeraOS Stable (44-1 and 43-1), ChimeraOS 45 unstable, NobaraOS 38, and Bazzite Deck Edition.
 
 Other distros not tested.
 
@@ -15,7 +15,6 @@ Bazzite may require you to configure `iomem=relaxed` as an additional kernel par
 ## Requirements
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
-
 
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
@@ -39,7 +38,7 @@ This should print out a table that looks something like the following:
 ```
 CPU Family: Rembrandt
 SMU BIOS Interface Version: 18
-Version: v0.13.0 
+Version: v0.13.0
 PM Table Version: 450005
 |        Name         |   Value   |     Parameter      |
 |---------------------|-----------|--------------------|
