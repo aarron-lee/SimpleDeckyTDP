@@ -17,7 +17,7 @@ import {
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
-import { cleanupAction } from "./extraActions";
+import { cleanupAction, suspendAction } from "./extraActions";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -48,9 +48,9 @@ const resetPolling = (store: any) => {
     pollIntervalId = window.setInterval(() => {
       const serverApi = getServerApi();
       const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const currentGameId = state.settings.currentGameId;
+      const activeGameId = activeGameIdSelector(store.getState())
 
-      setPollTdp(currentGameId);
+      setPollTdp(activeGameId);
     }, pollRate);
   }
 };
@@ -58,7 +58,7 @@ const resetPolling = (store: any) => {
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdpProfiles } = createServerApiHelpers(
+    const { setSetting, saveTdpProfiles, setPollTdp } = createServerApiHelpers(
       serverApi as ServerAPI
     );
 
@@ -66,6 +66,11 @@ export const settingsMiddleware =
 
     const state = store.getState();
     const activeGameId = activeGameIdSelector(state);
+
+    if(action.type === suspendAction.type) {
+      // pollTdp simply tells backend to set TDP according to settings.json
+      setPollTdp(activeGameId)
+    }
 
     if (action.type === setCurrentGameInfo.type) {
       const {
