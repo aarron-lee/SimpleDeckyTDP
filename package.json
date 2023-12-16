@@ -1,6 +1,6 @@
 {
-  "name": "decky-plugin-template",
-  "version": "0.0.1",
+  "name": "simple-decky-tdp",
+  "version": "0.0.4",
   "description": "Very simple RyzenAdj Decky plugin",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c --silent",
@@ -14,16 +14,14 @@
   "keywords": [
     "decky",
     "plugin",
-    "plugin-template",
-    "steam-deck",
-    "deck"
+    "legion-go"
   ],
-  "author": "Jonas Dellinger <jonas@dellinger.dev>",
+  "author": "Aarron L",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
+    "url": "https://github.com/aarron-lee/SimpleDeckyTDP/issues"
   },
-  "homepage": "https://github.com/SteamDeckHomebrew/decky-plugin-template#readme",
+  "homepage": "https://github.com/aarron-lee/SimpleDeckyTDP",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-json": "^4.1.0",
