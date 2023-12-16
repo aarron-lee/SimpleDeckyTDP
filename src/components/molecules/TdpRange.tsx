@@ -1,7 +1,7 @@
 // tdp range
 // import { useEffect } from 'react'
 import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
-import TdpDropdown from "../atoms/TdpDropdown";
+import TdpSlider from "../atoms/TdpSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
 
 const TdpRange = () => {
@@ -11,7 +11,7 @@ const TdpRange = () => {
   return (
     <PanelSection title="TDP Range">
       <PanelSectionRow>
-        <TdpDropdown
+        <TdpSlider
           tdpRange={[3, 12]}
           label="Minimum TDP"
           selected={minTdp}
@@ -22,7 +22,7 @@ const TdpRange = () => {
       </PanelSectionRow>
 
       <PanelSectionRow>
-        <TdpDropdown
+        <TdpSlider
           tdpRange={[15, 40]}
           label="Max TDP"
           selected={maxTdp}
