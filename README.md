@@ -2,7 +2,7 @@
 
 This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
-![plugin image](./img/plugin_img.png)
+![plugin image](./img/plugin_image.png)
 
 ## Compatibility
 
