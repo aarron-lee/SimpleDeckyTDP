@@ -50,6 +50,16 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 # Install
 
+### Quick Install
+
+run the following in terminal, then reboot:
+
+```
+curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+```
+
+### Manual Install
+
 Download the latest release from the [releases page](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
 Unzip the `tar.gz` file, and move the `SimpleDeckyTDP` folder to your `$HOME/homebrew/plugins` directory
