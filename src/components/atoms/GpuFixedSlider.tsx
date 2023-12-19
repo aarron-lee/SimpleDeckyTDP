@@ -31,9 +31,8 @@ const GpuFixedSlider = () => {
     <SliderField
       label={"Frequency"}
       value={currentFrequency}
-      showValue
+      description={`${currentFrequency} MHz`}
       step={50}
-      valueSuffix="MHz"
       min={min}
       max={max}
       validValues="range"

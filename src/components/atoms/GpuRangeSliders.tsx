@@ -36,9 +36,8 @@ const GpuRangeSliders = () => {
       <SliderField
         label={"Minimum Frequency Limit"}
         value={currentMin}
-        showValue
         step={50}
-        valueSuffix="MHz"
+        description={`${currentMin} MHz`}
         min={min}
         max={max}
         validValues="range"
@@ -54,9 +53,8 @@ const GpuRangeSliders = () => {
       <SliderField
         label={"Maximum Frequency Limit"}
         value={currentMax}
-        showValue
         step={50}
-        valueSuffix="MHz"
+        description={`${currentMax} MHz`}
         min={min}
         max={max}
         validValues="range"
