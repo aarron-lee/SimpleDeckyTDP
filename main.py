@@ -2,7 +2,7 @@
 import decky_plugin
 import logging
 import os
-from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile
+from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range
 
@@ -63,7 +63,7 @@ class Plugin:
     async def save_tdp(self, tdpProfiles, currentGameId):
         set_all_tdp_profiles(tdpProfiles)
         try:
-            tdp_profile = get_tdp_profile(currentGameId)
+            tdp_profile = get_active_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
             smt = tdp_profile.get('smt', True)
             cpu_boost = tdp_profile.get('cpuBoost', True)

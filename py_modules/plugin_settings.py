@@ -54,3 +54,10 @@ def get_tdp_profile(gameId):
     profiles = settings['tdpProfiles']
     return profiles.get(gameId, {})
 
+def get_active_tdp_profile(gameId):
+    settings = get_saved_settings()
+
+    if settings.get("enableTdpProfiles", False):
+        return get_tdp_profile(gameId)
+    else:
+        return get_tdp_profile('default')
