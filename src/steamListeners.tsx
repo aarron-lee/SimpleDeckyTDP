@@ -4,7 +4,7 @@ import {
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
 import { setCurrentGameInfo } from "./redux-modules/settingsSlice";
-import { suspendAction } from "./redux-modules/extraActions";
+import { resumeAction } from "./redux-modules/extraActions";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 
@@ -31,7 +31,16 @@ export const suspendEventListener = () => {
   try {
     const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
       async () => {
-        store.dispatch(suspendAction());
+        store.dispatch(resumeAction());
+
+        /*
+          Bug: ROG Ally doesn't register TDP changes via ryzenadj immediately.
+          Unknown if this is a ryzenadj bug, or otherwise
+          But for now send an additional resumeAction after 10s
+        */
+        setTimeout(() => {
+          store.dispatch(resumeAction());
+        }, 10000);
       }
     );
 

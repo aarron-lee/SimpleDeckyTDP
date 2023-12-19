@@ -20,7 +20,7 @@ import {
 import { createServerApiHelpers, getServerApi } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
-import { cleanupAction, suspendAction } from "./extraActions";
+import { cleanupAction, resumeAction } from "./extraActions";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -67,7 +67,7 @@ export const settingsMiddleware =
     const state = store.getState();
     const activeGameId = activeGameIdSelector(state);
 
-    if (action.type === suspendAction.type) {
+    if (action.type === resumeAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
       setPollTdp(activeGameId);
     }
