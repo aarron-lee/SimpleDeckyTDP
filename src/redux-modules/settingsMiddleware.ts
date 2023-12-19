@@ -6,6 +6,8 @@ import {
   setCpuBoost,
   setCurrentGameInfo,
   setEnableTdpProfiles,
+  setGpuFrequency,
+  setGpuMode,
   setPolling,
   setSmt,
   updateInitialLoad,
@@ -67,6 +69,13 @@ export const settingsMiddleware =
     if (action.type === suspendAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
       setPollTdp(activeGameId);
+    }
+
+    if (
+      action.type === setGpuMode.type ||
+      action.type === setGpuFrequency.type
+    ) {
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 
     if (action.type === setCurrentGameInfo.type) {

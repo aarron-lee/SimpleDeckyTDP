@@ -16,6 +16,7 @@ import { updateInitialLoad } from "./redux-modules/settingsSlice";
 import { useIsInitiallyLoading } from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
+import Gpu from "./components/molecules/Gpu";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   const loading = useIsInitiallyLoading();
@@ -27,6 +28,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           <TdpSlider />
           <TdpProfiles />
           <CpuFeatureToggles />
+          <Gpu />
           <TdpRange />
           <PollTdp />
         </>
