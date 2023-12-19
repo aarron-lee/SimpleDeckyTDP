@@ -118,7 +118,7 @@ e.g.
     ...
 }
 
-# called later during app runtime
+# called later at app runtime, 15 = tdp value
 sudo /path/to/script.sh 15
 ```
 
