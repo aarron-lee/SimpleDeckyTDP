@@ -25,13 +25,13 @@ def get_gpu_frequency_range():
     except Exception as e:
         logging.error(e)
 
-def set_gpu_frequency(activeGameId):
+def set_gpu_frequency(current_game_id):
     settings = get_saved_settings()
     gpu_mode = GpuModes.DEFAULT.value
     tdp_profile = settings.get("tdpProfiles").get("default")
 
     if settings.get("enableTdpProfiles"):
-        current_tdp_profile = settings.get("tdpProfiles").get(activeGameId)
+        current_tdp_profile = settings.get("tdpProfiles").get(current_game_id)
         if current_tdp_profile:
             tdp_profile = current_tdp_profile
     if tdp_profile.get("gpuMode"):

@@ -4,7 +4,7 @@ import logging
 import os
 from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
-from gpu_utils import get_gpu_frequency_range
+from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
 
 
 class Plugin:
@@ -68,6 +68,7 @@ class Plugin:
             smt = tdp_profile.get('smt', True)
             cpu_boost = tdp_profile.get('cpuBoost', True)
 
+            set_gpu_frequency(currentGameId)
             set_smt(smt)
             set_cpu_boost(cpu_boost)
 
