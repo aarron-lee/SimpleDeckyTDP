@@ -24,6 +24,7 @@ export type TdpProfile = {
   smt: boolean;
   minGpuFrequency: number;
   maxGpuFrequency: number;
+  fixedGpuFrequency: number;
   gpuMode: GpuModes;
 };
 
@@ -65,8 +66,9 @@ const initialState: SettingsState = {
       cpuBoost: true,
       smt: true,
       gpuMode: GpuModes.DEFAULT,
-      minGpuFrequency: 0,
-      maxGpuFrequency: 0,
+      minGpuFrequency: 1200,
+      maxGpuFrequency: 1200,
+      fixedGpuFrequency: 1200,
     },
   },
   pollEnabled: false,
@@ -84,6 +86,7 @@ export const settingsSlice = createSlice({
       state.maxTdp = action.payload;
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
+      const { minGpuFrequency, maxGpuFrequency } = action.payload;
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
@@ -93,22 +96,23 @@ export const settingsSlice = createSlice({
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
-      state.minGpuFrequency = action.payload.minGpuFrequency;
-      state.maxGpuFrequency = action.payload.maxGpuFrequency;
+      state.minGpuFrequency = minGpuFrequency;
+      state.maxGpuFrequency = maxGpuFrequency;
       // set default min/max gpu frequency if not set
-      if (
-        !state.tdpProfiles.default.minGpuFrequency &&
-        action.payload.minGpuFrequency
-      ) {
-        state.tdpProfiles.default.minGpuFrequency =
-          action.payload.minGpuFrequency;
+      if (!state.tdpProfiles.default.minGpuFrequency && minGpuFrequency) {
+        state.tdpProfiles.default.minGpuFrequency = minGpuFrequency;
+      }
+      if (!state.tdpProfiles.default.maxGpuFrequency && maxGpuFrequency) {
+        state.tdpProfiles.default.maxGpuFrequency = maxGpuFrequency;
       }
       if (
-        !state.tdpProfiles.default.maxGpuFrequency &&
-        action.payload.maxGpuFrequency
+        !state.tdpProfiles.default.fixedGpuFrequency &&
+        minGpuFrequency &&
+        maxGpuFrequency
       ) {
-        state.tdpProfiles.default.maxGpuFrequency =
-          action.payload.maxGpuFrequency;
+        state.tdpProfiles.default.fixedGpuFrequency = Math.floor(
+          (minGpuFrequency + maxGpuFrequency) / 2
+        );
       }
       state.currentGameId = extractCurrentGameId();
     },
@@ -153,6 +157,17 @@ export const settingsSlice = createSlice({
         }
       }
     },
+    setFixedGpuFrequency: (state, action: PayloadAction<number>) => {
+      const fixedFreq = action.payload;
+
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        state.tdpProfiles[currentGameId].fixedGpuFrequency = fixedFreq;
+      } else {
+        state.tdpProfiles.default.fixedGpuFrequency = fixedFreq;
+      }
+    },
     setGpuMode: (state, action: PayloadAction<GpuModes>) => {
       const newGpuMode = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
@@ -167,6 +182,10 @@ export const settingsSlice = createSlice({
         if (!state.tdpProfiles[currentGameId].maxGpuFrequency) {
           state.tdpProfiles[currentGameId].maxGpuFrequency =
             state.tdpProfiles.default.maxGpuFrequency;
+        }
+        if (!state.tdpProfiles[currentGameId].fixedGpuFrequency) {
+          state.tdpProfiles[currentGameId].fixedGpuFrequency =
+            state.tdpProfiles.default.fixedGpuFrequency;
         }
       } else {
         set(state.tdpProfiles, `default.gpuMode`, newGpuMode);
@@ -294,6 +313,12 @@ export const getCurrentGpuFrequencySelector = (state: RootState) => {
   };
 };
 
+export const getCurrentFixedGpuFrequencySelector = (state: RootState) => {
+  const activeGameId = activeGameIdSelector(state);
+
+  return state.settings.tdpProfiles[activeGameId].fixedGpuFrequency;
+};
+
 export const getGpuFrequencyRangeSelector = (state: RootState) => {
   return {
     min: state.settings.minGpuFrequency,
@@ -324,6 +349,7 @@ export const {
   setSmt,
   setGpuMode,
   setGpuFrequency,
+  setFixedGpuFrequency,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

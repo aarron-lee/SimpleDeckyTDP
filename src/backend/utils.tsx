@@ -4,6 +4,7 @@ import { TdpProfiles } from "../redux-modules/settingsSlice";
 export enum GpuModes {
   DEFAULT = "DEFAULT",
   RANGE = "RANGE",
+  FIXED = "FIXED",
 }
 
 export enum ServerAPIMethods {

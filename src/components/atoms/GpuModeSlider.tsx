@@ -6,6 +6,7 @@ import useGpuMode from "../../hooks/useGpuMode";
 enum Mode {
   DEFAULT = 0,
   RANGE = 1,
+  FIXED = 2,
 }
 
 const GpuModeSlider: FC = () => {
