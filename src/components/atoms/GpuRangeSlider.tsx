@@ -1,16 +1,33 @@
 // TDP Range Slider
 import { SliderField } from "decky-frontend-lib";
-import { useSelector } from "react-redux";
-import { getGpuFrequencyRangeSelector } from "../../redux-modules/settingsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCurrentGpuFrequencySelector,
+  getGpuFrequencyRangeSelector,
+  setGpuFrequency,
+} from "../../redux-modules/settingsSlice";
 import { useState } from "react";
 
-type PropType = {
-  label?: string;
-  onChange?: any;
+const useSetGpuFrequency = () => {
+  const dispatch = useDispatch();
+
+  const setMinFreq = (min: number) => {
+    return dispatch(setGpuFrequency({ min }));
+  };
+  const setMaxFreq = (max: number) => {
+    return dispatch(setGpuFrequency({ max }));
+  };
+
+  return { setMinFreq, setMaxFreq };
 };
 
-const GpuRangeSlider = ({ label, onChange }: PropType) => {
+const GpuRangeSliders = () => {
   const { min, max } = useSelector(getGpuFrequencyRangeSelector);
+  const { currentMin, currentMax } = useSelector(
+    getCurrentGpuFrequencySelector
+  );
+  const { setMinFreq, setMaxFreq } = useSetGpuFrequency();
+
   const [state, setState] = useState(1500);
 
   if (!(min && max)) {
@@ -18,19 +35,45 @@ const GpuRangeSlider = ({ label, onChange }: PropType) => {
   }
 
   return (
-    <SliderField
-      label={label || "GPU"}
-      value={state}
-      showValue
-      step={50}
-      valueSuffix="Hz"
-      min={min}
-      max={max}
-      validValues="range"
-      bottomSeparator="none"
-      onChange={setState}
-    />
+    <>
+      <SliderField
+        label={"Minimum Frequency Limit"}
+        value={currentMin}
+        showValue
+        step={50}
+        valueSuffix="Hz"
+        min={min}
+        max={max}
+        validValues="range"
+        bottomSeparator="none"
+        onChange={(newMin) => {
+          if (newMin > currentMax) {
+            return;
+          }
+
+          return setMinFreq(newMin);
+        }}
+      />
+      <SliderField
+        label={"Maximum Frequency Limit"}
+        value={currentMax}
+        showValue
+        step={50}
+        valueSuffix="Hz"
+        min={min}
+        max={max}
+        validValues="range"
+        bottomSeparator="none"
+        onChange={(newMax) => {
+          if (newMax < currentMin) {
+            return;
+          }
+
+          return setMaxFreq(newMax);
+        }}
+      />
+    </>
   );
 };
 
-export default GpuRangeSlider;
+export default GpuRangeSliders;

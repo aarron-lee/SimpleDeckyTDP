@@ -6,6 +6,7 @@ import {
   setCpuBoost,
   setCurrentGameInfo,
   setEnableTdpProfiles,
+  setGpuFrequency,
   setGpuMode,
   setPolling,
   setSmt,
@@ -70,7 +71,10 @@ export const settingsMiddleware =
       setPollTdp(activeGameId);
     }
 
-    if (action.type === setGpuMode.type) {
+    if (
+      action.type === setGpuMode.type ||
+      action.type === setGpuFrequency.type
+    ) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
     }
 

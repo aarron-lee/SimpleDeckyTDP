@@ -128,6 +128,31 @@ export const settingsSlice = createSlice({
         set(state.tdpProfiles, `default.cpuBoost`, cpuBoost);
       }
     },
+    setGpuFrequency: (
+      state,
+      action: PayloadAction<{ min?: number; max?: number }>
+    ) => {
+      const { min, max } = action.payload;
+
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (min) {
+        // set min value
+        if (enableTdpProfiles) {
+          state.tdpProfiles[currentGameId].minGpuFrequency = min;
+        } else {
+          state.tdpProfiles.default.minGpuFrequency = min;
+        }
+      }
+      if (max) {
+        // set max value
+        if (enableTdpProfiles) {
+          state.tdpProfiles[currentGameId].maxGpuFrequency = max;
+        } else {
+          state.tdpProfiles.default.maxGpuFrequency = max;
+        }
+      }
+    },
     setGpuMode: (state, action: PayloadAction<GpuModes>) => {
       const newGpuMode = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
@@ -260,6 +285,15 @@ export const getCurrentTdpInfoSelector = (state: RootState) => {
 
 // GPU selectors
 
+export const getCurrentGpuFrequencySelector = (state: RootState) => {
+  const activeGameId = activeGameIdSelector(state);
+
+  return {
+    currentMin: state.settings.tdpProfiles[activeGameId].minGpuFrequency,
+    currentMax: state.settings.tdpProfiles[activeGameId].maxGpuFrequency,
+  };
+};
+
 export const getGpuFrequencyRangeSelector = (state: RootState) => {
   return {
     min: state.settings.minGpuFrequency,
@@ -289,6 +323,7 @@ export const {
   setCpuBoost,
   setSmt,
   setGpuMode,
+  setGpuFrequency,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
