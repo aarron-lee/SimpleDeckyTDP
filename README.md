@@ -51,6 +51,10 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 # Install
 
+### Prerequisites
+
+Decky Loader must already be installed.
+
 ### Quick Install
 
 run the following in terminal, then reboot:
