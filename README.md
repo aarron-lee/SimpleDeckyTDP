@@ -121,4 +121,4 @@ e.g.
 sudo /path/to/script.sh 15
 ```
 
-You can see how it's used in the code
+You can see how it's used in the code [here](https://github.com/aarron-lee/SimpleDeckyTDP/blob/1ab6b6df468e983a1246ff378875bb2a370b5698/py_modules/cpu_utils.py#L18)
