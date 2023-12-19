@@ -7,6 +7,7 @@ import {
   extractCurrentGameId,
 } from "../utils/constants";
 import { RootState } from "./store";
+import { GpuModes } from "../backend/utils";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -23,6 +24,7 @@ export type TdpProfile = {
   smt: boolean;
   minGpuFrequency: number;
   maxGpuFrequency: number;
+  gpuMode: GpuModes;
 };
 
 export type TdpProfiles = {
@@ -62,6 +64,7 @@ const initialState: SettingsState = {
       tdp: DEFAULT_START_TDP,
       cpuBoost: true,
       smt: true,
+      gpuMode: GpuModes.DEFAULT,
       minGpuFrequency: 0,
       maxGpuFrequency: 0,
     },
@@ -92,6 +95,21 @@ export const settingsSlice = createSlice({
       }
       state.minGpuFrequency = action.payload.minGpuFrequency;
       state.maxGpuFrequency = action.payload.maxGpuFrequency;
+      // set default min/max gpu frequency if not set
+      if (
+        !state.tdpProfiles.default.minGpuFrequency &&
+        action.payload.minGpuFrequency
+      ) {
+        state.tdpProfiles.default.minGpuFrequency =
+          action.payload.minGpuFrequency;
+      }
+      if (
+        !state.tdpProfiles.default.maxGpuFrequency &&
+        action.payload.maxGpuFrequency
+      ) {
+        state.tdpProfiles.default.maxGpuFrequency =
+          action.payload.maxGpuFrequency;
+      }
       state.currentGameId = extractCurrentGameId();
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
