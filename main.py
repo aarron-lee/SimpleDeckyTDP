@@ -4,6 +4,7 @@ import logging
 import os
 from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
+from gpu_utils import get_gpu_frequency_range
 
 
 class Plugin:
@@ -16,15 +17,24 @@ class Plugin:
 
     async def get_settings(self):
         try:
-            return get_saved_settings()
+            settings = get_saved_settings()
+            try:
+                gpu_min, gpu_max = get_gpu_frequency_range()
+                if (gpu_min and gpu_max):
+                    settings['minGpuFrequency'] = gpu_min
+                    settings['maxGpuFrequency'] = gpu_max
+            except Exception as e:
+                logging.error(f"get_settings failed to get GPU clocks {e}")
+
+            return settings
         except Exception as e:
-            logging.error(e)
+            logging.error(f"get_settings failed to get settings {e}")
 
     async def set_setting(self, name: str, value):
         try:
             return set_setting(name, value)
         except Exception as e:
-            logging.error(e)
+            logging.error(f"error failed to set_setting {name}={value} {e}")
         
             
     async def poll_tdp(self, currentGameId: str):

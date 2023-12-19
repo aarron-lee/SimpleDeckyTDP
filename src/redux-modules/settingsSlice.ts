@@ -21,6 +21,8 @@ export type TdpProfile = {
   tdp: number;
   cpuBoost: boolean;
   smt: boolean;
+  minGpuFrequency: number;
+  maxGpuFrequency: number;
 };
 
 export type TdpProfiles = {
@@ -39,6 +41,8 @@ export interface SettingsState extends TdpRangeState, PollState {
   currentGameId: string;
   gameDisplayNames: { [key: string]: string };
   enableTdpProfiles: boolean;
+  minGpuFrequency?: number;
+  maxGpuFrequency?: number;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -58,6 +62,8 @@ const initialState: SettingsState = {
       tdp: DEFAULT_START_TDP,
       cpuBoost: true,
       smt: true,
+      minGpuFrequency: 0,
+      maxGpuFrequency: 0,
     },
   },
   pollEnabled: false,
@@ -84,6 +90,8 @@ export const settingsSlice = createSlice({
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
+      state.minGpuFrequency = action.payload.minGpuFrequency;
+      state.maxGpuFrequency = action.payload.maxGpuFrequency;
       state.currentGameId = extractCurrentGameId();
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
@@ -96,7 +104,7 @@ export const settingsSlice = createSlice({
       const cpuBoost = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
 
-      if(enableTdpProfiles) {
+      if (enableTdpProfiles) {
         set(state.tdpProfiles, `${currentGameId}.cpuBoost`, cpuBoost);
       } else {
         set(state.tdpProfiles, `default.cpuBoost`, cpuBoost);
@@ -108,8 +116,7 @@ export const settingsSlice = createSlice({
 
       if (enableTdpProfiles) {
         set(state.tdpProfiles, `${currentGameId}.smt`, smt);
-      }
-      else {
+      } else {
         set(state.tdpProfiles, `default.smt`, smt);
       }
     },
@@ -196,6 +203,13 @@ export const getCurrentSmtSelector = (state: RootState) => {
   const { tdpProfile: activeTdpProfile } = activeTdpProfileSelector(state);
 
   return Boolean(activeTdpProfile.smt);
+};
+
+export const getGpuFrequencyRangeSelector = (state: RootState) => {
+  return {
+    min: state.settings.minGpuFrequency,
+    max: state.settings.maxGpuFrequency,
+  };
 };
 
 export const getCurrentTdpInfoSelector = (state: RootState) => {
