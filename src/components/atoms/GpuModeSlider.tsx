@@ -1,27 +1,12 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { SliderField, NotchLabel } from "decky-frontend-lib";
 import { capitalize } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getGpuModeSelector,
-  setGpuMode,
-} from "../../redux-modules/settingsSlice";
+import useGpuMode from "../../hooks/useGpuMode";
 
 enum Mode {
   DEFAULT = 0,
   RANGE = 1,
 }
-
-const useGpuMode = () => {
-  const { activeGameId, gpuMode } = useSelector(getGpuModeSelector);
-  const dispatch = useDispatch();
-
-  const setMode = useCallback((mode) => {
-    return dispatch(setGpuMode(mode));
-  }, []);
-
-  return { activeGameId, gpuMode, setGpuMode: setMode };
-};
 
 const GpuModeSlider: FC = () => {
   const { gpuMode, setGpuMode } = useGpuMode();
