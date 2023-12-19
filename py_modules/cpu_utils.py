@@ -3,11 +3,21 @@ import subprocess
 import shutil
 import logging
 import plugin_settings
+from devices import legion_go
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
+
+def modprobe_acpi_call():
+    os.system("modprobe acpi_call")
+    result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    if result.stderr:
+        logging.error(f"modprobe_acpi_call error: {result.stderr}")
+        return False
+    return True
 
 def ryzenadj(tdp: int):
     settings = plugin_settings.get_saved_settings()
@@ -17,6 +27,12 @@ def ryzenadj(tdp: int):
             commands = [settings.get("overrideRyzenadj"), tdp]
             results = subprocess.call(commands)
             return results
+
+        device_name = open("/sys/devices/virtual/dmi/id/product_name", "r").read().strip()
+
+        if device_name == "83E1" and modprobe_acpi_call():
+            # legion go
+            return legion_go.ryzenadj(tdp)
 
         tdp = tdp*1000
 
