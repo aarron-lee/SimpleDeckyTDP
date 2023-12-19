@@ -6,7 +6,6 @@ import {
   getGpuFrequencyRangeSelector,
   setGpuFrequency,
 } from "../../redux-modules/settingsSlice";
-import { useState } from "react";
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -27,8 +26,6 @@ const GpuRangeSliders = () => {
     getCurrentGpuFrequencySelector
   );
   const { setMinFreq, setMaxFreq } = useSetGpuFrequency();
-
-  const [state, setState] = useState(1500);
 
   if (!(min && max)) {
     return <span>Error: Missing GPU Information</span>;
