@@ -33,7 +33,7 @@ const GpuFixedSlider = () => {
       value={currentFrequency}
       showValue
       step={50}
-      valueSuffix="Hz"
+      valueSuffix="MHz"
       min={min}
       max={max}
       validValues="range"

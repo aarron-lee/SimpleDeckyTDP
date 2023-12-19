@@ -38,7 +38,7 @@ const GpuRangeSliders = () => {
         value={currentMin}
         showValue
         step={50}
-        valueSuffix="Hz"
+        valueSuffix="MHz"
         min={min}
         max={max}
         validValues="range"
@@ -56,7 +56,7 @@ const GpuRangeSliders = () => {
         value={currentMax}
         showValue
         step={50}
-        valueSuffix="Hz"
+        valueSuffix="MHz"
         min={min}
         max={max}
         validValues="range"
