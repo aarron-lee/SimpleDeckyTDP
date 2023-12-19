@@ -99,3 +99,26 @@ sudo systemctl restart plugin_loader.service
 
 sudo systemctl reboot
 ```
+
+## Advanced configuration
+
+### Custom TDP method
+
+If you'd prefer to use something other than `ryzenadj` for to set TDP, you can opt to override ryzenadj with an alternative.
+
+In the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json`, add an `overrideRyzenadj` value. Whatever value you set will be used as a command, with the tdp provided as a single additional arg
+
+e.g.
+
+```
+# settings.json
+{
+    "overrideRyzenadj": "/path/to/script.sh",
+    ...
+}
+
+# called later during app runtime
+sudo /path/to/script.sh 15
+```
+
+You can see how it's used in the code

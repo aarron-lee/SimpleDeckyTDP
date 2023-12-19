@@ -2,6 +2,7 @@ import os
 import subprocess
 import shutil
 import logging
+import plugin_settings
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
@@ -9,9 +10,16 @@ AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
 
 def ryzenadj(tdp: int):
-    tdp = tdp*1000
-
+    settings = plugin_settings.get_saved_settings()
     try:
+        if settings.get("overrideRyzenadj"):
+            # use custom Tdp instead of ryzenadj
+            commands = [settings.get("overrideRyzenadj"), tdp]
+            results = subprocess.call(commands)
+            return results
+
+        tdp = tdp*1000
+
         if RYZENADJ_PATH:
             commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
 
