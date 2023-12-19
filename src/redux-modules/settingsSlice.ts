@@ -134,6 +134,15 @@ export const settingsSlice = createSlice({
 
       if (enableTdpProfiles) {
         set(state.tdpProfiles, `${currentGameId}.gpuMode`, newGpuMode);
+        // for users on older version of plugin, gpu freq might not be populated. Populate it here
+        if (!state.tdpProfiles[currentGameId].minGpuFrequency) {
+          state.tdpProfiles[currentGameId].minGpuFrequency =
+            state.tdpProfiles.default.minGpuFrequency;
+        }
+        if (!state.tdpProfiles[currentGameId].maxGpuFrequency) {
+          state.tdpProfiles[currentGameId].maxGpuFrequency =
+            state.tdpProfiles.default.maxGpuFrequency;
+        }
       } else {
         set(state.tdpProfiles, `default.gpuMode`, newGpuMode);
       }

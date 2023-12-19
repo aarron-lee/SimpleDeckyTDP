@@ -13,7 +13,7 @@ const GpuRangeSlider = ({ label, onChange }: PropType) => {
   const { min, max } = useSelector(getGpuFrequencyRangeSelector);
   const [state, setState] = useState(1500);
 
-  if (!(min || max)) {
+  if (!(min && max)) {
     return <span>Error: Missing GPU Information</span>;
   }
 
