@@ -27,14 +27,17 @@ def get_gpu_frequency_range():
 
 def set_gpu_frequency(activeGameId):
     settings = get_saved_settings()
-    tdp_profile = None
-    default_tdp_profile = settings.get("tdpProfiles").get("default")
+    gpu_mode = GpuModes.DEFAULT.value
+    tdp_profile = settings.get("tdpProfiles").get("default")
 
     if settings.get("enableTdpProfiles"):
         current_tdp_profile = settings.get("tdpProfiles").get(activeGameId)
-        tdp_profile = current_tdp_profile or default_tdp_profile
+        if current_tdp_profile:
+            tdp_profile = current_tdp_profile
+    if tdp_profile.get("gpuMode"):
+        gpu_mode = tdp_profile.get("gpuMode")
 
-    if tdp_profile.get("gpuMode") == GpuModes.DEFAULT.value:
+    if gpu_mode == GpuModes.DEFAULT.value:
         try:
             # change back to auto
             open(GPU_LEVEL_PATH,'w').write("auto")
@@ -42,7 +45,7 @@ def set_gpu_frequency(activeGameId):
         except Exception as e:
             logging.error(f"set_gpu_frequency default mode error {e}")
             return False
-    elif tdp_profile.get("gpuMode") == GpuModes.RANGE.value:
+    elif gpu_mode == GpuModes.RANGE.value:
         new_min = tdp_profile.get(GpuRange.MIN.value, 0)
         new_max = tdp_profile.get(GpuRange.MAX.value, 0)
         return set_gpu_frequency_range(new_min, new_max)
