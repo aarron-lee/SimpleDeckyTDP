@@ -39,14 +39,10 @@ const GpuRangeSliders = () => {
         step={50}
         description={`${currentMin} MHz`}
         min={min}
-        max={max}
+        max={currentMax}
         validValues="range"
         bottomSeparator="none"
         onChange={(newMin) => {
-          if (newMin > currentMax) {
-            return;
-          }
-
           return setMinFreq(newMin);
         }}
       />
@@ -55,15 +51,11 @@ const GpuRangeSliders = () => {
         value={currentMax}
         step={50}
         description={`${currentMax} MHz`}
-        min={min}
+        min={currentMin}
         max={max}
         validValues="range"
         bottomSeparator="none"
         onChange={(newMax) => {
-          if (newMax < currentMin) {
-            return;
-          }
-
           return setMaxFreq(newMax);
         }}
       />

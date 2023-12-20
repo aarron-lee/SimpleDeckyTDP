@@ -84,3 +84,12 @@ export const saveServerApi = (s: ServerAPI) => {
 export const getServerApi = () => {
   return serverApi;
 };
+
+export const getLogInfo = () => {
+  if (serverApi) {
+    const logInfo = createLogInfo(serverApi);
+    return logInfo;
+  } else {
+    return () => {};
+  }
+};
