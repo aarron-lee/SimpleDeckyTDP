@@ -28,11 +28,12 @@ def ryzenadj(tdp: int):
             results = subprocess.call(commands)
             return results
 
-        device_name = open("/sys/devices/virtual/dmi/id/product_name", "r").read().strip()
+        if settings.get("enableLegionGoCustomTDP"):
+            device_name = open("/sys/devices/virtual/dmi/id/product_name", "r").read().strip()
 
-        if device_name == "83E1" and modprobe_acpi_call():
-            # legion go
-            return legion_go.ryzenadj(tdp)
+            if device_name == "83E1" and modprobe_acpi_call():
+                # legion go
+                return legion_go.ryzenadj(tdp)
 
         tdp = tdp*1000
 
