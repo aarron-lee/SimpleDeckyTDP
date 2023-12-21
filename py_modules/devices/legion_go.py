@@ -2,6 +2,7 @@ import logging
 import subprocess
 
 # credit for all of the functions in this file goes to corando98 on github
+# https://github.com/corando98/
 
 def ryzenadj(tdp):
     try:

@@ -2,6 +2,17 @@
 
 This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
+- [Compatibility](#compatibility)
+- [Requirements](#requirements)
+- [Installation](#install)
+  - [Prerequisites](#prerequisites)
+  - [Quick Install](#quick-install)
+  - [Manual Install](#manual-install)
+- [Manual Build](#manual-build)
+- [Advanced Configuration](#advanced-configuration)
+  - [Custom TDP Method](#custom-tdp-method)
+- [Troubleshooting](#troubleshooting)
+
 ![plugin image](./img/plugin_image.png)
 ![gpu settings](./img/gpu_settings.png)
 
@@ -127,3 +138,13 @@ sudo /path/to/script.sh 15
 ```
 
 You can see how it's used in the code [here](https://github.com/aarron-lee/SimpleDeckyTDP/blob/1ab6b6df468e983a1246ff378875bb2a370b5698/py_modules/cpu_utils.py#L18)
+
+## Troubleshooting
+
+### Buggy behavior after upgrading the plugin to a new version
+
+If you see buggy behavior after upgrading to a new version of the plugin, it might be due to some bad values in an older settings file.
+
+Try deleting the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json` file.
+
+Note that this will delete any of your saved TDP profiles, so you could optionally copy it somewhere else to keep it as a backup instead.
