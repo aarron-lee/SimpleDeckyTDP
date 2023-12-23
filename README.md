@@ -11,6 +11,7 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 - [Manual Build](#manual-build)
 - [Advanced Configuration](#advanced-configuration)
   - [Custom TDP Method](#custom-tdp-method)
+  - [Custom Device Settings](#custom-device-settings)
 - [Troubleshooting](#troubleshooting)
 
 ![plugin image](./img/plugin_image.png)
@@ -138,6 +139,10 @@ sudo /path/to/script.sh 15
 ```
 
 You can see how it's used in the code [here](https://github.com/aarron-lee/SimpleDeckyTDP/blob/1ab6b6df468e983a1246ff378875bb2a370b5698/py_modules/cpu_utils.py#L18)
+
+### Custom Device settings
+
+See [device settings README](./py_modules/devices/README.md)
 
 ## Troubleshooting
 
