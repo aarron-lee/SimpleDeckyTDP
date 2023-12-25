@@ -6,6 +6,8 @@ This method, once enabled, will use Lenovo's built-in Custom TDP mode.
 
 Note that this requires the `acpi_call` module, if your distro doesn't have it pre-installed, it'll have to be manually installed.
 
+This also requires the v28 or newer bios.
+
 ### Setup Instructions:
 
 1. `sudo modprobe acpi_call`, if this errors out, you need to install `acpi_call`
