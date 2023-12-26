@@ -35,24 +35,28 @@ const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
 
 let pollIntervalId: undefined | number;
 
+// always have a default 10 second poll rate in the background
+// some devices mess with TDP in the background, e.g. Lenovo Legion Go
+const BACKGROUND_POLL_RATE = 10000;
+
 const resetPolling = (store: any) => {
   if (pollIntervalId) {
     clearInterval(pollIntervalId);
   }
   const state = store.getState();
-  const pollEnabled = pollEnabledSelector(state);
+  const pollOverrideEnabled = pollEnabledSelector(state);
 
-  if (pollEnabled) {
-    const pollRate = pollRateSelector(state);
+  const pollRateOverride = pollRateSelector(state);
 
-    pollIntervalId = window.setInterval(() => {
-      const serverApi = getServerApi();
-      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const activeGameId = activeGameIdSelector(store.getState());
+  const actualPollRate = pollOverrideEnabled ? pollRateOverride : BACKGROUND_POLL_RATE
 
-      setPollTdp(activeGameId);
-    }, pollRate);
-  }
+  pollIntervalId = window.setInterval(() => {
+    const serverApi = getServerApi();
+    const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+    const activeGameId = activeGameIdSelector(store.getState());
+
+    setPollTdp(activeGameId);
+  }, actualPollRate);
 };
 
 export const settingsMiddleware =
