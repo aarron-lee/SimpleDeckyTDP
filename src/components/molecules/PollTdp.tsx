@@ -5,6 +5,7 @@ import {
   PanelSectionRow,
 } from "decky-frontend-lib";
 import {
+  useDisableBackgroundPolling,
   usePollInfo,
   useSetPoll,
   useSetPollRate,
@@ -14,23 +15,27 @@ export function PollTdp() {
   const { enabled, pollRate } = usePollInfo();
   const setPoll = useSetPoll();
   const setPollRate = useSetPollRate();
+  const { disableBackgroundPolling, setDisableBackgroundPolling } =
+    useDisableBackgroundPolling();
 
   return (
     <PanelSection title="Poll TDP">
-      <PanelSectionRow>
-        <ToggleField
-          label="Enable Polling"
-          checked={enabled}
-          onChange={(enabled: boolean) => {
-            setPoll(enabled);
-          }}
-          highlightOnFocus
-        />
-      </PanelSectionRow>
-      {enabled && (
+      {!disableBackgroundPolling && (
+        <PanelSectionRow>
+          <ToggleField
+            label="Enable Polling Rate Override"
+            checked={enabled}
+            onChange={(enabled: boolean) => {
+              setPoll(enabled);
+            }}
+            highlightOnFocus
+          />
+        </PanelSectionRow>
+      )}
+      {enabled && !disableBackgroundPolling && (
         <PanelSectionRow>
           <SliderField
-            label="Poll Rate"
+            label="Override Poll Rate"
             description={`Set TDP every ${pollRate / 1000} seconds`}
             value={pollRate / 1000}
             step={1}
@@ -42,6 +47,21 @@ export function PollTdp() {
           />
         </PanelSectionRow>
       )}
+      <PanelSectionRow>
+        <ToggleField
+          label="Force Disable Background Polling"
+          checked={disableBackgroundPolling}
+          onChange={(enabled: boolean) => {
+            setDisableBackgroundPolling(enabled);
+          }}
+          highlightOnFocus
+          description={
+            disableBackgroundPolling
+              ? "Background TDP Polling Disabled"
+              : "10s Background TDP Poll Rate"
+          }
+        />
+      </PanelSectionRow>
     </PanelSection>
   );
 }

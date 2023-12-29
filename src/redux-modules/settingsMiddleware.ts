@@ -1,10 +1,12 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
+  disableBackgroundPollingSelector,
   pollEnabledSelector,
   pollRateSelector,
   setCpuBoost,
   setCurrentGameInfo,
+  setDisableBackgroundPolling,
   setEnableTdpProfiles,
   setFixedGpuFrequency,
   setGpuFrequency,
@@ -44,19 +46,24 @@ const resetPolling = (store: any) => {
     clearInterval(pollIntervalId);
   }
   const state = store.getState();
-  const pollOverrideEnabled = pollEnabledSelector(state);
 
+  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
+  const pollOverrideEnabled = pollEnabledSelector(state);
   const pollRateOverride = pollRateSelector(state);
 
-  const actualPollRate = pollOverrideEnabled ? pollRateOverride : BACKGROUND_POLL_RATE
+  const actualPollRate = pollOverrideEnabled
+    ? pollRateOverride
+    : BACKGROUND_POLL_RATE;
 
-  pollIntervalId = window.setInterval(() => {
-    const serverApi = getServerApi();
-    const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-    const activeGameId = activeGameIdSelector(store.getState());
+  if (!disableBackgroundPolling) {
+    pollIntervalId = window.setInterval(() => {
+      const serverApi = getServerApi();
+      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+      const activeGameId = activeGameIdSelector(store.getState());
 
-    setPollTdp(activeGameId);
-  }, actualPollRate);
+      setPollTdp(activeGameId);
+    }, actualPollRate);
+  }
 };
 
 export const settingsMiddleware =
@@ -74,6 +81,17 @@ export const settingsMiddleware =
     if (action.type === resumeAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
       setPollTdp(activeGameId);
+    }
+
+    if (action.type === setDisableBackgroundPolling.type) {
+      // update value on backend
+      setSetting({
+        fieldName: "disableBackgroundPolling",
+        fieldValue: action.payload,
+      });
+
+      // reset polling
+      resetPolling(store);
     }
 
     if (
