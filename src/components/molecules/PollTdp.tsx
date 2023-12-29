@@ -16,7 +16,7 @@ export function PollTdp() {
   const setPollRate = useSetPollRate();
 
   return (
-    <PanelSection title="Poll TDP">
+    <PanelSection title="Poll TDP Override">
       <PanelSectionRow>
         <ToggleField
           label="Enable Polling"
@@ -30,7 +30,7 @@ export function PollTdp() {
       {enabled && (
         <PanelSectionRow>
           <SliderField
-            label="Poll Rate"
+            label="Override Poll Rate"
             description={`Set TDP every ${pollRate / 1000} seconds`}
             value={pollRate / 1000}
             step={1}
