@@ -58,7 +58,7 @@ export function PollTdp() {
           description={
             disableBackgroundPolling
               ? "Background TDP Polling Disabled"
-              : "10s Background TDP Poll Rate"
+              : `${enabled ? pollRate / 1000 : "10"}s Background TDP Poll Rate`
           }
         />
       </PanelSectionRow>
