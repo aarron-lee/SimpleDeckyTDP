@@ -55,11 +55,6 @@ export function PollTdp() {
             setDisableBackgroundPolling(enabled);
           }}
           highlightOnFocus
-          description={
-            disableBackgroundPolling
-              ? "Background TDP Polling Disabled"
-              : `${enabled ? pollRate / 1000 : "10"}s Background TDP Poll Rate`
-          }
         />
       </PanelSectionRow>
     </PanelSection>
