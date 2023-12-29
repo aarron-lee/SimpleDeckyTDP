@@ -1,10 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import {
   pollRateSelector,
   pollEnabledSelector,
   updatePollRate,
   setPolling,
-} from '../redux-modules/settingsSlice';
+  disableBackgroundPollingSelector,
+  setDisableBackgroundPolling,
+} from "../redux-modules/settingsSlice";
 
 export const usePollInfo = () => {
   return {
@@ -26,5 +28,18 @@ export const useSetPoll = () => {
 
   return (enabled: boolean) => {
     return dispatch(setPolling(enabled));
+  };
+};
+
+export const useDisableBackgroundPolling = () => {
+  const enabled = useSelector(disableBackgroundPollingSelector);
+  const dispatch = useDispatch();
+  const setter = (enabled: boolean) => {
+    return dispatch(setDisableBackgroundPolling(enabled));
+  };
+
+  return {
+    disableBackgroundPolling: enabled,
+    setDisableBackgroundPolling: setter,
   };
 };

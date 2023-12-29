@@ -2,7 +2,7 @@
 import decky_plugin
 import logging
 import os
-from plugin_settings import set_setting, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile
+from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
 
@@ -32,7 +32,7 @@ class Plugin:
 
     async def set_setting(self, name: str, value):
         try:
-            return set_setting(name, value)
+            return persist_setting(name, value)
         except Exception as e:
             logging.error(f"error failed to set_setting {name}={value} {e}")
         
