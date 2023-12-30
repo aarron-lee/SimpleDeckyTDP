@@ -1,6 +1,7 @@
 import logging
 import decky_plugin
 import subprocess
+import time
 
 # credit for all of the functions in this file goes to corando98 on github
 # https://github.com/corando98/
@@ -8,6 +9,7 @@ import subprocess
 def ryzenadj(tdp):
     try:
         set_smart_fan_mode(0xff)
+        time.sleep(0.1)
         set_tdp_value('Slow', tdp)
         set_tdp_value('Steady', tdp)
         set_tdp_value('Fast', tdp + 2)
