@@ -1,4 +1,5 @@
 import logging
+import decky_plugin
 import subprocess
 
 # credit for all of the functions in this file goes to corando98 on github
@@ -6,12 +7,12 @@ import subprocess
 
 def ryzenadj(tdp):
     try:
-        set_smart_fan_mode(255)
+        set_smart_fan_mode(0xff)
         set_tdp_value('Slow', tdp)
         set_tdp_value('Steady', tdp)
         set_tdp_value('Fast', tdp + 2)
     except Exception as e:
-        logging.error(f"legion go ryzenadj error {e}")
+        decky_plugin.logger.error(f"legion go ryzenadj error {e}")
 
 def set_tdp_value(mode, wattage):
     """
@@ -92,5 +93,30 @@ def set_smart_fan_mode(mode_value):
     Returns:
         str: The result of the operation. Returns None if an error occurs.
     """
-    command = f"echo '\\_SB.GZFD.WMAA 0 0x2C {mode_value}' |  tee /proc/acpi/call;  cat /proc/acpi/call"
-    return execute_acpi_command(command)
+    is_already_set = get_smart_fan_mode() == mode_value
+
+    if not is_already_set:
+        command = f"echo '\\_SB.GZFD.WMAA 0 0x2C {mode_value}' |  tee /proc/acpi/call;  cat /proc/acpi/call"
+        return execute_acpi_command(command)
+    return True
+
+def get_smart_fan_mode():
+    """
+    Get the current Smart Fan Mode of the system.
+
+    This function retrieves the current setting of the Smart Fan mode as specified in the WMI documentation.
+
+    Returns:
+        str: The current Smart Fan Mode. The return value corresponds to:
+             - '0': Quiet Mode
+             - '1': Balanced Mode
+             - '2': Performance Mode
+             - '224': Extreme Mode
+             - '255': Custom Mode
+             Returns None if an error occurs.
+    """
+    command = "echo '\\_SB.GZFD.WMAA 0 0x2D' | tee /proc/acpi/call; cat /proc/acpi/call"
+    output = execute_acpi_command(command)
+    first_newline_position = output.find('\n')
+    output = output[first_newline_position+1:first_newline_position+5].replace('\x00', '')
+    return int(output, 16)
