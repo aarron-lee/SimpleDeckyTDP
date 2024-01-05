@@ -6,7 +6,7 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 - [Requirements](#requirements)
 - [Installation](#install)
   - [Prerequisites](#prerequisites)
-  - [Quick Install](#quick-install)
+  - [Quick Install / Update](#quick-install--update)
   - [Manual Install](#manual-install)
 - [Manual Build](#manual-build)
 - [Advanced Configuration](#advanced-configuration)
@@ -67,9 +67,9 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 Decky Loader must already be installed.
 
-### Quick Install
+### Quick Install / Update
 
-run the following in terminal, then reboot:
+Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
 
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
