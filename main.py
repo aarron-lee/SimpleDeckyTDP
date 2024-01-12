@@ -61,8 +61,8 @@ class Plugin:
             return True            
 
     async def save_tdp(self, tdpProfiles, currentGameId):
-        set_all_tdp_profiles(tdpProfiles)
         try:
+            set_all_tdp_profiles(tdpProfiles)
             tdp_profile = get_active_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
             smt = tdp_profile.get('smt', True)
