@@ -28,7 +28,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           <TdpSlider />
           <TdpProfiles />
           <CpuFeatureToggles />
-          <Gpu />
+          {/* <Gpu /> */}
           <TdpRange />
           <PollTdp />
         </>
