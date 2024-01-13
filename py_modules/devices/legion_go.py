@@ -35,12 +35,12 @@ def set_tdp_value(mode, wattage):
     command = f"echo '\\_SB.GZFD.WMAE 0 0x12 {{0x00, 0xFF, {mode_code}, 0x01, {wattage}, 0x00, 0x00, 0x00}}' |  tee /proc/acpi/call;  cat /proc/acpi/call"
 
     # Logging the command
-    logging.info(f"Command to set TDP value: {command}")
+    # logging.info(f"Command to set TDP value: {command}")
 
     output = execute_acpi_command(command)
 
     # Logging the output
-    logging.info(f"Output from setting TDP value: {output}")
+    # logging.info(f"Output from setting TDP value: {output}")
 
     return output
 
