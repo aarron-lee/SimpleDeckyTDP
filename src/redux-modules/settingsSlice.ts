@@ -22,9 +22,9 @@ export type TdpProfile = {
   tdp: number;
   cpuBoost: boolean;
   smt: boolean;
-  minGpuFrequency: number;
-  maxGpuFrequency: number;
-  fixedGpuFrequency: number;
+  minGpuFrequency?: number;
+  maxGpuFrequency?: number;
+  fixedGpuFrequency?: number;
   gpuMode: GpuModes;
 };
 
@@ -67,9 +67,9 @@ const initialState: SettingsState = {
       cpuBoost: true,
       smt: true,
       gpuMode: GpuModes.DEFAULT,
-      minGpuFrequency: 1100,
-      maxGpuFrequency: 1300,
-      fixedGpuFrequency: 1200,
+      minGpuFrequency: undefined,
+      maxGpuFrequency: undefined,
+      fixedGpuFrequency: undefined,
     },
   },
   pollEnabled: false,
