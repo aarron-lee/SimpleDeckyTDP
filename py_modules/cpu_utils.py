@@ -51,7 +51,9 @@ def set_cpu_boost(enabled = True):
 
         if os.path.exists(AMD_PSTATE_PATH):
             pstate = 'active' if enabled else 'passive'
-            open(AMD_PSTATE_PATH, 'w').write(pstate)
+            with open(AMD_PSTATE_PATH, 'w') as f:
+                f.write(pstate)
+                f.close()
 
         if os.path.exists(BOOST_PATH):
             with open(BOOST_PATH, 'w') as file:
@@ -59,6 +61,7 @@ def set_cpu_boost(enabled = True):
                     file.write('1')
                 else:
                     file.write('0')
+                file.close()
 
         return True
     except Exception as e:
@@ -75,6 +78,7 @@ def set_smt(enabled = True):
                     file.write('on')
                 else:
                     file.write('off')
+                file.close()
 
         return True
     except Exception as e:
