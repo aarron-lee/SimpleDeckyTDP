@@ -34,7 +34,7 @@ def ryzenadj(tdp: int):
                 device_name = file.read().strip()
                 file.close()
 
-                decky_plugin.logger.info(device_name)
+                # decky_plugin.logger.info(device_name)
 
                 if device_name == "83E1" and modprobe_acpi_call():
                     # legion go

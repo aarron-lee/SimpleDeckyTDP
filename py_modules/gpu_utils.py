@@ -1,6 +1,8 @@
 import decky_plugin
 import glob
 import re
+import time
+import subprocess
 from plugin_enums import GpuModes, GpuRange
 from plugin_settings import get_saved_settings
 
@@ -37,7 +39,7 @@ def set_gpu_frequency(current_game_id):
     if tdp_profile.get("gpuMode"):
         gpu_mode = tdp_profile.get("gpuMode")
 
-    # decky_plugin.debug.info(f'{__name__} {current_game_id} {gpu_mode} {tdp_profile}')
+    # decky_plugin.logger.info(f'{__name__} {current_game_id} {gpu_mode} {tdp_profile}')
 
     if gpu_mode == GpuModes.DEFAULT.value:
         try:
@@ -63,34 +65,37 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
     try:
         min, max = get_gpu_frequency_range()
 
-        # decky_plugin.logger.debug(f'{new_min} {new_max}')
-        # decky_plugin.logger.debug(f'{min} {max}')
+        # decky_plugin.logger.info(f'{new_min} {new_max}')
+        # decky_plugin.logger.info(f'{min} {max}')
 
         if not (new_min >= min and new_max <= max and new_min <= new_max):
             # invalid values, just change back to auto
-            # decky_plugin.logger.debug(f'auto')
+            # decky_plugin.logger.info(f'auto')
 
             with open(GPU_LEVEL_PATH,'w') as f:
                 f.write("auto")
                 f.close()
             return True
-        # decky_plugin.logger.debug(f'manual')
+        # decky_plugin.logger.info(f'manual')
 
-        with open(GPU_LEVEL_PATH,'w') as f:
-            f.write("manual")
-            f.close()
-        with open(GPU_FREQUENCY_PATH,'w') as f:
-            f.write(f"s 0 {new_min}")
-            f.close()
-        with open(GPU_FREQUENCY_PATH,'w') as f:
-            f.write(f"s 1 {new_max}")
-            f.close()
-        with open(GPU_FREQUENCY_PATH,'w') as f:
-            f.write("c")
-            f.close()
-        decky_plugin.logger.debug(f'gpu freq range end')
+        with open(GPU_LEVEL_PATH,'w') as file:
+            file.write("manual")
+            file.close()
+        time.sleep(0.1)
+        try:
+            execute_gpu_frequency_command(f"s 0 {new_min}")
+            execute_gpu_frequency_command(f"s 1 {new_max}")
+            execute_gpu_frequency_command("c")
+        except Exception as e:
+            decky_plugin.logger.error(f"{__name__} error while trying to write frequency range")
+        # decky_plugin.logger.info(f'gpu freq range end')
 
         return True
     except Exception as e:
         decky_plugin.logger.error(f"set_gpu_frequency_range {new_min} {new_max} error {e}")
         return False
+    
+
+def execute_gpu_frequency_command(command):
+    cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
