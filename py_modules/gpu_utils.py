@@ -37,7 +37,7 @@ def set_gpu_frequency(current_game_id):
     if tdp_profile.get("gpuMode"):
         gpu_mode = tdp_profile.get("gpuMode")
 
-    decky_plugin.debug.info(f'{__name__} {current_game_id} {gpu_mode} {tdp_profile}')
+    # decky_plugin.debug.info(f'{__name__} {current_game_id} {gpu_mode} {tdp_profile}')
 
     if gpu_mode == GpuModes.DEFAULT.value:
         try:
@@ -63,18 +63,18 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
     try:
         min, max = get_gpu_frequency_range()
 
-        decky_plugin.logger.debug(f'{new_min} {new_max}')
-        decky_plugin.logger.debug(f'{min} {max}')
+        # decky_plugin.logger.debug(f'{new_min} {new_max}')
+        # decky_plugin.logger.debug(f'{min} {max}')
 
         if not (new_min >= min and new_max <= max and new_min <= new_max):
             # invalid values, just change back to auto
-            decky_plugin.logger.debug(f'auto')
+            # decky_plugin.logger.debug(f'auto')
 
             with open(GPU_LEVEL_PATH,'w') as f:
                 f.write("auto")
                 f.close()
             return True
-        decky_plugin.logger.debug(f'manual')
+        # decky_plugin.logger.debug(f'manual')
 
         with open(GPU_LEVEL_PATH,'w') as f:
             f.write("manual")

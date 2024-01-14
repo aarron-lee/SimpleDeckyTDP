@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import decky_plugin
 import logging
 import plugin_settings
 from devices import legion_go
@@ -33,6 +34,8 @@ def ryzenadj(tdp: int):
                 device_name = file.read().strip()
                 file.close()
 
+                decky_plugin.logger.info(device_name)
+
                 if device_name == "83E1" and modprobe_acpi_call():
                     # legion go
                     return legion_go.ryzenadj(tdp)
@@ -49,7 +52,7 @@ def ryzenadj(tdp: int):
 
 def set_cpu_boost(enabled = True):
     try:
-        logging.debug(f"set_cpu_boost to {enabled}")
+        # logging.debug(f"set_cpu_boost to {enabled}")
 
         if os.path.exists(AMD_PSTATE_PATH):
             pstate = 'active' if enabled else 'passive'
@@ -72,7 +75,7 @@ def set_cpu_boost(enabled = True):
 
 def set_smt(enabled = True):
     try:
-        logging.debug(f"set_smt to {enabled}")
+        # logging.debug(f"set_smt to {enabled}")
 
         if os.path.exists(AMD_SMT_PATH):
             with open(AMD_SMT_PATH, 'w') as file:
