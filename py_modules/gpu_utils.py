@@ -81,7 +81,11 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
             f.close()
         with open(GPU_FREQUENCY_PATH,'w') as f:
             f.write(f"s 0 {new_min}")
+            f.close()
+        with open(GPU_FREQUENCY_PATH,'w') as f:
             f.write(f"s 1 {new_max}")
+            f.close()
+        with open(GPU_FREQUENCY_PATH,'w') as f:
             f.write("c")
             f.close()
         decky_plugin.logger.debug(f'gpu freq range end')
