@@ -27,6 +27,8 @@ Other distros not tested.
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
+Note that ryzenadj is NOT necessary if you plan on either using a [ryzenadj override](#custom-tdp-method) or use a [custom device setting](#custom-device-settings). There is a custom device setting available for the Legion Go.
+
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
 e.g.
