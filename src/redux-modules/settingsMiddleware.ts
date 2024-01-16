@@ -50,22 +50,27 @@ const resetPolling = (store: any) => {
   }
   const state = store.getState();
 
-  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
-  const pollOverrideEnabled = pollEnabledSelector(state);
-  const pollRateOverride = pollRateSelector(state);
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+  const tdpControlEnabled = Boolean(advancedState["tdpControl"]);
 
-  const actualPollRate = pollOverrideEnabled
-    ? pollRateOverride
-    : BACKGROUND_POLL_RATE;
+  if (tdpControlEnabled) {
+    const disableBackgroundPolling = disableBackgroundPollingSelector(state);
+    const pollOverrideEnabled = pollEnabledSelector(state);
+    const pollRateOverride = pollRateSelector(state);
 
-  if (!disableBackgroundPolling) {
-    pollIntervalId = window.setInterval(() => {
-      const serverApi = getServerApi();
-      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const activeGameId = activeGameIdSelector(store.getState());
+    const actualPollRate = pollOverrideEnabled
+      ? pollRateOverride
+      : BACKGROUND_POLL_RATE;
 
-      setPollTdp(activeGameId);
-    }, actualPollRate);
+    if (!disableBackgroundPolling) {
+      pollIntervalId = window.setInterval(() => {
+        const serverApi = getServerApi();
+        const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+        const activeGameId = activeGameIdSelector(store.getState());
+
+        setPollTdp(activeGameId);
+      }, actualPollRate);
+    }
   }
 };
 

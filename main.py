@@ -46,6 +46,10 @@ class Plugin:
             cpu_boost = default_tdp_profile.get('cpuBoost', True)
             tdp = default_tdp_profile.get('tdp', 12)
 
+            tdp_control_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            )
+
             if settings.get('enableTdpProfiles'):
                 tdp_profile = get_tdp_profile(currentGameId)
                 cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
@@ -54,7 +58,8 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    ryzenadj(tdp)
+                    if tdp_control_enabled:
+                        ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
             except Exception as e:
@@ -68,6 +73,10 @@ class Plugin:
             set_all_tdp_profiles(tdpProfiles)
             persist_setting('advanced', advanced)
 
+            tdp_control_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            )
+
             tdp_profile = get_active_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
             smt = tdp_profile.get('smt', True)
@@ -75,7 +84,8 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    ryzenadj(tdp)
+                    if tdp_control_enabled:
+                        ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
                     set_gpu_frequency(currentGameId)
