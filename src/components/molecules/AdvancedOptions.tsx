@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux-modules/store";
-import { getAdvancedOptionsInfoSelector } from "../../redux-modules/settingsSlice";
+import {
+  getAdvancedOptionsInfoSelector,
+  updateAdvancedOption,
+} from "../../redux-modules/settingsSlice";
 import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 
@@ -29,6 +32,11 @@ const AdvancedOptions = () => {
                 checked={value}
                 highlightOnFocus
                 bottomSeparator="none"
+                onChange={(enabled) => {
+                  return dispatch(
+                    updateAdvancedOption({ statePath, value: enabled })
+                  );
+                }}
               />
             </PanelSectionRow>
           );

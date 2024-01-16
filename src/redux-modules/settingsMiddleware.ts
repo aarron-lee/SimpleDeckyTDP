@@ -14,6 +14,7 @@ import {
   setGpuMode,
   setPolling,
   setSmt,
+  updateAdvancedOption,
   updateInitialLoad,
   updateMaxTdp,
   updateMinTdp,
@@ -32,6 +33,7 @@ const resetTdpActionTypes = [
   updatePollRate.type,
   setPolling.type,
   updateInitialLoad.type,
+  updateAdvancedOption.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];

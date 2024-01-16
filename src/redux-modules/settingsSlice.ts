@@ -95,6 +95,14 @@ export const settingsSlice = createSlice({
     updateMaxTdp: (state, action: PayloadAction<number>) => {
       state.maxTdp = action.payload;
     },
+    updateAdvancedOption: (
+      state,
+      action: PayloadAction<{ statePath: string; value: any }>
+    ) => {
+      const { statePath, value } = action.payload;
+
+      set(state, `advanced.${statePath}`, value);
+    },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const { minGpuFrequency, maxGpuFrequency, advancedOptions } =
         action.payload;
@@ -381,6 +389,7 @@ export const {
   setGpuFrequency,
   setFixedGpuFrequency,
   setDisableBackgroundPolling,
+  updateAdvancedOption,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
