@@ -13,12 +13,17 @@ import {
   suspendEventListener,
 } from "./steamListeners";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
-import { useIsInitiallyLoading } from "./hooks/useInitialState";
+import {
+  useFetchInitialStateEffect,
+  useIsInitiallyLoading,
+} from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
+  useFetchInitialStateEffect();
+
   const loading = useIsInitiallyLoading();
 
   return (

@@ -1,11 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { get, merge, set } from "lodash";
-import {
-  DEFAULT_POLL_RATE,
-  DEFAULT_START_TDP,
-  extractCurrentGameId,
-} from "../utils/constants";
+import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
 
@@ -118,7 +114,6 @@ export const settingsSlice = createSlice({
           (minGpuFrequency + maxGpuFrequency) / 2
         );
       }
-      state.currentGameId = extractCurrentGameId();
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
       merge(state.tdpProfiles, action.payload);
