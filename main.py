@@ -2,15 +2,13 @@
 import decky_plugin
 import logging
 import os
+import file_timeout
 from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
 
 
 class Plugin:
-    # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
-    async def add(self, left, right):
-        return left + right
 
     async def log_info(self, info):
         logging.info(info)
@@ -19,10 +17,11 @@ class Plugin:
         try:
             settings = get_saved_settings()
             try:
-                gpu_min, gpu_max = get_gpu_frequency_range()
-                if (gpu_min and gpu_max):
-                    settings['minGpuFrequency'] = gpu_min
-                    settings['maxGpuFrequency'] = gpu_max
+                with file_timeout.time_limit(3):
+                    gpu_min, gpu_max = get_gpu_frequency_range()
+                    if (gpu_min and gpu_max):
+                        settings['minGpuFrequency'] = gpu_min
+                        settings['maxGpuFrequency'] = gpu_max
             except Exception as e:
                 logging.error(f"get_settings failed to get GPU clocks {e}")
 
@@ -40,23 +39,24 @@ class Plugin:
     async def poll_tdp(self, currentGameId: str):
             settings = get_saved_settings()
             default_tdp_profile = get_tdp_profile('default')
-            default_smt = default_tdp_profile.get('smt', True)
-            default_cpu_boost = default_tdp_profile.get('cpuBoost', True)
-            default_tdp = default_tdp_profile.get('tdp', 12)
+            smt = default_tdp_profile.get('smt', True)
+            cpu_boost = default_tdp_profile.get('cpuBoost', True)
+            tdp = default_tdp_profile.get('tdp', 12)
 
             if settings.get('enableTdpProfiles'):
                 tdp_profile = get_tdp_profile(currentGameId)
-                cpu_boost = tdp_profile.get('cpuBoost', default_cpu_boost)
-                game_tdp = tdp_profile.get('tdp', default_tdp)
-                game_smt = tdp_profile.get('smt', default_smt)
+                cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
+                tdp = tdp_profile.get('tdp', tdp)
+                smt = tdp_profile.get('smt', smt)
 
-                set_cpu_boost(cpu_boost)
-                set_smt(game_smt)
-                ryzenadj(game_tdp)
-            else:
-                set_smt(default_smt)
-                set_cpu_boost(default_cpu_boost)
-                ryzenadj(default_tdp)
+            try:
+                with file_timeout.time_limit(3):
+                    ryzenadj(tdp)
+                    set_smt(smt)
+                    set_cpu_boost(cpu_boost)
+            except Exception as e:
+                logging.error(f'main#poll_tdp file timeout {e}')
+                return False
 
             return True            
 
@@ -68,12 +68,15 @@ class Plugin:
             smt = tdp_profile.get('smt', True)
             cpu_boost = tdp_profile.get('cpuBoost', True)
 
-            set_gpu_frequency(currentGameId)
-            set_smt(smt)
-            set_cpu_boost(cpu_boost)
+            try:
+                with file_timeout.time_limit(3):
+                    ryzenadj(tdp)
+                    set_smt(smt)
+                    set_cpu_boost(cpu_boost)
+                    set_gpu_frequency(currentGameId)
+            except Exception as e:
+                logging.error(f'main#save_tdp file timeout {e}')
 
-            # set tdp via ryzenadj
-            return ryzenadj(tdp)
         except Exception as e:
             logging.error(e)
 
