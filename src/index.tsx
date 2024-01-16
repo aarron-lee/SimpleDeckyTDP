@@ -20,22 +20,32 @@ import {
 import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
+import AdvancedOptions, {
+  useIsTdpControlEnabled,
+} from "./components/molecules/AdvancedOptions";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
 
   const loading = useIsInitiallyLoading();
 
+  const tdpControlEnabled = useIsTdpControlEnabled();
+
   return (
     <>
       {!loading && (
         <>
-          <TdpSlider />
-          <TdpProfiles />
+          {tdpControlEnabled && (
+            <>
+              <TdpSlider />
+              <TdpProfiles />
+            </>
+          )}
           <CpuFeatureToggles />
           <Gpu />
           <TdpRange />
           <PollTdp />
+          <AdvancedOptions />
         </>
       )}
     </>

@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   disableBackgroundPollingSelector,
+  getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
   setCpuBoost,
@@ -13,6 +14,7 @@ import {
   setGpuMode,
   setPolling,
   setSmt,
+  updateAdvancedOption,
   updateInitialLoad,
   updateMaxTdp,
   updateMinTdp,
@@ -31,6 +33,7 @@ const resetTdpActionTypes = [
   updatePollRate.type,
   setPolling.type,
   updateInitialLoad.type,
+  updateAdvancedOption.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
@@ -47,22 +50,27 @@ const resetPolling = (store: any) => {
   }
   const state = store.getState();
 
-  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
-  const pollOverrideEnabled = pollEnabledSelector(state);
-  const pollRateOverride = pollRateSelector(state);
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+  const tdpControlEnabled = Boolean(advancedState["tdpControl"]);
 
-  const actualPollRate = pollOverrideEnabled
-    ? pollRateOverride
-    : BACKGROUND_POLL_RATE;
+  if (tdpControlEnabled) {
+    const disableBackgroundPolling = disableBackgroundPollingSelector(state);
+    const pollOverrideEnabled = pollEnabledSelector(state);
+    const pollRateOverride = pollRateSelector(state);
 
-  if (!disableBackgroundPolling) {
-    pollIntervalId = window.setInterval(() => {
-      const serverApi = getServerApi();
-      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-      const activeGameId = activeGameIdSelector(store.getState());
+    const actualPollRate = pollOverrideEnabled
+      ? pollRateOverride
+      : BACKGROUND_POLL_RATE;
 
-      setPollTdp(activeGameId);
-    }, actualPollRate);
+    if (!disableBackgroundPolling) {
+      pollIntervalId = window.setInterval(() => {
+        const serverApi = getServerApi();
+        const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+        const activeGameId = activeGameIdSelector(store.getState());
+
+        setPollTdp(activeGameId);
+      }, actualPollRate);
+    }
   }
 };
 
@@ -76,6 +84,8 @@ export const settingsMiddleware =
     const result = dispatch(action);
 
     const state = store.getState();
+
+    const { advancedState } = getAdvancedOptionsInfoSelector(state);
     const activeGameId = activeGameIdSelector(state);
 
     if (action.type === resumeAction.type) {
@@ -99,7 +109,7 @@ export const settingsMiddleware =
       action.type === setGpuFrequency.type ||
       action.type === setFixedGpuFrequency.type
     ) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === setCurrentGameInfo.type) {
@@ -109,12 +119,16 @@ export const settingsMiddleware =
 
       if (previousGameId !== state.currentGameId) {
         // update TDP to new game's TDP value, if appropriate to do so
-        saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+        saveTdpProfiles(
+          state.settings.tdpProfiles,
+          activeGameId,
+          advancedState
+        );
       }
     }
 
     if (action.type === updateTdpProfiles.type) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === setEnableTdpProfiles.type) {
@@ -151,13 +165,13 @@ export const settingsMiddleware =
     }
 
     if (resetTdpActionTypes.includes(action.type)) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
       resetPolling(store);
     }
 
     if (changeCpuStateTypes.includes(action.type)) {
       // save tdp profiles, but polling reset is unnecessary
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === cleanupAction.type) {

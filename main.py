@@ -3,6 +3,7 @@ import decky_plugin
 import logging
 import os
 import file_timeout
+import advanced_options
 from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
@@ -17,13 +18,15 @@ class Plugin:
         try:
             settings = get_saved_settings()
             try:
-                with file_timeout.time_limit(3):
+                with file_timeout.time_limit(5):
+                    settings['advancedOptions'] = advanced_options.get_advanced_options()
+
                     gpu_min, gpu_max = get_gpu_frequency_range()
                     if (gpu_min and gpu_max):
                         settings['minGpuFrequency'] = gpu_min
                         settings['maxGpuFrequency'] = gpu_max
             except Exception as e:
-                logging.error(f"get_settings failed to get GPU clocks {e}")
+                logging.error(f"main#get_settings failed to get info {e}")
 
             return settings
         except Exception as e:
@@ -43,6 +46,10 @@ class Plugin:
             cpu_boost = default_tdp_profile.get('cpuBoost', True)
             tdp = default_tdp_profile.get('tdp', 12)
 
+            tdp_control_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            )
+
             if settings.get('enableTdpProfiles'):
                 tdp_profile = get_tdp_profile(currentGameId)
                 cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
@@ -51,7 +58,8 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    ryzenadj(tdp)
+                    if tdp_control_enabled:
+                        ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
             except Exception as e:
@@ -60,9 +68,15 @@ class Plugin:
 
             return True            
 
-    async def save_tdp(self, tdpProfiles, currentGameId):
+    async def save_tdp(self, tdpProfiles, currentGameId, advanced):
         try:
             set_all_tdp_profiles(tdpProfiles)
+            persist_setting('advanced', advanced)
+
+            tdp_control_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            )
+
             tdp_profile = get_active_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
             smt = tdp_profile.get('smt', True)
@@ -70,7 +84,8 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    ryzenadj(tdp)
+                    if tdp_control_enabled:
+                        ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
                     set_gpu_frequency(currentGameId)

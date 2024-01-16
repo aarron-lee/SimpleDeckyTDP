@@ -50,10 +50,11 @@ export const createSaveTdp =
 
 export const createSaveTdpProfiles =
   (serverAPI: ServerAPI) =>
-  async (tdpProfiles: TdpProfiles, currentGameId: string) => {
+  async (tdpProfiles: TdpProfiles, currentGameId: string, advanced: any) => {
     return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
       tdpProfiles,
       currentGameId,
+      advanced,
     });
   };
 
