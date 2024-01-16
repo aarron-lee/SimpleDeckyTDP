@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux-modules/store";
-import { getAdvancedOptionsInfo } from "../../redux-modules/settingsSlice";
+import { getAdvancedOptionsInfoSelector } from "../../redux-modules/settingsSlice";
 import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 
 const AdvancedOptions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { advancedState, advancedOptions } = useSelector(
-    getAdvancedOptionsInfo
+    getAdvancedOptionsInfoSelector
   );
 
   if (advancedOptions.length === 0) {

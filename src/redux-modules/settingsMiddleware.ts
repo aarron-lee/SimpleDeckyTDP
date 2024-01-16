@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   disableBackgroundPollingSelector,
+  getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
   setCpuBoost,
@@ -76,6 +77,8 @@ export const settingsMiddleware =
     const result = dispatch(action);
 
     const state = store.getState();
+
+    const { advancedState } = getAdvancedOptionsInfoSelector(state);
     const activeGameId = activeGameIdSelector(state);
 
     if (action.type === resumeAction.type) {
@@ -99,7 +102,7 @@ export const settingsMiddleware =
       action.type === setGpuFrequency.type ||
       action.type === setFixedGpuFrequency.type
     ) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === setCurrentGameInfo.type) {
@@ -109,12 +112,16 @@ export const settingsMiddleware =
 
       if (previousGameId !== state.currentGameId) {
         // update TDP to new game's TDP value, if appropriate to do so
-        saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+        saveTdpProfiles(
+          state.settings.tdpProfiles,
+          activeGameId,
+          advancedState
+        );
       }
     }
 
     if (action.type === updateTdpProfiles.type) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === setEnableTdpProfiles.type) {
@@ -151,13 +158,13 @@ export const settingsMiddleware =
     }
 
     if (resetTdpActionTypes.includes(action.type)) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
       resetPolling(store);
     }
 
     if (changeCpuStateTypes.includes(action.type)) {
       // save tdp profiles, but polling reset is unnecessary
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId);
+      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === cleanupAction.type) {

@@ -359,7 +359,7 @@ export const getGpuModeSelector = (state: RootState) => {
   return { activeGameId, gpuMode };
 };
 
-export const getAdvancedOptionsInfo = (state: RootState) => {
+export const getAdvancedOptionsInfoSelector = (state: RootState) => {
   const { advanced, advancedOptions } = state.settings;
 
   return { advancedState: advanced, advancedOptions };
