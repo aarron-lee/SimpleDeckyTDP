@@ -20,6 +20,10 @@ def modprobe_acpi_call():
         return False
     return True
 
+# e.g. get_setting(LegionGoSettings.CUSTOM_TDP_MODE.value)
+def get_setting(setting_name = ''):
+    return get_nested_setting(f'advanced.{setting_name}')
+
 def get_device_name():
     try:
         with file_timeout.time_limit(2):

@@ -4,6 +4,7 @@ import shutil
 import decky_plugin
 import logging
 import plugin_settings
+import advanced_options
 from devices import legion_go
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
@@ -29,16 +30,11 @@ def ryzenadj(tdp: int):
             results = subprocess.call(commands)
             return results
 
-        if settings.get("enableLegionGoCustomTDP"):
-            with open("/sys/devices/virtual/dmi/id/product_name", "r") as file:
-                device_name = file.read().strip()
-                file.close()
-
-                # decky_plugin.logger.info(device_name)
-
-                if device_name == "83E1" and modprobe_acpi_call():
-                    # legion go
-                    return legion_go.ryzenadj(tdp)
+        if advanced_options.get_setting(
+            advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
+        ):
+            # legion go
+            return legion_go.ryzenadj(tdp)
 
         tdp = tdp*1000
 
