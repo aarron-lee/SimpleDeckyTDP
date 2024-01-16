@@ -7,6 +7,12 @@ import {
 import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 
+export const useIsTdpControlEnabled = () => {
+  const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
+
+  return Boolean(advancedState["tdpControl"]);
+};
+
 const AdvancedOptions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { advancedState, advancedOptions } = useSelector(
