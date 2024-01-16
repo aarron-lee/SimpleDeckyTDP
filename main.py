@@ -3,6 +3,7 @@ import decky_plugin
 import logging
 import os
 import file_timeout
+import advanced_options
 from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
@@ -17,13 +18,15 @@ class Plugin:
         try:
             settings = get_saved_settings()
             try:
-                with file_timeout.time_limit(3):
+                with file_timeout.time_limit(5):
+                    settings['advancedOptions'] = advanced_options.get_advanced_options()
+
                     gpu_min, gpu_max = get_gpu_frequency_range()
                     if (gpu_min and gpu_max):
                         settings['minGpuFrequency'] = gpu_min
                         settings['maxGpuFrequency'] = gpu_max
             except Exception as e:
-                logging.error(f"get_settings failed to get GPU clocks {e}")
+                logging.error(f"main#get_settings failed to get info {e}")
 
             return settings
         except Exception as e:

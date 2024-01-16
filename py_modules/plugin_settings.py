@@ -1,6 +1,7 @@
 import logging
 import os
 from settings import SettingsManager
+from collections import deque 
 
 try:
     LOG_LOCATION = f"/tmp/simpleTDP.log"
@@ -61,3 +62,17 @@ def get_active_tdp_profile(gameId):
         return get_tdp_profile(gameId)
     else:
         return get_tdp_profile('default')
+
+def get_nested_setting(path, default):
+    if not path:
+        return None
+
+    settings = get_saved_settings()
+    pathValues = deque(path.split('.'))
+
+    result = settings
+
+    while len(pathValues) > 0:
+        result = result.get(pathValues.popleft(), default)
+    
+    return result
