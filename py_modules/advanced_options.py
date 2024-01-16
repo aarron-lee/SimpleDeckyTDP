@@ -8,6 +8,9 @@ from enum import Enum
 class Devices(Enum):
     LEGION_GO = "83E1"
 
+class DefaultSettings(Enum):
+    ENABLE_TDP_CONTROL = 'tdpControl'
+
 class LegionGoSettings(Enum):
     CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
 
@@ -36,8 +39,26 @@ def get_device_name():
         decky_plugin.logger.error(f'{__name__} error while trying to read device name')
         return ''
 
-def get_advanced_options():
+def get_default_options():
     options = []
+
+    enable_tdp_control_toggle = {
+        'name': 'Enable TDP Control',
+        'type': 'boolean',
+        'defaultValue': True,
+        'currentValue': get_nested_setting(
+            f'advanced.{DefaultSettings.ENABLE_TDP_CONTROL.value}'
+        ) or True,
+        'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
+    }
+
+    options.append(enable_tdp_control_toggle)
+
+    return options
+
+
+def get_advanced_options():
+    options = get_default_options()
     device_name = get_device_name()
     supports_acpi_call = modprobe_acpi_call()
 
