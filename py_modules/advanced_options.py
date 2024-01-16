@@ -44,9 +44,8 @@ def get_advanced_options():
             'type': 'boolean',
             'defaultValue': defaultValue,
             'currentValue': get_nested_setting(
-                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}',
-                defaultValue
-            ),
+                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
+            ) or defaultValue,
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
 

@@ -9,6 +9,14 @@ type Partial<T> = {
   [P in keyof T]?: T[P];
 };
 
+type AdvancedOption = {
+  name: string;
+  type: string;
+  defaultValue: any;
+  currentValue: any;
+  statePath: string;
+};
+
 export interface TdpRangeState {
   minTdp: number;
   maxTdp: number;
@@ -43,6 +51,8 @@ export interface SettingsState extends TdpRangeState, PollState {
   enableTdpProfiles: boolean;
   minGpuFrequency?: number;
   maxGpuFrequency?: number;
+  advancedOptions: AdvancedOption[];
+  advanced: { [optionName: string]: any };
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -53,6 +63,8 @@ const initialState: SettingsState = {
   gameDisplayNames: {
     default: "default",
   },
+  advanced: {},
+  advancedOptions: [],
   minTdp: 3,
   maxTdp: 15,
   initialLoad: true,
@@ -84,7 +96,8 @@ export const settingsSlice = createSlice({
       state.maxTdp = action.payload;
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
-      const { minGpuFrequency, maxGpuFrequency } = action.payload;
+      const { minGpuFrequency, maxGpuFrequency, advancedOptions } =
+        action.payload;
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
@@ -95,6 +108,12 @@ export const settingsSlice = createSlice({
       state.pollRate = action.payload.pollRate || 5000;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
+      }
+      if (advancedOptions) {
+        state.advancedOptions = advancedOptions;
+        advancedOptions.forEach((option) => {
+          set(state, `advanced.${option.statePath}`, option.currentValue);
+        });
       }
       state.minGpuFrequency = minGpuFrequency;
       state.maxGpuFrequency = maxGpuFrequency;
@@ -338,6 +357,12 @@ export const getGpuModeSelector = (state: RootState) => {
   } = activeTdpProfileSelector(state);
 
   return { activeGameId, gpuMode };
+};
+
+export const getAdvancedOptionsInfo = (state: RootState) => {
+  const { advanced, advancedOptions } = state.settings;
+
+  return { advancedState: advanced, advancedOptions };
 };
 
 // Action creators are generated for each case reducer function

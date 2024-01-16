@@ -20,6 +20,7 @@ import {
 import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
+import AdvancedOptions from "./components/molecules/AdvancedOptions";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -36,6 +37,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           <Gpu />
           <TdpRange />
           <PollTdp />
+          <AdvancedOptions />
         </>
       )}
     </>

@@ -63,7 +63,7 @@ def get_active_tdp_profile(gameId):
     else:
         return get_tdp_profile('default')
 
-def get_nested_setting(path, default):
+def get_nested_setting(path):
     if not path:
         return None
 
@@ -72,7 +72,7 @@ def get_nested_setting(path, default):
 
     result = settings
 
-    while len(pathValues) > 0:
-        result = result.get(pathValues.popleft(), default)
+    while len(pathValues) > 0 and result:
+        result = result.get(pathValues.popleft())
     
     return result

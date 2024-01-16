@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import settingsReducer from "./settingsSlice";
 import { settingsMiddleware } from "./settingsMiddleware";
+// import logger from "./logger";
 
 export const store = configureStore({
   reducer: {
@@ -9,7 +10,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
       settingsMiddleware,
-      // logger
+      // dev only
+      // logger,
     ]),
 });
 
