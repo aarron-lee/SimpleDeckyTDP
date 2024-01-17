@@ -53,6 +53,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   maxGpuFrequency?: number;
   advancedOptions: AdvancedOption[];
   advanced: { [optionName: string]: any };
+  pluginVersionNum: string;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -83,6 +84,7 @@ const initialState: SettingsState = {
   pollEnabled: false,
   pollRate: DEFAULT_POLL_RATE, // milliseconds
   disableBackgroundPolling: false,
+  pluginVersionNum: "",
 };
 
 export const settingsSlice = createSlice({
@@ -104,8 +106,12 @@ export const settingsSlice = createSlice({
       set(state, `advanced.${statePath}`, value);
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
-      const { minGpuFrequency, maxGpuFrequency, advancedOptions } =
-        action.payload;
+      const {
+        minGpuFrequency,
+        maxGpuFrequency,
+        advancedOptions,
+        pluginVersionNum,
+      } = action.payload;
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
@@ -116,6 +122,9 @@ export const settingsSlice = createSlice({
       state.pollRate = action.payload.pollRate || 5000;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
+      }
+      if (pluginVersionNum) {
+        state.pluginVersionNum = pluginVersionNum;
       }
       if (advancedOptions) {
         state.advancedOptions = advancedOptions;

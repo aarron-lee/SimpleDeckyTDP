@@ -28,6 +28,7 @@ class Plugin:
             except Exception as e:
                 logging.error(f"main#get_settings failed to get info {e}")
 
+            settings['pluginVersionNum'] = f'{decky_plugin.DECKY_PLUGIN_VERSION}'
             return settings
         except Exception as e:
             logging.error(f"get_settings failed to get settings {e}")
