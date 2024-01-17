@@ -24,6 +24,7 @@ import AdvancedOptions, {
   useIsTdpControlEnabled,
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -47,7 +48,9 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           <TdpRange />
           <PollTdp />
           <AdvancedOptions />
-          <OtaUpdates />
+          <ErrorBoundary title="OTA Updates">
+            <OtaUpdates />
+          </ErrorBoundary>
         </>
       )}
     </>
@@ -57,7 +60,9 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
 const ContentContainer: FC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   return (
     <Provider store={store}>
-      <Content serverAPI={serverAPI} />
+      <ErrorBoundary title="App">
+        <Content serverAPI={serverAPI} />
+      </ErrorBoundary>
     </Provider>
   );
 };
