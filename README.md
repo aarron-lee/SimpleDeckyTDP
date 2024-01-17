@@ -146,6 +146,19 @@ See [device settings README](./py_modules/devices/README.md)
 
 ## Troubleshooting
 
+### TDP Control is not working
+
+First try updating the plugin to the latest version.
+
+```
+# update script
+curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+```
+
+If this doesn't fix your issue, next try deleting your `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json` file, and rebooting.
+
+If neither works, please create a github issue.
+
 ### Buggy behavior after upgrading the plugin to a new version
 
 If you see buggy behavior after upgrading to a new version of the plugin, it might be due to some bad values in an older settings file.
