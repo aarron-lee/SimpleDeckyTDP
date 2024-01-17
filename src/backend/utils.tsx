@@ -65,6 +65,24 @@ export const createPollTdp =
     });
   };
 
+export const getLatestVersionNum = async (serverApi: ServerAPI) => {
+  const { result } = await serverApi.fetchNoCors(
+    "https://raw.githubusercontent.com/aarron-lee/SimpleDeckyTDP/main/package.json",
+    { method: "GET" }
+  );
+
+  //@ts-ignore
+  const body = result.body as string;
+  if (body && typeof body === "string") {
+    return JSON.parse(body)["version"];
+  }
+  return "";
+};
+
+export const otaUpdate = async (serverApi: ServerAPI) => {
+  return serverApi.callPluginMethod("ota_update", {});
+};
+
 export const createServerApiHelpers = (serverAPI: ServerAPI) => {
   return {
     getSettings: createGetSettings(serverAPI),

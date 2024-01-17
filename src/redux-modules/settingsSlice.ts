@@ -382,6 +382,12 @@ export const getAdvancedOptionsInfoSelector = (state: RootState) => {
   return { advancedState: advanced, advancedOptions };
 };
 
+export const getInstalledVersionNumSelector = (state: RootState) => {
+  const { pluginVersionNum } = state.settings;
+
+  return pluginVersionNum;
+};
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,

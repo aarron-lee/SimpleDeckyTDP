@@ -1,5 +1,6 @@
 # import os
 import decky_plugin
+import plugin_update
 import logging
 import os
 import file_timeout
@@ -93,6 +94,14 @@ class Plugin:
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
 
+        except Exception as e:
+            logging.error(e)
+
+    async def ota_update(self):
+        # trigger ota update
+        try:
+            with file_timeout.time_limit(15):
+                plugin_update.ota_update()
         except Exception as e:
             logging.error(e)
 

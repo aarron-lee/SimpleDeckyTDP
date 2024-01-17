@@ -23,6 +23,7 @@ import Gpu from "./components/molecules/Gpu";
 import AdvancedOptions, {
   useIsTdpControlEnabled,
 } from "./components/molecules/AdvancedOptions";
+import OtaUpdates from "./components/molecules/OtaUpdates";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -46,6 +47,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           <TdpRange />
           <PollTdp />
           <AdvancedOptions />
+          <OtaUpdates />
         </>
       )}
     </>
