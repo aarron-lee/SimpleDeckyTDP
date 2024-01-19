@@ -166,6 +166,8 @@ export const subscribeToTdpRangeChanges = () => {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
         }
+        // get on every redux state change, which should update TDP values, etc
+        getSteamPerfSettings();
       } else {
         if (unpatch) {
           unpatch();
