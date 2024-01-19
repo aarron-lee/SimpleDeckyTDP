@@ -43,9 +43,10 @@ def get_default_options():
     options = []
 
     enable_steam_patch = {
-        'name': 'Enable Steam\'s TDP/GPU controls',
+        'name': 'Fix Steam TDP Controls',
         'type': 'boolean',
         'defaultValue': False,
+        'description': 'Fixes the Steam TDP and GPU Sliders',
         'currentValue': get_nested_setting(
             f'advanced.{DefaultSettings.ENABLE_STEAM_PATCH.value}'
         ) or False,

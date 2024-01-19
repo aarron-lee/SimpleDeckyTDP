@@ -45,6 +45,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           )}
           <TdpProfiles />
           <CpuFeatureToggles />
+          {steamPatchEnabled && <TdpRange />}
           {!steamPatchEnabled && (
             <>
               <Gpu />

@@ -140,39 +140,48 @@ function manageTdp() {
 let unpatch: any;
 
 export const subscribeToTdpRangeChanges = () => {
-  const listener = () => {
-    const state = store.getState();
+  try {
+    const listener = () => {
+      const state = store.getState();
 
-    const { advancedState } = getAdvancedOptionsInfoSelector(state);
+      const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
+      minGpuFreq = minGpu;
+      maxGpuFreq = maxGpu;
+      const [min, max] = tdpRangeSelector(state);
+      minTdp = min;
+      maxTdp = max;
 
-    const steamPatchEnabled = Boolean(
-      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-    );
+      const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
-    if (steamPatchEnabled) {
-      if (!unpatch) {
-        unpatch = findSteamPerfModule();
+      const steamPatchEnabled = Boolean(
+        advancedState[AdvancedOptionsEnum.STEAM_PATCH]
+      );
+
+      if (steamPatchEnabled) {
+        if (!unpatch) {
+          unpatch = findSteamPerfModule();
+        }
+      } else {
+        if (unpatch) {
+          unpatch();
+          unpatch = undefined;
+        }
       }
-    } else {
-      if (unpatch) {
-        unpatch();
-        unpatch = undefined;
-      }
-    }
+    };
 
-    const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
-    minGpuFreq = minGpu;
-    maxGpuFreq = maxGpu;
-    const [min, max] = tdpRangeSelector(state);
-    minTdp = min;
-    maxTdp = max;
-  };
+    const unsubscribe = store.subscribe(listener);
 
-  const unsubscribe = store.subscribe(listener);
-
+    return () => {
+      unsubscribe();
+      unpatch && unpatch();
+      unpatch = undefined;
+    };
+  } catch (e) {
+    logInfo(e);
+  }
   return () => {
-    unsubscribe();
     unpatch && unpatch();
+    unpatch = undefined;
   };
 };
 

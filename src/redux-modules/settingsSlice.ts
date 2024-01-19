@@ -15,6 +15,7 @@ type AdvancedOption = {
   defaultValue: any;
   currentValue: any;
   statePath: string;
+  description?: string;
 };
 
 export interface TdpRangeState {

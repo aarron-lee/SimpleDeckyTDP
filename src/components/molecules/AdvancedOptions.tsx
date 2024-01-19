@@ -27,7 +27,7 @@ const AdvancedOptions = () => {
   return (
     <PanelSection title="Advanced Options">
       {advancedOptions.map((option, idx) => {
-        const { name, type, statePath, defaultValue } = option;
+        const { name, type, statePath, defaultValue, description } = option;
         const value = get(advancedState, statePath, defaultValue);
 
         if (type === "boolean") {
@@ -37,6 +37,7 @@ const AdvancedOptions = () => {
                 key={idx}
                 label={name}
                 checked={value}
+                description={description}
                 highlightOnFocus
                 bottomSeparator="none"
                 onChange={(enabled) => {
