@@ -14,6 +14,7 @@ import {
   setGpuMode,
   setPolling,
   setSmt,
+  setSteamPatchDefaultTdp,
   updateAdvancedOption,
   updateInitialLoad,
   updateMaxTdp,
@@ -39,6 +40,7 @@ const resetTdpActionTypes = [
   setPolling.type,
   updateInitialLoad.type,
   updateAdvancedOption.type,
+  setSteamPatchDefaultTdp.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
@@ -149,6 +151,13 @@ export const settingsMiddleware =
 
     if (action.type === updateTdpProfiles.type) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
+    }
+
+    if (action.type === setSteamPatchDefaultTdp.type) {
+      setSetting({
+        fieldName: "steamPatchDefaultTdp",
+        fieldValue: state.settings.steamPatchDefaultTdp,
+      });
     }
 
     if (action.type === setEnableTdpProfiles.type) {

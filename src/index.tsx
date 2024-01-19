@@ -26,6 +26,7 @@ import AdvancedOptions, {
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch";
+import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -45,7 +46,12 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           )}
           <TdpProfiles />
           <CpuFeatureToggles />
-          {steamPatchEnabled && <TdpRange />}
+          {steamPatchEnabled && (
+            <>
+              <SteamPatchDefaultTdpSlider />
+              <TdpRange />
+            </>
+          )}
           {!steamPatchEnabled && (
             <>
               <Gpu />

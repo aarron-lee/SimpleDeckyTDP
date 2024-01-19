@@ -1,25 +1,21 @@
 import { SliderField, PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import { useTdpRange } from "../../hooks/useTdpRange";
-import { useSetTdp } from "../../hooks/useTdpProfiles";
-import { useSelector } from "react-redux";
-import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import { FC } from "react";
+import { useSteamPatchDefaultTdp } from "../../hooks/useSteamPatch";
 
-export const TdpSlider: FC = () => {
+export const SteamPatchDefaultTdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
-  const setTdp = useSetTdp();
-  const { id, tdp } = useSelector(getCurrentTdpInfoSelector);
-
+  const { defaultTdp, setDefaultTdp } = useSteamPatchDefaultTdp();
   return (
-    <PanelSection title={"TDP"}>
+    <PanelSection title={"Steam TDP Slider Default"}>
       <PanelSectionRow>
         <SliderField
-          value={tdp}
+          value={defaultTdp}
           label="Watts"
           min={minTdp}
           max={maxTdp}
           step={1}
-          onChange={(newTdp) => setTdp(id, newTdp)}
+          onChange={(newTdp) => setDefaultTdp(newTdp)}
           notchTicksVisible
           showValue
         />

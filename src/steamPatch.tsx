@@ -9,6 +9,7 @@ import { store } from "./redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
+  getSteamPatchDefaultTdpSelector,
   tdpRangeSelector,
 } from "./redux-modules/settingsSlice";
 import { debounce } from "lodash";
@@ -27,6 +28,7 @@ let minTdp: any;
 let maxTdp: any;
 let minGpuFreq: any;
 let maxGpuFreq: any;
+let defaultTdp: any;
 
 const findSteamPerfModule = () => {
   try {
@@ -134,7 +136,7 @@ function manageTdp() {
       }
     } else {
       // default TDP
-      debouncedSetTdp(15);
+      debouncedSetTdp(defaultTdp || 12);
     }
   }
 }
@@ -147,6 +149,7 @@ export const subscribeToTdpRangeChanges = () => {
       const state = store.getState();
 
       const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
+      defaultTdp = getSteamPatchDefaultTdpSelector(state);
       minGpuFreq = minGpu;
       maxGpuFreq = maxGpu;
       const [min, max] = tdpRangeSelector(state);
