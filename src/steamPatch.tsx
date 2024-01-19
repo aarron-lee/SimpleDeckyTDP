@@ -1,4 +1,8 @@
-import { afterPatch, findModuleChild } from "decky-frontend-lib";
+import {
+  afterPatch,
+  findModuleChild,
+  LifetimeNotification,
+} from "decky-frontend-lib";
 import {
   AdvancedOptionsEnum,
   logInfo,
@@ -10,9 +14,11 @@ import {
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   getSteamPatchDefaultTdpSelector,
+  setCurrentGameInfo,
   tdpRangeSelector,
 } from "./redux-modules/settingsSlice";
 import { debounce } from "lodash";
+import { extractCurrentGameInfo } from "./utils/constants";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -141,6 +147,23 @@ function manageTdp() {
   }
 }
 
+let unregisterAppLifetimeNotifications: any;
+
+const registerForAppLifetimeNotifications = () => {
+  const { unregister } =
+    window.SteamClient.GameSessions.RegisterForAppLifetimeNotifications(
+      (data: LifetimeNotification) => {
+        const { bRunning: running, unAppID } = data;
+        const results = extractCurrentGameInfo();
+
+        if (running) {
+          store.dispatch(setCurrentGameInfo({ ...results, id: `${unAppID}` }));
+        }
+      }
+    );
+  unregisterAppLifetimeNotifications = unregister;
+};
+
 let unpatch: any;
 
 export const subscribeToTdpRangeChanges = () => {
@@ -166,12 +189,22 @@ export const subscribeToTdpRangeChanges = () => {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
         }
+        if (!unregisterAppLifetimeNotifications) {
+          registerForAppLifetimeNotifications();
+        }
         // get on every redux state change, which should update TDP values, etc
         getSteamPerfSettings();
       } else {
         if (unpatch) {
           unpatch();
           unpatch = undefined;
+        }
+        if (
+          unregisterAppLifetimeNotifications &&
+          typeof unregisterAppLifetimeNotifications === "function"
+        ) {
+          unregisterAppLifetimeNotifications();
+          unregisterAppLifetimeNotifications = undefined;
         }
       }
     };
