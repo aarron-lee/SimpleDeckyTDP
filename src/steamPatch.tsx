@@ -134,7 +134,9 @@ function manageTdp() {
     maxTdp &&
     minTdp &&
     typeof minTdp === "number" &&
-    typeof maxTdp === "number"
+    typeof maxTdp === "number" &&
+    msgLimits?.tdp_limit_min &&
+    msgLimits?.tdp_limit_max
   ) {
     // set TDP Range
     msgLimits.tdp_limit_min = minTdp;
