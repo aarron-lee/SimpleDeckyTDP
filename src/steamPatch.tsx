@@ -130,11 +130,10 @@ function manageTdp() {
         // set TDP
         debouncedSetTdp(updatedTDP);
       }
+    } else {
+      // default TDP
+      debouncedSetTdp(15);
     }
-  }
-  // default TDP
-  else {
-    debouncedSetTdp(15);
   }
 }
 
