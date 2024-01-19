@@ -43,13 +43,15 @@ def get_device_name():
 def get_default_options():
     options = []
 
+    current_tdp_control_value = get_nested_setting(
+        f'advanced.{DefaultSettings.ENABLE_TDP_CONTROL.value}'
+    )
+
     enable_tdp_control_toggle = {
         'name': 'Enable TDP Control',
         'type': 'boolean',
         'defaultValue': True,
-        'currentValue': get_nested_setting(
-            f'advanced.{DefaultSettings.ENABLE_TDP_CONTROL.value}'
-        ) or True,
+        'currentValue': current_tdp_control_value if isinstance(current_tdp_control_value, bool) else True,
         'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
     }
 
@@ -75,14 +77,15 @@ def get_advanced_options():
     supports_acpi_call = modprobe_acpi_call()
 
     if device_name == Devices.LEGION_GO.value and supports_acpi_call:
+        current_val = get_nested_setting(
+                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
+            )
         defaultValue = True
         options.append({
             'name': 'Lenovo Custom TDP Mode',
             'type': 'boolean',
             'defaultValue': defaultValue,
-            'currentValue': get_nested_setting(
-                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
-            ) or defaultValue,
+            'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
 

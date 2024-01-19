@@ -9,13 +9,9 @@ export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
   const setTdp = useSetTdp();
   const { id, tdp, displayName } = useSelector(getCurrentTdpInfoSelector);
-  const title =
-    Boolean(displayName) && displayName.toLowerCase() !== "default"
-      ? `TDP - ${displayName.substring(0, 20)}...`
-      : `TDP - Default`;
 
   return (
-    <PanelSection title={title}>
+    <PanelSection title={"TDP"}>
       <PanelSectionRow>
         <SliderField
           value={tdp}

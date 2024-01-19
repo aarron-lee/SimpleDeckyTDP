@@ -21,6 +21,7 @@ import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
 import AdvancedOptions, {
+  useIsSteamPatchEnabled,
   useIsTdpControlEnabled,
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
@@ -34,6 +35,8 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
 
   const tdpControlEnabled = useIsTdpControlEnabled();
 
+  const steamPatchEnabled = useIsSteamPatchEnabled();
+
   return (
     <>
       {!loading && (
@@ -41,13 +44,17 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           {tdpControlEnabled && (
             <>
               <TdpSlider />
-              <TdpProfiles />
             </>
           )}
+          <TdpProfiles />
           <CpuFeatureToggles />
-          <Gpu />
-          <TdpRange />
-          <PollTdp />
+          {!steamPatchEnabled && (
+            <>
+              <Gpu />
+              <TdpRange />
+              <PollTdp />
+            </>
+          )}
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />

@@ -21,7 +21,11 @@ import {
   updatePollRate,
   updateTdpProfiles,
 } from "./settingsSlice";
-import { createServerApiHelpers, getServerApi } from "../backend/utils";
+import {
+  AdvancedOptionsEnum,
+  createServerApiHelpers,
+  getServerApi,
+} from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
@@ -51,7 +55,9 @@ const resetPolling = (store: any) => {
   const state = store.getState();
 
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const tdpControlEnabled = Boolean(advancedState["tdpControl"]);
+  const tdpControlEnabled = Boolean(
+    advancedState[AdvancedOptionsEnum.TDP_CONTROL]
+  );
 
   if (tdpControlEnabled) {
     const disableBackgroundPolling = disableBackgroundPollingSelector(state);

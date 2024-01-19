@@ -1,6 +1,11 @@
 import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
+export enum AdvancedOptionsEnum {
+  TDP_CONTROL = "tdpControl",
+  STEAM_PATCH = "steamPatch",
+}
+
 export enum GpuModes {
   DEFAULT = "DEFAULT",
   RANGE = "RANGE",
