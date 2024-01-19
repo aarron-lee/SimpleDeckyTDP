@@ -9,7 +9,6 @@ class Devices(Enum):
     LEGION_GO = "83E1"
 
 class DefaultSettings(Enum):
-    ENABLE_TDP_CONTROL = 'tdpControl'
     ENABLE_STEAM_PATCH = 'steamPatch'
 
 class LegionGoSettings(Enum):
@@ -43,18 +42,6 @@ def get_device_name():
 def get_default_options():
     options = []
 
-    current_tdp_control_value = get_nested_setting(
-        f'advanced.{DefaultSettings.ENABLE_TDP_CONTROL.value}'
-    )
-
-    enable_tdp_control_toggle = {
-        'name': 'Enable TDP Control',
-        'type': 'boolean',
-        'defaultValue': True,
-        'currentValue': current_tdp_control_value if isinstance(current_tdp_control_value, bool) else True,
-        'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
-    }
-
     enable_steam_patch = {
         'name': 'Enable Steam\'s TDP/GPU controls',
         'type': 'boolean',
@@ -66,7 +53,6 @@ def get_default_options():
     }
 
     options.append(enable_steam_patch)
-    options.append(enable_tdp_control_toggle)
 
     return options
 

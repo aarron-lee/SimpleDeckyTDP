@@ -63,8 +63,8 @@ class Plugin:
             cpu_boost = default_tdp_profile.get('cpuBoost', True)
             tdp = default_tdp_profile.get('tdp', 12)
 
-            tdp_control_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            steam_patch_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
             )
 
             if settings.get('enableTdpProfiles'):
@@ -75,7 +75,7 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    if tdp_control_enabled:
+                    if not steam_patch_enabled:
                         ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
@@ -90,9 +90,6 @@ class Plugin:
             set_all_tdp_profiles(tdpProfiles)
             persist_setting('advanced', advanced)
 
-            tdp_control_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
-            )
             steam_patch_enabled = advanced_options.get_setting(
                 advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
             )
@@ -104,7 +101,7 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    if tdp_control_enabled:
+                    if not steam_patch_enabled:
                         ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)

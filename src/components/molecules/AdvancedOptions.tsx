@@ -8,12 +8,6 @@ import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 import { AdvancedOptionsEnum } from "../../backend/utils";
 
-export const useIsTdpControlEnabled = () => {
-  const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
-
-  return Boolean(advancedState[AdvancedOptionsEnum.TDP_CONTROL]);
-};
-
 export const useIsSteamPatchEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
 

@@ -22,7 +22,6 @@ import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
 import AdvancedOptions, {
   useIsSteamPatchEnabled,
-  useIsTdpControlEnabled,
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -33,15 +32,13 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
 
   const loading = useIsInitiallyLoading();
 
-  const tdpControlEnabled = useIsTdpControlEnabled();
-
   const steamPatchEnabled = useIsSteamPatchEnabled();
 
   return (
     <>
       {!loading && (
         <>
-          {tdpControlEnabled && (
+          {!steamPatchEnabled && (
             <>
               <TdpSlider />
             </>

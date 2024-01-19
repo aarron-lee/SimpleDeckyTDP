@@ -55,11 +55,11 @@ const resetPolling = (store: any) => {
   const state = store.getState();
 
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const tdpControlEnabled = Boolean(
-    advancedState[AdvancedOptionsEnum.TDP_CONTROL]
+  const steamPatchEnabled = Boolean(
+    advancedState[AdvancedOptionsEnum.STEAM_PATCH]
   );
 
-  if (tdpControlEnabled) {
+  if (!steamPatchEnabled) {
     const disableBackgroundPolling = disableBackgroundPollingSelector(state);
     const pollOverrideEnabled = pollEnabledSelector(state);
     const pollRateOverride = pollRateSelector(state);
