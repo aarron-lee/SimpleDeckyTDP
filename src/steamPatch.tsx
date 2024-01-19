@@ -112,7 +112,7 @@ function manageGpu() {
   }
 }
 
-const debouncedSetTdp = debounce(setSteamPatchTDP, 100);
+const debouncedSetTdp = debounce(setSteamPatchTDP, 80);
 
 function manageTdp() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
