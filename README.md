@@ -16,6 +16,7 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
 
 ![plugin image](./img/plugin_image.png)
 ![gpu settings](./img/gpu_settings.png)
+![steam patch](./img/steam-patch1.png)
 
 ## Compatibility
 
