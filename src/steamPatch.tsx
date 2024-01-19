@@ -160,6 +160,8 @@ function manageTdp() {
   }
 }
 
+let activeGameChangesGpuTimeoutId: any;
+
 export const handleActiveGameChanges = (state: RootState, id: string) => {
   const profile = state.settings?.tdpProfiles[id];
 
@@ -175,13 +177,19 @@ export const handleActiveGameChanges = (state: RootState, id: string) => {
     const { gpuMode, minGpuFrequency, maxGpuFrequency, fixedGpuFrequency } =
       profile;
 
-    if (gpuMode === GpuModes.DEFAULT) {
-      setSteamPatchGPU(0, 0);
-    } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
-      setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
-    } else {
-      setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
+    if (activeGameChangesGpuTimeoutId) {
+      clearTimeout(activeGameChangesGpuTimeoutId);
     }
+    // workaround for GPU settings to stick/persist after reboot
+    activeGameChangesGpuTimeoutId = setTimeout(() => {
+      if (gpuMode === GpuModes.DEFAULT) {
+        setSteamPatchGPU(0, 0);
+      } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
+        setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
+      } else {
+        setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
+      }
+    }, 8000);
   }
 };
 
