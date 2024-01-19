@@ -165,6 +165,7 @@ const registerForAppLifetimeNotifications = () => {
 };
 
 let unpatch: any;
+let reduxChangeTimeoutId: any;
 
 export const subscribeToTdpRangeChanges = () => {
   try {
@@ -185,6 +186,10 @@ export const subscribeToTdpRangeChanges = () => {
         advancedState[AdvancedOptionsEnum.STEAM_PATCH]
       );
 
+      if (reduxChangeTimeoutId) {
+        clearTimeout(reduxChangeTimeoutId);
+      }
+
       if (steamPatchEnabled) {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
@@ -193,7 +198,9 @@ export const subscribeToTdpRangeChanges = () => {
           registerForAppLifetimeNotifications();
         }
         // get on every redux state change, which should update TDP values, etc
-        getSteamPerfSettings();
+        reduxChangeTimeoutId = window.setTimeout(() => {
+          getSteamPerfSettings();
+        }, 10000);
       } else {
         if (unpatch) {
           unpatch();
