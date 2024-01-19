@@ -10,6 +10,7 @@ class Devices(Enum):
 
 class DefaultSettings(Enum):
     ENABLE_TDP_CONTROL = 'tdpControl'
+    ENABLE_STEAM_PATCH = 'steamPatch'
 
 class LegionGoSettings(Enum):
     CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -52,6 +53,17 @@ def get_default_options():
         'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
     }
 
+    enable_steam_patch = {
+        'name': 'Enable Steam\'s TDP/GPU controls',
+        'type': 'boolean',
+        'defaultValue': False,
+        'currentValue': get_nested_setting(
+            f'advanced.{DefaultSettings.ENABLE_STEAM_PATCH.value}'
+        ) or False,
+        'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
+    }
+
+    options.append(enable_steam_patch)
     options.append(enable_tdp_control_toggle)
 
     return options
