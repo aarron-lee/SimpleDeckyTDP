@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { get, merge, set } from "lodash";
+import { clone, get, merge, set } from "lodash";
 import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
@@ -158,6 +158,38 @@ export const settingsSlice = createSlice({
         );
       }
     },
+    cacheSteamPatchTdp: (
+      state,
+      action: PayloadAction<[id: string, tdp: number]>
+    ) => {
+      const [id, tdp] = action.payload;
+
+      bootstrapTdpProfile(state, id);
+
+      state.tdpProfiles[id].tdp = tdp;
+    },
+    cacheSteamPatchGpu: (
+      state,
+      action: PayloadAction<
+        [id: string, updatedGpuMin: number, updatedGpuMax: number]
+      >
+    ) => {
+      const [id, minGpu, maxGpu] = action.payload;
+
+      bootstrapTdpProfile(state, id);
+
+      if (minGpu === 0 && maxGpu === 0) {
+        // default/auto gpuMode
+        state.tdpProfiles[id].gpuMode = GpuModes.DEFAULT;
+      } else if (minGpu === maxGpu && minGpu > 0) {
+        state.tdpProfiles[id].gpuMode = GpuModes.FIXED;
+        state.tdpProfiles[id].fixedGpuFrequency = minGpu;
+      } else {
+        state.tdpProfiles[id].gpuMode = GpuModes.RANGE;
+        state.tdpProfiles[id].minGpuFrequency = minGpu;
+        state.tdpProfiles[id].maxGpuFrequency = maxGpu;
+      }
+    },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
       merge(state.tdpProfiles, action.payload);
     },
@@ -268,14 +300,18 @@ export const settingsSlice = createSlice({
       state.previousGameId = state.currentGameId;
       state.currentGameId = id;
       state.gameDisplayNames[id] = displayName;
-      // bootstrap initial TDP profile if it doesn't exist
-      if (!state.tdpProfiles[id]) {
-        const defaultTdpProfile = state.tdpProfiles.default;
-        state.tdpProfiles[id] = defaultTdpProfile;
-      }
+      bootstrapTdpProfile(state, id);
     },
   },
 });
+
+function bootstrapTdpProfile(state: any, id: string) {
+  // bootstrap initial TDP profile if it doesn't exist
+  if (!state.tdpProfiles[id]) {
+    const defaultTdpProfile = clone(state.tdpProfiles.default);
+    state.tdpProfiles[id] = defaultTdpProfile;
+  }
+}
 
 export const allStateSelector = (state: any) => state;
 export const initialLoadSelector = (state: any) => state.settings.initialLoad;
@@ -408,6 +444,13 @@ export const getSteamPatchDefaultTdpSelector = (state: RootState) => {
   return steamPatchDefaultTdp;
 };
 
+export const getCachedSteamPatchProfile =
+  (gameId: string) => (state: RootState) => {
+    const { tdpProfiles } = state.settings;
+
+    return tdpProfiles[gameId];
+  };
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -426,6 +469,8 @@ export const {
   setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
+  cacheSteamPatchTdp,
+  cacheSteamPatchGpu,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

@@ -1,23 +1,21 @@
-import {
-  afterPatch,
-  findModuleChild,
-  LifetimeNotification,
-} from "decky-frontend-lib";
+import { afterPatch, findModuleChild } from "decky-frontend-lib";
 import {
   AdvancedOptionsEnum,
+  GpuModes,
   logInfo,
   setSteamPatchGPU,
   setSteamPatchTDP,
 } from "./backend/utils";
-import { store } from "./redux-modules/store";
+import { RootState, store } from "./redux-modules/store";
 import {
+  cacheSteamPatchGpu,
+  cacheSteamPatchTdp,
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   getSteamPatchDefaultTdpSelector,
-  setCurrentGameInfo,
   tdpRangeSelector,
 } from "./redux-modules/settingsSlice";
-import { debounce } from "lodash";
+import { throttle } from "lodash";
 import { extractCurrentGameInfo } from "./utils/constants";
 
 enum GpuPerformanceLevel {
@@ -53,8 +51,8 @@ const findSteamPerfModule = () => {
       "Get",
       (args: any[], ret: any) => {
         if (perfStore) {
-          manageGpu();
           manageTdp();
+          manageGpu();
         }
         return ret;
       }
@@ -72,7 +70,14 @@ const findSteamPerfModule = () => {
   return () => {};
 };
 
-let debouncedSetGPU = debounce(setSteamPatchGPU, 100);
+const setGpu = (updatedGpuMin: number, updatedGpuMax: number) => {
+  setSteamPatchGPU(updatedGpuMin, updatedGpuMax);
+  const { id } = extractCurrentGameInfo();
+
+  store.dispatch(cacheSteamPatchGpu([id, updatedGpuMin, updatedGpuMax]));
+};
+
+let throttledSetGPU = throttle(setGpu, 100);
 
 function manageGpu() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
@@ -101,18 +106,26 @@ function manageGpu() {
         updatedGpuFreq >= minGpuFreq &&
         updatedGpuFreq <= maxGpuFreq
       ) {
-        debouncedSetGPU(updatedGpuFreq, updatedGpuFreq);
+        throttledSetGPU(updatedGpuFreq, maxGpuFreq);
       }
     }
     // default GPU range
     else {
       // 0 resets gpu to auto
-      debouncedSetGPU(0, 0);
+      throttledSetGPU(0, 0);
     }
   }
 }
 
-const debouncedSetTdp = debounce(setSteamPatchTDP, 80);
+const setTdp = (updatedTdp: number) => {
+  setSteamPatchTDP(updatedTdp);
+  const { id } = extractCurrentGameInfo();
+
+  // cache most recently used TDP for a game
+  store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
+};
+
+const throttledSetTdp = throttle(setTdp, 100);
 
 function manageTdp() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
@@ -138,30 +151,38 @@ function manageTdp() {
         updatedTDP <= maxTdp
       ) {
         // set TDP
-        debouncedSetTdp(updatedTDP);
+        throttledSetTdp(updatedTDP);
       }
     } else {
       // default TDP
-      debouncedSetTdp(defaultTdp || 12);
+      throttledSetTdp(defaultTdp || 12);
     }
   }
 }
 
-let unregisterAppLifetimeNotifications: any;
+export const handleActiveGameChanges = (state: RootState, id: string) => {
+  const profile = state.settings?.tdpProfiles[id];
 
-const registerForAppLifetimeNotifications = () => {
-  const { unregister } =
-    window.SteamClient.GameSessions.RegisterForAppLifetimeNotifications(
-      (data: LifetimeNotification) => {
-        const { bRunning: running, unAppID } = data;
-        const results = extractCurrentGameInfo();
+  if (profile && profile.tdp) {
+    setSteamPatchTDP(profile.tdp);
+  }
+  if (
+    profile &&
+    profile.gpuMode &&
+    profile.minGpuFrequency &&
+    profile.maxGpuFrequency
+  ) {
+    const { gpuMode, minGpuFrequency, maxGpuFrequency, fixedGpuFrequency } =
+      profile;
 
-        if (running) {
-          store.dispatch(setCurrentGameInfo({ ...results, id: `${unAppID}` }));
-        }
-      }
-    );
-  unregisterAppLifetimeNotifications = unregister;
+    if (gpuMode === GpuModes.DEFAULT) {
+      setSteamPatchGPU(0, 0);
+    } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
+      setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
+    } else {
+      setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
+    }
+  }
 };
 
 let unpatch: any;
@@ -171,6 +192,7 @@ export const subscribeToTdpRangeChanges = () => {
   try {
     const listener = () => {
       const state = store.getState();
+      const { id } = extractCurrentGameInfo();
 
       const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
       defaultTdp = getSteamPatchDefaultTdpSelector(state);
@@ -194,24 +216,14 @@ export const subscribeToTdpRangeChanges = () => {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
         }
-        if (!unregisterAppLifetimeNotifications) {
-          registerForAppLifetimeNotifications();
-        }
         // get on every redux state change, which should update TDP values, etc
         reduxChangeTimeoutId = window.setTimeout(() => {
-          getSteamPerfSettings();
-        }, 10000);
+          handleActiveGameChanges(state, id);
+        }, 500);
       } else {
         if (unpatch) {
           unpatch();
           unpatch = undefined;
-        }
-        if (
-          unregisterAppLifetimeNotifications &&
-          typeof unregisterAppLifetimeNotifications === "function"
-        ) {
-          unregisterAppLifetimeNotifications();
-          unregisterAppLifetimeNotifications = undefined;
         }
       }
     };
