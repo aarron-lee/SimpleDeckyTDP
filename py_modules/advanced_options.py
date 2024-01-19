@@ -9,7 +9,7 @@ class Devices(Enum):
     LEGION_GO = "83E1"
 
 class DefaultSettings(Enum):
-    ENABLE_TDP_CONTROL = 'tdpControl'
+    ENABLE_STEAM_PATCH = 'steamPatch'
 
 class LegionGoSettings(Enum):
     CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -42,17 +42,18 @@ def get_device_name():
 def get_default_options():
     options = []
 
-    enable_tdp_control_toggle = {
-        'name': 'Enable TDP Control',
+    enable_steam_patch = {
+        'name': 'Fix Steam TDP Controls',
         'type': 'boolean',
-        'defaultValue': True,
+        'defaultValue': False,
+        'description': 'Fixes the Steam TDP and GPU Sliders',
         'currentValue': get_nested_setting(
-            f'advanced.{DefaultSettings.ENABLE_TDP_CONTROL.value}'
-        ) or True,
-        'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
+            f'advanced.{DefaultSettings.ENABLE_STEAM_PATCH.value}'
+        ) or False,
+        'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
     }
 
-    options.append(enable_tdp_control_toggle)
+    options.append(enable_steam_patch)
 
     return options
 
@@ -63,14 +64,15 @@ def get_advanced_options():
     supports_acpi_call = modprobe_acpi_call()
 
     if device_name == Devices.LEGION_GO.value and supports_acpi_call:
+        current_val = get_nested_setting(
+                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
+            )
         defaultValue = True
         options.append({
             'name': 'Lenovo Custom TDP Mode',
             'type': 'boolean',
             'defaultValue': defaultValue,
-            'currentValue': get_nested_setting(
-                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
-            ) or defaultValue,
+            'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
 

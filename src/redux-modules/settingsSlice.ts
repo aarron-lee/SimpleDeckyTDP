@@ -15,6 +15,7 @@ type AdvancedOption = {
   defaultValue: any;
   currentValue: any;
   statePath: string;
+  description?: string;
 };
 
 export interface TdpRangeState {
@@ -53,6 +54,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   maxGpuFrequency?: number;
   advancedOptions: AdvancedOption[];
   advanced: { [optionName: string]: any };
+  steamPatchDefaultTdp: number;
   pluginVersionNum: string;
 }
 
@@ -84,6 +86,7 @@ const initialState: SettingsState = {
   pollEnabled: false,
   pollRate: DEFAULT_POLL_RATE, // milliseconds
   disableBackgroundPolling: false,
+  steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
 };
 
@@ -111,6 +114,7 @@ export const settingsSlice = createSlice({
         maxGpuFrequency,
         advancedOptions,
         pluginVersionNum,
+        steamPatchDefaultTdp,
       } = action.payload;
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
@@ -122,6 +126,9 @@ export const settingsSlice = createSlice({
       state.pollRate = action.payload.pollRate || 5000;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
+      }
+      if (typeof steamPatchDefaultTdp === "number") {
+        state.steamPatchDefaultTdp = steamPatchDefaultTdp;
       }
       if (pluginVersionNum) {
         state.pluginVersionNum = pluginVersionNum;
@@ -242,6 +249,13 @@ export const settingsSlice = createSlice({
     },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
+    },
+    setSteamPatchDefaultTdp: (state, action: PayloadAction<number>) => {
+      const { minTdp, maxTdp } = state;
+      let defaultTdp = action.payload;
+      if (defaultTdp < minTdp) defaultTdp = minTdp;
+      if (defaultTdp > maxTdp) defaultTdp = maxTdp;
+      state.steamPatchDefaultTdp = defaultTdp;
     },
     setPolling: (state, action: PayloadAction<boolean>) => {
       state.pollEnabled = action.payload;
@@ -388,6 +402,12 @@ export const getInstalledVersionNumSelector = (state: RootState) => {
   return pluginVersionNum;
 };
 
+export const getSteamPatchDefaultTdpSelector = (state: RootState) => {
+  const { steamPatchDefaultTdp } = state.settings;
+
+  return steamPatchDefaultTdp;
+};
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -405,6 +425,7 @@ export const {
   setFixedGpuFrequency,
   setDisableBackgroundPolling,
   updateAdvancedOption,
+  setSteamPatchDefaultTdp,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

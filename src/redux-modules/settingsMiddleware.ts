@@ -14,6 +14,7 @@ import {
   setGpuMode,
   setPolling,
   setSmt,
+  setSteamPatchDefaultTdp,
   updateAdvancedOption,
   updateInitialLoad,
   updateMaxTdp,
@@ -21,10 +22,15 @@ import {
   updatePollRate,
   updateTdpProfiles,
 } from "./settingsSlice";
-import { createServerApiHelpers, getServerApi } from "../backend/utils";
+import {
+  AdvancedOptionsEnum,
+  createServerApiHelpers,
+  getServerApi,
+} from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
+import { getSteamPerfSettings } from "../steamPatch";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -34,6 +40,7 @@ const resetTdpActionTypes = [
   setPolling.type,
   updateInitialLoad.type,
   updateAdvancedOption.type,
+  setSteamPatchDefaultTdp.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
@@ -51,9 +58,11 @@ const resetPolling = (store: any) => {
   const state = store.getState();
 
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const tdpControlEnabled = Boolean(advancedState["tdpControl"]);
+  const steamPatchEnabled = Boolean(
+    advancedState[AdvancedOptionsEnum.STEAM_PATCH]
+  );
 
-  if (tdpControlEnabled) {
+  if (!steamPatchEnabled) {
     const disableBackgroundPolling = disableBackgroundPollingSelector(state);
     const pollOverrideEnabled = pollEnabledSelector(state);
     const pollRateOverride = pollRateSelector(state);
@@ -86,11 +95,19 @@ export const settingsMiddleware =
     const state = store.getState();
 
     const { advancedState } = getAdvancedOptionsInfoSelector(state);
+    const steamPatchEnabled = Boolean(
+      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
+    );
+
     const activeGameId = activeGameIdSelector(state);
 
     if (action.type === resumeAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
       setPollTdp(activeGameId);
+      // if steamPatch enabled, invoke get to set tdp and gpu
+      if (steamPatchEnabled) {
+        getSteamPerfSettings();
+      }
     }
 
     if (action.type === setDisableBackgroundPolling.type) {
@@ -113,6 +130,11 @@ export const settingsMiddleware =
     }
 
     if (action.type === setCurrentGameInfo.type) {
+      if (steamPatchEnabled) {
+        // get steam perf settings when currentGameId changes
+        getSteamPerfSettings();
+      }
+
       const {
         settings: { previousGameId },
       } = state;
@@ -129,6 +151,13 @@ export const settingsMiddleware =
 
     if (action.type === updateTdpProfiles.type) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
+    }
+
+    if (action.type === setSteamPatchDefaultTdp.type) {
+      setSetting({
+        fieldName: "steamPatchDefaultTdp",
+        fieldValue: state.settings.steamPatchDefaultTdp,
+      });
     }
 
     if (action.type === setEnableTdpProfiles.type) {

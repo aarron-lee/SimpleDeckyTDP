@@ -3,13 +3,18 @@
 import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
+import { useIsSteamPatchEnabled } from "./AdvancedOptions";
 
 const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
   const [maxTdp, setMaxTdp] = useMaxTdp();
 
+  const steamPatchEnabled = useIsSteamPatchEnabled();
+
+  const title = steamPatchEnabled ? "Steam TDP Slider range" : "TDP Range";
+
   return (
-    <PanelSection title="TDP Range">
+    <PanelSection title={title}>
       <PanelSectionRow>
         <TdpRangeSlider
           tdpRange={[3, 12]}

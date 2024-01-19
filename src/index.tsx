@@ -21,32 +21,44 @@ import { cleanupAction } from "./redux-modules/extraActions";
 import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
 import AdvancedOptions, {
-  useIsTdpControlEnabled,
+  useIsSteamPatchEnabled,
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
+import steamPatch from "./steamPatch";
+import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
 
   const loading = useIsInitiallyLoading();
 
-  const tdpControlEnabled = useIsTdpControlEnabled();
+  const steamPatchEnabled = useIsSteamPatchEnabled();
 
   return (
     <>
       {!loading && (
         <>
-          {tdpControlEnabled && (
+          {!steamPatchEnabled && (
             <>
               <TdpSlider />
-              <TdpProfiles />
             </>
           )}
+          <TdpProfiles />
           <CpuFeatureToggles />
-          <Gpu />
-          <TdpRange />
-          <PollTdp />
+          {steamPatchEnabled && (
+            <>
+              <SteamPatchDefaultTdpSlider />
+              <TdpRange />
+            </>
+          )}
+          {!steamPatchEnabled && (
+            <>
+              <Gpu />
+              <TdpRange />
+              <PollTdp />
+            </>
+          )}
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />
@@ -85,6 +97,8 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
+  const unpatch = steamPatch();
+
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
 
@@ -93,6 +107,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
     onDismount: () => {
+      if (unpatch) unpatch();
       if (onUnmount) onUnmount();
       if (unregisterSuspendListener) unregisterSuspendListener();
       store.dispatch(cleanupAction());

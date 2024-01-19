@@ -7,7 +7,7 @@ import file_timeout
 import advanced_options
 from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
-from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
+from gpu_utils import get_gpu_frequency_range, set_gpu_frequency, set_gpu_frequency_range
 
 
 class Plugin:
@@ -39,7 +39,22 @@ class Plugin:
             return persist_setting(name, value)
         except Exception as e:
             logging.error(f"error failed to set_setting {name}={value} {e}")
-        
+
+    
+    async def set_steam_patch_tdp(self, tdp):
+        try:
+            with file_timeout.time_limit(3):
+                ryzenadj(tdp)
+        except Exception as e:
+            logging.error(f'main#set_steam_patch timeout {e}')
+
+
+    async def set_steam_patch_gpu(self, minFrequency, maxFrequency):
+        try:
+            with file_timeout.time_limit(3):
+                set_gpu_frequency_range(minFrequency, maxFrequency)
+        except Exception as e:
+            logging.error(f'main#steam_patch_gpu error {e}')       
             
     async def poll_tdp(self, currentGameId: str):
             settings = get_saved_settings()
@@ -48,8 +63,8 @@ class Plugin:
             cpu_boost = default_tdp_profile.get('cpuBoost', True)
             tdp = default_tdp_profile.get('tdp', 12)
 
-            tdp_control_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            steam_patch_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
             )
 
             if settings.get('enableTdpProfiles'):
@@ -60,7 +75,7 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    if tdp_control_enabled:
+                    if not steam_patch_enabled:
                         ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
@@ -75,8 +90,8 @@ class Plugin:
             set_all_tdp_profiles(tdpProfiles)
             persist_setting('advanced', advanced)
 
-            tdp_control_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_TDP_CONTROL.value
+            steam_patch_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
             )
 
             tdp_profile = get_active_tdp_profile(currentGameId)
@@ -86,11 +101,12 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    if tdp_control_enabled:
+                    if not steam_patch_enabled:
                         ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
-                    set_gpu_frequency(currentGameId)
+                    if not steam_patch_enabled:
+                        set_gpu_frequency(currentGameId)
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
 

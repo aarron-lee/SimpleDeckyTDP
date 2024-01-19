@@ -1,6 +1,10 @@
 import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
+export enum AdvancedOptionsEnum {
+  STEAM_PATCH = "steamPatch",
+}
+
 export enum GpuModes {
   DEFAULT = "DEFAULT",
   RANGE = "RANGE",
@@ -14,6 +18,8 @@ export enum ServerAPIMethods {
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
   POLL_TDP = "poll_tdp",
+  SET_STEAM_PATCH_TDP = "set_steam_patch_tdp",
+  SET_STEAM_PATCH_GPU = "set_steam_patch_gpu",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -110,5 +116,33 @@ export const getLogInfo = () => {
     return logInfo;
   } else {
     return () => {};
+  }
+};
+
+export const setSteamPatchTDP = (tdp: number) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_TDP, {
+      tdp,
+    });
+  }
+};
+
+export const setSteamPatchGPU = (
+  minFrequency: number,
+  maxFrequency: number
+) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_GPU, {
+      minFrequency,
+      maxFrequency,
+    });
+  }
+};
+
+export const logInfo = (info: any) => {
+  if (serverApi) {
+    const logger = createLogInfo(serverApi);
+    const s = getServerApi();
+    s && logger(info);
   }
 };
