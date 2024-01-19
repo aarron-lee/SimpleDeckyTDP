@@ -19,6 +19,8 @@ enum GpuPerformanceLevel {
 }
 
 let steamPerfSettingsClass: any;
+export const getSteamPerfSettings = () =>
+  steamPerfSettingsClass && steamPerfSettingsClass.Get();
 let perfStore: any;
 
 let minTdp: any;
@@ -50,7 +52,7 @@ const findSteamPerfModule = () => {
       }
     );
 
-    perfStore = steamPerfSettingsClass && steamPerfSettingsClass.Get();
+    perfStore = getSteamPerfSettings();
 
     return () => {
       patch.unpatch();

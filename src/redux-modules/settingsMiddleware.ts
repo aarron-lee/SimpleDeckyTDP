@@ -29,6 +29,7 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
+import { getSteamPerfSettings } from "../steamPatch";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -92,11 +93,19 @@ export const settingsMiddleware =
     const state = store.getState();
 
     const { advancedState } = getAdvancedOptionsInfoSelector(state);
+    const steamPatchEnabled = Boolean(
+      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
+    );
+
     const activeGameId = activeGameIdSelector(state);
 
     if (action.type === resumeAction.type) {
       // pollTdp simply tells backend to set TDP according to settings.json
       setPollTdp(activeGameId);
+      // if steamPatch enabled, invoke get to set tdp and gpu
+      if (steamPatchEnabled) {
+        getSteamPerfSettings();
+      }
     }
 
     if (action.type === setDisableBackgroundPolling.type) {
@@ -119,6 +128,11 @@ export const settingsMiddleware =
     }
 
     if (action.type === setCurrentGameInfo.type) {
+      if (steamPatchEnabled) {
+        // get steam perf settings when currentGameId changes
+        getSteamPerfSettings();
+      }
+
       const {
         settings: { previousGameId },
       } = state;
