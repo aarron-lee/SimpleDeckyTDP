@@ -1,11 +1,17 @@
 import { afterPatch, findModuleChild } from "decky-frontend-lib";
-import { logInfo } from "./backend/utils";
+import { logInfo, setSteamPatchGPU, setSteamPatchTDP } from "./backend/utils";
 import { store } from "./redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   tdpRangeSelector,
 } from "./redux-modules/settingsSlice";
+import { debounce } from "lodash";
+
+enum GpuPerformanceLevel {
+  ENABLED = 2,
+  DISABLED = 1,
+}
 
 let steamPerfSettingsClass: any;
 let perfStore: any;
@@ -32,32 +38,8 @@ const findSteamPerfModule = () => {
       "Get",
       (args: any[], ret: any) => {
         if (perfStore) {
-          const { msgLimits, msgSettingsPerApp } = perfStore;
-
-          if (
-            minGpuFreq &&
-            maxGpuFreq &&
-            typeof minGpuFreq === "number" &&
-            typeof maxGpuFreq === "number"
-          ) {
-            msgLimits.gpu_performance_manual_min_mhz = minGpuFreq;
-            msgLimits.gpu_performance_manual_max_mhz = maxGpuFreq;
-          }
-          if (
-            maxTdp &&
-            minTdp &&
-            typeof minTdp === "number" &&
-            typeof maxTdp === "number"
-          ) {
-            msgLimits.tdp_limit_min = minTdp;
-            msgLimits.tdp_limit_max = maxTdp;
-          }
-
-          logInfo(
-            `msgLimits ${Object.entries(
-              msgLimits
-            )} | msgSettingsPerApp ${Object.entries(msgSettingsPerApp)}`
-          );
+          manageGpu();
+          manageTdp();
         }
         return ret;
       }
@@ -74,6 +56,82 @@ const findSteamPerfModule = () => {
 
   return () => {};
 };
+
+let debouncedSetGPU = debounce(setSteamPatchGPU, 100);
+
+function manageGpu() {
+  const { msgLimits, msgSettingsPerApp } = perfStore;
+
+  if (
+    minGpuFreq &&
+    maxGpuFreq &&
+    typeof minGpuFreq === "number" &&
+    typeof maxGpuFreq === "number"
+  ) {
+    // set frequency limits
+    msgLimits.gpu_performance_manual_min_mhz = minGpuFreq;
+    msgLimits.gpu_performance_manual_max_mhz = maxGpuFreq;
+
+    // setGpuFrequency
+    if (
+      msgSettingsPerApp &&
+      msgSettingsPerApp?.gpu_performance_level === GpuPerformanceLevel.ENABLED
+    ) {
+      // per game GPU override
+      const updatedGpuFreq = msgSettingsPerApp?.gpu_performance_manual_mhz;
+
+      if (
+        updatedGpuFreq &&
+        typeof updatedGpuFreq === "number" &&
+        updatedGpuFreq >= minGpuFreq &&
+        updatedGpuFreq <= maxGpuFreq
+      ) {
+        debouncedSetGPU(updatedGpuFreq, updatedGpuFreq);
+      }
+    }
+    // default GPU range
+    else {
+      // 0 resets gpu to auto
+      debouncedSetGPU(0, 0);
+    }
+  }
+}
+
+const debouncedSetTdp = debounce(setSteamPatchTDP, 100);
+
+function manageTdp() {
+  const { msgLimits, msgSettingsPerApp } = perfStore;
+
+  if (
+    maxTdp &&
+    minTdp &&
+    typeof minTdp === "number" &&
+    typeof maxTdp === "number"
+  ) {
+    // set TDP Range
+    msgLimits.tdp_limit_min = minTdp;
+    msgLimits.tdp_limit_max = maxTdp;
+
+    // set TDP
+    if (msgSettingsPerApp && Boolean(msgSettingsPerApp?.is_tdp_limit_enabled)) {
+      // per-game TDP
+      const updatedTDP = msgSettingsPerApp?.tdp_limit;
+      if (
+        updatedTDP &&
+        typeof updatedTDP === "number" &&
+        updatedTDP >= minTdp &&
+        updatedTDP <= maxTdp
+      ) {
+        // set TDP
+        debouncedSetTdp(updatedTDP);
+      }
+    }
+  }
+  // default TDP
+  else {
+    debouncedSetTdp(15);
+  }
+}
 
 let unpatch: any;
 
