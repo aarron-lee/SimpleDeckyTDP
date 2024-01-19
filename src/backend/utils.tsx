@@ -112,3 +112,10 @@ export const getLogInfo = () => {
     return () => {};
   }
 };
+
+export const logInfo = (info: any) => {
+  const logger = createLogInfo(serverApi);
+  const s = getServerApi();
+  s && logger(info)
+};
+

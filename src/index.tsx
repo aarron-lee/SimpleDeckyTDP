@@ -25,6 +25,7 @@ import AdvancedOptions, {
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
+import steamPatch from "./steamPatch";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -85,6 +86,8 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
+  const unpatch = steamPatch();
+
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
 
@@ -93,6 +96,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
     onDismount: () => {
+      if (unpatch) unpatch();
       if (onUnmount) onUnmount();
       if (unregisterSuspendListener) unregisterSuspendListener();
       store.dispatch(cleanupAction());
