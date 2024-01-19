@@ -51,8 +51,12 @@ const findSteamPerfModule = () => {
       "Get",
       (args: any[], ret: any) => {
         if (perfStore) {
-          manageTdp();
-          manageGpu();
+          try {
+            manageTdp();
+            manageGpu();
+          } catch (e) {
+            logInfo(e);
+          }
         }
         return ret;
       }
@@ -83,6 +87,7 @@ function manageGpu() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
 
   if (
+    msgLimits &&
     minGpuFreq &&
     maxGpuFreq &&
     typeof minGpuFreq === "number" &&
@@ -165,33 +170,37 @@ function manageTdp() {
 let activeGameChangesGpuTimeoutId: any;
 
 export const handleActiveGameChanges = (state: RootState, id: string) => {
-  const profile = state.settings?.tdpProfiles[id];
+  try {
+    const profile = state.settings?.tdpProfiles[id];
 
-  if (profile && profile.tdp) {
-    setSteamPatchTDP(profile.tdp);
-  }
-  if (
-    profile &&
-    profile.gpuMode &&
-    profile.minGpuFrequency &&
-    profile.maxGpuFrequency
-  ) {
-    const { gpuMode, minGpuFrequency, maxGpuFrequency, fixedGpuFrequency } =
-      profile;
-
-    if (activeGameChangesGpuTimeoutId) {
-      clearTimeout(activeGameChangesGpuTimeoutId);
+    if (profile && profile.tdp) {
+      setSteamPatchTDP(profile.tdp);
     }
-    // workaround for GPU settings to stick/persist after reboot
-    activeGameChangesGpuTimeoutId = setTimeout(() => {
-      if (gpuMode === GpuModes.DEFAULT) {
-        setSteamPatchGPU(0, 0);
-      } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
-        setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
-      } else {
-        setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
+    if (
+      profile &&
+      profile.gpuMode &&
+      profile.minGpuFrequency &&
+      profile.maxGpuFrequency
+    ) {
+      const { gpuMode, minGpuFrequency, maxGpuFrequency, fixedGpuFrequency } =
+        profile;
+
+      if (activeGameChangesGpuTimeoutId) {
+        clearTimeout(activeGameChangesGpuTimeoutId);
       }
-    }, 8000);
+      // workaround for GPU settings to stick/persist after reboot
+      activeGameChangesGpuTimeoutId = setTimeout(() => {
+        if (gpuMode === GpuModes.DEFAULT) {
+          setSteamPatchGPU(0, 0);
+        } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
+          setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
+        } else {
+          setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
+        }
+      }, 8000);
+    }
+  } catch (e) {
+    logInfo(e);
   }
 };
 
