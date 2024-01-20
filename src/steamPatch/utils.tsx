@@ -37,7 +37,7 @@ const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     previousMaxGpu = updatedMaxGpu;
 
     setSteamPatchGPU(updatedMinGpu, updatedMaxGpu);
-    store.dispatch(cacheSteamPatchGpu([id, updatedMinGpu, updatedMaxGpu]));
+    // store.dispatch(cacheSteamPatchGpu([id, updatedMinGpu, updatedMaxGpu]));
   }
 };
 
