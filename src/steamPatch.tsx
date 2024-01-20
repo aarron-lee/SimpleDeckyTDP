@@ -1,22 +1,18 @@
 import { afterPatch, findModuleChild } from "decky-frontend-lib";
 import {
   AdvancedOptionsEnum,
-  GpuModes,
   logInfo,
   setSteamPatchGPU,
   setSteamPatchTDP,
 } from "./backend/utils";
-import { RootState, store } from "./redux-modules/store";
+import { store } from "./redux-modules/store";
 import {
-  cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   getSteamPatchDefaultTdpSelector,
   tdpRangeSelector,
 } from "./redux-modules/settingsSlice";
-import { throttle } from "lodash";
-import { extractCurrentGameInfo } from "./utils/constants";
+import { debounce } from "lodash";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -52,8 +48,8 @@ const findSteamPerfModule = () => {
       (args: any[], ret: any) => {
         if (perfStore) {
           try {
-            manageTdp();
             manageGpu();
+            manageTdp();
           } catch (e) {
             logInfo(e);
           }
@@ -74,14 +70,7 @@ const findSteamPerfModule = () => {
   return () => {};
 };
 
-const setGpu = (updatedGpuMin: number, updatedGpuMax: number) => {
-  setSteamPatchGPU(updatedGpuMin, updatedGpuMax);
-  const { id } = extractCurrentGameInfo();
-
-  store.dispatch(cacheSteamPatchGpu([id, updatedGpuMin, updatedGpuMax]));
-};
-
-let throttledSetGPU = throttle(setGpu, 100);
+let debouncedSetGPU = debounce(setSteamPatchGPU, 100);
 
 function manageGpu() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
@@ -111,37 +100,28 @@ function manageGpu() {
         updatedGpuFreq >= minGpuFreq &&
         updatedGpuFreq <= maxGpuFreq
       ) {
-        throttledSetGPU(updatedGpuFreq, maxGpuFreq);
+        debouncedSetGPU(updatedGpuFreq, updatedGpuFreq);
       }
     }
     // default GPU range
     else {
       // 0 resets gpu to auto
-      throttledSetGPU(0, 0);
+      debouncedSetGPU(0, 0);
     }
   }
 }
 
-const setTdp = (updatedTdp: number) => {
-  setSteamPatchTDP(updatedTdp);
-  const { id } = extractCurrentGameInfo();
-
-  // cache most recently used TDP for a game
-  store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
-};
-
-const throttledSetTdp = throttle(setTdp, 100);
+const debouncedSetTdp = debounce(setSteamPatchTDP, 100);
 
 function manageTdp() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
 
   if (
+    msgLimits &&
     maxTdp &&
     minTdp &&
     typeof minTdp === "number" &&
-    typeof maxTdp === "number" &&
-    msgLimits?.tdp_limit_min &&
-    msgLimits?.tdp_limit_max
+    typeof maxTdp === "number"
   ) {
     // set TDP Range
     msgLimits.tdp_limit_min = minTdp;
@@ -158,60 +138,21 @@ function manageTdp() {
         updatedTDP <= maxTdp
       ) {
         // set TDP
-        throttledSetTdp(updatedTDP);
+        debouncedSetTdp(updatedTDP);
       }
     } else {
       // default TDP
-      throttledSetTdp(defaultTdp || 12);
+      debouncedSetTdp(defaultTdp || 12);
     }
   }
 }
 
-let activeGameChangesGpuTimeoutId: any;
-
-export const handleActiveGameChanges = (state: RootState, id: string) => {
-  try {
-    const profile = state.settings?.tdpProfiles[id];
-
-    if (profile && profile.tdp) {
-      setSteamPatchTDP(profile.tdp);
-    }
-    if (
-      profile &&
-      profile.gpuMode &&
-      profile.minGpuFrequency &&
-      profile.maxGpuFrequency
-    ) {
-      const { gpuMode, minGpuFrequency, maxGpuFrequency, fixedGpuFrequency } =
-        profile;
-
-      if (activeGameChangesGpuTimeoutId) {
-        clearTimeout(activeGameChangesGpuTimeoutId);
-      }
-      // workaround for GPU settings to stick/persist after reboot
-      activeGameChangesGpuTimeoutId = setTimeout(() => {
-        if (gpuMode === GpuModes.DEFAULT) {
-          setSteamPatchGPU(0, 0);
-        } else if (gpuMode === GpuModes.FIXED && fixedGpuFrequency) {
-          setSteamPatchGPU(fixedGpuFrequency, fixedGpuFrequency);
-        } else {
-          setSteamPatchGPU(minGpuFrequency, maxGpuFrequency);
-        }
-      }, 8000);
-    }
-  } catch (e) {
-    logInfo(e);
-  }
-};
-
 let unpatch: any;
-let reduxChangeTimeoutId: any;
 
 export const subscribeToTdpRangeChanges = () => {
   try {
     const listener = () => {
       const state = store.getState();
-      const { id } = extractCurrentGameInfo();
 
       const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
       defaultTdp = getSteamPatchDefaultTdpSelector(state);
@@ -227,18 +168,10 @@ export const subscribeToTdpRangeChanges = () => {
         advancedState[AdvancedOptionsEnum.STEAM_PATCH]
       );
 
-      if (reduxChangeTimeoutId) {
-        clearTimeout(reduxChangeTimeoutId);
-      }
-
       if (steamPatchEnabled) {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
         }
-        // get on every redux state change, which should update TDP values, etc
-        reduxChangeTimeoutId = window.setTimeout(() => {
-          handleActiveGameChanges(state, id);
-        }, 500);
       } else {
         if (unpatch) {
           unpatch();

@@ -1,8 +1,6 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
-  cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
   disableBackgroundPollingSelector,
   getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
@@ -32,8 +30,7 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
-import { getSteamPerfSettings, handleActiveGameChanges } from "../steamPatch";
-import { extractCurrentGameInfo } from "../utils/constants";
+import { getSteamPerfSettings } from "../steamPatch";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -44,8 +41,6 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
   updateAdvancedOption.type,
   setSteamPatchDefaultTdp.type,
-  cacheSteamPatchTdp.type,
-  cacheSteamPatchGpu.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
@@ -111,8 +106,7 @@ export const settingsMiddleware =
       setPollTdp(activeGameId);
       // if steamPatch enabled, invoke get to set tdp and gpu
       if (steamPatchEnabled) {
-        const { id } = extractCurrentGameInfo();
-        handleActiveGameChanges(state, id);
+        getSteamPerfSettings();
       }
     }
 
@@ -130,17 +124,15 @@ export const settingsMiddleware =
     if (
       action.type === setGpuMode.type ||
       action.type === setGpuFrequency.type ||
-      action.type === setFixedGpuFrequency.type ||
-      action.type === cacheSteamPatchGpu.type
+      action.type === setFixedGpuFrequency.type
     ) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
 
     if (action.type === setCurrentGameInfo.type) {
       if (steamPatchEnabled) {
-        // handle game changes when currentGameId changes
-        const { id } = extractCurrentGameInfo();
-        handleActiveGameChanges(state, id);
+        // get steam perf settings when currentGameId changes
+        getSteamPerfSettings();
       }
 
       const {
