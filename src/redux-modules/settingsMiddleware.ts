@@ -145,7 +145,7 @@ export const settingsMiddleware =
           setSteamPatchTDP(steamPatchProfile.tdp);
         }
         // get steam perf settings when currentGameId changes
-        // getSteamPerfSettings();
+        getSteamPerfSettings();
       }
 
       const {

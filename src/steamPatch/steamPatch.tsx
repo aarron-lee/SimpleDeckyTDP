@@ -1,9 +1,5 @@
 import { afterPatch, findModuleChild } from "decky-frontend-lib";
-import {
-  AdvancedOptionsEnum,
-  logInfo,
-  setSteamPatchGPU,
-} from "../backend/utils";
+import { AdvancedOptionsEnum, logInfo } from "../backend/utils";
 import { store } from "../redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
@@ -11,8 +7,7 @@ import {
   getSteamPatchDefaultTdpSelector,
   tdpRangeSelector,
 } from "../redux-modules/settingsSlice";
-import { debounce } from "lodash";
-import { debouncedSetTdp } from "./utils";
+import { setTdp, debouncedSetGpu } from "./utils";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -70,8 +65,6 @@ const findSteamPerfModule = () => {
   return () => {};
 };
 
-let debouncedSetGPU = debounce(setSteamPatchGPU, 100);
-
 function manageGpu() {
   const { msgLimits, msgSettingsPerApp } = perfStore;
 
@@ -100,13 +93,13 @@ function manageGpu() {
         updatedGpuFreq >= minGpuFreq &&
         updatedGpuFreq <= maxGpuFreq
       ) {
-        debouncedSetGPU(updatedGpuFreq, updatedGpuFreq);
+        debouncedSetGpu(updatedGpuFreq, updatedGpuFreq);
       }
     }
     // default GPU range
     else {
       // 0 resets gpu to auto
-      debouncedSetGPU(0, 0);
+      debouncedSetGpu(0, 0);
     }
   }
 }
@@ -136,11 +129,11 @@ function manageTdp() {
         updatedTDP <= maxTdp
       ) {
         // set TDP
-        debouncedSetTdp(updatedTDP);
+        setTdp(updatedTDP);
       }
     } else {
       // default TDP
-      debouncedSetTdp(defaultTdp || 12);
+      setTdp(defaultTdp || 12);
     }
   }
 }
