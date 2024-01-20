@@ -152,15 +152,29 @@ let unpatch: any;
 export const subscribeToTdpRangeChanges = () => {
   try {
     const listener = () => {
+      let updateSteamQAM = false;
+
       const state = store.getState();
 
-      const { min: minGpu, max: maxGpu } = getGpuFrequencyRangeSelector(state);
+      const { min: updatedMinGpu, max: updatedMaxGpu } =
+        getGpuFrequencyRangeSelector(state);
       defaultTdp = getSteamPatchDefaultTdpSelector(state);
-      minGpuFreq = minGpu;
-      maxGpuFreq = maxGpu;
-      const [min, max] = tdpRangeSelector(state);
-      minTdp = min;
-      maxTdp = max;
+
+      if (updatedMinGpu !== minGpuFreq || updatedMaxGpu !== maxGpuFreq) {
+        updateSteamQAM = true;
+      }
+
+      minGpuFreq = updatedMinGpu;
+      maxGpuFreq = updatedMaxGpu;
+
+      const [updatedMinTdp, updatedMaxTdp] = tdpRangeSelector(state);
+
+      if (updatedMinTdp !== minTdp || updatedMaxTdp !== maxTdp) {
+        updateSteamQAM = true;
+      }
+
+      minTdp = updatedMinTdp;
+      maxTdp = updatedMaxTdp;
 
       const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
@@ -171,6 +185,9 @@ export const subscribeToTdpRangeChanges = () => {
       if (steamPatchEnabled) {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
+        }
+        if (updateSteamQAM) {
+          getSteamPerfSettings();
         }
       } else {
         if (unpatch) {
