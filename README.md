@@ -74,6 +74,9 @@ Run the following in terminal, then reboot. Note that this works both for instal
 
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+
+# BazziteOS installer, does extra steps so that steam-patch functionality can work
+ujust get-simpledeckytdp
 ```
 
 ### Manual Install
