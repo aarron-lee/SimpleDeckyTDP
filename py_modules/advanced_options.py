@@ -1,15 +1,24 @@
 import os
+import shutil
 import subprocess
 import file_timeout
 import decky_plugin
 from plugin_settings import get_nested_setting
 from enum import Enum
 
+ASUSCTL_PATH = shutil.which('asusctl')
+PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
+
 class Devices(Enum):
     LEGION_GO = "83E1"
+    ROG_ALLY = "ROG Ally RC71L_RC71L"
 
 class DefaultSettings(Enum):
     ENABLE_STEAM_PATCH = 'steamPatch'
+
+class RogAllySettings(Enum):
+    USE_ASUSCTL_TDP = 'useAsusCtlTdp'
+    USE_PLATFORM_PROFILE_TDP = 'platformProfileTdp'
 
 class LegionGoSettings(Enum):
     CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -75,5 +84,30 @@ def get_advanced_options():
             'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
+    if device_name == Devices.ROG_ALLY.value:
+        defaultValue = False
+        if ASUSCTL_PATH:
+            current_val = get_nested_setting(
+                    f'advanced.{RogAllySettings.USE_ASUSCTL_TDP.value}'
+                )
+            options.append({
+                'name': 'Use asusctl for TDP',
+                'type': 'boolean',
+                'defaultValue': defaultValue,
+                'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
+                'statePath': RogAllySettings.USE_ASUSCTL_TDP.value
+            })
+        if os.path.exists(PLATFORM_PROFILE_PATH):
+            current_val = get_nested_setting(
+                    f'advanced.{RogAllySettings.USE_PLATFORM_PROFILE_TDP.value}'
+                )
+            options.append({
+                'name': 'Use platform_profile for TDP',
+                'type': 'boolean',
+                'description': 'This is ignored if asusctl is enabled',
+                'defaultValue': defaultValue,
+                'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
+                'statePath': RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
+            })
 
     return options

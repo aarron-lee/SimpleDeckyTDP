@@ -5,7 +5,7 @@ import decky_plugin
 import logging
 import plugin_settings
 import advanced_options
-from devices import legion_go
+from devices import legion_go, rog_ally
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
@@ -35,6 +35,14 @@ def ryzenadj(tdp: int):
         ):
             # legion go
             return legion_go.ryzenadj(tdp)
+        if advanced_options.get_setting(
+            advanced_options.RogAllySettings.USE_ASUSCTL_TDP.value
+        ):
+            rog_ally.set_tdp_asusctl(tdp)
+        elif advanced_options.get_setting(
+            advanced_options.RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
+        ):
+            rog_ally.set_tdp_platform_profile(tdp)
 
         tdp = tdp*1000
 
