@@ -3,16 +3,16 @@ import {
   AdvancedOptionsEnum,
   logInfo,
   setSteamPatchGPU,
-  setSteamPatchTDP,
-} from "./backend/utils";
-import { store } from "./redux-modules/store";
+} from "../backend/utils";
+import { store } from "../redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   getSteamPatchDefaultTdpSelector,
   tdpRangeSelector,
-} from "./redux-modules/settingsSlice";
+} from "../redux-modules/settingsSlice";
 import { debounce } from "lodash";
+import { debouncedSetTdp } from "./utils";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -110,8 +110,6 @@ function manageGpu() {
     }
   }
 }
-
-const debouncedSetTdp = debounce(setSteamPatchTDP, 100);
 
 function manageTdp() {
   const { msgLimits, msgSettingsPerApp } = perfStore;

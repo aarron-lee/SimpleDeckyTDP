@@ -25,7 +25,7 @@ import AdvancedOptions, {
 } from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
-import steamPatch from "./steamPatch";
+import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {

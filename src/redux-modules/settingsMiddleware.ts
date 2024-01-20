@@ -1,6 +1,8 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
+  cacheSteamPatchGpu,
+  cacheSteamPatchTdp,
   disableBackgroundPollingSelector,
   getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
@@ -26,11 +28,13 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  setSteamPatchTDP,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
-import { getSteamPerfSettings } from "../steamPatch";
+import { getSteamPerfSettings } from "../steamPatch/steamPatch";
+import { getProfileForCurrentIdSelector } from "../steamPatch/utils";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -41,6 +45,8 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
   updateAdvancedOption.type,
   setSteamPatchDefaultTdp.type,
+  cacheSteamPatchTdp.type,
+  cacheSteamPatchGpu.type,
 ] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
@@ -98,6 +104,7 @@ export const settingsMiddleware =
     const steamPatchEnabled = Boolean(
       advancedState[AdvancedOptionsEnum.STEAM_PATCH]
     );
+    const steamPatchProfile = getProfileForCurrentIdSelector(state);
 
     const activeGameId = activeGameIdSelector(state);
 
@@ -106,6 +113,9 @@ export const settingsMiddleware =
       setPollTdp(activeGameId);
       // if steamPatch enabled, invoke get to set tdp and gpu
       if (steamPatchEnabled) {
+        if (steamPatchProfile?.tdp) {
+          setSteamPatchTDP(steamPatchProfile.tdp);
+        }
         getSteamPerfSettings();
       }
     }
@@ -131,8 +141,11 @@ export const settingsMiddleware =
 
     if (action.type === setCurrentGameInfo.type) {
       if (steamPatchEnabled) {
+        if (steamPatchProfile?.tdp) {
+          setSteamPatchTDP(steamPatchProfile.tdp);
+        }
         // get steam perf settings when currentGameId changes
-        getSteamPerfSettings();
+        // getSteamPerfSettings();
       }
 
       const {
