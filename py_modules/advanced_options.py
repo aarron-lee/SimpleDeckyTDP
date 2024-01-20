@@ -43,10 +43,10 @@ def get_default_options():
     options = []
 
     enable_steam_patch = {
-        'name': 'Fix Steam TDP Controls',
+        'name': 'Fix Steam TDP Slider',
         'type': 'boolean',
         'defaultValue': False,
-        'description': 'Fixes the Steam TDP and GPU Sliders',
+        'description': 'Fixes Steam TDP Slider (and GPU Slider on NobaraOS)',
         'currentValue': get_nested_setting(
             f'advanced.{DefaultSettings.ENABLE_STEAM_PATCH.value}'
         ) or False,
