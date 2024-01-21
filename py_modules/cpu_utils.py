@@ -38,11 +38,11 @@ def ryzenadj(tdp: int):
         if advanced_options.get_setting(
             advanced_options.RogAllySettings.USE_ASUSCTL_TDP.value
         ):
-            rog_ally.set_tdp_asusctl(tdp)
+            return rog_ally.set_tdp_asusctl(tdp)
         elif advanced_options.get_setting(
             advanced_options.RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
         ):
-            rog_ally.set_tdp_platform_profile(tdp)
+            return rog_ally.set_tdp_platform_profile(tdp)
 
         tdp = tdp*1000
 
