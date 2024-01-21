@@ -40,8 +40,6 @@ def set_tdp_platform_profile(tdp):
             else:
                 command = 'performance'
 
-            decky_plugin.logger.info(f'current platform profile is {current_value} | new platform profile will be set to {command} | tdp being set is {tdp}')
-
             if current_value.strip() == command:
                 # already set, return
                 return

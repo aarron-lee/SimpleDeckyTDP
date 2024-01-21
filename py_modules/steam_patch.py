@@ -1,14 +1,26 @@
-# import os
-import decky_plugin
-import plugin_update
 import logging
-import os
 import file_timeout
 import advanced_options
-from plugin_settings import bootstrap_profile, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
+from plugin_settings import bootstrap_profile, set_all_tdp_profiles, get_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
-from gpu_utils import get_gpu_frequency_range, set_gpu_frequency, set_gpu_frequency_range
+from gpu_utils import set_gpu_frequency_range
 
+
+def set_values_for_game_id(game_id):
+    set_tdp_for_game_id(game_id)
+    set_gpu_for_game_id(game_id)
+    set_smt_boost_for_game_id(game_id)
+
+def set_smt_boost_for_game_id(game_id):
+    tdp_profile = get_tdp_profile(game_id)
+
+    smt = tdp_profile.get('smt')
+    cpu_boost = tdp_profile.get('cpuBoost')
+
+    if smt:
+        set_smt(smt)
+    if cpu_boost:
+        set_cpu_boost(cpu_boost)
 
 def set_tdp_for_game_id(game_id):
     tdp_profile = get_tdp_profile(game_id)

@@ -13,14 +13,11 @@ import {
   createServerApiHelpers,
   getServerApi,
   saveSteamPatchTdpProfiles,
-  setGpuForGameId,
-  setSteamPatchTDP,
-  setTdpForGameId,
+  setValuesForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { resumeAction } from "./extraActions";
-import { getSteamPerfSettings } from "../steamPatch/steamPatch";
 import { extractCurrentGameId } from "../utils/constants";
 
 const saveToBackendTypes = [
@@ -57,15 +54,13 @@ export const steamPatchMiddleware =
 
       if (action.type === resumeAction.type) {
         if (steamPatchEnabled) {
-          setTdpForGameId(id);
-          setGpuForGameId(id);
+          setValuesForGameId(id);
         }
       }
 
       if (action.type === setCurrentGameInfo.type) {
         if (steamPatchEnabled) {
-          setTdpForGameId(id);
-          setGpuForGameId(id);
+          setValuesForGameId(id);
         }
       }
 

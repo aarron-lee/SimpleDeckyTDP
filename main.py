@@ -5,9 +5,9 @@ import logging
 import os
 import file_timeout
 import advanced_options
-from plugin_settings import bootstrap_profile, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
+from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
-from gpu_utils import get_gpu_frequency_range, set_gpu_frequency, set_gpu_frequency_range
+from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
 import steam_patch
 
 class Plugin:
@@ -43,12 +43,8 @@ class Plugin:
     async def save_steam_patch_tdp_profile(self, tdpProfiles, gameId, advanced):
         steam_patch.save_steam_patch_tdp_profile(tdpProfiles, gameId, advanced)
 
-    async def set_tdp_for_game_id(self, gameId):
-        steam_patch.set_tdp_for_game_id(gameId)
-
-
-    async def set_gpu_for_game_id(self, gameId):
-        steam_patch.set_gpu_for_game_id(gameId)
+    async def set_values_for_game_id(self, gameId):
+        steam_patch.set_values_for_game_id(gameId)
     
     async def save_steam_patch_tdp(self, tdp, gameId):
         steam_patch.save_steam_patch_tdp(tdp, gameId)
