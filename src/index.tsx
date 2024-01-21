@@ -84,7 +84,7 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const { getSettings } = createServerApiHelpers(serverApi);
 
-  let unpatch: any;
+  const unpatch = steamPatch();
 
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
@@ -96,9 +96,6 @@ export default definePlugin((serverApi: ServerAPI) => {
           ...results,
         })
       );
-      setTimeout(() => {
-        unpatch = steamPatch();
-      }, 0);
     }
   });
 

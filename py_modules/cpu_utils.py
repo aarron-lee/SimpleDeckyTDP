@@ -34,12 +34,11 @@ def ryzenadj(tdp: int):
         if advanced_options.get_setting(
             advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
         ):
+
             return legion_go.ryzenadj(tdp)
-        if advanced_options.get_setting(
-            advanced_options.RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
-        ):
-            with file_timeout.time_limit(2):
-                rog_ally.set_tdp_platform_profile(tdp)
+        with file_timeout.time_limit(2):
+            if advanced_options.get_device_name() == advanced_options.Devices.ROG_ALLY.value:
+                    rog_ally.set_tdp_platform_profile(tdp)
 
         tdp = tdp*1000
 
