@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import settingsReducer from "./settingsSlice";
 import { settingsMiddleware } from "./settingsMiddleware";
+import { steamPatchMiddleware } from "./steamPatchMiddleware";
+import { commonMiddleware } from "./commonMiddleware";
 // import logger from "./logger";
 
 export const store = configureStore({
@@ -9,7 +11,9 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
+      steamPatchMiddleware,
       settingsMiddleware,
+      commonMiddleware,
       // dev only
       // logger,
     ]),

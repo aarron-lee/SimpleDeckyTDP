@@ -40,6 +40,27 @@ class Plugin:
         except Exception as e:
             logging.error(f"error failed to set_setting {name}={value} {e}")
 
+    async def save_steam_patch_tdp_profile(self, tdpProfiles, gameId, advanced):
+        try:
+            set_all_tdp_profiles(tdpProfiles)
+            persist_setting('advanced', advanced)
+            steam_patch_enabled = advanced_options.get_setting(
+                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
+            )
+
+            if steam_patch_enabled:
+                tdp_profile = get_tdp_profile(gameId)
+                smt = tdp_profile.get('smt', True)
+                cpu_boost = tdp_profile.get('cpuBoost', True)
+                try:
+                    with file_timeout.time_limit(3):
+                        set_smt(smt)
+                        set_cpu_boost(cpu_boost)
+                except Exception as e:
+                    logging.error(f'main#save_tdp file timeout {e}')
+
+        except Exception as e:
+            logging.error(f'main#save_steam_patch_tdp error {e}')
     
     async def set_steam_patch_tdp(self, tdp):
         try:

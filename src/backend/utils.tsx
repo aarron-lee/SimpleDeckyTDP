@@ -1,5 +1,6 @@
 import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
+import { extractCurrentGameId } from "../utils/constants";
 
 export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
@@ -20,6 +21,7 @@ export enum ServerAPIMethods {
   POLL_TDP = "poll_tdp",
   SET_STEAM_PATCH_TDP = "set_steam_patch_tdp",
   SET_STEAM_PATCH_GPU = "set_steam_patch_gpu",
+  SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -135,6 +137,17 @@ export const setSteamPatchGPU = (
     serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_GPU, {
       minFrequency,
       maxFrequency,
+    });
+  }
+};
+
+export const saveSteamPatchTdpProfiles = (tdpProfiles: any, advanced: any) => {
+  const gameId = extractCurrentGameId();
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_TDP_PROFILE, {
+      tdpProfiles,
+      gameId,
+      advanced,
     });
   }
 };

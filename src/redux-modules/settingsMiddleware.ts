@@ -1,13 +1,10 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
-  cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
   disableBackgroundPollingSelector,
   getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
-  setCpuBoost,
   setCurrentGameInfo,
   setDisableBackgroundPolling,
   setEnableTdpProfiles,
@@ -15,12 +12,8 @@ import {
   setGpuFrequency,
   setGpuMode,
   setPolling,
-  setSmt,
-  setSteamPatchDefaultTdp,
   updateAdvancedOption,
   updateInitialLoad,
-  updateMaxTdp,
-  updateMinTdp,
   updatePollRate,
   updateTdpProfiles,
 } from "./settingsSlice";
@@ -28,13 +21,10 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
-  setSteamPatchTDP,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
-import { getSteamPerfSettings } from "../steamPatch/steamPatch";
-import { getProfileForCurrentIdSelector } from "../steamPatch/utils";
 
 const resetTdpActionTypes = [
   setCurrentGameInfo.type,
@@ -44,12 +34,7 @@ const resetTdpActionTypes = [
   setPolling.type,
   updateInitialLoad.type,
   updateAdvancedOption.type,
-  setSteamPatchDefaultTdp.type,
-  cacheSteamPatchTdp.type,
-  cacheSteamPatchGpu.type,
 ] as string[];
-
-const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
 
 let pollIntervalId: undefined | number;
 
@@ -63,29 +48,22 @@ const resetPolling = (store: any) => {
   }
   const state = store.getState();
 
-  const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const steamPatchEnabled = Boolean(
-    advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-  );
+  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
+  const pollOverrideEnabled = pollEnabledSelector(state);
+  const pollRateOverride = pollRateSelector(state);
 
-  if (!steamPatchEnabled) {
-    const disableBackgroundPolling = disableBackgroundPollingSelector(state);
-    const pollOverrideEnabled = pollEnabledSelector(state);
-    const pollRateOverride = pollRateSelector(state);
+  const actualPollRate = pollOverrideEnabled
+    ? pollRateOverride
+    : BACKGROUND_POLL_RATE;
 
-    const actualPollRate = pollOverrideEnabled
-      ? pollRateOverride
-      : BACKGROUND_POLL_RATE;
+  if (!disableBackgroundPolling) {
+    pollIntervalId = window.setInterval(() => {
+      const serverApi = getServerApi();
+      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
+      const activeGameId = activeGameIdSelector(store.getState());
 
-    if (!disableBackgroundPolling) {
-      pollIntervalId = window.setInterval(() => {
-        const serverApi = getServerApi();
-        const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
-        const activeGameId = activeGameIdSelector(store.getState());
-
-        setPollTdp(activeGameId);
-      }, actualPollRate);
-    }
+      setPollTdp(activeGameId);
+    }, actualPollRate);
   }
 };
 
@@ -104,122 +82,93 @@ export const settingsMiddleware =
     const steamPatchEnabled = Boolean(
       advancedState[AdvancedOptionsEnum.STEAM_PATCH]
     );
-    const steamPatchProfile = getProfileForCurrentIdSelector(state);
 
-    const activeGameId = activeGameIdSelector(state);
+    if (!steamPatchEnabled) {
+      const activeGameId = activeGameIdSelector(state);
 
-    if (action.type === resumeAction.type) {
-      // pollTdp simply tells backend to set TDP according to settings.json
-      setPollTdp(activeGameId);
-      // if steamPatch enabled, invoke get to set tdp and gpu
-      if (steamPatchEnabled) {
-        if (steamPatchProfile?.tdp) {
-          setSteamPatchTDP(steamPatchProfile.tdp);
-        }
-        getSteamPerfSettings();
-      }
-    }
-
-    if (action.type === setDisableBackgroundPolling.type) {
-      // update value on backend
-      setSetting({
-        fieldName: "disableBackgroundPolling",
-        fieldValue: action.payload,
-      });
-
-      // reset polling
-      resetPolling(store);
-    }
-
-    if (
-      action.type === setGpuMode.type ||
-      action.type === setGpuFrequency.type ||
-      action.type === setFixedGpuFrequency.type
-    ) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
-    }
-
-    if (action.type === setCurrentGameInfo.type) {
-      if (steamPatchEnabled) {
-        if (steamPatchProfile?.tdp) {
-          setSteamPatchTDP(steamPatchProfile.tdp);
-        }
-        // get steam perf settings when currentGameId changes
-        getSteamPerfSettings();
+      if (action.type === resumeAction.type) {
+        // pollTdp simply tells backend to set TDP according to settings.json
+        setPollTdp(activeGameId);
       }
 
-      const {
-        settings: { previousGameId },
-      } = state;
+      if (action.type === setDisableBackgroundPolling.type) {
+        // update value on backend
+        setSetting({
+          fieldName: "disableBackgroundPolling",
+          fieldValue: action.payload,
+        });
 
-      if (previousGameId !== state.currentGameId) {
-        // update TDP to new game's TDP value, if appropriate to do so
+        // reset polling
+        resetPolling(store);
+      }
+
+      if (
+        action.type === setGpuMode.type ||
+        action.type === setGpuFrequency.type ||
+        action.type === setFixedGpuFrequency.type
+      ) {
         saveTdpProfiles(
           state.settings.tdpProfiles,
           activeGameId,
           advancedState
         );
       }
-    }
 
-    if (action.type === updateTdpProfiles.type) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
-    }
+      if (action.type === setCurrentGameInfo.type) {
+        const {
+          settings: { previousGameId },
+        } = state;
 
-    if (action.type === setSteamPatchDefaultTdp.type) {
-      setSetting({
-        fieldName: "steamPatchDefaultTdp",
-        fieldValue: state.settings.steamPatchDefaultTdp,
-      });
-    }
-
-    if (action.type === setEnableTdpProfiles.type) {
-      setSetting({
-        fieldName: "enableTdpProfiles",
-        fieldValue: action.payload,
-      });
-    }
-    if (action.type === updateMinTdp.type) {
-      setSetting({
-        fieldName: "minTdp",
-        fieldValue: action.payload,
-      });
-    }
-    if (action.type === updateMaxTdp.type) {
-      setSetting({
-        fieldName: "maxTdp",
-        fieldValue: action.payload,
-      });
-    }
-    if (action.type === updatePollRate.type) {
-      // action.type == number (rate in ms)
-      setSetting({
-        fieldName: "pollRate",
-        fieldValue: action.payload,
-      });
-    }
-    if (action.type === setPolling.type) {
-      // action.type = boolean
-      setSetting({
-        fieldName: "pollEnabled",
-        fieldValue: action.payload,
-      });
-    }
-
-    if (resetTdpActionTypes.includes(action.type)) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
-      resetPolling(store);
-    }
-
-    if (changeCpuStateTypes.includes(action.type)) {
-      // save tdp profiles, but polling reset is unnecessary
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
-    }
-
-    if (action.type === cleanupAction.type) {
-      if (pollIntervalId) {
-        clearInterval(pollIntervalId);
+        if (previousGameId !== state.currentGameId) {
+          // update TDP to new game's TDP value, if appropriate to do so
+          saveTdpProfiles(
+            state.settings.tdpProfiles,
+            activeGameId,
+            advancedState
+          );
+        }
       }
+
+      if (action.type === updateTdpProfiles.type) {
+        saveTdpProfiles(
+          state.settings.tdpProfiles,
+          activeGameId,
+          advancedState
+        );
+      }
+
+      if (action.type === updatePollRate.type) {
+        // action.type == number (rate in ms)
+        setSetting({
+          fieldName: "pollRate",
+          fieldValue: action.payload,
+        });
+      }
+      if (action.type === setPolling.type) {
+        // action.type = boolean
+        setSetting({
+          fieldName: "pollEnabled",
+          fieldValue: action.payload,
+        });
+      }
+
+      if (resetTdpActionTypes.includes(action.type)) {
+        saveTdpProfiles(
+          state.settings.tdpProfiles,
+          activeGameId,
+          advancedState
+        );
+        resetPolling(store);
+      }
+
+      if (action.type === cleanupAction.type) {
+        if (pollIntervalId) {
+          clearInterval(pollIntervalId);
+        }
+      }
+    } else {
+      // steamPatchEnabled, disable polling
+      if (pollIntervalId) clearInterval(pollIntervalId);
     }
 
     return result;
