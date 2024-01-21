@@ -1,0 +1,42 @@
+name: Dev
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "dev"
+
+jobs:
+  build_plugin:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: set git global safe directory
+        run: |
+          pacman -Syu git npm --noconfirm
+          git config --global --add safe.directory $(realpath .)
+
+      - uses: actions/checkout@v3
+
+      - name: build plugin
+        run: |
+          npm i -g pnpm@8.5.1
+          pnpm install --no-frozen-lockfile
+          pnpm update decky-frontend-lib --latest
+          pnpm run build
+          tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist py_modules bin ota_update.sh *.py *.json *.md *.js LICENSE
+        continue-on-error: true
+
+      - name: show files
+        run: |
+          tar -tzvf SimpleDeckyTDP.tar.gz
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: SimpleDeckyTDP
+          path: SimpleDeckyTDP.tar.gz
