@@ -2,6 +2,7 @@ import os
 import subprocess
 import shutil
 import decky_plugin
+import file_timeout
 import logging
 import plugin_settings
 import advanced_options
@@ -37,7 +38,8 @@ def ryzenadj(tdp: int):
         if advanced_options.get_setting(
             advanced_options.RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
         ):
-            rog_ally.set_tdp_platform_profile(tdp)
+            with file_timeout.time_limit(2):
+                rog_ally.set_tdp_platform_profile(tdp)
 
         tdp = tdp*1000
 
