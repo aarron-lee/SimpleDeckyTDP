@@ -7,6 +7,7 @@ import time
 # https://github.com/corando98/
 
 def ryzenadj(tdp):
+    logging.info('legion_go set tdp {tdp}')
     try:
         set_smart_fan_mode(0xff)
         time.sleep(0.1)
