@@ -19,8 +19,8 @@ export enum ServerAPIMethods {
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
   POLL_TDP = "poll_tdp",
-  SET_STEAM_PATCH_TDP = "set_steam_patch_tdp",
-  SET_STEAM_PATCH_GPU = "set_steam_patch_gpu",
+  SAVE_STEAM_PATCH_TDP = "save_steam_patch_tdp",
+  SAVE_STEAM_PATCH_GPU = "save_steam_patch_gpu",
   SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
   SET_TDP_FOR_GAME_ID = "set_tdp_for_game_id",
   SET_GPU_FOR_GAME_ID = "set_gpu_for_game_id",
@@ -125,7 +125,7 @@ export const getLogInfo = () => {
 
 export const setSteamPatchTDP = (tdp: number, gameId: string) => {
   if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_TDP, {
+    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_TDP, {
       tdp,
       gameId,
     });
@@ -154,7 +154,7 @@ export const setSteamPatchGPU = (
   gameId: string
 ) => {
   if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_GPU, {
+    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_GPU, {
       minGpuFrequency,
       maxGpuFrequency,
       gameId,
