@@ -181,9 +181,6 @@ export const subscribeToTdpRangeChanges = () => {
       globalSteamPatchEnabled = steamPatchEnabled;
 
       if (steamPatchEnabled) {
-        if (!unpatch) {
-          unpatch = findSteamPerfModule();
-        }
         if (updateSteamQAM) {
           getSteamPerfSettings();
         }
@@ -195,7 +192,9 @@ export const subscribeToTdpRangeChanges = () => {
     };
 
     const unsubscribe = store.subscribe(listener);
+    unpatch = findSteamPerfModule();
 
+    // kickstart listener
     store.dispatch(noopAction());
 
     return () => {
