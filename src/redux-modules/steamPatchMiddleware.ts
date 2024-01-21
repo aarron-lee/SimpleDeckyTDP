@@ -3,7 +3,9 @@ import {
   cacheSteamPatchGpu,
   cacheSteamPatchTdp,
   getAdvancedOptionsInfoSelector,
+  setCpuBoost,
   setCurrentGameInfo,
+  setSmt,
   setSteamPatchDefaultTdp,
 } from "./settingsSlice";
 import {
@@ -18,12 +20,13 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { resumeAction } from "./extraActions";
 import { getSteamPerfSettings } from "../steamPatch/steamPatch";
-import { getProfileForCurrentIdSelector } from "../steamPatch/utils";
 import { extractCurrentGameId } from "../utils/constants";
 
 const saveToBackendTypes = [
   cacheSteamPatchTdp.type,
   cacheSteamPatchGpu.type,
+  setSmt.type,
+  setCpuBoost.type,
 ] as string[];
 
 export const steamPatchMiddleware =

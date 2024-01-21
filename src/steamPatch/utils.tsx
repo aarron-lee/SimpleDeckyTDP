@@ -1,7 +1,6 @@
 import { debounce, get } from "lodash";
 import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
 
-import { RootState } from "../redux-modules/store";
 import { extractCurrentGameId } from "../utils/constants";
 
 let previousTdp: number | undefined;
@@ -30,14 +29,6 @@ const setGpuOriginal = (updatedMinGpu: number, updatedMaxGpu: number) => {
   previousMaxGpu = updatedMaxGpu;
 
   setSteamPatchGPU(updatedMinGpu, updatedMaxGpu);
-  // store.dispatch(cacheSteamPatchGpu([id, updatedMinGpu, updatedMaxGpu]));
 };
 
 export const setGpu = debounce(setGpuOriginal, 100);
-
-export const getProfileForCurrentIdSelector = (state: RootState) => {
-  const id = extractCurrentGameId();
-  const profile = get(state, `settings.tdpProfiles.${id}`);
-
-  return profile;
-};
