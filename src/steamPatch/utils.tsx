@@ -1,9 +1,6 @@
-import { logInfo, setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
+import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
 
-import {
-  extractCurrentGameId,
-  extractCurrentGameInfo,
-} from "../utils/constants";
+import { extractCurrentGameId } from "../utils/constants";
 
 let previousTdp: number | undefined;
 let previousGameIdForTdp: string | undefined;
@@ -24,7 +21,7 @@ let previousMaxGpu: number | undefined;
 let previousGameIdForGpu: string | undefined;
 
 export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
-  const { id, displayName } = extractCurrentGameInfo();
+  const id = extractCurrentGameId();
 
   if (
     previousGameIdForGpu !== id ||
@@ -34,8 +31,6 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     previousGameIdForGpu = id;
     previousMinGpu = updatedMinGpu;
     previousMaxGpu = updatedMaxGpu;
-
-    logInfo(`gpu ${id} ${displayName} ${updatedMinGpu} ${updatedMaxGpu}`);
 
     setSteamPatchGPU(updatedMinGpu, updatedMaxGpu, id);
   }
