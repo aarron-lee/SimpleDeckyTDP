@@ -1,5 +1,5 @@
-import { get } from "lodash";
-import { logInfo, setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
+import { debounce, get } from "lodash";
+import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
 import {
   // cacheSteamPatchGpu,
   cacheSteamPatchTdp,
@@ -25,7 +25,7 @@ let previousMinGpu: number | undefined;
 let previousMaxGpu: number | undefined;
 let previousGameIdForGpu: string | undefined;
 
-export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
+const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
   const id = extractCurrentGameId();
   if (
     previousMinGpu !== updatedMinGpu ||
@@ -40,6 +40,8 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     // store.dispatch(cacheSteamPatchGpu([id, updatedMinGpu, updatedMaxGpu]));
   }
 };
+
+export const debouncedSetGpu = debounce(setGpu, 120);
 
 export const getProfileForCurrentIdSelector = (state: RootState) => {
   const id = extractCurrentGameId();

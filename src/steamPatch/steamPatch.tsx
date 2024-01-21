@@ -7,7 +7,7 @@ import {
   getSteamPatchDefaultTdpSelector,
   tdpRangeSelector,
 } from "../redux-modules/settingsSlice";
-import { setTdp, setGpu } from "./utils";
+import { setTdp, debouncedSetGpu } from "./utils";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -93,13 +93,13 @@ function manageGpu() {
         updatedGpuFreq >= minGpuFreq &&
         updatedGpuFreq <= maxGpuFreq
       ) {
-        setGpu(updatedGpuFreq, updatedGpuFreq);
+        debouncedSetGpu(updatedGpuFreq, updatedGpuFreq);
       }
     }
     // default GPU range
     else {
       // 0 resets gpu to auto
-      setGpu(0, 0);
+      debouncedSetGpu(0, 0);
     }
   }
 }
