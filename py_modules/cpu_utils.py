@@ -33,16 +33,11 @@ def ryzenadj(tdp: int):
         if advanced_options.get_setting(
             advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
         ):
-            # legion go
             return legion_go.ryzenadj(tdp)
         if advanced_options.get_setting(
-            advanced_options.RogAllySettings.USE_ASUSCTL_TDP.value
-        ):
-            return rog_ally.set_tdp_asusctl(tdp)
-        elif advanced_options.get_setting(
             advanced_options.RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
         ):
-            return rog_ally.set_tdp_platform_profile(tdp)
+            rog_ally.set_tdp_platform_profile(tdp)
 
         tdp = tdp*1000
 

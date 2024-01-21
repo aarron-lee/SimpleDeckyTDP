@@ -6,7 +6,6 @@ import decky_plugin
 from plugin_settings import get_nested_setting
 from enum import Enum
 
-ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
 class Devices(Enum):
@@ -85,26 +84,15 @@ def get_advanced_options():
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
     if device_name == Devices.ROG_ALLY.value:
-        defaultValue = False
-        if ASUSCTL_PATH:
-            current_val = get_nested_setting(
-                    f'advanced.{RogAllySettings.USE_ASUSCTL_TDP.value}'
-                )
-            options.append({
-                'name': 'Use asusctl for TDP',
-                'type': 'boolean',
-                'defaultValue': defaultValue,
-                'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
-                'statePath': RogAllySettings.USE_ASUSCTL_TDP.value
-            })
+        defaultValue = True
         if os.path.exists(PLATFORM_PROFILE_PATH):
             current_val = get_nested_setting(
                     f'advanced.{RogAllySettings.USE_PLATFORM_PROFILE_TDP.value}'
                 )
             options.append({
-                'name': 'Use platform_profile for TDP',
+                'name': 'Enable Asus Platform Profile',
                 'type': 'boolean',
-                'description': 'This is ignored if asusctl is enabled',
+                'description': 'Sets Quiet, Balanced, or Performance based on TDP',
                 'defaultValue': defaultValue,
                 'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
                 'statePath': RogAllySettings.USE_PLATFORM_PROFILE_TDP.value

@@ -1,5 +1,6 @@
 import subprocess
 import shutil
+from time import sleep
 import os
 import decky_plugin
 
@@ -36,6 +37,7 @@ def set_tdp_platform_profile(tdp):
         result = execute_bash_command(command, PLATFORM_PROFILE_PATH)
         if result.stderr:
             decky_plugin.logger.error(f"{__name__} platform_profile error {result.stderr}")
+        sleep(0.1)
         return result
 
 
