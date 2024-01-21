@@ -71,6 +71,30 @@ class Plugin:
                     ryzenadj(tdp_profile.get('tdp'))
             except Exception as e:
                 logging.error(f'main#set_tdp_for_game_id timeout {e}')
+
+    async def set_gpu_for_game_id(self, gameId):
+        tdp_profile = get_tdp_profile(gameId)
+        gpu_mode = tdp_profile.get('gpuMode')
+        fixed_frequency = tdp_profile.get('fixedGpuFrequency')
+        min_frequency = tdp_profile.get('minGpuFrequency')
+        max_frequency = tdp_profile.get('maxGpuFrequency')
+
+
+        if gpu_mode:
+            try:
+                with file_timeout.time_limit(3):
+                    if gpu_mode == 'DEFAULT':
+                        set_gpu_frequency_range(0, 0)
+                        return True
+                    elif gpu_mode == 'FIXED' and fixed_frequency:
+                        set_gpu_frequency_range(fixed_frequency, fixed_frequency)
+                        return True
+                    elif gpu_mode == 'RANGE' and min_frequency and max_frequency:
+                        set_gpu_frequency_range(min_frequency, max_frequency)
+                        return True
+                    return False
+            except Exception as e:
+                logging.error(f'main#set_tdp_for_game_id timeout {e}')
     
     async def set_steam_patch_tdp(self, tdp, gameId):
         tdp_profile = {
@@ -87,10 +111,34 @@ class Plugin:
             logging.error(f'main#set_steam_patch timeout {e}')
 
 
-    async def set_steam_patch_gpu(self, minFrequency, maxFrequency):
+    async def set_steam_patch_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
+        gpu_mode = None
+
+        profile_contents = {}
+
+        if minGpuFrequency == 0 and maxGpuFrequency == 0:
+            gpu_mode = 'DEFAULT'
+        elif minGpuFrequency == maxGpuFrequency:
+            gpu_mode = 'FIXED'
+            profile_contents["fixedGpuFrequency"] = maxGpuFrequency
+        elif minGpuFrequency < maxGpuFrequency:
+            gpu_mode = 'RANGE'
+            profile_contents["minGpuFrequency"] = minGpuFrequency
+            profile_contents["maxGpuFrequency"] = maxGpuFrequency
+        else:
+            # invalid, return
+            return
+        
+        profile_contents['gpuMode'] = gpu_mode
+
+        tdp_profile = {
+            f"{gameId}": profile_contents
+        }
+        set_all_tdp_profiles(tdp_profile)
+
         try:
             with file_timeout.time_limit(3):
-                set_gpu_frequency_range(minFrequency, maxFrequency)
+                set_gpu_frequency_range(minGpuFrequency, maxGpuFrequency)
         except Exception as e:
             logging.error(f'main#steam_patch_gpu error {e}')       
             

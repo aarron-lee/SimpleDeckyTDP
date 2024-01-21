@@ -13,6 +13,7 @@ import {
   createServerApiHelpers,
   getServerApi,
   saveSteamPatchTdpProfiles,
+  setGpuForGameId,
   setSteamPatchTDP,
   setTdpForGameId,
 } from "../backend/utils";
@@ -57,12 +58,14 @@ export const steamPatchMiddleware =
       if (action.type === resumeAction.type) {
         if (steamPatchEnabled) {
           setTdpForGameId(id);
+          setGpuForGameId(id);
         }
       }
 
       if (action.type === setCurrentGameInfo.type) {
         if (steamPatchEnabled) {
           setTdpForGameId(id);
+          setGpuForGameId(id);
         }
       }
 

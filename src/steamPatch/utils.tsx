@@ -1,7 +1,9 @@
-import { debounce, get } from "lodash";
-import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
+import { logInfo, setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
 
-import { extractCurrentGameId } from "../utils/constants";
+import {
+  extractCurrentGameId,
+  extractCurrentGameInfo,
+} from "../utils/constants";
 
 let previousTdp: number | undefined;
 let previousGameIdForTdp: string | undefined;
@@ -21,14 +23,20 @@ let previousMinGpu: number | undefined;
 let previousMaxGpu: number | undefined;
 let previousGameIdForGpu: string | undefined;
 
-const setGpuOriginal = (updatedMinGpu: number, updatedMaxGpu: number) => {
-  const id = extractCurrentGameId();
+export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
+  const { id, displayName } = extractCurrentGameInfo();
 
-  previousGameIdForGpu = id;
-  previousMinGpu = updatedMinGpu;
-  previousMaxGpu = updatedMaxGpu;
+  if (
+    previousGameIdForGpu !== id ||
+    previousMinGpu !== updatedMinGpu ||
+    previousMaxGpu !== updatedMaxGpu
+  ) {
+    previousGameIdForGpu = id;
+    previousMinGpu = updatedMinGpu;
+    previousMaxGpu = updatedMaxGpu;
 
-  setSteamPatchGPU(updatedMinGpu, updatedMaxGpu);
+    logInfo(`gpu ${id} ${displayName} ${updatedMinGpu} ${updatedMaxGpu}`);
+
+    setSteamPatchGPU(updatedMinGpu, updatedMaxGpu, id);
+  }
 };
-
-export const setGpu = debounce(setGpuOriginal, 100);
