@@ -183,6 +183,8 @@ export const subscribeToTdpRangeChanges = () => {
       } else {
         if (unpatch) {
           unpatch();
+          // reset perf settings after unpatch
+          getSteamPerfSettings();
           unpatch = undefined;
         }
       }
