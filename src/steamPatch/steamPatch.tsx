@@ -24,6 +24,7 @@ let maxTdp: any;
 let minGpuFreq: any;
 let maxGpuFreq: any;
 let defaultTdp: any;
+let globalSteamPatchEnabled: boolean | undefined;
 
 const findSteamPerfModule = () => {
   try {
@@ -42,11 +43,14 @@ const findSteamPerfModule = () => {
       "Get",
       (args: any[], ret: any) => {
         if (perfStore) {
-          try {
-            manageGpu();
-            manageTdp();
-          } catch (e) {
-            logInfo(e);
+          if (globalSteamPatchEnabled) {
+            // decky's unpatch doesn't work consistently, better to manually check patch status
+            try {
+              manageGpu();
+              manageTdp();
+            } catch (e) {
+              logInfo(e);
+            }
           }
         }
         return ret;
@@ -173,6 +177,8 @@ export const subscribeToTdpRangeChanges = () => {
         advancedState[AdvancedOptionsEnum.STEAM_PATCH]
       );
 
+      globalSteamPatchEnabled = steamPatchEnabled;
+
       if (steamPatchEnabled) {
         if (!unpatch) {
           unpatch = findSteamPerfModule();
@@ -181,12 +187,9 @@ export const subscribeToTdpRangeChanges = () => {
           getSteamPerfSettings();
         }
       } else {
-        if (unpatch) {
-          unpatch();
-          // reset perf settings after unpatch
-          getSteamPerfSettings();
-          unpatch = undefined;
-        }
+        // reset perf settings after unpatch
+        // globalSteamPatchEnabled bool will stop steam patch from working
+        getSteamPerfSettings();
       }
     };
 
