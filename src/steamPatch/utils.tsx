@@ -1,10 +1,5 @@
-import { get } from "lodash";
 import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
-import {
-  // cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
-} from "../redux-modules/settingsSlice";
-import { RootState, store } from "../redux-modules/store";
+
 import { extractCurrentGameId } from "../utils/constants";
 
 let previousTdp: number | undefined;
@@ -12,12 +7,12 @@ let previousGameIdForTdp: string | undefined;
 
 export const setTdp = (updatedTdp: number) => {
   const id = extractCurrentGameId();
-  if (previousTdp !== updatedTdp || id !== previousGameIdForTdp) {
+
+  if (previousTdp !== updatedTdp || previousGameIdForTdp !== id) {
     previousGameIdForTdp = id;
     previousTdp = updatedTdp;
 
-    setSteamPatchTDP(updatedTdp);
-    store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
+    setSteamPatchTDP(updatedTdp, id);
   }
 };
 
@@ -29,22 +24,14 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
   const id = extractCurrentGameId();
 
   if (
+    previousGameIdForGpu !== id ||
     previousMinGpu !== updatedMinGpu ||
-    previousMaxGpu !== updatedMaxGpu ||
-    id !== previousGameIdForGpu
+    previousMaxGpu !== updatedMaxGpu
   ) {
     previousGameIdForGpu = id;
     previousMinGpu = updatedMinGpu;
     previousMaxGpu = updatedMaxGpu;
 
-    setSteamPatchGPU(updatedMinGpu, updatedMaxGpu);
-    // store.dispatch(cacheSteamPatchGpu([id, updatedMinGpu, updatedMaxGpu]));
+    setSteamPatchGPU(updatedMinGpu, updatedMaxGpu, id);
   }
-};
-
-export const getProfileForCurrentIdSelector = (state: RootState) => {
-  const id = extractCurrentGameId();
-  const profile = get(state, `settings.tdpProfiles.${id}`);
-
-  return profile;
 };

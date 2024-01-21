@@ -31,6 +31,7 @@ def set_tdp_platform_profile(tdp):
         with open(PLATFORM_PROFILE_PATH, 'r') as file:
             current_value = file.read()
             file.close()
+
             command = 'quiet'
             if tdp < 9:
                 command = 'quiet'
@@ -38,6 +39,7 @@ def set_tdp_platform_profile(tdp):
                 command = 'balanced'
             else:
                 command = 'performance'
+
             if current_value.strip() == command:
                 # already set, return
                 return

@@ -84,8 +84,6 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const { getSettings } = createServerApiHelpers(serverApi);
 
-  const unpatch = steamPatch();
-
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
     if (result.success) {
@@ -99,7 +97,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
-  // const unpatch = steamPatch();
+  const unpatch = steamPatch();
 
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();

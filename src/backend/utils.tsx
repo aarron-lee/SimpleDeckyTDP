@@ -19,9 +19,10 @@ export enum ServerAPIMethods {
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
   POLL_TDP = "poll_tdp",
-  SET_STEAM_PATCH_TDP = "set_steam_patch_tdp",
-  SET_STEAM_PATCH_GPU = "set_steam_patch_gpu",
+  SAVE_STEAM_PATCH_TDP = "save_steam_patch_tdp",
+  SAVE_STEAM_PATCH_GPU = "save_steam_patch_gpu",
   SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
+  SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -121,22 +122,33 @@ export const getLogInfo = () => {
   }
 };
 
-export const setSteamPatchTDP = (tdp: number) => {
+export const setSteamPatchTDP = (tdp: number, gameId: string) => {
   if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_TDP, {
+    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_TDP, {
       tdp,
+      gameId,
+    });
+  }
+};
+
+export const setValuesForGameId = (gameId: string) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, {
+      gameId,
     });
   }
 };
 
 export const setSteamPatchGPU = (
-  minFrequency: number,
-  maxFrequency: number
+  minGpuFrequency: number,
+  maxGpuFrequency: number,
+  gameId: string
 ) => {
   if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_STEAM_PATCH_GPU, {
-      minFrequency,
-      maxFrequency,
+    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_GPU, {
+      minGpuFrequency,
+      maxGpuFrequency,
+      gameId,
     });
   }
 };
