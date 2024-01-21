@@ -32,8 +32,6 @@ def set_tdp_platform_profile(tdp):
             current_value = file.read()
             file.close()
 
-            decky_plugin.logger.info(f'platform profile is {current_value} | tdp being set is {tdp}')
-
             command = 'quiet'
             if tdp < 9:
                 command = 'quiet'
@@ -41,6 +39,9 @@ def set_tdp_platform_profile(tdp):
                 command = 'balanced'
             else:
                 command = 'performance'
+
+            decky_plugin.logger.info(f'current platform profile is {current_value} | new platform profile will be set to {command} | tdp being set is {tdp}')
+
             if current_value.strip() == command:
                 # already set, return
                 return
