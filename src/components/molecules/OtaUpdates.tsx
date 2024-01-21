@@ -31,6 +31,12 @@ const OtaUpdates = () => {
     fn();
   }, []);
 
+  let buttonText = `Update to ${latestVersionNum}`;
+
+  if (installedVersionNum === latestVersionNum && Boolean(latestVersionNum)) {
+    buttonText = "Reinstall Plugin";
+  }
+
   return (
     <PanelSection title="Updates">
       <PanelSectionRow>
@@ -41,31 +47,30 @@ const OtaUpdates = () => {
 
       {Boolean(latestVersionNum) && (
         <PanelSectionRow>
-          <Field disabled label={"Newest Version"}>
+          <Field disabled label={"Latest Version"}>
             {latestVersionNum}
           </Field>
         </PanelSectionRow>
       )}
-      {installedVersionNum !== latestVersionNum &&
-        Boolean(latestVersionNum) && (
-          <PanelSectionRow>
-            <ButtonItem
-              onClick={() => {
-                const serverApi = getServerApi();
-                if (serverApi) otaUpdate(serverApi);
-              }}
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              layout={"below"}
-            >
-              Update to {latestVersionNum}
-            </ButtonItem>
-          </PanelSectionRow>
-        )}
+      {Boolean(latestVersionNum) && (
+        <PanelSectionRow>
+          <ButtonItem
+            onClick={() => {
+              const serverApi = getServerApi();
+              if (serverApi) otaUpdate(serverApi);
+            }}
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            layout={"below"}
+          >
+            {buttonText}
+          </ButtonItem>
+        </PanelSectionRow>
+      )}
     </PanelSection>
   );
 };
