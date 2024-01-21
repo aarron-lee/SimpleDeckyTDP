@@ -8,6 +8,7 @@ import {
   tdpRangeSelector,
 } from "../redux-modules/settingsSlice";
 import { setTdp, setGpu } from "./utils";
+import { noopAction } from "../redux-modules/extraActions";
 
 enum GpuPerformanceLevel {
   ENABLED = 2,
@@ -180,6 +181,9 @@ export const subscribeToTdpRangeChanges = () => {
       globalSteamPatchEnabled = steamPatchEnabled;
 
       if (steamPatchEnabled) {
+        if (!unpatch) {
+          unpatch = findSteamPerfModule();
+        }
         if (updateSteamQAM) {
           getSteamPerfSettings();
         }
@@ -192,7 +196,7 @@ export const subscribeToTdpRangeChanges = () => {
 
     const unsubscribe = store.subscribe(listener);
 
-    unpatch = findSteamPerfModule();
+    store.dispatch(noopAction());
 
     return () => {
       unsubscribe();
