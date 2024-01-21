@@ -19,8 +19,6 @@ import { resumeAction } from "./extraActions";
 import { getSteamPerfSettings } from "../steamPatch/steamPatch";
 import { getProfileForCurrentIdSelector } from "../steamPatch/utils";
 
-let setTdpTimeoutId: any;
-
 const saveToBackendTypes = [
   cacheSteamPatchTdp.type,
   cacheSteamPatchGpu.type,
@@ -54,13 +52,7 @@ export const steamPatchMiddleware =
       if (action.type === resumeAction.type) {
         if (steamPatchEnabled) {
           if (steamPatchProfile?.tdp) {
-            if (setTdpTimeoutId) {
-              clearTimeout(setTdpTimeoutId);
-              setTdpTimeoutId = undefined;
-            }
-            setTimeout(() => {
-              setSteamPatchTDP(steamPatchProfile.tdp);
-            }, 2000);
+            setSteamPatchTDP(steamPatchProfile.tdp);
           }
           // getSteamPerfSettings();
         }
@@ -69,13 +61,7 @@ export const steamPatchMiddleware =
       if (action.type === setCurrentGameInfo.type) {
         if (steamPatchEnabled) {
           if (steamPatchProfile?.tdp) {
-            if (setTdpTimeoutId) {
-              clearTimeout(setTdpTimeoutId);
-              setTdpTimeoutId = undefined;
-            }
-            setTimeout(() => {
-              setSteamPatchTDP(steamPatchProfile.tdp);
-            }, 2000);
+            setSteamPatchTDP(steamPatchProfile.tdp);
           }
           // get steam perf settings when currentGameId changes
           // getSteamPerfSettings();
