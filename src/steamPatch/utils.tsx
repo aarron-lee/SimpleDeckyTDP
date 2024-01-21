@@ -17,7 +17,7 @@ export const setTdp = (updatedTdp: number) => {
     previousTdp = updatedTdp;
 
     setSteamPatchTDP(updatedTdp);
-    store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
+    // store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
   }
 };
 
