@@ -39,7 +39,6 @@ def ryzenadj(tdp: int):
         with file_timeout.time_limit(2):
             if advanced_options.get_device_name() == advanced_options.Devices.ROG_ALLY.value:
                     rog_ally.set_tdp_platform_profile(tdp)
-
         tdp = tdp*1000
 
         if RYZENADJ_PATH:

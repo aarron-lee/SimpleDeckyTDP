@@ -51,22 +51,22 @@ export const steamPatchMiddleware =
 
       if (action.type === resumeAction.type) {
         if (steamPatchEnabled) {
-          // if (steamPatchProfile?.tdp) {
-          //   setSteamPatchTDP(steamPatchProfile.tdp);
-          // }
-          getSteamPerfSettings();
+          if (steamPatchProfile?.tdp) {
+            setSteamPatchTDP(steamPatchProfile.tdp);
+          }
+          // getSteamPerfSettings();
         }
       }
 
-      // if (action.type === setCurrentGameInfo.type) {
-      //   if (steamPatchEnabled) {
-      //     // if (steamPatchProfile?.tdp) {
-      //     //   setSteamPatchTDP(steamPatchProfile.tdp);
-      //     // }
-      //     // get steam perf settings when currentGameId changes
-      //     getSteamPerfSettings();
-      //   }
-      // }
+      if (action.type === setCurrentGameInfo.type) {
+        if (steamPatchEnabled) {
+          if (steamPatchProfile?.tdp) {
+            setSteamPatchTDP(steamPatchProfile.tdp);
+          }
+          // get steam perf settings when currentGameId changes
+          // getSteamPerfSettings();
+        }
+      }
 
       if (saveToBackendTypes.includes(action.type)) {
         saveSteamPatchTdpProfiles(state.settings.tdpProfiles, advancedState);
