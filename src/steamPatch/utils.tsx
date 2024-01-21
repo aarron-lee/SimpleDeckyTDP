@@ -1,10 +1,7 @@
 import { debounce, get } from "lodash";
 import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
-import {
-  // cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
-} from "../redux-modules/settingsSlice";
-import { RootState, store } from "../redux-modules/store";
+
+import { RootState } from "../redux-modules/store";
 import { extractCurrentGameId } from "../utils/constants";
 
 let previousTdp: number | undefined;
@@ -17,8 +14,7 @@ export const setTdp = (updatedTdp: number) => {
     previousGameIdForTdp = id;
     previousTdp = updatedTdp;
 
-    setSteamPatchTDP(updatedTdp);
-    store.dispatch(cacheSteamPatchTdp([id, updatedTdp]));
+    setSteamPatchTDP(updatedTdp, id);
   }
 };
 

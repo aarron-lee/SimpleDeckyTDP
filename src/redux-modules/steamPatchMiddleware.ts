@@ -12,12 +12,14 @@ import {
   getServerApi,
   saveSteamPatchTdpProfiles,
   setSteamPatchTDP,
+  setTdpForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { resumeAction } from "./extraActions";
 import { getSteamPerfSettings } from "../steamPatch/steamPatch";
 import { getProfileForCurrentIdSelector } from "../steamPatch/utils";
+import { extractCurrentGameId } from "../utils/constants";
 
 const saveToBackendTypes = [
   cacheSteamPatchTdp.type,
@@ -39,9 +41,9 @@ export const steamPatchMiddleware =
       advancedState[AdvancedOptionsEnum.STEAM_PATCH]
     );
 
-    if (steamPatchEnabled) {
-      const steamPatchProfile = getProfileForCurrentIdSelector(state);
+    const id = extractCurrentGameId();
 
+    if (steamPatchEnabled) {
       if (action.type === setSteamPatchDefaultTdp.type) {
         setSetting({
           fieldName: "steamPatchDefaultTdp",
@@ -51,20 +53,13 @@ export const steamPatchMiddleware =
 
       if (action.type === resumeAction.type) {
         if (steamPatchEnabled) {
-          if (steamPatchProfile?.tdp) {
-            setSteamPatchTDP(steamPatchProfile.tdp);
-          }
-          // getSteamPerfSettings();
+          setTdpForGameId(id);
         }
       }
 
       if (action.type === setCurrentGameInfo.type) {
         if (steamPatchEnabled) {
-          if (steamPatchProfile?.tdp) {
-            setSteamPatchTDP(steamPatchProfile.tdp);
-          }
-          // get steam perf settings when currentGameId changes
-          // getSteamPerfSettings();
+          setTdpForGameId(id);
         }
       }
 

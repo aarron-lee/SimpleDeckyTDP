@@ -61,8 +61,25 @@ class Plugin:
 
         except Exception as e:
             logging.error(f'main#save_steam_patch_tdp error {e}')
+
+    async def set_tdp_for_game_id(self, gameId):
+        tdp_profile = get_tdp_profile(gameId)
+
+        if tdp_profile.get('tdp'):
+            try:
+                with file_timeout.time_limit(3):
+                    ryzenadj(tdp_profile.get('tdp'))
+            except Exception as e:
+                logging.error(f'main#set_tdp_for_game_id timeout {e}')
     
-    async def set_steam_patch_tdp(self, tdp):
+    async def set_steam_patch_tdp(self, tdp, gameId):
+        tdp_profile = {
+            f"{gameId}": {
+                "tdp": tdp
+            }
+        }
+        set_all_tdp_profiles(tdp_profile)
+
         try:
             with file_timeout.time_limit(3):
                 ryzenadj(tdp)
