@@ -31,6 +31,9 @@ def set_tdp_platform_profile(tdp):
         with open(PLATFORM_PROFILE_PATH, 'r') as file:
             current_value = file.read()
             file.close()
+
+            decky_plugin.logger.info(f'platform profile is {current_value} | tdp being set is {tdp}')
+
             command = 'quiet'
             if tdp < 9:
                 command = 'quiet'
