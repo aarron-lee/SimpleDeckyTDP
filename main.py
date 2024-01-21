@@ -5,7 +5,7 @@ import logging
 import os
 import file_timeout
 import advanced_options
-from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
+from plugin_settings import bootstrap_profile, set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency, set_gpu_frequency_range
 
@@ -97,6 +97,7 @@ class Plugin:
                 logging.error(f'main#set_tdp_for_game_id timeout {e}')
     
     async def set_steam_patch_tdp(self, tdp, gameId):
+        bootstrap_profile(gameId)
         tdp_profile = {
             f"{gameId}": {
                 "tdp": tdp
@@ -112,6 +113,7 @@ class Plugin:
 
 
     async def set_steam_patch_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
+        bootstrap_profile(gameId)
         gpu_mode = None
 
         profile_contents = {}

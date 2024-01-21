@@ -27,7 +27,7 @@ def deep_merge(origin, destination):
         else:
             destination[k] = v
 
-    return destination
+    return destination    
 
 def get_saved_settings():
     setting_file.read()
@@ -54,6 +54,19 @@ def get_tdp_profile(gameId):
         settings['tdpProfiles'] = {}
     profiles = settings['tdpProfiles']
     return profiles.get(gameId, {})
+
+def bootstrap_profile(game_id):
+    settings = get_saved_settings()
+    profiles = settings.get('tdpProfiles', {})
+    
+    default_profile = profiles.get('default')
+    tdp_profile = profiles.get(game_id)
+
+    if not tdp_profile and default_profile:
+        set_all_tdp_profiles({
+            f"{game_id}": default_profile
+        })
+
 
 def get_active_tdp_profile(gameId):
     settings = get_saved_settings()
