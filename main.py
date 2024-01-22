@@ -5,6 +5,7 @@ import logging
 import os
 import file_timeout
 import advanced_options
+import power_utils
 from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
@@ -20,6 +21,12 @@ class Plugin:
             settings = get_saved_settings()
             try:
                 with file_timeout.time_limit(5):
+                    supports_epp = power_utils.supports_epp()
+                    if supports_epp:
+                        settings['supportsEpp'] = True
+                        settings['recommendedEpp'] = power_utils.RECOMMENDED_EPP
+                    settings['recommendedPowerGovernor'] = power_utils.RECOMMENDED_GOVERNOR
+
                     settings['advancedOptions'] = advanced_options.get_advanced_options()
 
                     gpu_min, gpu_max = get_gpu_frequency_range()

@@ -88,3 +88,11 @@ def set_smt(enabled = True):
     except Exception as e:
         logging.error(e)
         return False
+
+def get_pstate_status():
+    if os.path.exists(AMD_PSTATE_PATH):
+        with open(AMD_PSTATE_PATH, 'r') as file:
+            pstate = file.read()
+            file.close()
+            return pstate
+    return None
