@@ -27,6 +27,7 @@ import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
+import PowerGovernorSlider from "./components/atoms/PowerGovernorSlider";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -46,6 +47,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           )}
           <TdpProfiles />
           <CpuFeatureToggles />
+          <PowerGovernorSlider />
           {steamPatchEnabled && (
             <>
               <SteamPatchDefaultTdpSlider />

@@ -6,6 +6,7 @@ import {
   DEFAULT_START_TDP,
   EppOption,
   PowerGovernorOption,
+  PowerGovernorOptions,
 } from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
@@ -92,7 +93,7 @@ const initialState: SettingsState = {
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
       useRecommendedPowerOptions: true,
-      powerGovernor: "powersave",
+      powerGovernor: PowerGovernorOptions.POWER_SAVE,
     },
   },
   pollEnabled: false,
@@ -120,6 +121,16 @@ export const settingsSlice = createSlice({
       const { statePath, value } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
+    },
+    updatePowerGovernor: (state, action: PayloadAction<string>) => {
+      const powerGovernor = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.powerGovernor`, powerGovernor);
+      } else {
+        set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
+      }
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const {
@@ -504,6 +515,7 @@ export const {
   setSteamPatchDefaultTdp,
   cacheSteamPatchTdp,
   cacheSteamPatchGpu,
+  updatePowerGovernor,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

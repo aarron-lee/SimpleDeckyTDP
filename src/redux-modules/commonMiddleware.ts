@@ -8,6 +8,7 @@ import {
   updateAdvancedOption,
   updateMaxTdp,
   updateMinTdp,
+  updatePowerGovernor,
 } from "./settingsSlice";
 import {
   AdvancedOptionsEnum,
@@ -17,6 +18,11 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
+
+const updateTdpProfilesTypes = [
+  updateAdvancedOption.type,
+  updatePowerGovernor.type,
+] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
 
@@ -52,6 +58,7 @@ export const commonMiddleware =
         fieldValue: action.payload,
       });
     }
+
     if (action.type === updateMaxTdp.type) {
       setSetting({
         fieldName: "maxTdp",
@@ -61,7 +68,7 @@ export const commonMiddleware =
 
     if (
       changeCpuStateTypes.includes(action.type) ||
-      action.type === updateAdvancedOption.type
+      updateTdpProfilesTypes.includes(action.type)
     ) {
       saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
     }
