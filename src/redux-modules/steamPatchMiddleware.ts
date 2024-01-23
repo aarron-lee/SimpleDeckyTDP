@@ -53,15 +53,11 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === resumeAction.type) {
-        if (steamPatchEnabled) {
-          setValuesForGameId(id);
-        }
+        setValuesForGameId(id);
       }
 
       if (action.type === setCurrentGameInfo.type) {
-        if (steamPatchEnabled) {
-          setValuesForGameId(id);
-        }
+        setValuesForGameId(id);
       }
 
       if (saveToBackendTypes.includes(action.type)) {

@@ -103,10 +103,6 @@ class Plugin:
             merge_tdp_profiles(tdpProfiles)
             persist_setting('advanced', advanced)
 
-            steam_patch_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
-            )
-
             tdp_profile = get_active_tdp_profile(currentGameId)
             tdp = tdp_profile.get('tdp', 12)
             smt = tdp_profile.get('smt', True)
@@ -114,12 +110,10 @@ class Plugin:
 
             try:
                 with file_timeout.time_limit(3):
-                    if not steam_patch_enabled:
-                        ryzenadj(tdp)
+                    ryzenadj(tdp)
                     set_smt(smt)
                     set_cpu_boost(cpu_boost)
-                    if not steam_patch_enabled:
-                        set_gpu_frequency(currentGameId)
+                    set_gpu_frequency(currentGameId)
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
 
