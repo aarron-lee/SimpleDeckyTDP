@@ -36,7 +36,7 @@ def get_saved_settings():
 def set_setting(name: str, value):
     return setting_file.setSetting(name, value)
 
-def set_all_tdp_profiles(tdp_profiles):
+def merge_tdp_profiles(tdp_profiles):
     settings = get_saved_settings()
 
     if not settings.get('tdpProfiles'):
@@ -63,7 +63,7 @@ def bootstrap_profile(game_id):
     tdp_profile = profiles.get(game_id)
 
     if not tdp_profile and default_profile:
-        set_all_tdp_profiles({
+        merge_tdp_profiles({
             f"{game_id}": default_profile
         })
 

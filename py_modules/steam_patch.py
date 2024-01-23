@@ -1,7 +1,7 @@
 import logging
 import file_timeout
 import advanced_options
-from plugin_settings import bootstrap_profile, set_all_tdp_profiles, get_tdp_profile, set_setting as persist_setting
+from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import set_gpu_frequency_range
 
@@ -64,7 +64,7 @@ def save_steam_patch_tdp(tdp, game_id):
             "tdp": tdp
         }
     }
-    set_all_tdp_profiles(tdp_profile)
+    merge_tdp_profiles(tdp_profile)
 
     try:
         with file_timeout.time_limit(3):
@@ -96,7 +96,7 @@ def save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, game_id):
     tdp_profile = {
         f"{game_id}": profile_contents
     }
-    set_all_tdp_profiles(tdp_profile)
+    merge_tdp_profiles(tdp_profile)
 
     try:
         with file_timeout.time_limit(3):
@@ -107,7 +107,7 @@ def save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, game_id):
 
 def save_steam_patch_tdp_profile(tdp_profiles, game_id, advanced):
     try:
-        set_all_tdp_profiles(tdp_profiles)
+        merge_tdp_profiles(tdp_profiles)
         persist_setting('advanced', advanced)
         steam_patch_enabled = advanced_options.get_setting(
             advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value

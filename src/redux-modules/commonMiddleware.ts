@@ -14,15 +14,13 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  setPowerGovernor,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
 
-const updateTdpProfilesTypes = [
-  updateAdvancedOption.type,
-  updatePowerGovernor.type,
-] as string[];
+const updateTdpProfilesTypes = [updateAdvancedOption.type] as string[];
 
 const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
 
@@ -57,6 +55,10 @@ export const commonMiddleware =
         fieldName: "minTdp",
         fieldValue: action.payload,
       });
+    }
+
+    if (action.type === updatePowerGovernor.type) {
+      setPowerGovernor(action.payload, activeGameId);
     }
 
     if (action.type === updateMaxTdp.type) {

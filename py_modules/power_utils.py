@@ -2,6 +2,8 @@ import os
 import glob
 import decky_plugin
 import subprocess
+import file_timeout
+import time
 from enum import Enum
 import cpu_utils
 
@@ -14,12 +16,12 @@ EPP_OPTION_PATHS = glob.glob('/sys/devices/system/cpu/cpu*/cpufreq/energy_perfor
 EPP_PATH ='/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference'
 
 POWER_GOVERNOR_PATH = '/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+POWER_GOVERNOR_OPTION_PATHS = '/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors'
 POWER_GOVERNOR_DEVICES = glob.glob(POWER_GOVERNOR_PATH)
 
 class PowerGovernorOptions(Enum):
     POWER_SAVE = 'powersave'
     PERFORMANCE = 'performance'
-    BALANCED = 'schedutil'
 
 class EppOptions(Enum):
     PERFORMANCE = 'performance'
@@ -71,6 +73,11 @@ def supports_epp():
     return False
 
 def execute_bash_command(command, path):
-    cmd = f"echo '{command}' | tee {path}"
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return result
+    cmd = f"echo {command} | tee {path}"
+    decky_plugin.logger.info(cmd)
+    # result = subprocess.run(cmd, timeout=1, shell=True, text=True, check=True)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    time.sleep(0.2)
+    # process hangs if not manually killed
+    p.kill()
+    # return result

@@ -6,7 +6,7 @@ import os
 import file_timeout
 import advanced_options
 import power_utils
-from plugin_settings import set_all_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
+from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
 import steam_patch
@@ -56,42 +56,51 @@ class Plugin:
     async def save_steam_patch_tdp(self, tdp, gameId):
         steam_patch.save_steam_patch_tdp(tdp, gameId)
 
-
     async def save_steam_patch_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
         steam_patch.save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, gameId)
-            
+
+    async def set_power_governor(self, powerGovernor, gameId):
+        tdp_profiles = {
+            f'{gameId}': {
+                'powerGovernor': powerGovernor
+            }
+        }
+        merge_tdp_profiles(tdp_profiles)
+
+        return power_utils.set_power_governor(powerGovernor)
+
     async def poll_tdp(self, currentGameId: str):
-            settings = get_saved_settings()
-            default_tdp_profile = get_tdp_profile('default')
-            smt = default_tdp_profile.get('smt', True)
-            cpu_boost = default_tdp_profile.get('cpuBoost', True)
-            tdp = default_tdp_profile.get('tdp', 12)
+        settings = get_saved_settings()
+        default_tdp_profile = get_tdp_profile('default')
+        smt = default_tdp_profile.get('smt', True)
+        cpu_boost = default_tdp_profile.get('cpuBoost', True)
+        tdp = default_tdp_profile.get('tdp', 12)
 
-            steam_patch_enabled = advanced_options.get_setting(
-                advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
-            )
+        steam_patch_enabled = advanced_options.get_setting(
+            advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
+        )
 
-            if settings.get('enableTdpProfiles'):
-                tdp_profile = get_tdp_profile(currentGameId)
-                cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
-                tdp = tdp_profile.get('tdp', tdp)
-                smt = tdp_profile.get('smt', smt)
+        if settings.get('enableTdpProfiles'):
+            tdp_profile = get_tdp_profile(currentGameId)
+            cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
+            tdp = tdp_profile.get('tdp', tdp)
+            smt = tdp_profile.get('smt', smt)
 
-            try:
-                with file_timeout.time_limit(3):
-                    if not steam_patch_enabled:
-                        ryzenadj(tdp)
-                    set_smt(smt)
-                    set_cpu_boost(cpu_boost)
-            except Exception as e:
-                logging.error(f'main#poll_tdp file timeout {e}')
-                return False
+        try:
+            with file_timeout.time_limit(3):
+                if not steam_patch_enabled:
+                    ryzenadj(tdp)
+                set_smt(smt)
+                set_cpu_boost(cpu_boost)
+        except Exception as e:
+            logging.error(f'main#poll_tdp file timeout {e}')
+            return False
 
-            return True            
+        return True            
 
     async def save_tdp(self, tdpProfiles, currentGameId, advanced):
         try:
-            set_all_tdp_profiles(tdpProfiles)
+            merge_tdp_profiles(tdpProfiles)
             persist_setting('advanced', advanced)
 
             steam_patch_enabled = advanced_options.get_setting(
