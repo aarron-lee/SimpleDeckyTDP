@@ -26,6 +26,7 @@ class EppOptions(Enum):
     BALANCE_PERFORMANCE = 'balance_performance'
     BALANCE_POWER = 'balance_power'
     POWER_SAVE = 'power'
+
 def set_power_governor(governor_option):
     try:
         option = PowerGovernorOptions(governor_option).value

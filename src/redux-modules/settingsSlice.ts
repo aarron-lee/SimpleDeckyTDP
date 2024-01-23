@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { clone, get, merge, set } from "lodash";
-import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
+import {
+  DEFAULT_POLL_RATE,
+  DEFAULT_START_TDP,
+  EppOption,
+  PowerGovernorOption,
+} from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
 
@@ -31,6 +36,9 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
+  useRecommendedPowerOptions: boolean;
+  powerGovernor: PowerGovernorOption;
+  epp?: EppOption;
 };
 
 export type TdpProfiles = {
@@ -42,7 +50,6 @@ export interface PollState {
   pollRate: number;
   disableBackgroundPolling: boolean;
 }
-
 export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean;
   tdpProfiles: TdpProfiles;
@@ -56,6 +63,9 @@ export interface SettingsState extends TdpRangeState, PollState {
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
+  supportsEpp: boolean;
+  recommendedEpp?: EppOption;
+  recommendedPowerGovernor?: PowerGovernorOption;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -81,6 +91,8 @@ const initialState: SettingsState = {
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
+      useRecommendedPowerOptions: true,
+      powerGovernor: "powersave",
     },
   },
   pollEnabled: false,
@@ -88,6 +100,7 @@ const initialState: SettingsState = {
   disableBackgroundPolling: false,
   steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
+  supportsEpp: false,
 };
 
 export const settingsSlice = createSlice({
@@ -114,6 +127,9 @@ export const settingsSlice = createSlice({
         maxGpuFrequency,
         advancedOptions,
         pluginVersionNum,
+        supportsEpp,
+        recommendedEpp,
+        recommendedPowerGovernor,
         steamPatchDefaultTdp,
       } = action.payload;
       state.initialLoad = false;
@@ -138,6 +154,11 @@ export const settingsSlice = createSlice({
         advancedOptions.forEach((option) => {
           set(state, `advanced.${option.statePath}`, option.currentValue);
         });
+      }
+      if (supportsEpp) {
+        state.supportsEpp = supportsEpp;
+        state.recommendedEpp = recommendedEpp;
+        state.recommendedPowerGovernor = recommendedPowerGovernor;
       }
       state.minGpuFrequency = minGpuFrequency;
       state.maxGpuFrequency = maxGpuFrequency;
@@ -450,6 +471,18 @@ export const getCachedSteamPatchProfile =
 
     return tdpProfiles[gameId];
   };
+
+export const supportsEppSelector = (state: RootState) =>
+  state.settings.supportsEpp;
+
+export const getPowerControlInfoSelector = (state: RootState) => {
+  const {
+    tdpProfile: { epp, powerGovernor, useRecommendedPowerOptions },
+  } = activeTdpProfileSelector(state);
+  const supportsEpp = supportsEppSelector(state);
+
+  return { supportsEpp, useRecommendedPowerOptions, epp, powerGovernor };
+};
 
 // Action creators are generated for each case reducer function
 export const {

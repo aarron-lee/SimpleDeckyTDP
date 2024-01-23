@@ -14,3 +14,24 @@ export const extractCurrentGameInfo = () => {
 
   return results;
 };
+
+export type EppOption =
+  | "performance"
+  | "power"
+  | "balance_performance"
+  | "balance_power";
+
+export const EppOptions = {
+  PERFORMANCE: "performance",
+  BALANCE_PERFORMANCE: "balance_performance",
+  BALANCE_POWER_SAVE: "balance_power",
+  POWER_SAVE: "power",
+};
+
+export type PowerGovernorOption = "powersave" | "performance" | "schedutil";
+
+export const PowerGovernorOptions = {
+  POWER_SAVE: "powersave",
+  BALANCED: "schedutil",
+  PERFORMANCE: "performance",
+};
