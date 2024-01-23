@@ -7,8 +7,7 @@ import file_timeout
 import advanced_options
 import power_utils
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
-from cpu_utils import ryzenadj, set_cpu_boost, set_smt
-from gpu_utils import get_gpu_frequency_range, set_gpu_frequency
+from gpu_utils import get_gpu_frequency_range
 import steam_patch
 
 class Plugin:
@@ -71,27 +70,14 @@ class Plugin:
 
     async def poll_tdp(self, currentGameId: str):
         settings = get_saved_settings()
-        default_tdp_profile = get_tdp_profile('default')
-        smt = default_tdp_profile.get('smt', True)
-        cpu_boost = default_tdp_profile.get('cpuBoost', True)
-        tdp = default_tdp_profile.get('tdp', 12)
-
-        steam_patch_enabled = advanced_options.get_setting(
-            advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
-        )
+        tdp_profile = get_tdp_profile('default')
 
         if settings.get('enableTdpProfiles'):
-            tdp_profile = get_tdp_profile(currentGameId)
-            cpu_boost = tdp_profile.get('cpuBoost', cpu_boost)
-            tdp = tdp_profile.get('tdp', tdp)
-            smt = tdp_profile.get('smt', smt)
+            tdp_profile = get_tdp_profile(currentGameId) or tdp_profile
 
         try:
             with file_timeout.time_limit(3):
-                if not steam_patch_enabled:
-                    ryzenadj(tdp)
-                set_smt(smt)
-                set_cpu_boost(cpu_boost)
+                steam_patch.set_values_for_tdp_profile(tdp_profile)
         except Exception as e:
             logging.error(f'main#poll_tdp file timeout {e}')
             return False
@@ -104,16 +90,10 @@ class Plugin:
             persist_setting('advanced', advanced)
 
             tdp_profile = get_active_tdp_profile(currentGameId)
-            tdp = tdp_profile.get('tdp', 12)
-            smt = tdp_profile.get('smt', True)
-            cpu_boost = tdp_profile.get('cpuBoost', True)
 
             try:
                 with file_timeout.time_limit(3):
-                    ryzenadj(tdp)
-                    set_smt(smt)
-                    set_cpu_boost(cpu_boost)
-                    set_gpu_frequency(currentGameId)
+                    steam_patch.set_values_for_tdp_profile(tdp_profile)
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
 

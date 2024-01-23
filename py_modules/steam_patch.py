@@ -1,5 +1,6 @@
 import logging
 import file_timeout
+from time import sleep
 import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
@@ -9,28 +10,33 @@ import power_utils
 
 def set_values_for_game_id(game_id):
     tdp_profile = get_tdp_profile(game_id)
+    set_values_for_tdp_profile(tdp_profile)
 
-    set_tdp_for_tdp_profile(tdp_profile)
-    set_gpu_for_tdp_profile(tdp_profile)
+def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_governor = True):
+    if set_tdp:
+        set_tdp_for_tdp_profile(tdp_profile)
+    if set_gpu:
+        set_gpu_for_tdp_profile(tdp_profile)
     set_cpu_boost_for_tdp_profile(tdp_profile)
     set_smt_for_tdp_profile(tdp_profile)
-    set_power_governor_for_tdp_profile(tdp_profile)
+    if set_governor:
+        # must be set AFTER smt
+        sleep(0.1)
+        set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
     if tdp_profile.get('powerGovernor'):
         power_utils.set_power_governor(tdp_profile.get('powerGovernor'))
 
 def set_smt_for_tdp_profile(tdp_profile):
-    smt = tdp_profile.get('smt')
+    smt = tdp_profile.get('smt', False)
 
-    if smt:
-        set_smt(smt)
+    set_smt(smt)
 
 def set_cpu_boost_for_tdp_profile(tdp_profile):
-    cpu_boost = tdp_profile.get('cpuBoost')
+    cpu_boost = tdp_profile.get('cpuBoost', False)
 
-    if cpu_boost:
-        set_cpu_boost(cpu_boost)
+    set_cpu_boost(cpu_boost)
 
 def set_tdp_for_tdp_profile(tdp_profile):
     if tdp_profile.get('tdp'):
@@ -122,12 +128,9 @@ def save_steam_patch_tdp_profile(tdp_profiles, game_id, advanced):
 
         if steam_patch_enabled:
             tdp_profile = get_tdp_profile(game_id)
-            smt = tdp_profile.get('smt', True)
-            cpu_boost = tdp_profile.get('cpuBoost', True)
             try:
                 with file_timeout.time_limit(3):
-                    set_smt(smt)
-                    set_cpu_boost(cpu_boost)
+                    set_values_for_tdp_profile(tdp_profile)
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
     except Exception as e:
