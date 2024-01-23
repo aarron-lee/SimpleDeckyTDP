@@ -4,36 +4,43 @@ import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import set_gpu_frequency_range
+import power_utils
 
 
 def set_values_for_game_id(game_id):
-    set_tdp_for_game_id(game_id)
-    set_gpu_for_game_id(game_id)
-    set_smt_boost_for_game_id(game_id)
-
-def set_smt_boost_for_game_id(game_id):
     tdp_profile = get_tdp_profile(game_id)
 
+    set_tdp_for_tdp_profile(tdp_profile)
+    set_gpu_for_tdp_profile(tdp_profile)
+    set_cpu_boost_for_tdp_profile(tdp_profile)
+    set_smt_for_tdp_profile(tdp_profile)
+    set_power_governor_for_tdp_profile(tdp_profile)
+
+def set_power_governor_for_tdp_profile(tdp_profile):
+    if tdp_profile.get('powerGovernor'):
+        power_utils.set_power_governor(tdp_profile.get('powerGovernor'))
+
+def set_smt_for_tdp_profile(tdp_profile):
     smt = tdp_profile.get('smt')
-    cpu_boost = tdp_profile.get('cpuBoost')
 
     if smt:
         set_smt(smt)
+
+def set_cpu_boost_for_tdp_profile(tdp_profile):
+    cpu_boost = tdp_profile.get('cpuBoost')
+
     if cpu_boost:
         set_cpu_boost(cpu_boost)
 
-def set_tdp_for_game_id(game_id):
-    tdp_profile = get_tdp_profile(game_id)
-
+def set_tdp_for_tdp_profile(tdp_profile):
     if tdp_profile.get('tdp'):
         try:
             with file_timeout.time_limit(3):
                 ryzenadj(tdp_profile.get('tdp'))
         except Exception as e:
-            logging.error(f'main#set_tdp_for_game_id timeout {e}')
+            logging.error(f'main#set_tdp_for_tdp_profile timeout {e}')
 
-def set_gpu_for_game_id(game_id):
-    tdp_profile = get_tdp_profile(game_id)
+def set_gpu_for_tdp_profile(tdp_profile):
     gpu_mode = tdp_profile.get('gpuMode')
     fixed_frequency = tdp_profile.get('fixedGpuFrequency')
     min_frequency = tdp_profile.get('minGpuFrequency')

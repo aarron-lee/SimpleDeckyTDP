@@ -31,10 +31,18 @@ class EppOptions(Enum):
 
 def set_power_governor(governor_option):
     try:
-        option = PowerGovernorOptions(governor_option).value
+        with file_timeout.time_limit(2):
+            file = open(POWER_GOVERNOR_DEVICES[0], 'r')
+            current_value = file.read().strip()
+            file.close()
 
-        if len(POWER_GOVERNOR_DEVICES) > 0:
-            return execute_bash_command(option, POWER_GOVERNOR_PATH)
+            if current_value == governor_option:
+                return
+
+            option = PowerGovernorOptions(governor_option).value
+
+            if len(POWER_GOVERNOR_DEVICES) > 0:
+                return execute_bash_command(option, POWER_GOVERNOR_PATH)
     except Exception as e:
         decky_plugin.logger.error(f'{__name__} error setting power governor {e}')
 
