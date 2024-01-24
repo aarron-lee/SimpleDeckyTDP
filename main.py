@@ -81,7 +81,9 @@ class Plugin:
         }
         merge_tdp_profiles(tdp_profiles)
 
-        power_utils.set_epp(epp)
+        tdp_profile = get_tdp_profile(gameId)
+        if tdp_profile:
+            steam_patch.set_epp_for_tdp_profile(tdp_profile)
 
     async def persist_smt(self, smt, gameId):
         tdp_profiles = {

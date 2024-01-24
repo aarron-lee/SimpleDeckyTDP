@@ -48,7 +48,9 @@ def set_smt_for_tdp_profile(tdp_profile):
 def set_cpu_boost_for_tdp_profile(tdp_profile):
     cpu_boost = tdp_profile.get('cpuBoost', False)
 
-    set_cpu_boost(cpu_boost)
+    if not power_utils.supports_epp():
+        # only set cpu boost if no pstate/epp available
+        set_cpu_boost(cpu_boost)
 
 def set_tdp_for_tdp_profile(tdp_profile):
     if tdp_profile.get('tdp'):
