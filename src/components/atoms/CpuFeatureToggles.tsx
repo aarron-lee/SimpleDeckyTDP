@@ -10,7 +10,7 @@ export function CpuFeatureToggles() {
   const { smt, setSmt } = useSmt();
 
   return (
-    <PanelSection>
+    <>
       <PanelSectionRow>
         {
           // cpuBoost control only on non-AMD pstate platforms
@@ -25,6 +25,9 @@ export function CpuFeatureToggles() {
             />
           )
         }
+      </PanelSectionRow>
+
+      <PanelSectionRow>
         <ToggleField
           label="Enable SMT"
           checked={smt}
@@ -34,6 +37,6 @@ export function CpuFeatureToggles() {
           highlightOnFocus
         />
       </PanelSectionRow>
-    </PanelSection>
+    </>
   );
 }

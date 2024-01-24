@@ -36,7 +36,7 @@ const GpuFixedSlider = () => {
       min={min}
       max={max}
       validValues="range"
-      bottomSeparator="none"
+      bottomSeparator="standard"
       onChange={setFreq}
     />
   );

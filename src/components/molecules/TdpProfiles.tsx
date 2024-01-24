@@ -14,7 +14,7 @@ export function TdpProfiles() {
       : `Using - Default`;
 
   return (
-    <PanelSection title={"Per Game Profiles"}>
+    <PanelSection>
       <PanelSectionRow>
         <ToggleField
           label="Enable per-game profiles"

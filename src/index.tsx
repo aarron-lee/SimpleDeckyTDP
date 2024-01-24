@@ -31,8 +31,6 @@ import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
-import PowerGovernorSlider from "./components/atoms/PowerGovernorSlider";
-import EppSlider from "./components/atoms/EppSlider";
 import PowerControl from "./components/molecules/PowerControl";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
@@ -52,9 +50,9 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
             </>
           )}
           <TdpProfiles />
-          <CpuFeatureToggles />
           {steamPatchEnabled && (
             <>
+              <PowerControl />
               <SteamPatchDefaultTdpSlider />
               <TdpRange />
             </>
@@ -62,11 +60,11 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           {!steamPatchEnabled && (
             <>
               <Gpu />
+              <PowerControl />
               <TdpRange />
               <PollTdp />
             </>
           )}
-          <PowerControl />
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />

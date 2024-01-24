@@ -98,7 +98,10 @@ def supports_epp():
 def execute_bash_command(command, paths):
     for p in paths:
         with file_timeout.time_limit(1):
-            with open(p, 'w') as file:
-                file.write(f'{command}')
-                file.close()
+            try:
+                with open(p, 'w') as file:
+                    file.write(f'{command}')
+                    file.close()
+            except Exception as e:
+                decky_plugin.logger.error(e)
 
