@@ -2,6 +2,7 @@ import glob
 from time import sleep
 import decky_plugin
 import subprocess
+import file_timeout
 from enum import Enum
 import cpu_utils
 
@@ -37,7 +38,7 @@ def set_power_governor(governor_option):
         option = PowerGovernorOptions(governor_option).value
 
         if len(POWER_GOVERNOR_DEVICES) > 0:
-            return execute_bash_command(option, POWER_GOVERNOR_PATH)
+            return execute_bash_command(option, POWER_GOVERNOR_DEVICES)
     except Exception as e:
         decky_plugin.logger.error(f'{__name__} error setting power governor {e}')
 
@@ -75,7 +76,8 @@ def set_epp(epp_option):
         if epp_option not in get_available_epp_options():
             return
         if len(EPP_DEVICES) > 0:
-            return execute_bash_command(epp_option, EPP_PATH)
+            # return execute_bash_command(epp_option, EPP_PATH)
+            return execute_bash_command(epp_option, EPP_DEVICES)
 
     except Exception as e:
         decky_plugin.logger.error(f'{__name__} error setting epp {e}')
@@ -93,11 +95,10 @@ def supports_epp():
         return True
     return False
 
-def execute_bash_command(command, path):
-    cmd = f"echo {command} | tee {path}"
-    # result = subprocess.run(cmd, timeout=1, shell=True, text=True, check=True)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    sleep(0.2)
-    # process hangs if not manually killed
-    p.kill()
-    # return result
+def execute_bash_command(command, paths):
+    for p in paths:
+        with file_timeout.time_limit(1):
+            with open(p, 'w') as file:
+                file.write(f'{command}')
+                file.close()
+
