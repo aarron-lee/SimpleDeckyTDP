@@ -25,8 +25,18 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
         set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
-    if tdp_profile.get('powerGovernor'):
-        power_utils.set_power_governor(tdp_profile.get('powerGovernor'))
+    governor = tdp_profile.get('powerGovernor', power_utils.RECOMMENDED_GOVERNOR)
+    power_utils.set_power_governor(governor)
+
+    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value:
+        # epp is automatically changed to `performance` when governor is performance
+        # this is to handle for all other governor options
+        set_epp_for_tdp_profile(tdp_profile)
+
+def set_epp_for_tdp_profile(tdp_profile):
+    epp = tdp_profile.get('epp', power_utils.RECOMMENDED_EPP)
+
+    power_utils.set_epp(epp)
 
 def set_smt_for_tdp_profile(tdp_profile):
     smt = tdp_profile.get('smt', False)
