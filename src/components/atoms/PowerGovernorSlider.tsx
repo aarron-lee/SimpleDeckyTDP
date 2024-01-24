@@ -14,15 +14,11 @@ import { logInfo } from "../../backend/utils";
 const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
-
+  const notchLabels: NotchLabel[] = [];
   powerGovernorOptions.forEach((option, idx) => {
     idxToOption[idx] = option;
     optionToIdx[option] = idx;
-  });
 
-  const notchLabels: NotchLabel[] = [];
-
-  powerGovernorOptions.forEach((option, idx) => {
     const label = PowerGovernorOptions[option];
 
     notchLabels.push({

@@ -11,15 +11,12 @@ import { logInfo } from "../../backend/utils";
 const getOptions = (eppOptions: EppOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
+  const notchLabels: NotchLabel[] = [];
 
   eppOptions.forEach((option, idx) => {
     idxToOption[idx] = option;
     optionToIdx[option] = idx;
-  });
 
-  const notchLabels: NotchLabel[] = [];
-
-  eppOptions.forEach((option, idx) => {
     const label = EppOptions[option];
     notchLabels.push({
       notchIndex: idx,
