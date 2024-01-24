@@ -22,7 +22,7 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     set_smt_for_tdp_profile(tdp_profile)
     if set_governor:
         # must be set AFTER smt
-        sleep(0.1)
+        sleep(0.2)
         set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
@@ -32,6 +32,7 @@ def set_power_governor_for_tdp_profile(tdp_profile):
     if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value:
         # epp is automatically changed to `performance` when governor is performance
         # this is to handle for all other governor options
+        sleep(0.2)
         set_epp_for_tdp_profile(tdp_profile)
 
 def set_epp_for_tdp_profile(tdp_profile):

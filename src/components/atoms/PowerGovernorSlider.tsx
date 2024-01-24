@@ -43,8 +43,6 @@ const PowerGovernorSlider = () => {
   );
   const dispatch = useDispatch();
 
-  logInfo(powerGovernorOptions);
-
   const { idxToOption, optionToIdx, notchLabels } =
     getOptions(powerGovernorOptions);
 

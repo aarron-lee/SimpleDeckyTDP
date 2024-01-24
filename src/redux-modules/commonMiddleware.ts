@@ -6,6 +6,7 @@ import {
   setEnableTdpProfiles,
   setSmt,
   updateAdvancedOption,
+  updateEpp,
   updateMaxTdp,
   updateMinTdp,
   updatePowerGovernor,
@@ -14,8 +15,10 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  logInfo,
   persistCpuBoost,
   persistSmt,
+  setEpp,
   setPowerGovernor,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -55,6 +58,10 @@ export const commonMiddleware =
 
     if (action.type === updatePowerGovernor.type) {
       setPowerGovernor(action.payload, activeGameId);
+    }
+
+    if (action.type === updateEpp.type) {
+      setEpp(action.payload, activeGameId);
     }
 
     if (action.type === updateMaxTdp.type) {

@@ -69,16 +69,19 @@ class Plugin:
         }
         merge_tdp_profiles(tdp_profiles)
 
-        power_utils.set_power_governor(powerGovernor)
+        tdp_profile = get_tdp_profile(gameId)
+        if tdp_profile:
+            steam_patch.set_power_governor_for_tdp_profile(tdp_profile)
 
-        response = {
-            'powerGovernorOptions': power_utils.get_available_governor_options(),
-            'eppOptions': power_utils.get_available_epp_options()
+    async def set_epp(self, epp, gameId):
+        tdp_profiles = {
+            f'{gameId}': {
+                'epp': epp
+            }
         }
+        merge_tdp_profiles(tdp_profiles)
 
-        return response
-
-
+        power_utils.set_epp(epp)
 
     async def persist_smt(self, smt, gameId):
         tdp_profiles = {

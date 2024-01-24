@@ -26,6 +26,7 @@ export enum ServerAPIMethods {
   SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
   SET_POWER_GOVERNOR = "set_power_governor",
+  SET_EPP = "set_epp",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -129,6 +130,15 @@ export const setPowerGovernor = (powerGovernor: string, gameId: string) => {
   if (serverApi) {
     serverApi.callPluginMethod(ServerAPIMethods.SET_POWER_GOVERNOR, {
       powerGovernor,
+      gameId,
+    });
+  }
+};
+
+export const setEpp = (epp: string, gameId: string) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.SET_EPP, {
+      epp,
       gameId,
     });
   }
