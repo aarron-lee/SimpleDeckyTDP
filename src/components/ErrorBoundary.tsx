@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { Field } from "decky-frontend-lib";
 import { Component } from "react";
+import { logInfo } from "../backend/utils";
 
 type PropsType = {
   children: any;
@@ -18,12 +19,15 @@ class ErrorBoundary extends Component<PropsType, StateType> {
   }
 
   static getDerivedStateFromError(error) {
-    console.log(error);
+    logInfo(JSON.stringify(error));
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    console.log(error, errorInfo);
+    logInfo({
+      error: JSON.stringify(error),
+      errorInfo: JSON.stringify(errorInfo),
+    });
   }
   render() {
     if (this.state.hasError) {

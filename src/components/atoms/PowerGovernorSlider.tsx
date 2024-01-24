@@ -15,23 +15,21 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
 
-  Object.values(PowerGovernorOptions).forEach((option, idx) => {
-    if (powerGovernorOptions.includes(option)) {
-      idxToOption[idx] = option;
-      optionToIdx[option] = idx;
-    }
+  powerGovernorOptions.forEach((option, idx) => {
+    idxToOption[idx] = option;
+    optionToIdx[option] = idx;
   });
 
   const notchLabels: NotchLabel[] = [];
 
-  Object.entries(PowerGovernorOptions).forEach(([label, value], idx) => {
-    if (powerGovernorOptions.includes(value)) {
-      notchLabels.push({
-        notchIndex: idx,
-        value: idx,
-        label: capitalize(label.replace(/_/g, " ")),
-      });
-    }
+  powerGovernorOptions.forEach((option, idx) => {
+    const label = PowerGovernorOptions[option];
+
+    notchLabels.push({
+      notchIndex: idx,
+      value: idx,
+      label: capitalize(label.replace(/_/g, " ")),
+    });
   });
 
   return { idxToOption, optionToIdx, notchLabels };

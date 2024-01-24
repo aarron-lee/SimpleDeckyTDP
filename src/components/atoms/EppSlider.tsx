@@ -6,28 +6,26 @@ import {
 } from "../../redux-modules/settingsSlice";
 import { EppOption, EppOptions } from "../../utils/constants";
 import { capitalize } from "lodash";
+import { logInfo } from "../../backend/utils";
 
 const getOptions = (eppOptions: EppOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
 
-  Object.values(EppOptions).forEach((option, idx) => {
-    if (eppOptions.includes(option)) {
-      idxToOption[idx] = option;
-      optionToIdx[option] = idx;
-    }
+  eppOptions.forEach((option, idx) => {
+    idxToOption[idx] = option;
+    optionToIdx[option] = idx;
   });
 
   const notchLabels: NotchLabel[] = [];
 
-  Object.entries(EppOptions).forEach(([label, value], idx) => {
-    if (eppOptions.includes(value)) {
-      notchLabels.push({
-        notchIndex: idx,
-        label: capitalize(label.replace(/_/g, " ")),
-        value: idx,
-      });
-    }
+  eppOptions.forEach((option, idx) => {
+    const label = EppOptions[option];
+    notchLabels.push({
+      notchIndex: idx,
+      label: capitalize(label.replace(/_/g, " ")),
+      value: idx,
+    });
   });
 
   return { idxToOption, optionToIdx, notchLabels };
@@ -37,9 +35,10 @@ const EppSlider = () => {
   const { powerGovernor, epp, eppOptions } = useSelector(
     getPowerControlInfoSelector
   );
+
   const dispatch = useDispatch();
 
-  if (!eppOptions || eppOptions.length == 0) {
+  if (!eppOptions || eppOptions?.length == 0) {
     return null;
   }
 
@@ -71,7 +70,7 @@ const EppSlider = () => {
       step={1}
       notchCount={notchLabels.length}
       notchLabels={notchLabels}
-      notchTicksVisible={true}
+      notchTicksVisible
       showValue={false}
       bottomSeparator={"none"}
       description={description}

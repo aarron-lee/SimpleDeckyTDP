@@ -49,8 +49,10 @@ def get_available_epp_options():
         if len(EPP_OPTION_PATHS) > 0:
             path = EPP_OPTION_PATHS[0]
             with open(path, 'r') as file:
-                available_options = file.read().strip().split(' ')
-                available_options
+                available_options = file.read().strip().split(' ') or []
+                available_options.reverse()
+                if available_options and 'default' in available_options:
+                    available_options.remove('default')
                 file.close()
                 # available_options.remove('default')
                 return available_options
@@ -64,8 +66,8 @@ def get_available_governor_options():
         if len(POWER_GOVERNOR_OPTION_PATHS) > 0:
             path = POWER_GOVERNOR_OPTION_PATHS[0]
             with open(path, 'r') as file:
-                available_options = file.read().strip().split(' ')
-                available_options
+                available_options = file.read().strip().split(' ') or []
+                available_options.reverse()
                 file.close()
                 return available_options
     except Exception as e:

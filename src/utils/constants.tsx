@@ -43,3 +43,18 @@ export const PowerGovernorOptions: {
   BALANCED: "schedutil",
   PERFORMANCE: "performance",
 };
+
+const addReverseMapping = (options: { [key: string]: string }) => {
+  Object.entries(options).forEach(
+    ([label, option]) => (options[option] = label)
+  );
+};
+
+addReverseMapping(PowerGovernorOptions);
+addReverseMapping(EppOptions);
+
+// export enum PowerGovernorOptions {
+//   POWER_SAVE = "powersave",
+//   BALANCED = "schedutil",
+//   PERFORMANCE = "performance",
+// }
