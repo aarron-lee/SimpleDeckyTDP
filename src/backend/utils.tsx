@@ -21,6 +21,8 @@ export enum ServerAPIMethods {
   POLL_TDP = "poll_tdp",
   PERSIST_TDP = "persist_tdp",
   PERSIST_GPU = "persist_gpu",
+  PERSIST_SMT = "persist_smt",
+  PERSIST_CPU_BOOST = "persist_cpu_boost",
   SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
   SET_POWER_GOVERNOR = "set_power_governor",
@@ -158,6 +160,24 @@ export const persistGpu = (
     serverApi.callPluginMethod(ServerAPIMethods.PERSIST_GPU, {
       minGpuFrequency,
       maxGpuFrequency,
+      gameId,
+    });
+  }
+};
+
+export const persistSmt = (smt: boolean, gameId: string) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_SMT, {
+      smt,
+      gameId,
+    });
+  }
+};
+
+export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_CPU_BOOST, {
+      cpuBoost,
       gameId,
     });
   }

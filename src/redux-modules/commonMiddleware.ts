@@ -14,22 +14,18 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  persistCpuBoost,
+  persistSmt,
   setPowerGovernor,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
 
-const updateTdpProfilesTypes = [updateAdvancedOption.type] as string[];
-
-const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
-
 export const commonMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdpProfiles } = createServerApiHelpers(
-      serverApi as ServerAPI
-    );
+    const { setSetting } = createServerApiHelpers(serverApi as ServerAPI);
 
     const result = dispatch(action);
 
@@ -68,11 +64,20 @@ export const commonMiddleware =
       });
     }
 
-    if (
-      changeCpuStateTypes.includes(action.type) ||
-      updateTdpProfilesTypes.includes(action.type)
-    ) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
+    if (action.type === updateAdvancedOption.type) {
+      const { advancedState } = getAdvancedOptionsInfoSelector(state);
+      setSetting({
+        fieldName: "advanced",
+        fieldValue: advancedState,
+      });
+    }
+
+    if (action.type === setSmt.type) {
+      persistSmt(action.payload, activeGameId);
+    }
+
+    if (action.type === setCpuBoost.type) {
+      persistCpuBoost(action.payload, activeGameId);
     }
 
     return result;

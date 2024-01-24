@@ -35,7 +35,6 @@ const resetTdpActionTypes = [
   setCurrentGameInfo.type,
   setPolling.type,
   updateInitialLoad.type,
-  updateAdvancedOption.type,
 ] as string[];
 
 let pollIntervalId: undefined | number;

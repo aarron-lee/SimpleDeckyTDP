@@ -6,6 +6,7 @@ import os
 import file_timeout
 import advanced_options
 import power_utils
+import cpu_utils
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
 import steam_patch
@@ -67,6 +68,26 @@ class Plugin:
         merge_tdp_profiles(tdp_profiles)
 
         return power_utils.set_power_governor(powerGovernor)
+
+    async def persist_smt(self, smt, gameId):
+        tdp_profiles = {
+            f'{gameId}': {
+                'smt': smt
+            }
+        }
+        merge_tdp_profiles(tdp_profiles)
+
+        return cpu_utils.set_smt(smt)
+
+    async def persist_cpu_boost(self, cpuBoost, gameId):
+        tdp_profiles = {
+            f'{gameId}': {
+                'cpuBoost': cpuBoost
+            }
+        }
+        merge_tdp_profiles(tdp_profiles)
+
+        return cpu_utils.set_cpu_boost(cpuBoost)
 
     async def poll_tdp(self, currentGameId: str):
         settings = get_saved_settings()

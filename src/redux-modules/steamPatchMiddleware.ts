@@ -23,8 +23,6 @@ import { extractCurrentGameId } from "../utils/constants";
 const saveToBackendTypes = [
   cacheSteamPatchTdp.type,
   cacheSteamPatchGpu.type,
-  setSmt.type,
-  setCpuBoost.type,
 ] as string[];
 
 export const steamPatchMiddleware =
