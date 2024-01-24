@@ -1,4 +1,3 @@
-// TDP Range Slider
 import { SliderField, NotchLabel } from "decky-frontend-lib";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,8 +28,8 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
     if (powerGovernorOptions.includes(value)) {
       notchLabels.push({
         notchIndex: idx,
-        label: capitalize(label.replace("_", " ")),
         value: idx,
+        label: capitalize(label.replace(/_/g, " ")),
       });
     }
   });

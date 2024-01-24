@@ -144,6 +144,16 @@ export const settingsSlice = createSlice({
         set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
       }
     },
+    updateEpp: (state, action: PayloadAction<string>) => {
+      const epp = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.epp`, epp);
+      } else {
+        set(state.tdpProfiles, `default.epp`, epp);
+      }
+    },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const {
         minGpuFrequency,
@@ -534,6 +544,7 @@ export const {
   cacheSteamPatchGpu,
   updatePowerGovernor,
   setReduxTdp,
+  updateEpp,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

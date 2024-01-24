@@ -6,7 +6,11 @@ import { TdpSlider } from "./components/molecules/TdpSlider";
 import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
-import { createServerApiHelpers, saveServerApi } from "./backend/utils";
+import {
+  createServerApiHelpers,
+  saveServerApi,
+  setValuesForGameId,
+} from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
   currentGameInfoListener,
@@ -28,6 +32,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerGovernorSlider from "./components/atoms/PowerGovernorSlider";
+import EppSlider from "./components/atoms/EppSlider";
+import PowerControl from "./components/molecules/PowerControl";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -47,7 +53,6 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
           )}
           <TdpProfiles />
           <CpuFeatureToggles />
-          <PowerGovernorSlider />
           {steamPatchEnabled && (
             <>
               <SteamPatchDefaultTdpSlider />
@@ -61,6 +66,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
               <PollTdp />
             </>
           )}
+          <PowerControl />
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />
@@ -96,6 +102,9 @@ export default definePlugin((serverApi: ServerAPI) => {
           ...results,
         })
       );
+      setTimeout(() => {
+        setValuesForGameId("default");
+      }, 0);
     }
   });
 

@@ -10,7 +10,8 @@ import power_utils
 
 def set_values_for_game_id(game_id):
     tdp_profile = get_tdp_profile(game_id)
-    set_values_for_tdp_profile(tdp_profile)
+    if tdp_profile:
+        set_values_for_tdp_profile(tdp_profile)
 
 def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_governor = True):
     if set_tdp:

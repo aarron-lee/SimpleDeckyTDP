@@ -22,10 +22,10 @@ export type EppOption =
   | "balance_power";
 
 export const EppOptions: { [optionName: string]: EppOption } = {
-  PERFORMANCE: "performance",
-  BALANCE_PERFORMANCE: "balance_performance",
-  BALANCE_POWER_SAVE: "balance_power",
   POWER_SAVE: "power",
+  BALANCE_POWER_SAVE: "balance_power",
+  BALANCE_PERFORMANCE: "balance_performance",
+  PERFORMANCE: "performance",
 };
 
 export type PowerGovernorOption = "powersave" | "performance";

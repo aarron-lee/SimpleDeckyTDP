@@ -1,16 +1,14 @@
-import os
 import glob
 from time import sleep
 import decky_plugin
 import subprocess
-import file_timeout
 from enum import Enum
 import cpu_utils
 
 # ENERGY_PERFORMANCE_PREFERENCE_PATH
-EPP_DEVICES = glob.glob('/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference')
-EPP_OPTION_PATHS = glob.glob('/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_available_preferences')
 EPP_PATH ='/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference'
+EPP_OPTION_PATHS = glob.glob('/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_available_preferences')
+EPP_DEVICES = glob.glob(EPP_PATH)
 
 POWER_GOVERNOR_PATH = '/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
 POWER_GOVERNOR_OPTION_PATHS = glob.glob('/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_governors')
@@ -49,9 +47,9 @@ def get_available_epp_options():
             path = EPP_OPTION_PATHS[0]
             with open(path, 'r') as file:
                 available_options = file.read().strip().split(' ')
-                available_options.reverse()
+                available_options
                 file.close()
-                available_options.remove('default')
+                # available_options.remove('default')
                 return available_options
     except Exception as e:
         decky_plugin.logger.error(f'{__name__} error getting epp options {e}')
@@ -64,7 +62,7 @@ def get_available_governor_options():
             path = POWER_GOVERNOR_OPTION_PATHS[0]
             with open(path, 'r') as file:
                 available_options = file.read().strip().split(' ')
-                available_options.reverse()
+                available_options
                 file.close()
                 return available_options
     except Exception as e:
@@ -90,8 +88,6 @@ def supports_epp():
 
     current_pstate = cpu_utils.get_pstate_status()
     available_epp_options = get_available_epp_options()
-
-    decky_plugin.logger.info(f'{current_pstate} {available_epp_options} {RECOMMENDED_EPP}')
 
     if current_pstate and len(available_epp_options) > 0:
         return True
