@@ -11,9 +11,9 @@ def set_tdp_asusctl(tdp):
     if ASUSCTL_PATH:
         commands = [ASUSCTL_PATH, 'profile', '-P']
 
-        if tdp < 9:
+        if tdp < 13:
             commands.append('Quiet')
-        elif tdp < 19:
+        elif tdp < 20:
             commands.append('Balanced')
         else:
             commands.append('Performance')
@@ -33,9 +33,9 @@ def set_tdp_platform_profile(tdp):
             file.close()
 
             command = 'quiet'
-            if tdp < 9:
+            if tdp < 13:
                 command = 'quiet'
-            elif tdp < 19:
+            elif tdp < 20:
                 command = 'balanced'
             else:
                 command = 'performance'
