@@ -9,7 +9,7 @@ enum Mode {
   FIXED = 2,
 }
 
-const GpuModeSlider: FC = () => {
+const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   const { gpuMode, setGpuMode } = useGpuMode();
 
   const handleSliderChange = (value: number) => {
@@ -38,7 +38,7 @@ const GpuModeSlider: FC = () => {
         notchLabels={MODES}
         notchTicksVisible={true}
         showValue={false}
-        bottomSeparator={"none"}
+        bottomSeparator={showSeparator ? "standard" : "none"}
         onChange={handleSliderChange}
       />
     </>

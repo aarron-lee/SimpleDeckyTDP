@@ -6,6 +6,7 @@ import {
   getGpuFrequencyRangeSelector,
   setGpuFrequency,
 } from "../../redux-modules/settingsSlice";
+import { FC } from "react";
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const useSetGpuFrequency = () => {
   return { setMinFreq, setMaxFreq };
 };
 
-const GpuRangeSliders = () => {
+const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   const { min, max } = useSelector(getGpuFrequencyRangeSelector);
   const { currentMin, currentMax } = useSelector(
     getCurrentGpuFrequencySelector
@@ -54,7 +55,7 @@ const GpuRangeSliders = () => {
         min={currentMin}
         max={max}
         validValues="range"
-        bottomSeparator="none"
+        bottomSeparator={showSeparator ? "standard" : "none"}
         onChange={(newMax) => {
           return setMaxFreq(newMax);
         }}

@@ -1,3 +1,4 @@
+import os
 import glob
 from time import sleep
 import decky_plugin
@@ -38,6 +39,7 @@ def set_power_governor(governor_option):
         option = PowerGovernorOptions(governor_option).value
 
         if len(POWER_GOVERNOR_DEVICES) > 0:
+            # return execute_bash_command(option, POWER_GOVERNOR_PATH)
             return execute_bash_command(option, POWER_GOVERNOR_DEVICES)
     except Exception as e:
         decky_plugin.logger.error(f'{__name__} error setting power governor {e}')
@@ -84,14 +86,14 @@ def set_epp(epp_option):
 
 def supports_epp():
     # enables PSTATE if it exists
-    cpu_utils.set_cpu_boost(True)
+    # cpu_utils.set_cpu_boost(True)
 
-    sleep(0.2)
+    # sleep(0.2)
 
     current_pstate = cpu_utils.get_pstate_status()
     available_epp_options = get_available_epp_options()
 
-    if current_pstate and len(available_epp_options) > 0:
+    if current_pstate == 'active' and len(available_epp_options) > 0:
         return True
     return False
 
@@ -104,4 +106,9 @@ def execute_bash_command(command, paths):
                     file.close()
             except Exception as e:
                 decky_plugin.logger.error(e)
+    # cmd = f'echo "{command}" | sudo tee "{path}"'
 
+    # os.system(cmd)
+    # result = subprocess.call(cmd, timeout=1, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # return result

@@ -19,12 +19,12 @@ const Gpu = () => {
   return (
     <PanelSection title="GPU">
       <PanelSectionRow>
-        <GpuModeSlider />
+        <GpuModeSlider showSeparator={gpuMode == GpuModes.DEFAULT} />
       </PanelSectionRow>
 
       {gpuMode === GpuModes.RANGE && (
         <PanelSectionRow>
-          <GpuRangeSliders />
+          <GpuRangeSliders showSeparator />
         </PanelSectionRow>
       )}
       {gpuMode === GpuModes.FIXED && (
