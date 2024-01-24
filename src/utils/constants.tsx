@@ -28,11 +28,18 @@ export const EppOptions: { [optionName: string]: EppOption } = {
   PERFORMANCE: "performance",
 };
 
-export type PowerGovernorOption = "powersave" | "performance";
+export type PowerGovernorOption =
+  | "powersave"
+  | "performance"
+  | "conservative"
+  | "ondemand"
+  | "userspace"
+  | "schedutil";
 
 export const PowerGovernorOptions: {
   [optionName: string]: PowerGovernorOption;
 } = {
   POWER_SAVE: "powersave",
+  BALANCED: "schedutil",
   PERFORMANCE: "performance",
 };
