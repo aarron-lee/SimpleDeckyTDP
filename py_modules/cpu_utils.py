@@ -95,7 +95,7 @@ def get_pstate_status():
             with open(AMD_PSTATE_PATH, 'r') as file:
                 pstate = file.read()
                 file.close()
-                return pstate
+                return pstate.strip()
     except Exception as e:
         logging.error(f'{__name__} get_pstate_status {e}')
         return False

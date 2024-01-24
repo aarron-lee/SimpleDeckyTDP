@@ -86,9 +86,9 @@ def set_epp(epp_option):
 
 def supports_epp():
     # enables PSTATE if it exists
-    # cpu_utils.set_cpu_boost(True)
+    cpu_utils.set_cpu_boost(True)
 
-    # sleep(0.2)
+    sleep(0.2)
 
     current_pstate = cpu_utils.get_pstate_status()
     available_epp_options = get_available_epp_options()
@@ -106,9 +106,11 @@ def execute_bash_command(command, paths):
                     file.close()
             except Exception as e:
                 decky_plugin.logger.error(e)
-    # cmd = f'echo "{command}" | sudo tee "{path}"'
+    # cmd = f"echo {command} | tee {path}"
+    # # result = subprocess.run(cmd, timeout=1, shell=True, text=True, check=True)
+    # p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    # sleep(0.2)
+    # # process hangs if not manually killed
+    # p.kill()
+    # # return result
 
-    # os.system(cmd)
-    # result = subprocess.call(cmd, timeout=1, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    # return result
