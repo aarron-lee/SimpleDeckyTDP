@@ -13,7 +13,6 @@ import {
   setGpuMode,
   setPolling,
   setReduxTdp,
-  updateAdvancedOption,
   updateInitialLoad,
   updatePollRate,
   updateTdpProfiles,
