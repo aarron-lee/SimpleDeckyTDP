@@ -1,4 +1,4 @@
-import { setSteamPatchGPU, persistTdp } from "../backend/utils";
+import { persistGpu, persistTdp } from "../backend/utils";
 
 import { extractCurrentGameId } from "../utils/constants";
 
@@ -32,6 +32,6 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     previousMinGpu = updatedMinGpu;
     previousMaxGpu = updatedMaxGpu;
 
-    setSteamPatchGPU(updatedMinGpu, updatedMaxGpu, id);
+    persistGpu(updatedMinGpu, updatedMaxGpu, id);
   }
 };

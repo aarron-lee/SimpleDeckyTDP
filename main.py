@@ -55,8 +55,8 @@ class Plugin:
     async def persist_tdp(self, tdp, gameId):
         steam_patch.persist_tdp(tdp, gameId)
 
-    async def save_steam_patch_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
-        steam_patch.save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, gameId)
+    async def persist_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
+        steam_patch.persist_gpu(minGpuFrequency, maxGpuFrequency, gameId)
 
     async def set_power_governor(self, powerGovernor, gameId):
         tdp_profiles = {

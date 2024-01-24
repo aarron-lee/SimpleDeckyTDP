@@ -86,7 +86,7 @@ def persist_tdp(tdp, game_id):
         logging.error(f'main#set_steam_patch timeout {e}')
 
 
-def save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, game_id):
+def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
     bootstrap_profile(game_id)
     gpu_mode = None
 
