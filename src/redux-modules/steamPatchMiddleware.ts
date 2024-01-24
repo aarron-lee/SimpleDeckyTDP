@@ -8,7 +8,7 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
-  setValuesForGameId,
+  setSteamPatchValuesForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
@@ -41,11 +41,11 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === resumeAction.type) {
-        setValuesForGameId(id);
+        setSteamPatchValuesForGameId(id);
       }
 
       if (action.type === setCurrentGameInfo.type) {
-        setValuesForGameId(id);
+        setSteamPatchValuesForGameId(id);
       }
     }
 

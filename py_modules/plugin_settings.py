@@ -67,6 +67,10 @@ def bootstrap_profile(game_id):
             f"{game_id}": default_profile
         })
 
+def per_game_profiles_enabled():
+    settings = get_saved_settings()
+
+    return settings.get("enableTdpProfiles", False)
 
 def get_active_tdp_profile(gameId):
     settings = get_saved_settings()

@@ -1,13 +1,11 @@
-# import os
 import decky_plugin
 import plugin_update
 import logging
-import os
 import file_timeout
 import advanced_options
 import power_utils
 import cpu_utils
-from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, set_setting as persist_setting
+from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, per_game_profiles_enabled, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
 import steam_patch
 import migrations
@@ -52,6 +50,10 @@ class Plugin:
 
     async def set_values_for_game_id(self, gameId):
         steam_patch.set_values_for_game_id(gameId)
+
+    async def set_steam_patch_values_for_game_id(self, gameId):
+        enabled = per_game_profiles_enabled()
+        steam_patch.set_steam_patch_values_for_game_id(gameId, enabled)
     
     async def persist_tdp(self, tdp, gameId):
         steam_patch.persist_tdp(tdp, gameId)

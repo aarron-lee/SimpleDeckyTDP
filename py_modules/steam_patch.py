@@ -7,7 +7,6 @@ from cpu_utils import ryzenadj, set_cpu_boost, set_smt
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
-
 def set_values_for_game_id(game_id):
     tdp_profile = get_tdp_profile(game_id)
     if tdp_profile:
@@ -21,7 +20,7 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     set_cpu_boost_for_tdp_profile(tdp_profile)
     set_smt_for_tdp_profile(tdp_profile)
     if set_governor:
-        # must be set AFTER smt
+        # governor must be set AFTER smt
         sleep(0.2)
         set_power_governor_for_tdp_profile(tdp_profile)
 
@@ -130,3 +129,18 @@ def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
             set_gpu_frequency_range(minGpuFrequency, maxGpuFrequency)
     except Exception as e:
         logging.error(f'main#steam_patch_gpu error {e}')
+
+def set_steam_patch_values_for_game_id(game_id, per_game_profiles_enabled):
+    tdp_profile = get_tdp_profile(game_id)
+    if tdp_profile:
+        # always set tdp + gpu from the tdp profile, since TDP and GPU values are cached from steam per-profile
+        set_tdp_for_tdp_profile(tdp_profile)
+        set_gpu_for_tdp_profile(tdp_profile)
+
+        # set boost, smt, and governor based on if Plugin's per-game profiles enabled, NOT steam's per-game profiles
+        if per_game_profiles_enabled:
+            set_values_for_tdp_profile(tdp_profile, set_tdp=False, set_gpu=False)
+        else:
+            # use default profile
+            default_profile = get_tdp_profile('default')
+            set_values_for_tdp_profile(default_profile, set_tdp=False, set_gpu=False)
