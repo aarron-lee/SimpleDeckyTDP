@@ -19,7 +19,7 @@ export enum ServerAPIMethods {
   SET_TDP = "set_tdp",
   SAVE_TDP = "save_tdp",
   POLL_TDP = "poll_tdp",
-  SAVE_STEAM_PATCH_TDP = "save_steam_patch_tdp",
+  PERSIST_TDP = "persist_tdp",
   SAVE_STEAM_PATCH_GPU = "save_steam_patch_gpu",
   SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
@@ -132,9 +132,9 @@ export const setPowerGovernor = (powerGovernor: string, gameId: string) => {
   }
 };
 
-export const setSteamPatchTDP = (tdp: number, gameId: string) => {
+export const persistTdp = (tdp: number, gameId: string) => {
   if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_TDP, {
+    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_TDP, {
       tdp,
       gameId,
     });

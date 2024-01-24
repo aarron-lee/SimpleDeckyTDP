@@ -52,8 +52,8 @@ class Plugin:
     async def set_values_for_game_id(self, gameId):
         steam_patch.set_values_for_game_id(gameId)
     
-    async def save_steam_patch_tdp(self, tdp, gameId):
-        steam_patch.save_steam_patch_tdp(tdp, gameId)
+    async def persist_tdp(self, tdp, gameId):
+        steam_patch.persist_tdp(tdp, gameId)
 
     async def save_steam_patch_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
         steam_patch.save_steam_patch_gpu(minGpuFrequency, maxGpuFrequency, gameId)

@@ -8,7 +8,7 @@ import { FC } from "react";
 export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
   const setTdp = useSetTdp();
-  const { id, tdp } = useSelector(getCurrentTdpInfoSelector);
+  const { tdp } = useSelector(getCurrentTdpInfoSelector);
 
   return (
     <PanelSection title={"TDP"}>
@@ -19,7 +19,7 @@ export const TdpSlider: FC = () => {
           min={minTdp}
           max={maxTdp}
           step={1}
-          onChange={(newTdp) => setTdp(id, newTdp)}
+          onChange={(newTdp) => setTdp(newTdp)}
           notchTicksVisible
           showValue
         />

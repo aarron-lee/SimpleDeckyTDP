@@ -108,6 +108,16 @@ export const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
+    setReduxTdp: (state, action: PayloadAction<number>) => {
+      const tdp = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.tdp`, tdp);
+      } else {
+        set(state.tdpProfiles, `default.tdp`, tdp);
+      }
+    },
     updateMinTdp: (state, action: PayloadAction<number>) => {
       state.minTdp = action.payload;
     },
@@ -516,6 +526,7 @@ export const {
   cacheSteamPatchTdp,
   cacheSteamPatchGpu,
   updatePowerGovernor,
+  setReduxTdp,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

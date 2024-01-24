@@ -67,10 +67,10 @@ def set_gpu_for_tdp_profile(tdp_profile):
                     return True
                 return False
         except Exception as e:
-            logging.error(f'main#set_tdp_for_game_id timeout {e}')
+            logging.error(f'main#set_gpu_for_game_id timeout {e}')
 
 
-def save_steam_patch_tdp(tdp, game_id):
+def persist_tdp(tdp, game_id):
     bootstrap_profile(game_id)
     tdp_profile = {
         f"{game_id}": {
@@ -134,4 +134,4 @@ def save_steam_patch_tdp_profile(tdp_profiles, game_id, advanced):
             except Exception as e:
                 logging.error(f'main#save_tdp file timeout {e}')
     except Exception as e:
-        logging.error(f'main#save_steam_patch_tdp error {e}')
+        logging.error(f'main#save_steam_patch_tdp_profile error {e}')

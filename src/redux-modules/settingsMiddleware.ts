@@ -12,6 +12,7 @@ import {
   setGpuFrequency,
   setGpuMode,
   setPolling,
+  setReduxTdp,
   updateAdvancedOption,
   updateInitialLoad,
   updatePollRate,
@@ -21,6 +22,7 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  persistTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
@@ -118,6 +120,10 @@ export const settingsMiddleware =
           activeGameId,
           advancedState
         );
+      }
+
+      if (action.type === setReduxTdp.type) {
+        persistTdp(action.payload, activeGameId);
       }
 
       if (action.type === updatePollRate.type) {
