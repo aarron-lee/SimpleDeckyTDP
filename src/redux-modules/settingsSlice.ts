@@ -5,6 +5,7 @@ import {
   DEFAULT_POLL_RATE,
   DEFAULT_START_TDP,
   EppOption,
+  EppOptions,
   PowerGovernorOption,
   PowerGovernorOptions,
 } from "../utils/constants";
@@ -37,7 +38,6 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
-  useRecommendedPowerOptions: boolean;
   powerGovernor: PowerGovernorOption;
   epp?: EppOption;
 };
@@ -65,8 +65,8 @@ export interface SettingsState extends TdpRangeState, PollState {
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
   supportsEpp: boolean;
-  recommendedEpp?: EppOption;
-  recommendedPowerGovernor?: PowerGovernorOption;
+  powerGovernorOptions: PowerGovernorOption[];
+  eppOptions?: EppOption[];
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -92,8 +92,8 @@ const initialState: SettingsState = {
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
-      useRecommendedPowerOptions: true,
       powerGovernor: PowerGovernorOptions.POWER_SAVE,
+      epp: EppOptions.POWER_SAVE,
     },
   },
   pollEnabled: false,
@@ -102,6 +102,8 @@ const initialState: SettingsState = {
   steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
   supportsEpp: false,
+  powerGovernorOptions: [],
+  eppOptions: [],
 };
 
 export const settingsSlice = createSlice({
@@ -149,8 +151,8 @@ export const settingsSlice = createSlice({
         advancedOptions,
         pluginVersionNum,
         supportsEpp,
-        recommendedEpp,
-        recommendedPowerGovernor,
+        eppOptions,
+        powerGovernorOptions,
         steamPatchDefaultTdp,
       } = action.payload;
       state.initialLoad = false;
@@ -176,10 +178,12 @@ export const settingsSlice = createSlice({
           set(state, `advanced.${option.statePath}`, option.currentValue);
         });
       }
+      if (powerGovernorOptions) {
+        state.powerGovernorOptions = powerGovernorOptions;
+      }
       if (supportsEpp) {
         state.supportsEpp = supportsEpp;
-        state.recommendedEpp = recommendedEpp;
-        state.recommendedPowerGovernor = recommendedPowerGovernor;
+        state.eppOptions = eppOptions;
       }
       state.minGpuFrequency = minGpuFrequency;
       state.maxGpuFrequency = maxGpuFrequency;
@@ -498,11 +502,14 @@ export const supportsEppSelector = (state: RootState) =>
 
 export const getPowerControlInfoSelector = (state: RootState) => {
   const {
-    tdpProfile: { epp, powerGovernor, useRecommendedPowerOptions },
+    tdpProfile: { epp, powerGovernor },
   } = activeTdpProfileSelector(state);
+  const {
+    settings: { powerGovernorOptions, eppOptions },
+  } = state;
   const supportsEpp = supportsEppSelector(state);
 
-  return { supportsEpp, useRecommendedPowerOptions, epp, powerGovernor };
+  return { supportsEpp, epp, powerGovernor, powerGovernorOptions, eppOptions };
 };
 
 // Action creators are generated for each case reducer function

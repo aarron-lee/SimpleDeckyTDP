@@ -5,36 +5,49 @@ import {
   getPowerControlInfoSelector,
   updatePowerGovernor,
 } from "../../redux-modules/settingsSlice";
-import { PowerGovernorOptions } from "../../utils/constants";
+import {
+  PowerGovernorOption,
+  PowerGovernorOptions,
+} from "../../utils/constants";
 import { capitalize } from "lodash";
+import { logInfo } from "../../backend/utils";
 
-const getOptions = () => {
+const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
 
   Object.values(PowerGovernorOptions).forEach((option, idx) => {
-    idxToOption[idx] = option;
-    optionToIdx[option] = idx;
+    if (powerGovernorOptions.includes(option)) {
+      idxToOption[idx] = option;
+      optionToIdx[option] = idx;
+    }
   });
 
-  const notchLabels: NotchLabel[] = Object.keys(PowerGovernorOptions).map(
-    (label, idx) => {
-      return {
+  const notchLabels: NotchLabel[] = [];
+
+  Object.entries(PowerGovernorOptions).forEach(([label, value], idx) => {
+    if (powerGovernorOptions.includes(value)) {
+      notchLabels.push({
         notchIndex: idx,
         label: capitalize(label.replace("_", " ")),
         value: idx,
-      };
+      });
     }
-  );
+  });
 
   return { idxToOption, optionToIdx, notchLabels };
 };
 
 const PowerGovernorSlider = () => {
-  const { powerGovernor } = useSelector(getPowerControlInfoSelector);
+  const { powerGovernor, powerGovernorOptions } = useSelector(
+    getPowerControlInfoSelector
+  );
   const dispatch = useDispatch();
 
-  const { idxToOption, optionToIdx, notchLabels } = getOptions();
+  logInfo(powerGovernorOptions);
+
+  const { idxToOption, optionToIdx, notchLabels } =
+    getOptions(powerGovernorOptions);
 
   const handleSliderChange = (value: number) => {
     const powerGovernorOption = idxToOption[value];

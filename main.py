@@ -24,9 +24,11 @@ class Plugin:
                     supports_epp = power_utils.supports_epp()
                     if supports_epp:
                         settings['supportsEpp'] = True
-                        settings['recommendedEpp'] = power_utils.RECOMMENDED_EPP
-                    settings['recommendedPowerGovernor'] = power_utils.RECOMMENDED_GOVERNOR
+                        # eppOptions aren't available on performance governor
+                        power_utils.set_recommended_options()
+                        settings['eppOptions'] = power_utils.get_available_epp_options()
 
+                    settings['powerGovernorOptions'] = power_utils.get_available_governor_options()
                     settings['advancedOptions'] = advanced_options.get_advanced_options()
 
                     gpu_min, gpu_max = get_gpu_frequency_range()
@@ -67,7 +69,16 @@ class Plugin:
         }
         merge_tdp_profiles(tdp_profiles)
 
-        return power_utils.set_power_governor(powerGovernor)
+        power_utils.set_power_governor(powerGovernor)
+
+        response = {
+            'powerGovernorOptions': power_utils.get_available_governor_options(),
+            'eppOptions': power_utils.get_available_epp_options()
+        }
+
+        return response
+
+
 
     async def persist_smt(self, smt, gameId):
         tdp_profiles = {
