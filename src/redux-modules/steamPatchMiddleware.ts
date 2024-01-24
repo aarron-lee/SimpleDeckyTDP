@@ -1,29 +1,19 @@
 import { Dispatch } from "redux";
 import {
-  cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
   getAdvancedOptionsInfoSelector,
-  setCpuBoost,
   setCurrentGameInfo,
-  setSmt,
   setSteamPatchDefaultTdp,
 } from "./settingsSlice";
 import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
-  saveSteamPatchTdpProfiles,
   setValuesForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { resumeAction } from "./extraActions";
 import { extractCurrentGameId } from "../utils/constants";
-
-const saveToBackendTypes = [
-  cacheSteamPatchTdp.type,
-  cacheSteamPatchGpu.type,
-] as string[];
 
 export const steamPatchMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
@@ -56,10 +46,6 @@ export const steamPatchMiddleware =
 
       if (action.type === setCurrentGameInfo.type) {
         setValuesForGameId(id);
-      }
-
-      if (saveToBackendTypes.includes(action.type)) {
-        saveSteamPatchTdpProfiles(state.settings.tdpProfiles, advancedState);
       }
     }
 

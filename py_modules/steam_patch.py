@@ -130,22 +130,3 @@ def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
             set_gpu_frequency_range(minGpuFrequency, maxGpuFrequency)
     except Exception as e:
         logging.error(f'main#steam_patch_gpu error {e}')
-
-
-def save_steam_patch_tdp_profile(tdp_profiles, game_id, advanced):
-    try:
-        merge_tdp_profiles(tdp_profiles)
-        persist_setting('advanced', advanced)
-        steam_patch_enabled = advanced_options.get_setting(
-            advanced_options.DefaultSettings.ENABLE_STEAM_PATCH.value
-        )
-
-        if steam_patch_enabled:
-            tdp_profile = get_tdp_profile(game_id)
-            try:
-                with file_timeout.time_limit(3):
-                    set_values_for_tdp_profile(tdp_profile)
-            except Exception as e:
-                logging.error(f'main#save_tdp file timeout {e}')
-    except Exception as e:
-        logging.error(f'main#save_steam_patch_tdp_profile error {e}')

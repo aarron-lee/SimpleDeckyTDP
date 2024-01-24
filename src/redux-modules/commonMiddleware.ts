@@ -15,7 +15,6 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
-  logInfo,
   persistCpuBoost,
   persistSmt,
   setEpp,

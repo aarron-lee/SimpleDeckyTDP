@@ -49,9 +49,6 @@ class Plugin:
         except Exception as e:
             logging.error(f"error failed to set_setting {name}={value} {e}")
 
-    async def save_steam_patch_tdp_profile(self, tdpProfiles, gameId, advanced):
-        steam_patch.save_steam_patch_tdp_profile(tdpProfiles, gameId, advanced)
-
     async def set_values_for_game_id(self, gameId):
         steam_patch.set_values_for_game_id(gameId)
     

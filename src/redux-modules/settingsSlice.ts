@@ -214,38 +214,6 @@ export const settingsSlice = createSlice({
         );
       }
     },
-    cacheSteamPatchTdp: (
-      state,
-      action: PayloadAction<[id: string, tdp: number]>
-    ) => {
-      const [id, tdp] = action.payload;
-
-      bootstrapTdpProfile(state, id);
-
-      state.tdpProfiles[id].tdp = tdp;
-    },
-    cacheSteamPatchGpu: (
-      state,
-      action: PayloadAction<
-        [id: string, updatedGpuMin: number, updatedGpuMax: number]
-      >
-    ) => {
-      const [id, minGpu, maxGpu] = action.payload;
-
-      bootstrapTdpProfile(state, id);
-
-      if (minGpu === 0 && maxGpu === 0) {
-        // default/auto gpuMode
-        state.tdpProfiles[id].gpuMode = GpuModes.DEFAULT;
-      } else if (minGpu === maxGpu && minGpu > 0) {
-        state.tdpProfiles[id].gpuMode = GpuModes.FIXED;
-        state.tdpProfiles[id].fixedGpuFrequency = minGpu;
-      } else {
-        state.tdpProfiles[id].gpuMode = GpuModes.RANGE;
-        state.tdpProfiles[id].minGpuFrequency = minGpu;
-        state.tdpProfiles[id].maxGpuFrequency = maxGpu;
-      }
-    },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
       merge(state.tdpProfiles, action.payload);
     },
@@ -540,8 +508,6 @@ export const {
   setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
-  cacheSteamPatchTdp,
-  cacheSteamPatchGpu,
   updatePowerGovernor,
   setReduxTdp,
   updateEpp,

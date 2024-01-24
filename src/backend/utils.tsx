@@ -23,7 +23,6 @@ export enum ServerAPIMethods {
   PERSIST_GPU = "persist_gpu",
   PERSIST_SMT = "persist_smt",
   PERSIST_CPU_BOOST = "persist_cpu_boost",
-  SAVE_STEAM_PATCH_TDP_PROFILE = "save_steam_patch_tdp_profile",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
   SET_POWER_GOVERNOR = "set_power_governor",
   SET_EPP = "set_epp",
@@ -189,17 +188,6 @@ export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
     serverApi.callPluginMethod(ServerAPIMethods.PERSIST_CPU_BOOST, {
       cpuBoost,
       gameId,
-    });
-  }
-};
-
-export const saveSteamPatchTdpProfiles = (tdpProfiles: any, advanced: any) => {
-  const gameId = extractCurrentGameId();
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SAVE_STEAM_PATCH_TDP_PROFILE, {
-      tdpProfiles,
-      gameId,
-      advanced,
     });
   }
 };
