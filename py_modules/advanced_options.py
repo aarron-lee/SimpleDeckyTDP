@@ -14,6 +14,7 @@ class Devices(Enum):
 
 class DefaultSettings(Enum):
     ENABLE_STEAM_PATCH = 'steamPatch'
+    ENABLE_POWER_CONTROL = 'enablePowercontrol'
 
 class RogAllySettings(Enum):
     USE_ASUSCTL_TDP = 'useAsusCtlTdp'
@@ -62,6 +63,19 @@ def get_default_options():
     }
 
     options.append(enable_steam_patch)
+
+    enable_power_control = {
+        'name': 'Enable Power Controls',
+        'type': 'boolean',
+        'defaultValue': True,
+        'description': 'Enables Power Governor and EPP controls',
+        'currentValue': get_nested_setting(
+            f'advanced.{DefaultSettings.ENABLE_POWER_CONTROL.value}'
+        ) or True,
+        'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
+    }
+
+    options.append(enable_power_control)
 
     return options
 

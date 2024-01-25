@@ -111,6 +111,12 @@ def get_pstate_status():
         return False
     return None
 
+def set_amd_pstate_active():
+    if os.path.exists(AMD_PSTATE_PATH):
+      with open(AMD_PSTATE_PATH, 'w') as file:
+          file.write('active')
+          file.close()
+
 def get_scaling_driver():
     try:
         with file_timeout.time_limit(1):

@@ -119,3 +119,6 @@ def execute_bash_command(command, paths):
             except Exception as e:
                 decky_plugin.logger.error(e)
                 continue
+
+def power_controls_enabled():
+    return True
