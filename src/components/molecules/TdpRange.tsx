@@ -17,7 +17,7 @@ const TdpRange = () => {
     <PanelSection title={title}>
       <PanelSectionRow>
         <TdpRangeSlider
-          tdpRange={[3, 12]}
+          tdpRange={[4, 12]}
           label="Minimum TDP"
           value={minTdp}
           onChange={setMinTdp}

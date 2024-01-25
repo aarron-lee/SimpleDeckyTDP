@@ -62,9 +62,9 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
               <Gpu />
               <PowerControl />
               <TdpRange />
-              <PollTdp />
             </>
           )}
+          <PollTdp />
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />

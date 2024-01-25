@@ -51,7 +51,7 @@ def get_default_options():
     options = []
 
     enable_steam_patch = {
-        'name': 'Fix Steam Hardware Controls',
+        'name': 'Fix Steam Hardware Controls (Experimental)',
         'type': 'boolean',
         'defaultValue': False,
         'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros)',
