@@ -1,4 +1,9 @@
-import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
+import {
+  definePlugin,
+  PanelSection,
+  ServerAPI,
+  staticClasses,
+} from "decky-frontend-lib";
 import { FC, memo } from "react";
 import { FaShip } from "react-icons/fa";
 import TdpRange from "./components/molecules/TdpRange";
@@ -44,26 +49,18 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
     <>
       {!loading && (
         <>
-          {!steamPatchEnabled && (
-            <>
-              <TdpSlider />
-            </>
-          )}
-          <TdpProfiles />
-          {steamPatchEnabled && (
-            <>
-              <PowerControl />
-              <SteamPatchDefaultTdpSlider />
-              <TdpRange />
-            </>
-          )}
-          {!steamPatchEnabled && (
-            <>
-              <Gpu />
-              <PowerControl />
-              <TdpRange />
-            </>
-          )}
+          <PanelSection>
+            <TdpProfiles />
+            {!steamPatchEnabled && (
+              <>
+                <TdpSlider />
+                <Gpu />
+              </>
+            )}
+          </PanelSection>
+          <PowerControl />
+          {steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
+          <TdpRange />
           <PollTdp />
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">

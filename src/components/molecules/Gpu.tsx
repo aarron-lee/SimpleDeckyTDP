@@ -17,7 +17,7 @@ const Gpu = () => {
 
   const { gpuMode } = useGpuMode();
   return (
-    <PanelSection title="GPU">
+    <>
       <PanelSectionRow>
         <GpuModeSlider showSeparator={gpuMode == GpuModes.DEFAULT} />
       </PanelSectionRow>
@@ -32,7 +32,7 @@ const Gpu = () => {
           <GpuFixedSlider />
         </PanelSectionRow>
       )}
-    </PanelSection>
+    </>
   );
 };
 

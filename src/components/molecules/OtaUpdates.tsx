@@ -44,21 +44,21 @@ const OtaUpdates = () => {
   return (
     <PanelSection title="System Info">
       <PanelSectionRow>
-        <Field disabled label={"Installed Version"}>
+        <Field disabled label={"Installed Version"} bottomSeparator="none">
           {installedVersionNum}
         </Field>
       </PanelSectionRow>
 
       {Boolean(latestVersionNum) && (
         <PanelSectionRow>
-          <Field disabled label={"Latest Version"}>
+          <Field disabled label={"Latest Version"} bottomSeparator="none">
             {latestVersionNum}
           </Field>
         </PanelSectionRow>
       )}
       {Boolean(scalingDriver) && (
         <PanelSectionRow>
-          <Field disabled label={"Scaling Driver"}>
+          <Field disabled label={"Scaling Driver"} bottomSeparator="none">
             {scalingDriver}
           </Field>
         </PanelSectionRow>

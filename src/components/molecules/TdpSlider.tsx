@@ -11,19 +11,17 @@ export const TdpSlider: FC = () => {
   const { tdp } = useSelector(getCurrentTdpInfoSelector);
 
   return (
-    <PanelSection title={"TDP"}>
-      <PanelSectionRow>
-        <SliderField
-          value={tdp}
-          label="Watts"
-          min={minTdp}
-          max={maxTdp}
-          step={1}
-          onChange={(newTdp) => setTdp(newTdp)}
-          notchTicksVisible
-          showValue
-        />
-      </PanelSectionRow>
-    </PanelSection>
+    <PanelSectionRow>
+      <SliderField
+        value={tdp}
+        label="TDP (Watts)"
+        min={minTdp}
+        max={maxTdp}
+        step={1}
+        onChange={(newTdp) => setTdp(newTdp)}
+        notchTicksVisible
+        showValue
+      />
+    </PanelSectionRow>
   );
 };
