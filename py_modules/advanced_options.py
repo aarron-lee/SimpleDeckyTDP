@@ -48,6 +48,13 @@ def get_device_name():
         decky_plugin.logger.error(f'{__name__} error while trying to read device name')
         return ''
 
+def get_value(setting, default_value = False):
+    current_val = get_nested_setting(
+        f'advanced.{setting.value}'
+    )
+
+    current_val if isinstance(current_val, bool) else default_value
+
 def get_default_options():
     options = []
 
@@ -56,9 +63,7 @@ def get_default_options():
         'type': 'boolean',
         'defaultValue': False,
         'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros)',
-        'currentValue': get_nested_setting(
-            f'advanced.{DefaultSettings.ENABLE_STEAM_PATCH.value}'
-        ) or False,
+        'currentValue': get_value(DefaultSettings.ENABLE_STEAM_PATCH),
         'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
     }
 
@@ -69,9 +74,7 @@ def get_default_options():
         'type': 'boolean',
         'defaultValue': True,
         'description': 'Enables Power Governor and EPP controls',
-        'currentValue': get_nested_setting(
-            f'advanced.{DefaultSettings.ENABLE_POWER_CONTROL.value}'
-        ) or True,
+        'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, True),
         'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
     }
 
@@ -86,15 +89,12 @@ def get_advanced_options():
     supports_acpi_call = modprobe_acpi_call()
 
     if device_name == Devices.LEGION_GO.value and supports_acpi_call:
-        current_val = get_nested_setting(
-                f'advanced.{LegionGoSettings.CUSTOM_TDP_MODE.value}'
-            )
         defaultValue = True
         options.append({
             'name': 'Lenovo Custom TDP Mode',
             'type': 'boolean',
             'defaultValue': defaultValue,
-            'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
+            'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
             'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
         })
     # if device_name == Devices.ROG_ALLY.value:
