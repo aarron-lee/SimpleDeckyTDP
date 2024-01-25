@@ -19,6 +19,7 @@ POWER_GOVERNOR_DEVICES = glob.glob(POWER_GOVERNOR_PATH)
 
 class PowerGovernorOptions(Enum):
   POWER_SAVE = 'powersave'
+  BALANCED = 'schedutil'
   PERFORMANCE = 'performance'
 
 class EppOptions(Enum):

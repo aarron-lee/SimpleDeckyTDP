@@ -53,7 +53,10 @@ def get_value(setting, default_value = False):
     f'advanced.{setting.value}'
   )
 
-  current_val if isinstance(current_val, bool) else default_value
+  if isinstance(current_val, bool):
+    return current_val
+  else:
+    return default_value
 
 def get_default_options():
   options = []

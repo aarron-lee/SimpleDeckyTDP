@@ -17,17 +17,23 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
   const notchLabels: NotchLabel[] = [];
+
+  let notchIdx = 0;
+
   powerGovernorOptions.forEach((option, idx) => {
-    idxToOption[idx] = option;
-    optionToIdx[option] = idx;
+    if (PowerGovernorOptions[option]) {
+      idxToOption[idx] = option;
+      optionToIdx[option] = idx;
 
-    const label = PowerGovernorOptions[option];
+      const label = PowerGovernorOptions[option];
 
-    notchLabels.push({
-      notchIndex: idx,
-      value: idx,
-      label: capitalize(label.replace(/_/g, " ")),
-    });
+      notchLabels.push({
+        notchIndex: notchIdx,
+        value: notchIdx,
+        label: capitalize(label.replace(/_/g, " ")),
+      });
+      notchIdx++;
+    }
   });
 
   return { idxToOption, optionToIdx, notchLabels };
@@ -49,12 +55,12 @@ const PowerGovernorSlider: FC<{
     return dispatch(updatePowerGovernor(powerGovernorOption));
   };
 
-  const sliderValue = optionToIdx[powerGovernor];
+  const sliderValue = optionToIdx[powerGovernor || "powersave"];
 
   return (
     <SliderField
       label="Power Governor"
-      value={sliderValue || optionToIdx["powersave"]}
+      value={sliderValue}
       min={0}
       max={notchLabels.length - 1}
       step={1}

@@ -21,6 +21,7 @@ export type PowerControlInfo = {
   eppOptions: EppOption[];
   powerGovernorOptions: PowerGovernorOption[];
   scalingDriver: string;
+  pstateStatus?: string;
 };
 
 export type EppOption =

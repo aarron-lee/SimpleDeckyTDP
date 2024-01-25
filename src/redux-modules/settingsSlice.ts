@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { clone, get, merge, set } from "lodash";
-import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
+import {
+  DEFAULT_POLL_RATE,
+  DEFAULT_START_TDP,
+  EppOption,
+  PowerGovernorOption,
+} from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
 
@@ -30,6 +35,8 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
+  powerGovernor?: PowerGovernorOption;
+  epp?: EppOption;
 };
 
 export type TdpProfiles = {
@@ -114,6 +121,26 @@ export const settingsSlice = createSlice({
       const { statePath, value } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
+    },
+    updatePowerGovernor: (state, action: PayloadAction<string>) => {
+      const powerGovernor = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.powerGovernor`, powerGovernor);
+      } else {
+        set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
+      }
+    },
+    updateEpp: (state, action: PayloadAction<string>) => {
+      const epp = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.epp`, epp);
+      } else {
+        set(state.tdpProfiles, `default.epp`, epp);
+      }
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const {
@@ -410,6 +437,14 @@ export const getCachedSteamPatchProfile =
     return tdpProfiles[gameId];
   };
 
+export const getPowerControlInfoSelector = (state: RootState) => {
+  const {
+    tdpProfile: { epp, powerGovernor },
+  } = activeTdpProfileSelector(state);
+
+  return { epp, powerGovernor };
+};
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -427,7 +462,9 @@ export const {
   setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
+  updatePowerGovernor,
   setReduxTdp,
+  updateEpp,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

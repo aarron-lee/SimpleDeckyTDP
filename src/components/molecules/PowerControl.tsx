@@ -4,7 +4,10 @@ import EppSlider from "../atoms/EppSlider";
 import { CpuFeatureToggles } from "../atoms/CpuFeatureToggles";
 import ErrorBoundary from "../ErrorBoundary";
 import { useSelector } from "react-redux";
-import { getAdvancedOptionsInfoSelector } from "../../redux-modules/settingsSlice";
+import {
+  getAdvancedOptionsInfoSelector,
+  getPowerControlInfoSelector,
+} from "../../redux-modules/settingsSlice";
 import { AdvancedOptionsEnum, getPowerControlInfo } from "../../backend/utils";
 import { useEffect, useState } from "react";
 import { PowerControlInfo } from "../../utils/constants";
@@ -16,9 +19,12 @@ export const usePowerControlsEnabled = () => {
 };
 
 const PowerControl = () => {
+  const powerControlsEnabled = usePowerControlsEnabled();
   const [powerControlInfo, setPowerControlInfo] = useState<
     PowerControlInfo | undefined
   >();
+
+  const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
   useEffect(() => {
     const fn = async () => {
@@ -29,8 +35,12 @@ const PowerControl = () => {
         setPowerControlInfo(result);
       }
     };
-    fn();
-  }, []);
+    if (powerControlsEnabled) {
+      fn();
+    } else {
+      setPowerControlInfo(undefined);
+    }
+  }, [powerGovernor, epp, powerControlsEnabled]);
 
   if (!powerControlInfo) {
     return null;

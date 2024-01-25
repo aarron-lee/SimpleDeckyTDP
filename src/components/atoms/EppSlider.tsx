@@ -4,34 +4,40 @@ import {
   getPowerControlInfoSelector,
   updateEpp,
 } from "../../redux-modules/settingsSlice";
-import { EppOption, EppOptions } from "../../utils/constants";
+import { EppOption, EppOptions, PowerControlInfo } from "../../utils/constants";
 import { capitalize } from "lodash";
 import { logInfo } from "../../backend/utils";
+import { FC } from "react";
 
 const getOptions = (eppOptions: EppOption[]) => {
   const idxToOption = {};
   const optionToIdx = {};
   const notchLabels: NotchLabel[] = [];
 
+  let notchIdx = 0;
   eppOptions.forEach((option, idx) => {
-    idxToOption[idx] = option;
-    optionToIdx[option] = idx;
+    if (EppOptions[option]) {
+      idxToOption[idx] = option;
+      optionToIdx[option] = idx;
 
-    const label = EppOptions[option];
-    notchLabels.push({
-      notchIndex: idx,
-      label: capitalize(label.replace(/_/g, " ")),
-      value: idx,
-    });
+      const label = EppOptions[option];
+      notchLabels.push({
+        notchIndex: notchIdx,
+        label: capitalize(label.replace(/_/g, " ")),
+        value: notchIdx,
+      });
+      notchIdx++;
+    }
   });
 
   return { idxToOption, optionToIdx, notchLabels };
 };
 
-const EppSlider = () => {
-  const { powerGovernor, epp, eppOptions } = useSelector(
-    getPowerControlInfoSelector
-  );
+const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
+  powerControlInfo,
+}) => {
+  const { eppOptions, pstateStatus } = powerControlInfo;
+  const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
   const dispatch = useDispatch();
 
@@ -42,18 +48,18 @@ const EppSlider = () => {
   const { idxToOption, optionToIdx, notchLabels } = getOptions(eppOptions);
 
   let handleSliderChange = (value: number) => {
-    if (powerGovernor !== "performance") {
-      const eppOption = idxToOption[value];
-      return dispatch(updateEpp(eppOption));
+    if (powerGovernor === "performance" && pstateStatus === "active") {
+      return;
     }
-    return;
+    const eppOption = idxToOption[value];
+    return dispatch(updateEpp(eppOption));
   };
 
   let sliderValue = optionToIdx[epp || "power"];
 
   let description;
 
-  if (powerGovernor === "performance") {
+  if (powerGovernor === "performance" && pstateStatus === "active") {
     sliderValue = optionToIdx["performance"];
     description = "EPP cannot be changed while Governor is set to Performance";
   }
