@@ -15,6 +15,14 @@ export const extractCurrentGameInfo = () => {
   return results;
 };
 
+export type PowerControlInfo = {
+  powerControlsEnabled: boolean;
+  supportsEpp: boolean;
+  eppOptions: EppOption[];
+  powerGovernorOptions: PowerGovernorOption[];
+  scalingDriver: string;
+};
+
 export type EppOption =
   | "performance"
   | "power"

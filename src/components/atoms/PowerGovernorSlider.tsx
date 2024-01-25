@@ -5,11 +5,13 @@ import {
   updatePowerGovernor,
 } from "../../redux-modules/settingsSlice";
 import {
+  PowerControlInfo,
   PowerGovernorOption,
   PowerGovernorOptions,
 } from "../../utils/constants";
 import { capitalize } from "lodash";
 import { logInfo } from "../../backend/utils";
+import { FC } from "react";
 
 const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
@@ -31,10 +33,12 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   return { idxToOption, optionToIdx, notchLabels };
 };
 
-const PowerGovernorSlider = () => {
-  const { powerGovernor, powerGovernorOptions } = useSelector(
-    getPowerControlInfoSelector
-  );
+const PowerGovernorSlider: FC<{
+  powerControlInfo: PowerControlInfo;
+}> = ({ powerControlInfo }) => {
+  const { powerGovernorOptions } = powerControlInfo;
+
+  const { powerGovernor } = useSelector(getPowerControlInfoSelector);
   const dispatch = useDispatch();
 
   const { idxToOption, optionToIdx, notchLabels } =

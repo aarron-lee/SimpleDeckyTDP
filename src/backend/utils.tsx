@@ -26,6 +26,7 @@ export enum ServerAPIMethods {
   SET_STEAM_PATCH_VALUES_FOR_GAME_ID = "set_steam_patch_values_for_game_id",
   SET_POWER_GOVERNOR = "set_power_governor",
   SET_EPP = "set_epp",
+  GET_POWER_CONTROL_INFO = "get_power_control_info",
 }
 
 export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
@@ -123,6 +124,13 @@ export const getLogInfo = () => {
   } else {
     return () => {};
   }
+};
+
+export const getPowerControlInfo = () => {
+  return serverApi?.callPluginMethod(
+    ServerAPIMethods.GET_POWER_CONTROL_INFO,
+    {}
+  );
 };
 
 export const setPowerGovernor = (powerGovernor: string, gameId: string) => {
