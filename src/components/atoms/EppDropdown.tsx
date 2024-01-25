@@ -8,27 +8,22 @@ import { EppOption, EppOptions, PowerControlInfo } from "../../utils/constants";
 import { FC } from "react";
 
 const getOptions = (eppOptions: EppOption[]) => {
-  const idxToOption = {};
-  const optionToIdx = {};
   const dropdownOptions: any[] = [];
 
-  let notchIdx = 0;
-  eppOptions.forEach((option, idx) => {
+  let dropdownIdx = 0;
+  eppOptions.forEach((option) => {
     if (EppOptions[option]) {
-      idxToOption[idx] = option;
-      optionToIdx[option] = idx;
-
       let label = EppOptions[option];
       dropdownOptions.push({
         data: option,
         label: label.replace(/_/g, " "),
-        value: notchIdx,
+        value: dropdownIdx,
       });
-      notchIdx++;
+      dropdownIdx++;
     }
   });
 
-  return { idxToOption, optionToIdx, dropdownOptions };
+  return { dropdownOptions };
 };
 
 const EppDropdown: FC<{ powerControlInfo: PowerControlInfo }> = ({

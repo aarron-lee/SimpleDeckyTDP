@@ -13,6 +13,7 @@ import { AdvancedOptionsEnum, getPowerControlInfo } from "../../backend/utils";
 import { useEffect, useState } from "react";
 import { PowerControlInfo } from "../../utils/constants";
 import EppDropdown from "../atoms/EppDropdown";
+import PowerGovernorDropdown from "../atoms/PowerGovernorDropdown";
 
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
@@ -59,7 +60,8 @@ const PowerControl = () => {
       <CpuFeatureToggles />
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
-          <PowerGovernorSlider powerControlInfo={powerControlInfo} />
+          {/* <PowerGovernorSlider powerControlInfo={powerControlInfo} /> */}
+          <PowerGovernorDropdown powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
       </PanelSectionRow>
       <PanelSectionRow>
