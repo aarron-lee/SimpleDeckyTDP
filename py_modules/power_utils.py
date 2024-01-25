@@ -88,15 +88,20 @@ def set_epp(epp_option):
 
 def supports_epp():
     # enables PSTATE if it exists
-    cpu_utils.set_cpu_boost(True)
+    scaling_driver = cpu_utils.get_scaling_driver()
+
+    if scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value:
+        # smt = false not supported
+        cpu_utils.set_smt(True)
 
     sleep(0.2)
 
-    current_pstate = cpu_utils.get_pstate_status()
-    available_epp_options = get_available_epp_options()
+    if scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value:
+        current_pstate = cpu_utils.get_pstate_status()
+        available_epp_options = get_available_epp_options()
 
-    if current_pstate == 'active' and len(available_epp_options) > 0:
-        return True
+        if current_pstate == 'active' and scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value and len(available_epp_options) > 0:
+            return True
     return False
 
 def execute_bash_command(command, paths):

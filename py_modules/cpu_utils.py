@@ -1,3 +1,4 @@
+from enum import Enum
 import os
 import subprocess
 import shutil
@@ -6,12 +7,21 @@ import file_timeout
 import logging
 import plugin_settings
 import advanced_options
+import glob
 from devices import legion_go, rog_ally
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
+
+SCALING_DRIVER_PATH="/sys/devices/system/cpu/cpufreq/policy*/scaling_driver"
+SCALING_DRIVER_DEVICES=glob.glob(SCALING_DRIVER_PATH)
+
+class ScalingDrivers(Enum):
+    PSTATE_EPP = "amd-pstate-epp"
+    PSTATE = "amd-pstate"
+    ACPI_CPUFREQ = "acpi-cpufreq"
 
 def modprobe_acpi_call():
     os.system("modprobe acpi_call")
@@ -100,3 +110,15 @@ def get_pstate_status():
         logging.error(f'{__name__} get_pstate_status {e}')
         return False
     return None
+
+def get_scaling_driver():
+    try:
+        with file_timeout.time_limit(1):
+            if os.path.exists(SCALING_DRIVER_DEVICES[0]):
+                with open(SCALING_DRIVER_DEVICES[0], 'r') as file:
+                    scaling_driver = file.read().strip()
+                    file.close()
+                    return scaling_driver
+    except Exception as e:
+        logging.error(f'{__name__} get_scaling_driver {e}')
+        return ''
