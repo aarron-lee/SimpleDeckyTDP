@@ -57,7 +57,9 @@ const PowerControl = () => {
 
   return (
     <PanelSection title="Power Controls">
-      <CpuFeatureToggles />
+      {powerControlInfo.scalingDriver !== "amd-pstate-epp" && (
+        <CpuFeatureToggles />
+      )}
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />

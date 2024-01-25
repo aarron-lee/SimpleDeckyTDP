@@ -1,4 +1,4 @@
-import { SliderField, NotchLabel } from "decky-frontend-lib";
+import { SliderField, NotchLabel, Field } from "decky-frontend-lib";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPowerControlInfoSelector,
@@ -36,7 +36,7 @@ const getOptions = (eppOptions: EppOption[]) => {
 const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
   powerControlInfo,
 }) => {
-  const { eppOptions, pstateStatus } = powerControlInfo;
+  const { eppOptions, pstateStatus, scalingDriver } = powerControlInfo;
   const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
   const dispatch = useDispatch();
@@ -57,11 +57,16 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
 
   let sliderValue = optionToIdx[epp || "power"];
 
-  let description;
-
-  if (powerGovernor === "performance" && pstateStatus === "active") {
-    sliderValue = optionToIdx["performance"];
-    description = "EPP cannot be changed while Governor is set to Performance";
+  if (
+    powerGovernor === "performance" &&
+    pstateStatus === "active" &&
+    scalingDriver === "amd-pstate-epp"
+  ) {
+    return (
+      <Field disabled>
+        EPP cannot be changed while Governor is set to Performance
+      </Field>
+    );
   }
 
   return (
@@ -76,8 +81,6 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
       notchTicksVisible
       showValue={false}
       bottomSeparator={"none"}
-      description={description}
-      disabled={powerGovernor === "performance"}
       onChange={handleSliderChange}
     />
   );
