@@ -3,6 +3,7 @@ import glob
 from time import sleep
 import decky_plugin
 import subprocess
+import advanced_options
 import file_timeout
 from enum import Enum
 import cpu_utils
@@ -63,6 +64,8 @@ def get_available_epp_options():
 
 def get_available_governor_options():
     try:
+        if not power_controls_enabled():
+            return
         if len(POWER_GOVERNOR_OPTION_PATHS) > 0:
             path = POWER_GOVERNOR_OPTION_PATHS[0]
             with open(path, 'r') as file:
@@ -77,6 +80,8 @@ def get_available_governor_options():
 
 def set_epp(epp_option):
     try:
+        if not power_controls_enabled():
+            return
         if epp_option not in get_available_epp_options():
             return
         if len(EPP_DEVICES) > 0:
@@ -121,4 +126,7 @@ def execute_bash_command(command, paths):
                 continue
 
 def power_controls_enabled():
-    return True
+    with file_timeout.time_limit(1):
+        return advanced_options.get_setting(
+            advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
+        )

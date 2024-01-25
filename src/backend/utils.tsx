@@ -3,6 +3,7 @@ import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
+  ENABLE_POWER_CONTROL = "enablePowercontrol",
 }
 
 export enum GpuModes {
