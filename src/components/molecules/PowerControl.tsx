@@ -12,6 +12,7 @@ import {
 import { AdvancedOptionsEnum, getPowerControlInfo } from "../../backend/utils";
 import { useEffect, useState } from "react";
 import { PowerControlInfo } from "../../utils/constants";
+import EppDropdown from "../atoms/EppDropdown";
 
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
@@ -62,8 +63,8 @@ const PowerControl = () => {
         </ErrorBoundary>
       </PanelSectionRow>
       <PanelSectionRow>
-        <ErrorBoundary title="Epp Slider">
-          <EppSlider powerControlInfo={powerControlInfo} />
+        <ErrorBoundary title="Epp Dropdown">
+          <EppDropdown powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
       </PanelSectionRow>
     </PanelSection>
