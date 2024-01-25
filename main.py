@@ -15,21 +15,36 @@ class Plugin:
   async def log_info(self, info):
     logging.info(info)
 
+  async def get_power_control_info(self):
+    response = {
+      'powerControlsEnabled': False,
+      'supportsEpp': False,
+      "eppOptions": [],
+      "powerGovernorOptions": [],
+      "scalingDriver": '',
+    }
+    try:
+      with file_timeout.time_limit(5):
+        response['scalingDriver'] = cpu_utils.get_scaling_driver()
+        response['powerControlsEnabled'] = power_utils.power_controls_enabled()
+        if response['powerControlsEnabled']:
+          supports_epp = power_utils.supports_epp()
+          if supports_epp:
+            response['supportsEpp'] = True
+            # eppOptions aren't available on performance governor
+            power_utils.set_recommended_options()
+            response['eppOptions'] = power_utils.get_available_epp_options()
+
+          response['powerGovernorOptions'] = power_utils.get_available_governor_options()
+    except Exception as e:
+      decky_plugin.logger.error(f'{__name__} get_power_control_info {e}')
+    return response
+
   async def get_settings(self):
     try:
       settings = get_saved_settings()
       try:
         with file_timeout.time_limit(5):
-          if power_utils.power_controls_enabled():
-            supports_epp = power_utils.supports_epp()
-            if supports_epp:
-              settings['supportsEpp'] = True
-              # eppOptions aren't available on performance governor
-              power_utils.set_recommended_options()
-              settings['eppOptions'] = power_utils.get_available_epp_options()
-
-            settings['powerGovernorOptions'] = power_utils.get_available_governor_options()
-
           settings['advancedOptions'] = advanced_options.get_advanced_options()
 
           gpu_min, gpu_max = get_gpu_frequency_range()

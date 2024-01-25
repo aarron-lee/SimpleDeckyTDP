@@ -1,14 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { clone, get, merge, set } from "lodash";
-import {
-  DEFAULT_POLL_RATE,
-  DEFAULT_START_TDP,
-  EppOption,
-  EppOptions,
-  PowerGovernorOption,
-  PowerGovernorOptions,
-} from "../utils/constants";
+import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
 
@@ -37,8 +30,6 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
-  powerGovernor: PowerGovernorOption;
-  epp?: EppOption;
 };
 
 export type TdpProfiles = {
@@ -63,9 +54,6 @@ export interface SettingsState extends TdpRangeState, PollState {
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
-  supportsEpp: boolean;
-  powerGovernorOptions: PowerGovernorOption[];
-  eppOptions?: EppOption[];
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -90,8 +78,6 @@ const initialState: SettingsState = {
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
-      powerGovernor: PowerGovernorOptions.POWER_SAVE,
-      epp: EppOptions.POWER_SAVE,
     },
   },
   pollEnabled: false,
@@ -99,9 +85,6 @@ const initialState: SettingsState = {
   disableBackgroundPolling: false,
   steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
-  supportsEpp: false,
-  powerGovernorOptions: [],
-  eppOptions: [],
 };
 
 export const settingsSlice = createSlice({
@@ -132,35 +115,12 @@ export const settingsSlice = createSlice({
 
       set(state, `advanced.${statePath}`, value);
     },
-    updatePowerGovernor: (state, action: PayloadAction<string>) => {
-      const powerGovernor = action.payload;
-      const { currentGameId, enableTdpProfiles } = state;
-
-      if (enableTdpProfiles) {
-        set(state.tdpProfiles, `${currentGameId}.powerGovernor`, powerGovernor);
-      } else {
-        set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
-      }
-    },
-    updateEpp: (state, action: PayloadAction<string>) => {
-      const epp = action.payload;
-      const { currentGameId, enableTdpProfiles } = state;
-
-      if (enableTdpProfiles) {
-        set(state.tdpProfiles, `${currentGameId}.epp`, epp);
-      } else {
-        set(state.tdpProfiles, `default.epp`, epp);
-      }
-    },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const {
         minGpuFrequency,
         maxGpuFrequency,
         advancedOptions,
         pluginVersionNum,
-        supportsEpp,
-        eppOptions,
-        powerGovernorOptions,
         steamPatchDefaultTdp,
       } = action.payload;
       state.initialLoad = false;
@@ -185,13 +145,6 @@ export const settingsSlice = createSlice({
         advancedOptions.forEach((option) => {
           set(state, `advanced.${option.statePath}`, option.currentValue);
         });
-      }
-      if (powerGovernorOptions) {
-        state.powerGovernorOptions = powerGovernorOptions;
-      }
-      if (supportsEpp) {
-        state.supportsEpp = supportsEpp;
-        state.eppOptions = eppOptions;
       }
       state.minGpuFrequency = minGpuFrequency;
       state.maxGpuFrequency = maxGpuFrequency;
@@ -457,21 +410,6 @@ export const getCachedSteamPatchProfile =
     return tdpProfiles[gameId];
   };
 
-export const supportsEppSelector = (state: RootState) =>
-  state.settings.supportsEpp;
-
-export const getPowerControlInfoSelector = (state: RootState) => {
-  const {
-    tdpProfile: { epp, powerGovernor },
-  } = activeTdpProfileSelector(state);
-  const {
-    settings: { powerGovernorOptions, eppOptions },
-  } = state;
-  const supportsEpp = supportsEppSelector(state);
-
-  return { supportsEpp, epp, powerGovernor, powerGovernorOptions, eppOptions };
-};
-
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -489,9 +427,7 @@ export const {
   setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
-  updatePowerGovernor,
   setReduxTdp,
-  updateEpp,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
