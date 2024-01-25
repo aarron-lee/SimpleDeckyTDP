@@ -91,7 +91,7 @@ def supports_epp():
     scaling_driver = cpu_utils.get_scaling_driver()
 
     if scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value:
-        # smt = false not supported
+        # smt must be true for pstate-epp
         cpu_utils.set_smt(True)
 
     sleep(0.2)

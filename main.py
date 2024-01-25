@@ -85,16 +85,6 @@ class Plugin:
         if tdp_profile:
             steam_patch.set_epp_for_tdp_profile(tdp_profile)
 
-    async def persist_smt(self, smt, gameId):
-        tdp_profiles = {
-            f'{gameId}': {
-                'smt': smt
-            }
-        }
-        merge_tdp_profiles(tdp_profiles)
-
-        return cpu_utils.set_smt(smt)
-
     async def persist_cpu_boost(self, cpuBoost, gameId):
         tdp_profiles = {
             f'{gameId}': {

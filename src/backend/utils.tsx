@@ -1,6 +1,5 @@
 import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
-import { extractCurrentGameId } from "../utils/constants";
 
 export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
@@ -21,7 +20,6 @@ export enum ServerAPIMethods {
   POLL_TDP = "poll_tdp",
   PERSIST_TDP = "persist_tdp",
   PERSIST_GPU = "persist_gpu",
-  PERSIST_SMT = "persist_smt",
   PERSIST_CPU_BOOST = "persist_cpu_boost",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
   SET_STEAM_PATCH_VALUES_FOR_GAME_ID = "set_steam_patch_values_for_game_id",
@@ -181,15 +179,6 @@ export const persistGpu = (
     serverApi.callPluginMethod(ServerAPIMethods.PERSIST_GPU, {
       minGpuFrequency,
       maxGpuFrequency,
-      gameId,
-    });
-  }
-};
-
-export const persistSmt = (smt: boolean, gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_SMT, {
-      smt,
       gameId,
     });
   }
