@@ -34,8 +34,6 @@ class Plugin:
           supports_epp = power_utils.supports_epp()
           if supports_epp:
             response['supportsEpp'] = True
-            # eppOptions aren't available on performance governor
-            power_utils.set_recommended_options()
             response['eppOptions'] = power_utils.get_available_epp_options()
 
           response['powerGovernorOptions'] = power_utils.get_available_governor_options()

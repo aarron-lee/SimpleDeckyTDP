@@ -31,11 +31,6 @@ class EppOptions(Enum):
 RECOMMENDED_EPP = EppOptions.POWER_SAVE.value
 RECOMMENDED_GOVERNOR = PowerGovernorOptions.POWER_SAVE.value
 
-def set_recommended_options():
-  set_power_governor(RECOMMENDED_GOVERNOR)
-  sleep(0.1)
-  set_epp(RECOMMENDED_EPP)
-
 def set_power_governor(governor_option):
   try:
     option = PowerGovernorOptions(governor_option).value
