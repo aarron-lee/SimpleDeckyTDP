@@ -34,7 +34,7 @@ export const EppOptions: { [optionName: string]: EppOption } = {
   POWER_SAVE: "power",
   BALANCE_POWER_SAVE: "balance_power",
   BALANCE_PERFORMANCE: "balance_performance",
-  PERFORMANCE: "performance",
+  PERFORM_ANCE: "performance",
 };
 
 export type PowerGovernorOption =
@@ -50,7 +50,7 @@ export const PowerGovernorOptions: {
 } = {
   POWER_SAVE: "powersave",
   BALANCED: "schedutil",
-  PERFORMANCE: "performance",
+  PERFORM_ANCE: "performance",
 };
 
 const addReverseMapping = (options: { [key: string]: string }) => {

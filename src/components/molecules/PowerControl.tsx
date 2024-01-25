@@ -60,13 +60,14 @@ const PowerControl = () => {
       <CpuFeatureToggles />
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
-          {/* <PowerGovernorSlider powerControlInfo={powerControlInfo} /> */}
-          <PowerGovernorDropdown powerControlInfo={powerControlInfo} />
+          <PowerGovernorSlider powerControlInfo={powerControlInfo} />
+          {/* <PowerGovernorDropdown powerControlInfo={powerControlInfo} /> */}
         </ErrorBoundary>
       </PanelSectionRow>
       <PanelSectionRow>
         <ErrorBoundary title="Epp Dropdown">
-          <EppDropdown powerControlInfo={powerControlInfo} />
+          {/* <EppDropdown powerControlInfo={powerControlInfo} /> */}
+          <EppSlider powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
       </PanelSectionRow>
     </PanelSection>
