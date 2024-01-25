@@ -102,12 +102,10 @@ def supports_epp():
 
   sleep(0.2)
 
-  if scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value:
-    current_pstate = cpu_utils.get_pstate_status()
-    available_epp_options = get_available_epp_options()
+  available_epp_options = get_available_epp_options()
 
-    if current_pstate == 'active' and scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value and len(available_epp_options) > 0:
-      return True
+  if len(available_epp_options) > 0:
+    return True
   return False
 
 def execute_bash_command(command, paths):
