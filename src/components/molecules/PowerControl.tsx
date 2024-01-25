@@ -3,10 +3,11 @@ import PowerGovernorSlider from "../atoms/PowerGovernorSlider";
 import EppSlider from "../atoms/EppSlider";
 import { CpuFeatureToggles } from "../atoms/CpuFeatureToggles";
 import ErrorBoundary from "../ErrorBoundary";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAdvancedOptionsInfoSelector,
   getPowerControlInfoSelector,
+  setScalingDriver,
 } from "../../redux-modules/settingsSlice";
 import { AdvancedOptionsEnum, getPowerControlInfo } from "../../backend/utils";
 import { useEffect, useState } from "react";
@@ -23,6 +24,7 @@ const PowerControl = () => {
   const [powerControlInfo, setPowerControlInfo] = useState<
     PowerControlInfo | undefined
   >();
+  const dispatch = useDispatch();
 
   const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
@@ -33,6 +35,7 @@ const PowerControl = () => {
         const result = results.result as PowerControlInfo;
 
         setPowerControlInfo(result);
+        dispatch(setScalingDriver(result.scalingDriver));
       }
     };
     if (powerControlsEnabled) {

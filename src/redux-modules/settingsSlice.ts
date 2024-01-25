@@ -61,6 +61,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
+  scalingDriver?: string;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -294,6 +295,9 @@ export const settingsSlice = createSlice({
       state.gameDisplayNames[id] = displayName;
       bootstrapTdpProfile(state, id);
     },
+    setScalingDriver: (state, action: PayloadAction<string>) => {
+      state.scalingDriver = action.payload;
+    },
   },
 });
 
@@ -445,6 +449,9 @@ export const getPowerControlInfoSelector = (state: RootState) => {
   return { epp, powerGovernor };
 };
 
+export const getScalingDriverSelector = (state: RootState) =>
+  state.settings.scalingDriver;
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -465,6 +472,7 @@ export const {
   updatePowerGovernor,
   setReduxTdp,
   updateEpp,
+  setScalingDriver,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

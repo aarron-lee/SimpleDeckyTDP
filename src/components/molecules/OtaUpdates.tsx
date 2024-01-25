@@ -5,7 +5,10 @@ import {
   otaUpdate,
 } from "../../backend/utils";
 import { useSelector } from "react-redux";
-import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
+import {
+  getInstalledVersionNumSelector,
+  getScalingDriverSelector,
+} from "../../redux-modules/settingsSlice";
 import {
   ButtonItem,
   Field,
@@ -16,6 +19,7 @@ import {
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
+  const scalingDriver = useSelector(getScalingDriverSelector);
 
   useEffect(() => {
     const fn = async () => {
@@ -38,7 +42,7 @@ const OtaUpdates = () => {
   }
 
   return (
-    <PanelSection title="Updates">
+    <PanelSection title="System Info">
       <PanelSectionRow>
         <Field disabled label={"Installed Version"}>
           {installedVersionNum}
@@ -49,6 +53,13 @@ const OtaUpdates = () => {
         <PanelSectionRow>
           <Field disabled label={"Latest Version"}>
             {latestVersionNum}
+          </Field>
+        </PanelSectionRow>
+      )}
+      {Boolean(scalingDriver) && (
+        <PanelSectionRow>
+          <Field disabled label={"Scaling Driver"}>
+            {scalingDriver}
           </Field>
         </PanelSectionRow>
       )}
