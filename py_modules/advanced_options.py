@@ -92,11 +92,11 @@ def get_advanced_options():
   supports_acpi_call = modprobe_acpi_call()
 
   if device_name == Devices.LEGION_GO.value and supports_acpi_call:
-    defaultValue = True
     options.append({
       'name': 'Lenovo Custom TDP Mode',
       'type': 'boolean',
-      'defaultValue': defaultValue,
+      'description': 'Does not work with custom fan curves',
+      'defaultValue': False,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
