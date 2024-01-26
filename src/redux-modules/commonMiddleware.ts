@@ -4,28 +4,28 @@ import {
   getAdvancedOptionsInfoSelector,
   setCpuBoost,
   setEnableTdpProfiles,
-  setSmt,
   updateAdvancedOption,
+  updateEpp,
   updateMaxTdp,
   updateMinTdp,
+  updatePowerGovernor,
 } from "./settingsSlice";
 import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  persistCpuBoost,
+  setEpp,
+  setPowerGovernor,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
 
-const changeCpuStateTypes = [setCpuBoost.type, setSmt.type] as string[];
-
 export const commonMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting, saveTdpProfiles } = createServerApiHelpers(
-      serverApi as ServerAPI
-    );
+    const { setSetting } = createServerApiHelpers(serverApi as ServerAPI);
 
     const result = dispatch(action);
 
@@ -52,6 +52,15 @@ export const commonMiddleware =
         fieldValue: action.payload,
       });
     }
+
+    if (action.type === updatePowerGovernor.type) {
+      setPowerGovernor(action.payload, activeGameId);
+    }
+
+    if (action.type === updateEpp.type) {
+      setEpp(action.payload, activeGameId);
+    }
+
     if (action.type === updateMaxTdp.type) {
       setSetting({
         fieldName: "maxTdp",
@@ -59,11 +68,16 @@ export const commonMiddleware =
       });
     }
 
-    if (
-      changeCpuStateTypes.includes(action.type) ||
-      action.type === updateAdvancedOption.type
-    ) {
-      saveTdpProfiles(state.settings.tdpProfiles, activeGameId, advancedState);
+    if (action.type === updateAdvancedOption.type) {
+      const { advancedState } = getAdvancedOptionsInfoSelector(state);
+      setSetting({
+        fieldName: "advanced",
+        fieldValue: advancedState,
+      });
+    }
+
+    if (action.type === setCpuBoost.type) {
+      persistCpuBoost(action.payload, activeGameId);
     }
 
     return result;

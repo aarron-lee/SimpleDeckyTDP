@@ -12,7 +12,7 @@ import {
   setGpuFrequency,
   setGpuMode,
   setPolling,
-  updateAdvancedOption,
+  setReduxTdp,
   updateInitialLoad,
   updatePollRate,
   updateTdpProfiles,
@@ -21,19 +21,19 @@ import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
+  persistTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 
 const resetTdpActionTypes = [
-  setCurrentGameInfo.type,
   setEnableTdpProfiles.type,
   updateTdpProfiles.type,
   updatePollRate.type,
+  setCurrentGameInfo.type,
   setPolling.type,
   updateInitialLoad.type,
-  updateAdvancedOption.type,
 ] as string[];
 
 let pollIntervalId: undefined | number;
@@ -45,6 +45,7 @@ const BACKGROUND_POLL_RATE = 10000;
 const resetPolling = (store: any) => {
   if (pollIntervalId) {
     clearInterval(pollIntervalId);
+    pollIntervalId = undefined;
   }
   const state = store.getState();
 
@@ -83,7 +84,12 @@ export const settingsMiddleware =
       advancedState[AdvancedOptionsEnum.STEAM_PATCH]
     );
 
-    if (!steamPatchEnabled) {
+    if (steamPatchEnabled) {
+      if (pollIntervalId) {
+        clearInterval(pollIntervalId);
+        pollIntervalId = undefined;
+      }
+    } else {
       const activeGameId = activeGameIdSelector(state);
 
       if (action.type === resumeAction.type) {
@@ -114,27 +120,8 @@ export const settingsMiddleware =
         );
       }
 
-      if (action.type === setCurrentGameInfo.type) {
-        const {
-          settings: { previousGameId },
-        } = state;
-
-        if (previousGameId !== state.currentGameId) {
-          // update TDP to new game's TDP value, if appropriate to do so
-          saveTdpProfiles(
-            state.settings.tdpProfiles,
-            activeGameId,
-            advancedState
-          );
-        }
-      }
-
-      if (action.type === updateTdpProfiles.type) {
-        saveTdpProfiles(
-          state.settings.tdpProfiles,
-          activeGameId,
-          advancedState
-        );
+      if (action.type === setReduxTdp.type) {
+        persistTdp(action.payload, activeGameId);
       }
 
       if (action.type === updatePollRate.type) {
@@ -166,9 +153,6 @@ export const settingsMiddleware =
           clearInterval(pollIntervalId);
         }
       }
-    } else {
-      // steamPatchEnabled, disable polling
-      if (pollIntervalId) clearInterval(pollIntervalId);
     }
 
     return result;

@@ -1,4 +1,4 @@
-import { setSteamPatchGPU, setSteamPatchTDP } from "../backend/utils";
+import { persistGpu, persistTdp } from "../backend/utils";
 
 import { extractCurrentGameId } from "../utils/constants";
 
@@ -12,7 +12,7 @@ export const setTdp = (updatedTdp: number) => {
     previousGameIdForTdp = id;
     previousTdp = updatedTdp;
 
-    setSteamPatchTDP(updatedTdp, id);
+    persistTdp(updatedTdp, id);
   }
 };
 
@@ -32,6 +32,6 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     previousMinGpu = updatedMinGpu;
     previousMaxGpu = updatedMaxGpu;
 
-    setSteamPatchGPU(updatedMinGpu, updatedMaxGpu, id);
+    persistGpu(updatedMinGpu, updatedMaxGpu, id);
   }
 };

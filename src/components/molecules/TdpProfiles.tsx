@@ -14,18 +14,16 @@ export function TdpProfiles() {
       : `Using - Default`;
 
   return (
-    <PanelSection title={"Per Game Profiles"}>
-      <PanelSectionRow>
-        <ToggleField
-          label="Enable per-game profiles"
-          checked={tdpProfilesEnabled}
-          onChange={(enabled: boolean) => {
-            setTdpProfilesEnabled(enabled);
-          }}
-          description={description}
-          highlightOnFocus
-        />
-      </PanelSectionRow>
-    </PanelSection>
+    <PanelSectionRow>
+      <ToggleField
+        label="Enable per-game profiles"
+        checked={tdpProfilesEnabled}
+        onChange={(enabled: boolean) => {
+          setTdpProfilesEnabled(enabled);
+        }}
+        description={tdpProfilesEnabled ? description : ""}
+        highlightOnFocus
+      />
+    </PanelSectionRow>
   );
 }

@@ -8,22 +8,20 @@ import { FC } from "react";
 export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
   const setTdp = useSetTdp();
-  const { id, tdp } = useSelector(getCurrentTdpInfoSelector);
+  const { tdp } = useSelector(getCurrentTdpInfoSelector);
 
   return (
-    <PanelSection title={"TDP"}>
-      <PanelSectionRow>
-        <SliderField
-          value={tdp}
-          label="Watts"
-          min={minTdp}
-          max={maxTdp}
-          step={1}
-          onChange={(newTdp) => setTdp(id, newTdp)}
-          notchTicksVisible
-          showValue
-        />
-      </PanelSectionRow>
-    </PanelSection>
+    <PanelSectionRow>
+      <SliderField
+        value={tdp}
+        label="TDP (Watts)"
+        min={minTdp}
+        max={maxTdp}
+        step={1}
+        onChange={(newTdp) => setTdp(newTdp)}
+        notchTicksVisible
+        showValue
+      />
+    </PanelSectionRow>
   );
 };

@@ -1,19 +1,11 @@
-import { useDispatch } from 'react-redux';
-import {
-  updateTdpProfiles,
-  TdpProfiles,
-} from '../redux-modules/settingsSlice';
+import { useDispatch } from "react-redux";
+import { setReduxTdp } from "../redux-modules/settingsSlice";
 
 export const useSetTdp = () => {
   const dispatch = useDispatch();
 
-  const dispatcher = (gameId: string, tdp: number) => {
-    const payload: TdpProfiles = {
-      [gameId]: {
-        tdp,
-      },
-    };
-    return dispatch(updateTdpProfiles(payload));
+  const dispatcher = (tdp: number) => {
+    return dispatch(setReduxTdp(tdp));
   };
 
   return dispatcher;

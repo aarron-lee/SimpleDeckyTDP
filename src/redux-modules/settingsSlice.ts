@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { clone, get, merge, set } from "lodash";
-import { DEFAULT_POLL_RATE, DEFAULT_START_TDP } from "../utils/constants";
+import {
+  DEFAULT_POLL_RATE,
+  DEFAULT_START_TDP,
+  EppOption,
+  PowerGovernorOption,
+} from "../utils/constants";
 import { RootState } from "./store";
 import { GpuModes } from "../backend/utils";
 
@@ -26,11 +31,12 @@ export interface TdpRangeState {
 export type TdpProfile = {
   tdp: number;
   cpuBoost: boolean;
-  smt: boolean;
   minGpuFrequency?: number;
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
+  powerGovernor?: PowerGovernorOption;
+  epp?: EppOption;
 };
 
 export type TdpProfiles = {
@@ -42,7 +48,6 @@ export interface PollState {
   pollRate: number;
   disableBackgroundPolling: boolean;
 }
-
 export interface SettingsState extends TdpRangeState, PollState {
   initialLoad: boolean;
   tdpProfiles: TdpProfiles;
@@ -56,6 +61,7 @@ export interface SettingsState extends TdpRangeState, PollState {
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
+  scalingDriver?: string;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -76,7 +82,6 @@ const initialState: SettingsState = {
     default: {
       tdp: DEFAULT_START_TDP,
       cpuBoost: true,
-      smt: true,
       gpuMode: GpuModes.DEFAULT,
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
@@ -94,6 +99,16 @@ export const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
+    setReduxTdp: (state, action: PayloadAction<number>) => {
+      const tdp = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.tdp`, tdp);
+      } else {
+        set(state.tdpProfiles, `default.tdp`, tdp);
+      }
+    },
     updateMinTdp: (state, action: PayloadAction<number>) => {
       state.minTdp = action.payload;
     },
@@ -107,6 +122,26 @@ export const settingsSlice = createSlice({
       const { statePath, value } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
+    },
+    updatePowerGovernor: (state, action: PayloadAction<string>) => {
+      const powerGovernor = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.powerGovernor`, powerGovernor);
+      } else {
+        set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
+      }
+    },
+    updateEpp: (state, action: PayloadAction<string>) => {
+      const epp = action.payload;
+      const { currentGameId, enableTdpProfiles } = state;
+
+      if (enableTdpProfiles) {
+        set(state.tdpProfiles, `${currentGameId}.epp`, epp);
+      } else {
+        set(state.tdpProfiles, `default.epp`, epp);
+      }
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
       const {
@@ -156,38 +191,6 @@ export const settingsSlice = createSlice({
         state.tdpProfiles.default.fixedGpuFrequency = Math.floor(
           (minGpuFrequency + maxGpuFrequency) / 2
         );
-      }
-    },
-    cacheSteamPatchTdp: (
-      state,
-      action: PayloadAction<[id: string, tdp: number]>
-    ) => {
-      const [id, tdp] = action.payload;
-
-      bootstrapTdpProfile(state, id);
-
-      state.tdpProfiles[id].tdp = tdp;
-    },
-    cacheSteamPatchGpu: (
-      state,
-      action: PayloadAction<
-        [id: string, updatedGpuMin: number, updatedGpuMax: number]
-      >
-    ) => {
-      const [id, minGpu, maxGpu] = action.payload;
-
-      bootstrapTdpProfile(state, id);
-
-      if (minGpu === 0 && maxGpu === 0) {
-        // default/auto gpuMode
-        state.tdpProfiles[id].gpuMode = GpuModes.DEFAULT;
-      } else if (minGpu === maxGpu && minGpu > 0) {
-        state.tdpProfiles[id].gpuMode = GpuModes.FIXED;
-        state.tdpProfiles[id].fixedGpuFrequency = minGpu;
-      } else {
-        state.tdpProfiles[id].gpuMode = GpuModes.RANGE;
-        state.tdpProfiles[id].minGpuFrequency = minGpu;
-        state.tdpProfiles[id].maxGpuFrequency = maxGpu;
       }
     },
     updateTdpProfiles: (state, action: PayloadAction<TdpProfiles>) => {
@@ -265,16 +268,6 @@ export const settingsSlice = createSlice({
         set(state.tdpProfiles, `default.gpuMode`, newGpuMode);
       }
     },
-    setSmt: (state, action: PayloadAction<boolean>) => {
-      const smt = action.payload;
-      const { currentGameId, enableTdpProfiles } = state;
-
-      if (enableTdpProfiles) {
-        set(state.tdpProfiles, `${currentGameId}.smt`, smt);
-      } else {
-        set(state.tdpProfiles, `default.smt`, smt);
-      }
-    },
     setDisableBackgroundPolling: (state, action: PayloadAction<boolean>) => {
       const enabled = action.payload;
       state.disableBackgroundPolling = enabled;
@@ -301,6 +294,9 @@ export const settingsSlice = createSlice({
       state.currentGameId = id;
       state.gameDisplayNames[id] = displayName;
       bootstrapTdpProfile(state, id);
+    },
+    setScalingDriver: (state, action: PayloadAction<string>) => {
+      state.scalingDriver = action.payload;
     },
   },
 });
@@ -369,12 +365,6 @@ export const getCurrentCpuBoostSelector = (state: RootState) => {
   const { tdpProfile: activeTdpProfile } = activeTdpProfileSelector(state);
 
   return Boolean(activeTdpProfile.cpuBoost);
-};
-
-export const getCurrentSmtSelector = (state: RootState) => {
-  const { tdpProfile: activeTdpProfile } = activeTdpProfileSelector(state);
-
-  return Boolean(activeTdpProfile.smt);
 };
 
 export const getCurrentTdpInfoSelector = (state: RootState) => {
@@ -451,6 +441,17 @@ export const getCachedSteamPatchProfile =
     return tdpProfiles[gameId];
   };
 
+export const getPowerControlInfoSelector = (state: RootState) => {
+  const {
+    tdpProfile: { epp, powerGovernor },
+  } = activeTdpProfileSelector(state);
+
+  return { epp, powerGovernor };
+};
+
+export const getScalingDriverSelector = (state: RootState) =>
+  state.settings.scalingDriver;
+
 // Action creators are generated for each case reducer function
 export const {
   updateMinTdp,
@@ -462,15 +463,16 @@ export const {
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setCpuBoost,
-  setSmt,
   setGpuMode,
   setGpuFrequency,
   setFixedGpuFrequency,
   setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
-  cacheSteamPatchTdp,
-  cacheSteamPatchGpu,
+  updatePowerGovernor,
+  setReduxTdp,
+  updateEpp,
+  setScalingDriver,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

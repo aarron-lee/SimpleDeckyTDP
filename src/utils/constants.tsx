@@ -14,3 +14,56 @@ export const extractCurrentGameInfo = () => {
 
   return results;
 };
+
+export type PowerControlInfo = {
+  powerControlsEnabled: boolean;
+  supportsEpp: boolean;
+  eppOptions: EppOption[];
+  powerGovernorOptions: PowerGovernorOption[];
+  scalingDriver: string;
+  pstateStatus?: string;
+};
+
+export type EppOption =
+  | "performance"
+  | "power"
+  | "balance_performance"
+  | "balance_power";
+
+export const EppOptions: { [optionName: string]: EppOption } = {
+  POWER_SAVE: "power",
+  BALANCE_POWER_SAVE: "balance_power",
+  BALANCE_PERFORMANCE: "balance_performance",
+  PERFORM_ANCE: "performance",
+};
+
+export type PowerGovernorOption =
+  | "powersave"
+  | "performance"
+  | "conservative"
+  | "ondemand"
+  | "userspace"
+  | "schedutil";
+
+export const PowerGovernorOptions: {
+  [optionName: string]: PowerGovernorOption;
+} = {
+  POWER_SAVE: "powersave",
+  BALANCED: "schedutil",
+  PERFORM_ANCE: "performance",
+};
+
+const addReverseMapping = (options: { [key: string]: string }) => {
+  Object.entries(options).forEach(
+    ([label, option]) => (options[option] = label)
+  );
+};
+
+addReverseMapping(PowerGovernorOptions);
+addReverseMapping(EppOptions);
+
+// export enum PowerGovernorOptions {
+//   POWER_SAVE = "powersave",
+//   BALANCED = "schedutil",
+//   PERFORMANCE = "performance",
+// }

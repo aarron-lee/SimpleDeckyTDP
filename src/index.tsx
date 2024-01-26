@@ -1,4 +1,9 @@
-import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
+import {
+  definePlugin,
+  PanelSection,
+  ServerAPI,
+  staticClasses,
+} from "decky-frontend-lib";
 import { FC, memo } from "react";
 import { FaShip } from "react-icons/fa";
 import TdpRange from "./components/molecules/TdpRange";
@@ -6,7 +11,11 @@ import { TdpSlider } from "./components/molecules/TdpSlider";
 import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
 import { Provider } from "react-redux";
-import { createServerApiHelpers, saveServerApi } from "./backend/utils";
+import {
+  createServerApiHelpers,
+  saveServerApi,
+  setValuesForGameId,
+} from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
   currentGameInfoListener,
@@ -27,6 +36,7 @@ import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
+import PowerControl from "./components/molecules/PowerControl";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -39,26 +49,19 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
     <>
       {!loading && (
         <>
-          {!steamPatchEnabled && (
-            <>
-              <TdpSlider />
-            </>
-          )}
-          <TdpProfiles />
-          <CpuFeatureToggles />
-          {steamPatchEnabled && (
-            <>
-              <SteamPatchDefaultTdpSlider />
-              <TdpRange />
-            </>
-          )}
-          {!steamPatchEnabled && (
-            <>
-              <Gpu />
-              <TdpRange />
-              <PollTdp />
-            </>
-          )}
+          <PanelSection>
+            <TdpProfiles />
+            {!steamPatchEnabled && (
+              <>
+                <TdpSlider />
+                <Gpu />
+              </>
+            )}
+          </PanelSection>
+          <PowerControl />
+          {steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
+          <TdpRange />
+          <PollTdp />
           <AdvancedOptions />
           <ErrorBoundary title="OTA Updates">
             <OtaUpdates />
@@ -94,6 +97,9 @@ export default definePlugin((serverApi: ServerAPI) => {
           ...results,
         })
       );
+      setTimeout(() => {
+        setValuesForGameId("default");
+      }, 0);
     }
   });
 

@@ -1,31 +1,53 @@
 import { Dispatch } from "redux";
 import {
-  cacheSteamPatchGpu,
-  cacheSteamPatchTdp,
-  getAdvancedOptionsInfoSelector,
-  setCpuBoost,
   setCurrentGameInfo,
-  setSmt,
   setSteamPatchDefaultTdp,
+  disableBackgroundPollingSelector,
+  getAdvancedOptionsInfoSelector,
+  pollEnabledSelector,
+  pollRateSelector,
+  setDisableBackgroundPolling,
+  updatePollRate,
+  setPolling,
 } from "./settingsSlice";
 import {
   AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
-  saveSteamPatchTdpProfiles,
-  setValuesForGameId,
+  setSteamPatchValuesForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
-import { resumeAction } from "./extraActions";
+import { cleanupAction, resumeAction } from "./extraActions";
 import { extractCurrentGameId } from "../utils/constants";
 
-const saveToBackendTypes = [
-  cacheSteamPatchTdp.type,
-  cacheSteamPatchGpu.type,
-  setSmt.type,
-  setCpuBoost.type,
-] as string[];
+let pollIntervalId: undefined | number;
+
+// always have a default 10 second poll rate in the background
+// some devices mess with TDP in the background, e.g. Lenovo Legion Go
+const BACKGROUND_POLL_RATE = 10000;
+
+const resetPolling = (state: any) => {
+  if (pollIntervalId) {
+    clearInterval(pollIntervalId);
+    pollIntervalId = undefined;
+  }
+  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
+  const pollOverrideEnabled = pollEnabledSelector(state);
+  const pollRateOverride = pollRateSelector(state);
+
+  const actualPollRate = pollOverrideEnabled
+    ? pollRateOverride
+    : BACKGROUND_POLL_RATE;
+
+  if (!disableBackgroundPolling) {
+    pollIntervalId = window.setInterval(() => {
+      const id = extractCurrentGameId();
+
+      setSteamPatchValuesForGameId(id);
+    }, actualPollRate);
+  }
+};
 
 export const steamPatchMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
@@ -53,19 +75,47 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === resumeAction.type) {
-        if (steamPatchEnabled) {
-          setValuesForGameId(id);
-        }
+        setSteamPatchValuesForGameId(id);
+      }
+
+      if (action.type === updatePollRate.type) {
+        // action.type == number (rate in ms)
+        setSetting({
+          fieldName: "pollRate",
+          fieldValue: action.payload,
+        });
+        resetPolling(state);
+      }
+      if (action.type === setPolling.type) {
+        // action.type = boolean
+        setSetting({
+          fieldName: "pollEnabled",
+          fieldValue: action.payload,
+        });
+        resetPolling(state);
+      }
+
+      if (action.type === setDisableBackgroundPolling.type) {
+        // update value on backend
+        setSetting({
+          fieldName: "disableBackgroundPolling",
+          fieldValue: action.payload,
+        });
+        resetPolling(state);
       }
 
       if (action.type === setCurrentGameInfo.type) {
-        if (steamPatchEnabled) {
-          setValuesForGameId(id);
-        }
+        setSteamPatchValuesForGameId(id);
       }
 
-      if (saveToBackendTypes.includes(action.type)) {
-        saveSteamPatchTdpProfiles(state.settings.tdpProfiles, advancedState);
+      if (action.type === cleanupAction.type) {
+        if (pollIntervalId) clearInterval(pollIntervalId);
+      }
+    } else {
+      // steam patch turned off
+      if (pollIntervalId) {
+        clearInterval(pollIntervalId);
+        pollIntervalId = undefined;
       }
     }
 
