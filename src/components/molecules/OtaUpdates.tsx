@@ -5,21 +5,19 @@ import {
   otaUpdate,
 } from "../../backend/utils";
 import { useSelector } from "react-redux";
-import {
-  getInstalledVersionNumSelector,
-  getScalingDriverSelector,
-} from "../../redux-modules/settingsSlice";
+import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
 import {
   ButtonItem,
   Field,
   PanelSection,
   PanelSectionRow,
 } from "decky-frontend-lib";
+import { selectScalingDriver } from "../../redux-modules/uiSlice";
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
-  const scalingDriver = useSelector(getScalingDriverSelector);
+  const scalingDriver = useSelector(selectScalingDriver);
 
   useEffect(() => {
     const fn = async () => {

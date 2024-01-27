@@ -7,13 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAdvancedOptionsInfoSelector,
   getPowerControlInfoSelector,
-  setScalingDriver,
 } from "../../redux-modules/settingsSlice";
-import { AdvancedOptionsEnum, getPowerControlInfo } from "../../backend/utils";
-import { useEffect, useState } from "react";
-import { PowerControlInfo } from "../../utils/constants";
-import EppDropdown from "../atoms/EppDropdown";
-import PowerGovernorDropdown from "../atoms/PowerGovernorDropdown";
+import { AdvancedOptionsEnum } from "../../backend/utils";
+import { useEffect } from "react";
+import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
+import { fetchPowerControlInfo } from "../../redux-modules/thunks";
+import { AppDispatch } from "../../redux-modules/store";
+// import EppDropdown from "../atoms/EppDropdown";
+// import PowerGovernorDropdown from "../atoms/PowerGovernorDropdown";
 
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
@@ -22,29 +23,14 @@ export const usePowerControlsEnabled = () => {
 };
 
 const PowerControl = () => {
+  const powerControlInfo = useSelector(selectPowerControlInfo);
   const powerControlsEnabled = usePowerControlsEnabled();
-  const [powerControlInfo, setPowerControlInfo] = useState<
-    PowerControlInfo | undefined
-  >();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
   useEffect(() => {
-    const fn = async () => {
-      const results = await getPowerControlInfo();
-      if (results?.success) {
-        const result = results.result as PowerControlInfo;
-
-        setPowerControlInfo(result);
-        dispatch(setScalingDriver(result.scalingDriver));
-      }
-    };
-    if (powerControlsEnabled) {
-      fn();
-    } else {
-      setPowerControlInfo(undefined);
-    }
+    dispatch(fetchPowerControlInfo());
   }, [powerGovernor, epp, powerControlsEnabled]);
 
   if (!powerControlInfo) {

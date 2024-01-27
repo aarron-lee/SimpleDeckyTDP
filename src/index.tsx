@@ -37,6 +37,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerControl from "./components/molecules/PowerControl";
+import { fetchPowerControlInfo } from "./redux-modules/thunks";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -97,6 +98,8 @@ export default definePlugin((serverApi: ServerAPI) => {
           ...results,
         })
       );
+      store.dispatch(fetchPowerControlInfo());
+
       setTimeout(() => {
         setValuesForGameId("default");
       }, 0);

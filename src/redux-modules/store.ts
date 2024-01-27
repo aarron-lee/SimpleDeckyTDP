@@ -3,10 +3,12 @@ import settingsReducer from "./settingsSlice";
 import { settingsMiddleware } from "./settingsMiddleware";
 import { steamPatchMiddleware } from "./steamPatchMiddleware";
 import { commonMiddleware } from "./commonMiddleware";
+import { uiSlice } from "./uiSlice";
 // import logger from "./logger";
 
 export const store = configureStore({
   reducer: {
+    ui: uiSlice.reducer,
     settings: settingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
