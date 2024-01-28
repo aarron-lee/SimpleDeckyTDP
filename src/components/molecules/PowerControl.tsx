@@ -16,6 +16,12 @@ import { AppDispatch } from "../../redux-modules/store";
 // import EppDropdown from "../atoms/EppDropdown";
 // import PowerGovernorDropdown from "../atoms/PowerGovernorDropdown";
 
+export const useFetchPowerControlInfo = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  return () => dispatch(fetchPowerControlInfo());
+};
+
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
 
@@ -25,12 +31,12 @@ export const usePowerControlsEnabled = () => {
 const PowerControl = () => {
   const powerControlInfo = useSelector(selectPowerControlInfo);
   const powerControlsEnabled = usePowerControlsEnabled();
-  const dispatch = useDispatch<AppDispatch>();
+  const fetchPowerControlInfo = useFetchPowerControlInfo();
 
   const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
 
   useEffect(() => {
-    dispatch(fetchPowerControlInfo());
+    fetchPowerControlInfo();
   }, [powerGovernor, epp, powerControlsEnabled]);
 
   if (!powerControlInfo) {
@@ -43,9 +49,7 @@ const PowerControl = () => {
 
   return (
     <PanelSection title="Power Controls">
-      {powerControlInfo.scalingDriver !== "amd-pstate-epp" && (
-        <CpuFeatureToggles />
-      )}
+      <CpuFeatureToggles />
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />
