@@ -22,7 +22,7 @@ jobs:
           pacman -Syu git npm --noconfirm
           git config --global --add safe.directory $(realpath .)
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: build plugin
         run: |
@@ -38,7 +38,7 @@ jobs:
           tar -tzvf SimpleDeckyTDP.tar.gz
 
       - name: Publish Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SimpleDeckyTDP
           path: SimpleDeckyTDP.tar.gz
