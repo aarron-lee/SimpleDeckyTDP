@@ -28,8 +28,18 @@ class EppOptions(Enum):
   BALANCE_POWER = 'balance_power'
   POWER_SAVE = 'power'
 
-RECOMMENDED_EPP = EppOptions.POWER_SAVE.value
-RECOMMENDED_GOVERNOR = PowerGovernorOptions.POWER_SAVE.value
+RECOMMENDED_DEFAULTS = {
+  'amd-pstate-epp': {
+    'epp': EppOptions.POWER_SAVE.value,
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  },
+  'amd-pstate': {
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  },
+  'acpi-cpufreq': {
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  }
+}
 
 def set_power_governor(governor_option):
   try:

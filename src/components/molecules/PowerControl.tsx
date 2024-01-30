@@ -33,7 +33,9 @@ const PowerControl = () => {
   const powerControlsEnabled = usePowerControlsEnabled();
   const fetchPowerControlInfo = useFetchPowerControlInfo();
 
-  const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
+  const { powerGovernor, epp } = useSelector(
+    getPowerControlInfoSelector(powerControlInfo?.scalingDriver)
+  );
 
   useEffect(() => {
     fetchPowerControlInfo();

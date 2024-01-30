@@ -79,10 +79,17 @@ class Plugin:
   async def persist_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
     steam_patch.persist_gpu(minGpuFrequency, maxGpuFrequency, gameId)
 
-  async def set_power_governor(self, powerGovernor, gameId):
+  async def set_power_governor(self, powerGovernorInfo, gameId):
+    scaling_driver = powerGovernorInfo.get('scalingDriver')
+    powerGovernor = powerGovernorInfo.get('powerGovernor')
+
     tdp_profiles = {
       f'{gameId}': {
-        'powerGovernor': powerGovernor
+        'powerControls': {
+          f'{scaling_driver}': {
+            'powerGovernor': powerGovernor
+          }
+        }
       }
     }
     merge_tdp_profiles(tdp_profiles)
@@ -91,16 +98,23 @@ class Plugin:
     if tdp_profile:
       steam_patch.set_power_governor_for_tdp_profile(tdp_profile)
 
-  async def set_epp(self, epp, gameId):
+  async def set_epp(self, eppInfo, gameId):
+    scaling_driver = eppInfo.get('scalingDriver')
+    epp = eppInfo.get('epp')
+
     tdp_profiles = {
       f'{gameId}': {
-        'epp': epp
+        'powerControls': {
+          f'{scaling_driver}': {
+            'epp': epp
+          }
+        }
       }
     }
     merge_tdp_profiles(tdp_profiles)
 
     tdp_profile = get_tdp_profile(gameId)
-    if tdp_profile:
+    if tdp_profile and scaling_driver and epp:
       steam_patch.set_epp_for_tdp_profile(tdp_profile)
 
   async def persist_cpu_boost(self, cpuBoost, gameId):

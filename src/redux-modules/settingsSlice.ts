@@ -36,8 +36,12 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
-  powerGovernor?: PowerGovernorOption;
-  epp?: EppOption;
+  powerControls: {
+    [key: string]: {
+      powerGovernor?: PowerGovernorOption;
+      epp?: EppOption;
+    };
+  };
 };
 
 export type TdpProfiles = {
@@ -90,6 +94,7 @@ const initialState: SettingsState = {
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
+      powerControls: {},
     },
   },
   pollEnabled: false,
@@ -127,24 +132,46 @@ export const settingsSlice = createSlice({
 
       set(state, `advanced.${statePath}`, value);
     },
-    updatePowerGovernor: (state, action: PayloadAction<string>) => {
-      const powerGovernor = action.payload;
+    updatePowerGovernor: (
+      state,
+      action: PayloadAction<{ powerGovernor: string; scalingDriver: string }>
+    ) => {
+      const { powerGovernor, scalingDriver } = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
 
       if (enableTdpProfiles) {
-        set(state.tdpProfiles, `${currentGameId}.powerGovernor`, powerGovernor);
+        set(
+          state.tdpProfiles,
+          `${currentGameId}.powerControls.${scalingDriver}.powerGovernor`,
+          powerGovernor
+        );
       } else {
-        set(state.tdpProfiles, `default.powerGovernor`, powerGovernor);
+        set(
+          state.tdpProfiles,
+          `default.powerControls.${scalingDriver}.powerGovernor`,
+          powerGovernor
+        );
       }
     },
-    updateEpp: (state, action: PayloadAction<string>) => {
-      const epp = action.payload;
+    updateEpp: (
+      state,
+      action: PayloadAction<{ epp: string; scalingDriver: string }>
+    ) => {
+      const { epp, scalingDriver } = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
 
       if (enableTdpProfiles) {
-        set(state.tdpProfiles, `${currentGameId}.epp`, epp);
+        set(
+          state.tdpProfiles,
+          `${currentGameId}.powerControls.${scalingDriver}.epp`,
+          epp
+        );
       } else {
-        set(state.tdpProfiles, `default.epp`, epp);
+        set(
+          state.tdpProfiles,
+          `default.powerControls.${scalingDriver}.epp`,
+          epp
+        );
       }
     },
     updateInitialLoad: (state, action: PayloadAction<InitialStateType>) => {
@@ -442,13 +469,18 @@ export const getCachedSteamPatchProfile =
     return tdpProfiles[gameId];
   };
 
-export const getPowerControlInfoSelector = (state: RootState) => {
-  const {
-    tdpProfile: { epp, powerGovernor },
-  } = activeTdpProfileSelector(state);
+export const getPowerControlInfoSelector =
+  (scalingDriver?: string) => (state: RootState) => {
+    const {
+      tdpProfile: { powerControls },
+    } = activeTdpProfileSelector(state);
+    if (!scalingDriver) {
+      return {};
+    }
+    const { epp, powerGovernor } = powerControls[scalingDriver];
 
-  return { epp, powerGovernor };
-};
+    return { epp, powerGovernor };
+  };
 
 // Action creators are generated for each case reducer function
 export const {

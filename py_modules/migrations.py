@@ -11,10 +11,9 @@ def migrate_power_control():
 
     for game_id in tdp_profiles:
       profile = tdp_profiles[game_id]
-      if not profile.get('epp'):
-        profile['epp'] = power_utils.RECOMMENDED_EPP
-      if not profile.get('powerGovernor'):
-        profile['powerGovernor'] = power_utils.RECOMMENDED_GOVERNOR
+
+      if not profile.get('powerControls'):
+        profile['powerControls'] = power_utils.RECOMMENDED_DEFAULTS
     
     merge_tdp_profiles(tdp_profiles)
   except Exception as e:
