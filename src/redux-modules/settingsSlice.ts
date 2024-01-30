@@ -5,6 +5,7 @@ import {
   DEFAULT_POLL_RATE,
   DEFAULT_START_TDP,
   EppOption,
+  MIN_TDP_RANGE,
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
@@ -74,7 +75,7 @@ const initialState: SettingsState = {
   },
   advanced: {},
   advancedOptions: [],
-  minTdp: 3,
+  minTdp: MIN_TDP_RANGE,
   maxTdp: 15,
   initialLoad: true,
   enableTdpProfiles: false,

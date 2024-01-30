@@ -4,6 +4,7 @@ import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
 import { useIsSteamPatchEnabled } from "./AdvancedOptions";
+import { MIN_TDP_RANGE } from "../../utils/constants";
 
 const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
@@ -17,7 +18,7 @@ const TdpRange = () => {
     <PanelSection title={title}>
       <PanelSectionRow>
         <TdpRangeSlider
-          tdpRange={[4, 12]}
+          tdpRange={[MIN_TDP_RANGE, 12]}
           label="Minimum TDP"
           value={minTdp}
           onChange={setMinTdp}
