@@ -63,8 +63,15 @@ const addReverseMapping = (options: { [key: string]: string }) => {
 addReverseMapping(PowerGovernorOptions);
 addReverseMapping(EppOptions);
 
-// export enum PowerGovernorOptions {
-//   POWER_SAVE = "powersave",
-//   BALANCED = "schedutil",
-//   PERFORMANCE = "performance",
-// }
+export const DEFAULT_POWER_CONTROLS = {
+  "amd-pstate-epp": {
+    epp: EppOptions.POWER_SAVE,
+    powerGovernor: PowerGovernorOptions.POWER_SAVE,
+  },
+  "amd-pstate": {
+    powerGovernor: PowerGovernorOptions.POWER_SAVE,
+  },
+  "acpi-cpufreq": {
+    powerGovernor: PowerGovernorOptions.POWER_SAVE,
+  },
+};

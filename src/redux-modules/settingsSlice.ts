@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { clone, get, merge, set } from "lodash";
 import {
   DEFAULT_POLL_RATE,
+  DEFAULT_POWER_CONTROLS,
   DEFAULT_START_TDP,
   EppOption,
   MIN_TDP_RANGE,
@@ -94,7 +95,7 @@ const initialState: SettingsState = {
       minGpuFrequency: undefined,
       maxGpuFrequency: undefined,
       fixedGpuFrequency: undefined,
-      powerControls: {},
+      powerControls: DEFAULT_POWER_CONTROLS,
     },
   },
   pollEnabled: false,
