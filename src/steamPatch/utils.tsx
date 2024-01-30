@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import { persistGpu, persistTdp } from "../backend/utils";
 
 import { extractCurrentGameId } from "../utils/constants";
@@ -5,7 +6,7 @@ import { extractCurrentGameId } from "../utils/constants";
 let previousTdp: number | undefined;
 let previousGameIdForTdp: string | undefined;
 
-export const setTdp = (updatedTdp: number) => {
+const setTdpOriginal = (updatedTdp: number) => {
   const id = extractCurrentGameId();
 
   if (previousTdp !== updatedTdp || previousGameIdForTdp !== id) {
@@ -15,6 +16,8 @@ export const setTdp = (updatedTdp: number) => {
     persistTdp(updatedTdp, id);
   }
 };
+
+export const setTdp = debounce(setTdpOriginal, 100);
 
 let previousMinGpu: number | undefined;
 let previousMaxGpu: number | undefined;

@@ -41,14 +41,15 @@ def ryzenadj(tdp: int):
       results = subprocess.call(commands)
       return results
 
-    if advanced_options.get_setting(
-      advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
-    ):
+    with file_timeout.time_limit(4):
+      if advanced_options.get_setting(
+        advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
+      ):
 
-      return legion_go.ryzenadj(tdp)
-    with file_timeout.time_limit(2):
-      if advanced_options.get_device_name() == advanced_options.Devices.ROG_ALLY.value:
-          rog_ally.set_tdp_platform_profile(tdp)
+        legion_go.ryzenadj(tdp)
+      elif advanced_options.get_device_name() == advanced_options.Devices.ROG_ALLY.value:
+        rog_ally.set_tdp_platform_profile(tdp)
+
     tdp = tdp*1000
 
     if RYZENADJ_PATH:

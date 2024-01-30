@@ -13,6 +13,7 @@ def ryzenadj(tdp):
     set_tdp_value('Slow', tdp)
     set_tdp_value('Steady', tdp)
     set_tdp_value('Fast', tdp + 2)
+    time.sleep(0.3)
   except Exception as e:
     decky_plugin.logger.error(f"legion go ryzenadj error {e}")
 

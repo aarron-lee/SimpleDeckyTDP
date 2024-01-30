@@ -26,6 +26,7 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
+import { debounce } from "lodash";
 
 const resetTdpActionTypes = [
   setEnableTdpProfiles.type,
@@ -37,6 +38,8 @@ const resetTdpActionTypes = [
 ] as string[];
 
 let pollIntervalId: undefined | number;
+
+let debouncedPersistTdp = debounce(persistTdp, 100);
 
 // always have a default 10 second poll rate in the background
 // some devices mess with TDP in the background, e.g. Lenovo Legion Go
@@ -121,7 +124,7 @@ export const settingsMiddleware =
       }
 
       if (action.type === setReduxTdp.type) {
-        persistTdp(action.payload, activeGameId);
+        debouncedPersistTdp(action.payload, activeGameId);
       }
 
       if (action.type === updatePollRate.type) {
