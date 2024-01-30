@@ -49,20 +49,23 @@ export interface PollState {
   pollRate: number;
   disableBackgroundPolling: boolean;
 }
-export interface SettingsState extends TdpRangeState, PollState {
+
+interface GpuState {
+  minGpuFrequency?: number;
+  maxGpuFrequency?: number;
+}
+
+export interface SettingsState extends TdpRangeState, PollState, GpuState {
   initialLoad: boolean;
   tdpProfiles: TdpProfiles;
   previousGameId: string | undefined;
   currentGameId: string;
   gameDisplayNames: { [key: string]: string };
   enableTdpProfiles: boolean;
-  minGpuFrequency?: number;
-  maxGpuFrequency?: number;
   advancedOptions: AdvancedOption[];
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
-  scalingDriver?: string;
 }
 
 export type InitialStateType = Partial<SettingsState>;
