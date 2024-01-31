@@ -19,7 +19,6 @@ class Plugin:
   async def get_power_control_info(self):
     response = {
       'powerControlsEnabled': False,
-      'supportsEpp': False,
       "eppOptions": [],
       "powerGovernorOptions": [],
       "scalingDriver": '',
@@ -32,11 +31,7 @@ class Plugin:
         if pstate_status:
           response['pstateStatus'] = pstate_status
         if response['powerControlsEnabled']:
-          supports_epp = power_utils.supports_epp()
-          if supports_epp:
-            response['supportsEpp'] = True
-            response['eppOptions'] = power_utils.get_available_epp_options()
-
+          response['eppOptions'] = power_utils.get_available_epp_options()
           response['powerGovernorOptions'] = power_utils.get_available_governor_options()
     except Exception as e:
       decky_plugin.logger.error(f'{__name__} get_power_control_info {e}')

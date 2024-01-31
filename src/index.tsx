@@ -27,7 +27,6 @@ import {
   useIsInitiallyLoading,
 } from "./hooks/useInitialState";
 import { cleanupAction } from "./redux-modules/extraActions";
-import { CpuFeatureToggles } from "./components/atoms/CpuFeatureToggles";
 import Gpu from "./components/molecules/Gpu";
 import AdvancedOptions, {
   useIsSteamPatchEnabled,

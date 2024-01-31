@@ -99,22 +99,6 @@ def set_epp(epp_option):
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error setting epp {e}')
 
-def supports_epp():
-  # enables PSTATE if it exists
-  scaling_driver = cpu_utils.get_scaling_driver()
-
-  if scaling_driver == cpu_utils.ScalingDrivers.PSTATE_EPP.value:
-    # smt must be true for pstate-epp
-    cpu_utils.set_smt(True)
-
-  sleep(0.2)
-
-  available_epp_options = get_available_epp_options()
-
-  if len(available_epp_options) > 0:
-    return True
-  return False
-
 def execute_bash_command(command, paths):
   with file_timeout.time_limit(2):
     for p in paths:
