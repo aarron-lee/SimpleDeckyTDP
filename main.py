@@ -8,7 +8,7 @@ import power_utils
 import cpu_utils
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, per_game_profiles_enabled, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
-import steam_patch
+import plugin_utils
 import migrations
 
 class Plugin:
@@ -63,17 +63,17 @@ class Plugin:
       logging.error(f"error failed to set_setting {name}={value} {e}")
 
   async def set_values_for_game_id(self, gameId):
-    steam_patch.set_values_for_game_id(gameId)
+    plugin_utils.set_values_for_game_id(gameId)
 
   async def set_steam_patch_values_for_game_id(self, gameId):
     enabled = per_game_profiles_enabled()
-    steam_patch.set_steam_patch_values_for_game_id(gameId, enabled)
+    plugin_utils.set_steam_patch_values_for_game_id(gameId, enabled)
   
   async def persist_tdp(self, tdp, gameId):
-    steam_patch.persist_tdp(tdp, gameId)
+    plugin_utils.persist_tdp(tdp, gameId)
 
   async def persist_gpu(self, minGpuFrequency, maxGpuFrequency, gameId):
-    steam_patch.persist_gpu(minGpuFrequency, maxGpuFrequency, gameId)
+    plugin_utils.persist_gpu(minGpuFrequency, maxGpuFrequency, gameId)
 
   async def set_power_governor(self, powerGovernorInfo, gameId):
     scaling_driver = powerGovernorInfo.get('scalingDriver')
@@ -92,7 +92,7 @@ class Plugin:
 
     tdp_profile = get_tdp_profile(gameId)
     if tdp_profile:
-      steam_patch.set_power_governor_for_tdp_profile(tdp_profile)
+      plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
 
   async def set_epp(self, eppInfo, gameId):
     scaling_driver = eppInfo.get('scalingDriver')
@@ -111,7 +111,7 @@ class Plugin:
 
     tdp_profile = get_tdp_profile(gameId)
     if tdp_profile and scaling_driver and epp:
-      steam_patch.set_epp_for_tdp_profile(tdp_profile)
+      plugin_utils.set_epp_for_tdp_profile(tdp_profile)
 
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {
@@ -125,7 +125,7 @@ class Plugin:
     # tdp_profile = get_tdp_profile(gameId)
     # time.sleep(0.3)
     # # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
-    # steam_patch.set_power_governor_for_tdp_profile(tdp_profile)
+    # plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
     # return True
 
 
@@ -138,7 +138,7 @@ class Plugin:
 
     try:
       with file_timeout.time_limit(3):
-        steam_patch.set_values_for_tdp_profile(tdp_profile)
+        plugin_utils.set_values_for_tdp_profile(tdp_profile)
     except Exception as e:
       logging.error(f'main#poll_tdp file timeout {e}')
       return False
@@ -154,7 +154,7 @@ class Plugin:
 
       try:
         with file_timeout.time_limit(3):
-          steam_patch.set_values_for_tdp_profile(tdp_profile)
+          plugin_utils.set_values_for_tdp_profile(tdp_profile)
       except Exception as e:
         logging.error(f'main#save_tdp file timeout {e}')
 
