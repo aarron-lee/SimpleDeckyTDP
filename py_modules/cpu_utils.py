@@ -64,11 +64,11 @@ def set_cpu_boost(enabled = True):
   try:
     # logging.debug(f"set_cpu_boost to {enabled}")
 
-    if os.path.exists(AMD_PSTATE_PATH):
-      pstate = 'active' if enabled else 'passive'
-      with open(AMD_PSTATE_PATH, 'w') as f:
-        f.write(pstate)
-        f.close()
+    # if os.path.exists(AMD_PSTATE_PATH):
+    #   pstate = 'active' if enabled else 'passive'
+    #   with open(AMD_PSTATE_PATH, 'w') as f:
+    #     f.write(pstate)
+    #     f.close()
 
     if os.path.exists(BOOST_PATH):
       with open(BOOST_PATH, 'w') as file:

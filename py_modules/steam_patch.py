@@ -7,6 +7,8 @@ from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
+SCALING_DRIVER = get_scaling_driver()
+
 def set_values_for_game_id(game_id):
   tdp_profile = get_tdp_profile(game_id)
   if tdp_profile:
@@ -23,16 +25,15 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
-  scaling_driver = get_scaling_driver()
-  default_power_governor = power_utils.RECOMMENDED_DEFAULTS.get(scaling_driver, {}).get('powerGovernor')
-  power_controls = tdp_profile.get('powerControls', {}).get(scaling_driver, {})
+  default_power_governor = power_utils.RECOMMENDED_DEFAULTS.get(SCALING_DRIVER, {}).get('powerGovernor')
+  power_controls = tdp_profile.get('powerControls', {}).get(SCALING_DRIVER, {})
 
   governor = power_controls.get('powerGovernor', default_power_governor)
 
   if governor:
     power_utils.set_power_governor(governor)
 
-    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and scaling_driver == 'amd-pstate-epp':
+    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and SCALING_DRIVER == 'amd-pstate-epp':
       # epp is automatically changed to `performance` when governor is performance
       # this is to handle for all other governor options
       sleep(0.3)
@@ -50,7 +51,8 @@ def set_epp_for_tdp_profile(tdp_profile):
 def set_cpu_boost_for_tdp_profile(tdp_profile):
   cpu_boost = tdp_profile.get('cpuBoost', False)
 
-  set_cpu_boost(cpu_boost)
+  if SCALING_DRIVER != 'amd-pstate-epp':
+    set_cpu_boost(cpu_boost)
 
 def set_tdp_for_tdp_profile(tdp_profile):
   if tdp_profile.get('tdp'):
