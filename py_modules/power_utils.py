@@ -28,8 +28,18 @@ class EppOptions(Enum):
   BALANCE_POWER = 'balance_power'
   POWER_SAVE = 'power'
 
-RECOMMENDED_EPP = EppOptions.POWER_SAVE.value
-RECOMMENDED_GOVERNOR = PowerGovernorOptions.POWER_SAVE.value
+RECOMMENDED_DEFAULTS = {
+  'amd-pstate-epp': {
+    'epp': EppOptions.POWER_SAVE.value,
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  },
+  'amd-pstate': {
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  },
+  'acpi-cpufreq': {
+    'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
+  }
+}
 
 def set_power_governor(governor_option):
   try:
@@ -45,14 +55,15 @@ def get_available_epp_options():
   try:
     if len(EPP_OPTION_PATHS) > 0:
       path = EPP_OPTION_PATHS[0]
-      with open(path, 'r') as file:
-        available_options = file.read().strip().split(' ') or []
-        available_options.reverse()
-        if available_options and 'default' in available_options:
-          available_options.remove('default')
-        file.close()
-        # available_options.remove('default')
-        return available_options
+      if os.path.exists(path):
+        with open(path, 'r') as file:
+          available_options = file.read().strip().split(' ') or []
+          available_options.reverse()
+          if available_options and 'default' in available_options:
+            available_options.remove('default')
+          file.close()
+          # available_options.remove('default')
+          return available_options
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error getting epp options {e}')
 
@@ -64,11 +75,12 @@ def get_available_governor_options():
       return
     if len(POWER_GOVERNOR_OPTION_PATHS) > 0:
       path = POWER_GOVERNOR_OPTION_PATHS[0]
-      with open(path, 'r') as file:
-        available_options = file.read().strip().split(' ') or []
-        available_options.reverse()
-        file.close()
-        return available_options
+      if os.path.exists(path):
+        with open(path, 'r') as file:
+          available_options = file.read().strip().split(' ') or []
+          available_options.reverse()
+          file.close()
+          return available_options
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error getting power governor options {e}')
 

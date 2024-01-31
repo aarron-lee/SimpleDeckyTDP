@@ -133,19 +133,19 @@ export const getPowerControlInfo = () => {
   );
 };
 
-export const setPowerGovernor = (powerGovernor: string, gameId: string) => {
+export const setPowerGovernor = (powerGovernorInfo: any, gameId: string) => {
   if (serverApi) {
     serverApi.callPluginMethod(ServerAPIMethods.SET_POWER_GOVERNOR, {
-      powerGovernor,
+      powerGovernorInfo,
       gameId,
     });
   }
 };
 
-export const setEpp = (epp: string, gameId: string) => {
+export const setEpp = (eppInfo: any, gameId: string) => {
   if (serverApi) {
     serverApi.callPluginMethod(ServerAPIMethods.SET_EPP, {
-      epp,
+      eppInfo,
       gameId,
     });
   }

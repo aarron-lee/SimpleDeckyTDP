@@ -42,9 +42,11 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
 const PowerGovernorSlider: FC<{
   powerControlInfo: PowerControlInfo;
 }> = ({ powerControlInfo }) => {
-  const { powerGovernorOptions } = powerControlInfo;
+  const { powerGovernorOptions, scalingDriver } = powerControlInfo;
 
-  const { powerGovernor } = useSelector(getPowerControlInfoSelector);
+  const { powerGovernor } = useSelector(
+    getPowerControlInfoSelector(scalingDriver)
+  );
   const dispatch = useDispatch();
 
   const { idxToOption, optionToIdx, notchLabels } =
@@ -52,7 +54,9 @@ const PowerGovernorSlider: FC<{
 
   const handleSliderChange = (value: number) => {
     const powerGovernorOption = idxToOption[value];
-    return dispatch(updatePowerGovernor(powerGovernorOption));
+    return dispatch(
+      updatePowerGovernor({ powerGovernor: powerGovernorOption, scalingDriver })
+    );
   };
 
   const sliderValue = optionToIdx[powerGovernor || "powersave"];

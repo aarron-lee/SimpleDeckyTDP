@@ -3,7 +3,7 @@ import file_timeout
 from time import sleep
 import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
-from cpu_utils import ryzenadj, set_cpu_boost
+from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
@@ -23,19 +23,29 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
-  governor = tdp_profile.get('powerGovernor', power_utils.RECOMMENDED_GOVERNOR)
-  power_utils.set_power_governor(governor)
+  scaling_driver = get_scaling_driver()
+  default_power_governor = power_utils.RECOMMENDED_DEFAULTS.get(scaling_driver, {}).get('powerGovernor')
+  power_controls = tdp_profile.get('powerControls', {}).get(scaling_driver, {})
 
-  if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value:
-    # epp is automatically changed to `performance` when governor is performance
-    # this is to handle for all other governor options
-    sleep(0.2)
-    set_epp_for_tdp_profile(tdp_profile)
+  governor = power_controls.get('powerGovernor', default_power_governor)
+
+  if governor:
+    power_utils.set_power_governor(governor)
+
+    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and scaling_driver == 'amd-pstate-epp':
+      # epp is automatically changed to `performance` when governor is performance
+      # this is to handle for all other governor options
+      sleep(0.3)
+      set_epp_for_tdp_profile(tdp_profile)
 
 def set_epp_for_tdp_profile(tdp_profile):
-  epp = tdp_profile.get('epp', power_utils.RECOMMENDED_EPP)
+  default_epp = power_utils.RECOMMENDED_DEFAULTS.get('amd-pstate-epp').get('epp')
+  power_controls = tdp_profile.get('powerControls', {}).get('amd-pstate-epp', {})
 
-  power_utils.set_epp(epp)
+  epp = power_controls.get('epp', default_epp)
+
+  if epp:
+    power_utils.set_epp(epp)
 
 def set_cpu_boost_for_tdp_profile(tdp_profile):
   cpu_boost = tdp_profile.get('cpuBoost', False)

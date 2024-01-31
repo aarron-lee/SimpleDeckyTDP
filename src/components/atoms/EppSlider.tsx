@@ -37,7 +37,9 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
   powerControlInfo,
 }) => {
   const { eppOptions, pstateStatus, scalingDriver } = powerControlInfo;
-  const { powerGovernor, epp } = useSelector(getPowerControlInfoSelector);
+  const { powerGovernor, epp } = useSelector(
+    getPowerControlInfoSelector(scalingDriver)
+  );
 
   const dispatch = useDispatch();
 
@@ -52,7 +54,7 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
       return;
     }
     const eppOption = idxToOption[value];
-    return dispatch(updateEpp(eppOption));
+    return dispatch(updateEpp({ epp: eppOption, scalingDriver }));
   };
 
   let sliderValue = optionToIdx[epp || "power"];
