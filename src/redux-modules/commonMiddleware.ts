@@ -5,6 +5,7 @@ import {
   getSteamPatchEnabledSelector,
   setCpuBoost,
   setEnableTdpProfiles,
+  setSmt,
   updateAdvancedOption,
   updateEpp,
   updateMaxTdp,
@@ -15,6 +16,7 @@ import {
   createServerApiHelpers,
   getServerApi,
   persistCpuBoost,
+  persistSmt,
   setEpp,
   setPowerGovernor,
 } from "../backend/utils";
@@ -71,6 +73,10 @@ export const commonMiddleware =
         fieldName: "advanced",
         fieldValue: advancedState,
       });
+    }
+
+    if (action.type === setSmt.type) {
+      persistSmt(action.payload, activeGameId);
     }
 
     if (action.type === setCpuBoost.type) {
