@@ -8,7 +8,7 @@ export function CpuFeatureToggles() {
   const fetchPowerControlInfo = useFetchPowerControlInfo();
 
   useEffect(() => {
-    setTimeout(() => fetchPowerControlInfo(), 300);
+    setTimeout(() => fetchPowerControlInfo(), 700);
   }, [cpuBoost]);
 
   return (

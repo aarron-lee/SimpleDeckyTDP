@@ -35,7 +35,7 @@ def set_power_governor_for_tdp_profile(tdp_profile):
     if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and scaling_driver == 'amd-pstate-epp':
       # epp is automatically changed to `performance` when governor is performance
       # this is to handle for all other governor options
-      sleep(0.2)
+      sleep(0.3)
       set_epp_for_tdp_profile(tdp_profile)
 
 def set_epp_for_tdp_profile(tdp_profile):

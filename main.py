@@ -1,6 +1,7 @@
 import decky_plugin
 import plugin_update
 import logging
+import time
 import file_timeout
 import advanced_options
 import power_utils
@@ -125,7 +126,13 @@ class Plugin:
     }
     merge_tdp_profiles(tdp_profiles)
 
-    return cpu_utils.set_cpu_boost(cpuBoost)
+    cpu_utils.set_cpu_boost(cpuBoost)
+    tdp_profile = get_tdp_profile(gameId)
+    time.sleep(0.3)
+    # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
+    steam_patch.set_power_governor_for_tdp_profile(tdp_profile)
+    return True
+
 
   async def poll_tdp(self, currentGameId: str):
     settings = get_saved_settings()
