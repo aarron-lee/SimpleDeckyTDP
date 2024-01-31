@@ -14,8 +14,8 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - [Custom Device Settings](#custom-device-settings)
 - [Troubleshooting](#troubleshooting)
 
-![plugin image](./img/plugin_image_update.png)
-![steam patch](./img/steam-patch1.png)
+![plugin image](./img/plugin_image_updated.png)
+![steam patch](./img/steam-patch2.png)
 
 ## Compatibility
 
