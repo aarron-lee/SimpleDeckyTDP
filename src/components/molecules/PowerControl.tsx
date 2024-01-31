@@ -13,8 +13,6 @@ import { useEffect } from "react";
 import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
 import { fetchPowerControlInfo } from "../../redux-modules/thunks";
 import { AppDispatch } from "../../redux-modules/store";
-// import EppDropdown from "../atoms/EppDropdown";
-// import PowerGovernorDropdown from "../atoms/PowerGovernorDropdown";
 
 export const useFetchPowerControlInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -55,12 +53,10 @@ const PowerControl = () => {
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />
-          {/* <PowerGovernorDropdown powerControlInfo={powerControlInfo} /> */}
         </ErrorBoundary>
       </PanelSectionRow>
       <PanelSectionRow>
         <ErrorBoundary title="Epp Dropdown">
-          {/* <EppDropdown powerControlInfo={powerControlInfo} /> */}
           <EppSlider powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
       </PanelSectionRow>

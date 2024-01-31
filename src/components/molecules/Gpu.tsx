@@ -6,6 +6,7 @@ import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import { useSelector } from "react-redux";
 import { getGpuFrequencyRangeSelector } from "../../redux-modules/settingsSlice";
 import GpuFixedSlider from "../atoms/GpuFixedSlider";
+import ErrorBoundary from "../ErrorBoundary";
 
 const Gpu = () => {
   const { min, max } = useSelector(getGpuFrequencyRangeSelector);
@@ -17,7 +18,7 @@ const Gpu = () => {
 
   const { gpuMode } = useGpuMode();
   return (
-    <>
+    <ErrorBoundary title="GPU">
       <PanelSectionRow>
         <GpuModeSlider showSeparator={gpuMode == GpuModes.DEFAULT} />
       </PanelSectionRow>
@@ -32,7 +33,7 @@ const Gpu = () => {
           <GpuFixedSlider />
         </PanelSectionRow>
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 

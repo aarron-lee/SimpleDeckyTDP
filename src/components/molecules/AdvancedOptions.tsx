@@ -7,6 +7,7 @@ import {
 import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 import { AdvancedOptionsEnum } from "../../backend/utils";
+import ErrorBoundary from "../ErrorBoundary";
 
 export const useIsSteamPatchEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
@@ -26,32 +27,34 @@ const AdvancedOptions = () => {
 
   return (
     <PanelSection title="Advanced Options">
-      {advancedOptions.map((option, idx) => {
-        const { name, type, statePath, defaultValue, description } = option;
-        const value = get(advancedState, statePath, defaultValue);
+      <ErrorBoundary title="Advanced Options">
+        {advancedOptions.map((option, idx) => {
+          const { name, type, statePath, defaultValue, description } = option;
+          const value = get(advancedState, statePath, defaultValue);
 
-        if (type === "boolean") {
-          return (
-            <PanelSectionRow>
-              <ToggleField
-                key={idx}
-                label={name}
-                checked={value}
-                description={description}
-                highlightOnFocus
-                bottomSeparator="none"
-                onChange={(enabled) => {
-                  return dispatch(
-                    updateAdvancedOption({ statePath, value: enabled })
-                  );
-                }}
-              />
-            </PanelSectionRow>
-          );
-        }
+          if (type === "boolean") {
+            return (
+              <PanelSectionRow>
+                <ToggleField
+                  key={idx}
+                  label={name}
+                  checked={value}
+                  description={description}
+                  highlightOnFocus
+                  bottomSeparator="none"
+                  onChange={(enabled) => {
+                    return dispatch(
+                      updateAdvancedOption({ statePath, value: enabled })
+                    );
+                  }}
+                />
+              </PanelSectionRow>
+            );
+          }
 
-        return null;
-      })}
+          return null;
+        })}
+      </ErrorBoundary>
     </PanelSection>
   );
 };
