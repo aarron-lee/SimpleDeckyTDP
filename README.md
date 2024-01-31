@@ -1,6 +1,6 @@
 # SimpleDeckyTDP
 
-This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
+This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended for devices compatible with ryzenadj.
 
 - [Compatibility](#compatibility)
 - [Requirements](#requirements)
@@ -14,13 +14,12 @@ This is a very simple Linux TDP Decky Plugin that wraps ryzenadj
   - [Custom Device Settings](#custom-device-settings)
 - [Troubleshooting](#troubleshooting)
 
-![plugin image](./img/plugin_image.png)
-![gpu settings](./img/gpu_settings.png)
+![plugin image](./img/plugin_image_update.png)
 ![steam patch](./img/steam-patch1.png)
 
 ## Compatibility
 
-Tested on ChimeraOS Stable (44-1 and 43-1), ChimeraOS 45 unstable, NobaraOS 39, and Bazzite Deck Edition.
+Tested on ChimeraOS Stable (45), NobaraOS 39, and Bazzite Deck Edition.
 
 Other distros not tested.
 
@@ -28,7 +27,7 @@ Other distros not tested.
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
-Note that ryzenadj is NOT necessary if you plan on either using a [ryzenadj override](#custom-tdp-method) or use a [custom device setting](#custom-device-settings). There is a custom device setting available for the Legion Go.
+Note that ryzenadj is NOT necessary if you plan on using a [ryzenadj override](#custom-tdp-method).
 
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
@@ -60,13 +59,13 @@ PM Table Version: 450005
 | STAPM VALUE         |     0.062 |                    |
 ```
 
-If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel.
+If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel, or disable secure boot.
 
 # Install
 
 ### Prerequisites
 
-Decky Loader must already be installed.
+Decky Loader must already be installed. If using ryzenadj for TDP control, secure boot must be disabled.
 
 ### Quick Install / Update
 
@@ -75,7 +74,7 @@ Run the following in terminal, then reboot. Note that this works both for instal
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
-# BazziteOS installer, does extra steps so that steam-patch functionality can work
+# BazziteOS installer, does extra steps so that steam-fix functionality can work
 ujust get-simpledeckytdp
 ```
 
