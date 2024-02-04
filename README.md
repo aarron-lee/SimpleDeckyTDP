@@ -29,6 +29,8 @@ Other distros not tested.
 
 Note that ryzenadj is NOT necessary if you plan on using a [ryzenadj override](#custom-tdp-method).
 
+ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed. 
+
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
 e.g.
