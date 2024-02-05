@@ -171,3 +171,9 @@ If you see buggy behavior after upgrading to a new version of the plugin, it mig
 Try deleting the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json` file.
 
 Note that this will delete any of your saved TDP profiles, so you could optionally copy it somewhere else to keep it as a backup instead.
+
+### Steam GPU slider does not appear with the "Fix Steam Hardware Controls" enabled
+
+If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has no control over the GPU slider showing up, the plugin can only modify it.
+
+If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin.
