@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
-    "decky-frontend-lib": "^3.23.1",
+    "decky-frontend-lib": "^3.24.5",
     "lodash": "^4.17.21",
     "react-icons": "^4.4.0",
     "react-redux": "^8.1.3",
