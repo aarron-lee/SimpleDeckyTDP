@@ -10,7 +10,7 @@ fi
 DECKY_DIR="$HOME/homebrew/plugins"
 
 if [ ! -d $DECKY_DIR ]; then
-  echo "Failed to find DECKY_DIR at: "
+  echo "Failed to find DECKY_DIR at: " 
   echo $DECKY_DIR
   exit -1
 fi
