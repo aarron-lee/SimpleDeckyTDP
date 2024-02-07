@@ -23,7 +23,10 @@ let previousMinGpu: number | undefined;
 let previousMaxGpu: number | undefined;
 let previousGameIdForGpu: string | undefined;
 
-export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
+export const setGpuOriginal = (
+  updatedMinGpu: number,
+  updatedMaxGpu: number
+) => {
   const id = extractCurrentGameId();
 
   if (
@@ -38,3 +41,5 @@ export const setGpu = (updatedMinGpu: number, updatedMaxGpu: number) => {
     persistGpu(updatedMinGpu, updatedMaxGpu, id);
   }
 };
+
+export const setGpu = debounce(setGpuOriginal, 100);

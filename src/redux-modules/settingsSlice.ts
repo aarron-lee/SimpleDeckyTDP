@@ -100,7 +100,7 @@ const initialState: SettingsState = {
   },
   pollEnabled: false,
   pollRate: DEFAULT_POLL_RATE, // milliseconds
-  disableBackgroundPolling: false,
+  disableBackgroundPolling: true,
   steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
 };

@@ -51,7 +51,7 @@ export function PollTdp() {
         )}
         <PanelSectionRow>
           <ToggleField
-            label="Force Disable Background Polling"
+            label="Disable Background Polling"
             checked={disableBackgroundPolling}
             onChange={(enabled: boolean) => {
               setDisableBackgroundPolling(enabled);

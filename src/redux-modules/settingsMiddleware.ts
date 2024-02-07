@@ -41,6 +41,21 @@ let pollIntervalId: undefined | number;
 
 let debouncedPersistTdp = debounce(persistTdp, 100);
 
+let persistGpu = ({
+  saveTdpProfiles,
+  state,
+  activeGameId,
+  advancedState,
+}: any) => {
+  return saveTdpProfiles(
+    state.settings.tdpProfiles,
+    activeGameId,
+    advancedState
+  );
+};
+
+let debouncedPersistGpu = debounce(persistGpu, 100);
+
 // always have a default 10 second poll rate in the background
 // some devices mess with TDP in the background, e.g. Lenovo Legion Go
 const BACKGROUND_POLL_RATE = 10000;
@@ -116,11 +131,12 @@ export const settingsMiddleware =
         action.type === setGpuFrequency.type ||
         action.type === setFixedGpuFrequency.type
       ) {
-        saveTdpProfiles(
-          state.settings.tdpProfiles,
+        debouncedPersistGpu({
+          saveTdpProfiles,
+          state,
           activeGameId,
-          advancedState
-        );
+          advancedState,
+        });
       }
 
       if (action.type === setReduxTdp.type) {
