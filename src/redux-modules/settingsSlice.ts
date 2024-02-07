@@ -180,10 +180,10 @@ export const settingsSlice = createSlice({
         steamPatchDefaultTdp,
       } = action.payload;
       state.initialLoad = false;
-      state.minTdp = action.payload.minTdp || 3;
+      state.minTdp = action.payload.minTdp || MIN_TDP_RANGE;
       state.maxTdp = action.payload.maxTdp || 15;
       state.enableTdpProfiles = action.payload.enableTdpProfiles || false;
-      state.pollRate = action.payload.pollRate || 5000;
+      state.pollRate = action.payload.pollRate || DEFAULT_POLL_RATE;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
       }
