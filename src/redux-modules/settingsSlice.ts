@@ -449,6 +449,14 @@ export const getInstalledVersionNumSelector = (state: RootState) => {
   return pluginVersionNum;
 };
 
+export const getSteamPatchEnabledSelector = (state: RootState) => {
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+  const steamPatchEnabled = Boolean(
+    advancedState[AdvancedOptionsEnum.STEAM_PATCH]
+  );
+  return steamPatchEnabled;
+};
+
 export const getSteamPatchDefaultTdpSelector = (state: RootState) => {
   const { steamPatchDefaultTdp } = state.settings;
 

@@ -2,14 +2,11 @@ import { Dispatch } from "redux";
 import {
   setCurrentGameInfo,
   setSteamPatchDefaultTdp,
-  getAdvancedOptionsInfoSelector,
-  pollEnabledSelector,
-  pollRateSelector,
   updatePollRate,
   updateAdvancedOption,
+  getSteamPatchEnabledSelector,
 } from "./settingsSlice";
 import {
-  AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
   setSteamPatchValuesForGameId,
@@ -18,31 +15,11 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { extractCurrentGameId } from "../utils/constants";
-import { debounce } from "lodash";
-
-let pollIntervalId: undefined | number;
-
-const debouncedSetSteamPatchValuesForGameId = debounce(
-  setSteamPatchValuesForGameId,
-  1000
-);
-
-const resetPolling = (state: any) => {
-  if (pollIntervalId) {
-    clearInterval(pollIntervalId);
-    pollIntervalId = undefined;
-  }
-  const pollEnabled = pollEnabledSelector(state);
-  const pollRate = pollRateSelector(state);
-
-  if (pollEnabled) {
-    pollIntervalId = window.setInterval(() => {
-      const id = extractCurrentGameId();
-
-      debouncedSetSteamPatchValuesForGameId(id);
-    }, pollRate);
-  }
-};
+import {
+  clearIntervalOnSteamPatchChange,
+  clearPollingInterval,
+  setPolling,
+} from "./pollingMiddleware";
 
 export const steamPatchMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
@@ -54,10 +31,7 @@ export const steamPatchMiddleware =
 
     const state = store.getState();
 
-    const { advancedState } = getAdvancedOptionsInfoSelector(state);
-    const steamPatchEnabled = Boolean(
-      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-    );
+    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
     const id = extractCurrentGameId();
 
@@ -79,11 +53,11 @@ export const steamPatchMiddleware =
           fieldName: "pollRate",
           fieldValue: action.payload,
         });
-        resetPolling(state);
+        setPolling();
       }
 
       if (action.type === updateAdvancedOption.type) {
-        resetPolling(state);
+        setPolling();
       }
 
       if (action.type === setCurrentGameInfo.type) {
@@ -91,14 +65,11 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === cleanupAction.type) {
-        if (pollIntervalId) clearInterval(pollIntervalId);
+        clearPollingInterval();
       }
     } else {
       // steam patch turned off
-      if (pollIntervalId) {
-        clearInterval(pollIntervalId);
-        pollIntervalId = undefined;
-      }
+      clearIntervalOnSteamPatchChange(steamPatchEnabled);
     }
 
     return result;

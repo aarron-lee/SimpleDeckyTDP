@@ -2,17 +2,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
+  getSteamPatchEnabledSelector,
   updateAdvancedOption,
 } from "../../redux-modules/settingsSlice";
 import { get } from "lodash";
 import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
-import { AdvancedOptionsEnum } from "../../backend/utils";
 import ErrorBoundary from "../ErrorBoundary";
 
 export const useIsSteamPatchEnabled = () => {
-  const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
+  const steamPatchEnabled = useSelector(getSteamPatchEnabledSelector);
 
-  return Boolean(advancedState[AdvancedOptionsEnum.STEAM_PATCH]);
+  return steamPatchEnabled;
 };
 
 const AdvancedOptions = () => {

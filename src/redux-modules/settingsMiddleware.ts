@@ -2,8 +2,7 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   getAdvancedOptionsInfoSelector,
-  pollEnabledSelector,
-  pollRateSelector,
+  getSteamPatchEnabledSelector,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setFixedGpuFrequency,
@@ -16,16 +15,19 @@ import {
   updateTdpProfiles,
 } from "./settingsSlice";
 import {
-  AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
   persistTdp,
-  setPollTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { debounce } from "lodash";
+import {
+  clearIntervalOnSteamPatchChange,
+  clearPollingInterval,
+  setPolling,
+} from "./pollingMiddleware";
 
 const resetTdpActionTypes = [
   setEnableTdpProfiles.type,
@@ -34,11 +36,9 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
 ] as string[];
 
-let pollIntervalId: undefined | number;
+const debouncedPersistTdp = debounce(persistTdp, 10);
 
-let debouncedPersistTdp = debounce(persistTdp, 10);
-
-let persistGpu = ({
+const persistGpu = ({
   saveTdpProfiles,
   state,
   activeGameId,
@@ -51,27 +51,7 @@ let persistGpu = ({
   );
 };
 
-let debouncedPersistGpu = debounce(persistGpu, 100);
-const debouncedSetPollTdp = debounce(setPollTdp, 1000);
-
-const resetPolling = (store: any) => {
-  if (pollIntervalId) {
-    clearInterval(pollIntervalId);
-    pollIntervalId = undefined;
-  }
-  const state = store.getState();
-
-  const pollEnabled = pollEnabledSelector(state);
-  const pollRate = pollRateSelector(state);
-
-  if (pollEnabled) {
-    pollIntervalId = window.setInterval(() => {
-      const activeGameId = activeGameIdSelector(store.getState());
-
-      debouncedSetPollTdp(activeGameId);
-    }, pollRate);
-  }
-};
+const debouncedPersistGpu = debounce(persistGpu, 100);
 
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
@@ -85,15 +65,10 @@ export const settingsMiddleware =
     const state = store.getState();
 
     const { advancedState } = getAdvancedOptionsInfoSelector(state);
-    const steamPatchEnabled = Boolean(
-      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-    );
+    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
     if (steamPatchEnabled) {
-      if (pollIntervalId) {
-        clearInterval(pollIntervalId);
-        pollIntervalId = undefined;
-      }
+      clearIntervalOnSteamPatchChange(steamPatchEnabled);
     } else {
       const activeGameId = activeGameIdSelector(state);
 
@@ -125,11 +100,11 @@ export const settingsMiddleware =
           fieldName: "pollRate",
           fieldValue: action.payload,
         });
-        resetPolling(store);
+        setPolling();
       }
 
       if (action.type === updateAdvancedOption.type) {
-        resetPolling(store);
+        setPolling();
       }
 
       if (resetTdpActionTypes.includes(action.type)) {
@@ -138,13 +113,11 @@ export const settingsMiddleware =
           activeGameId,
           advancedState
         );
-        resetPolling(store);
+        setPolling();
       }
 
       if (action.type === cleanupAction.type) {
-        if (pollIntervalId) {
-          clearInterval(pollIntervalId);
-        }
+        clearPollingInterval();
       }
     }
 

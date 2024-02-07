@@ -1,10 +1,10 @@
 import { afterPatch, findModuleChild } from "decky-frontend-lib";
-import { AdvancedOptionsEnum, logInfo } from "../backend/utils";
+import { logInfo } from "../backend/utils";
 import { store } from "../redux-modules/store";
 import {
-  getAdvancedOptionsInfoSelector,
   getGpuFrequencyRangeSelector,
   getSteamPatchDefaultTdpSelector,
+  getSteamPatchEnabledSelector,
   tdpRangeSelector,
 } from "../redux-modules/settingsSlice";
 import { setTdp, setGpu } from "./utils";
@@ -172,11 +172,7 @@ export const subscribeToTdpRangeChanges = () => {
       minTdp = updatedMinTdp;
       maxTdp = updatedMaxTdp;
 
-      const { advancedState } = getAdvancedOptionsInfoSelector(state);
-
-      const steamPatchEnabled = Boolean(
-        advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-      );
+      const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
       globalSteamPatchEnabled = steamPatchEnabled;
 

@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   getAdvancedOptionsInfoSelector,
+  getSteamPatchEnabledSelector,
   setCpuBoost,
   setEnableTdpProfiles,
   updateAdvancedOption,
@@ -11,7 +12,6 @@ import {
   updatePowerGovernor,
 } from "./settingsSlice";
 import {
-  AdvancedOptionsEnum,
   createServerApiHelpers,
   getServerApi,
   persistCpuBoost,
@@ -31,10 +31,7 @@ export const commonMiddleware =
 
     const state = store.getState();
 
-    const { advancedState } = getAdvancedOptionsInfoSelector(state);
-    const steamPatchEnabled = Boolean(
-      advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-    );
+    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
     const activeGameId = steamPatchEnabled
       ? extractCurrentGameId()
