@@ -4,6 +4,7 @@ import { TdpProfiles } from "../redux-modules/settingsSlice";
 export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
+  ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
 }
 
 export enum GpuModes {
@@ -148,6 +149,13 @@ export const setEpp = (eppInfo: any, gameId: string) => {
       eppInfo,
       gameId,
     });
+  }
+};
+
+export const setPollTdp = (gameId: string) => {
+  if (serverApi) {
+    const pollTdp = createPollTdp(serverApi);
+    pollTdp(gameId);
   }
 };
 

@@ -1,18 +1,16 @@
 import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
-  disableBackgroundPollingSelector,
   getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
   setCurrentGameInfo,
-  setDisableBackgroundPolling,
   setEnableTdpProfiles,
   setFixedGpuFrequency,
   setGpuFrequency,
   setGpuMode,
-  setPolling,
   setReduxTdp,
+  updateAdvancedOption,
   updateInitialLoad,
   updatePollRate,
   updateTdpProfiles,
@@ -22,6 +20,7 @@ import {
   createServerApiHelpers,
   getServerApi,
   persistTdp,
+  setPollTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
@@ -31,15 +30,13 @@ import { debounce } from "lodash";
 const resetTdpActionTypes = [
   setEnableTdpProfiles.type,
   updateTdpProfiles.type,
-  updatePollRate.type,
   setCurrentGameInfo.type,
-  setPolling.type,
   updateInitialLoad.type,
 ] as string[];
 
 let pollIntervalId: undefined | number;
 
-let debouncedPersistTdp = debounce(persistTdp, 100);
+let debouncedPersistTdp = debounce(persistTdp, 10);
 
 let persistGpu = ({
   saveTdpProfiles,
@@ -55,10 +52,7 @@ let persistGpu = ({
 };
 
 let debouncedPersistGpu = debounce(persistGpu, 100);
-
-// always have a default 10 second poll rate in the background
-// some devices mess with TDP in the background, e.g. Lenovo Legion Go
-const BACKGROUND_POLL_RATE = 10000;
+const debouncedSetPollTdp = debounce(setPollTdp, 1000);
 
 const resetPolling = (store: any) => {
   if (pollIntervalId) {
@@ -67,22 +61,15 @@ const resetPolling = (store: any) => {
   }
   const state = store.getState();
 
-  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
-  const pollOverrideEnabled = pollEnabledSelector(state);
-  const pollRateOverride = pollRateSelector(state);
+  const pollEnabled = pollEnabledSelector(state);
+  const pollRate = pollRateSelector(state);
 
-  const actualPollRate = pollOverrideEnabled
-    ? pollRateOverride
-    : BACKGROUND_POLL_RATE;
-
-  if (!disableBackgroundPolling) {
+  if (pollEnabled) {
     pollIntervalId = window.setInterval(() => {
-      const serverApi = getServerApi();
-      const { setPollTdp } = createServerApiHelpers(serverApi as ServerAPI);
       const activeGameId = activeGameIdSelector(store.getState());
 
-      setPollTdp(activeGameId);
-    }, actualPollRate);
+      debouncedSetPollTdp(activeGameId);
+    }, pollRate);
   }
 };
 
@@ -115,17 +102,6 @@ export const settingsMiddleware =
         setPollTdp(activeGameId);
       }
 
-      if (action.type === setDisableBackgroundPolling.type) {
-        // update value on backend
-        setSetting({
-          fieldName: "disableBackgroundPolling",
-          fieldValue: action.payload,
-        });
-
-        // reset polling
-        resetPolling(store);
-      }
-
       if (
         action.type === setGpuMode.type ||
         action.type === setGpuFrequency.type ||
@@ -149,13 +125,11 @@ export const settingsMiddleware =
           fieldName: "pollRate",
           fieldValue: action.payload,
         });
+        resetPolling(store);
       }
-      if (action.type === setPolling.type) {
-        // action.type = boolean
-        setSetting({
-          fieldName: "pollEnabled",
-          fieldValue: action.payload,
-        });
+
+      if (action.type === updateAdvancedOption.type) {
+        resetPolling(store);
       }
 
       if (resetTdpActionTypes.includes(action.type)) {

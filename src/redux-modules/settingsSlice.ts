@@ -10,7 +10,7 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { GpuModes } from "../backend/utils";
+import { AdvancedOptionsEnum, GpuModes } from "../backend/utils";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -50,9 +50,7 @@ export type TdpProfiles = {
 };
 
 export interface PollState {
-  pollEnabled: boolean;
   pollRate: number;
-  disableBackgroundPolling: boolean;
 }
 
 interface GpuState {
@@ -98,9 +96,7 @@ const initialState: SettingsState = {
       powerControls: DEFAULT_POWER_CONTROLS,
     },
   },
-  pollEnabled: false,
   pollRate: DEFAULT_POLL_RATE, // milliseconds
-  disableBackgroundPolling: true,
   steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
 };
@@ -186,10 +182,7 @@ export const settingsSlice = createSlice({
       state.initialLoad = false;
       state.minTdp = action.payload.minTdp || 3;
       state.maxTdp = action.payload.maxTdp || 15;
-      state.pollEnabled = action.payload.pollEnabled || false;
       state.enableTdpProfiles = action.payload.enableTdpProfiles || false;
-      state.disableBackgroundPolling =
-        action.payload.disableBackgroundPolling || false;
       state.pollRate = action.payload.pollRate || 5000;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
@@ -300,10 +293,6 @@ export const settingsSlice = createSlice({
         set(state.tdpProfiles, `default.gpuMode`, newGpuMode);
       }
     },
-    setDisableBackgroundPolling: (state, action: PayloadAction<boolean>) => {
-      const enabled = action.payload;
-      state.disableBackgroundPolling = enabled;
-    },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
     },
@@ -313,9 +302,6 @@ export const settingsSlice = createSlice({
       if (defaultTdp < minTdp) defaultTdp = minTdp;
       if (defaultTdp > maxTdp) defaultTdp = maxTdp;
       state.steamPatchDefaultTdp = defaultTdp;
-    },
-    setPolling: (state, action: PayloadAction<boolean>) => {
-      state.pollEnabled = action.payload;
     },
     setCurrentGameInfo: (
       state,
@@ -355,9 +341,15 @@ export const defaultTdpSelector = (state: any) =>
 
 // poll rate selectors
 export const pollRateSelector = (state: any) => state.settings.pollRate;
-export const pollEnabledSelector = (state: any) => state.settings.pollEnabled;
-export const disableBackgroundPollingSelector = (state: RootState) =>
-  state.settings.disableBackgroundPolling;
+export const pollEnabledSelector = (state: any) => {
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+  const pollingEnabled = Boolean(
+    advancedState[AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING]
+  );
+
+  return pollingEnabled;
+};
 
 // enableTdpProfiles selectors
 export const tdpProfilesEnabled = (state: any) =>
@@ -490,14 +482,12 @@ export const {
   updateInitialLoad,
   updateTdpProfiles,
   updatePollRate,
-  setPolling,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setCpuBoost,
   setGpuMode,
   setGpuFrequency,
   setFixedGpuFrequency,
-  setDisableBackgroundPolling,
   updateAdvancedOption,
   setSteamPatchDefaultTdp,
   updatePowerGovernor,

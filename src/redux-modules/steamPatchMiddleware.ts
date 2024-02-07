@@ -2,13 +2,11 @@ import { Dispatch } from "redux";
 import {
   setCurrentGameInfo,
   setSteamPatchDefaultTdp,
-  disableBackgroundPollingSelector,
   getAdvancedOptionsInfoSelector,
   pollEnabledSelector,
   pollRateSelector,
-  setDisableBackgroundPolling,
   updatePollRate,
-  setPolling,
+  updateAdvancedOption,
 } from "./settingsSlice";
 import {
   AdvancedOptionsEnum,
@@ -20,32 +18,29 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { extractCurrentGameId } from "../utils/constants";
+import { debounce } from "lodash";
 
 let pollIntervalId: undefined | number;
 
-// always have a default 10 second poll rate in the background
-// some devices mess with TDP in the background, e.g. Lenovo Legion Go
-const BACKGROUND_POLL_RATE = 10000;
+const debouncedSetSteamPatchValuesForGameId = debounce(
+  setSteamPatchValuesForGameId,
+  1000
+);
 
 const resetPolling = (state: any) => {
   if (pollIntervalId) {
     clearInterval(pollIntervalId);
     pollIntervalId = undefined;
   }
-  const disableBackgroundPolling = disableBackgroundPollingSelector(state);
-  const pollOverrideEnabled = pollEnabledSelector(state);
-  const pollRateOverride = pollRateSelector(state);
+  const pollEnabled = pollEnabledSelector(state);
+  const pollRate = pollRateSelector(state);
 
-  const actualPollRate = pollOverrideEnabled
-    ? pollRateOverride
-    : BACKGROUND_POLL_RATE;
-
-  if (!disableBackgroundPolling) {
+  if (pollEnabled) {
     pollIntervalId = window.setInterval(() => {
       const id = extractCurrentGameId();
 
-      setSteamPatchValuesForGameId(id);
-    }, actualPollRate);
+      debouncedSetSteamPatchValuesForGameId(id);
+    }, pollRate);
   }
 };
 
@@ -86,21 +81,8 @@ export const steamPatchMiddleware =
         });
         resetPolling(state);
       }
-      if (action.type === setPolling.type) {
-        // action.type = boolean
-        setSetting({
-          fieldName: "pollEnabled",
-          fieldValue: action.payload,
-        });
-        resetPolling(state);
-      }
 
-      if (action.type === setDisableBackgroundPolling.type) {
-        // update value on backend
-        setSetting({
-          fieldName: "disableBackgroundPolling",
-          fieldValue: action.payload,
-        });
+      if (action.type === updateAdvancedOption.type) {
         resetPolling(state);
       }
 

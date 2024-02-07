@@ -15,6 +15,7 @@ class Devices(Enum):
 class DefaultSettings(Enum):
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
+  ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
 
 class RogAllySettings(Enum):
   USE_ASUSCTL_TDP = 'useAsusCtlTdp'
@@ -83,6 +84,17 @@ def get_default_options():
 
   options.append(enable_power_control)
 
+  enable_background_polling = {
+    'name': 'Enable Background Polling',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'Polling will set TDP every few seconds',
+    'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, False),
+    'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value
+  }
+
+  options.append(enable_background_polling)
+
   return options
 
 
@@ -100,19 +112,5 @@ def get_advanced_options():
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
-  # if device_name == Devices.ROG_ALLY.value:
-  #   defaultValue = True
-  #   if os.path.exists(PLATFORM_PROFILE_PATH):
-  #     current_val = get_nested_setting(
-  #         f'advanced.{RogAllySettings.USE_PLATFORM_PROFILE_TDP.value}'
-  #       )
-  #     options.append({
-  #       'name': 'Enable Asus Platform Profile',
-  #       'type': 'boolean',
-  #       'description': 'Sets Quiet, Balanced, or Performance based on TDP',
-  #       'defaultValue': defaultValue,
-  #       'currentValue': current_val if isinstance(current_val, bool) else defaultValue,
-  #       'statePath': RogAllySettings.USE_PLATFORM_PROFILE_TDP.value
-  #     })
 
   return options
