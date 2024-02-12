@@ -107,7 +107,7 @@ def get_advanced_options():
     options.append({
       'name': 'Lenovo Custom TDP Mode',
       'type': 'boolean',
-      'description': 'Does not work with custom fan curves',
+      'description': 'Requires Bios with TDP fixes (Bios version N3CN29WW_TDP02 or newer)',
       'defaultValue': False,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
