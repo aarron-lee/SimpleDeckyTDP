@@ -8,6 +8,12 @@ ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
 def set_asusctl_platform_profile(tdp):
+  current_value = ''
+  if os.path.exists(PLATFORM_PROFILE_PATH):
+    with open(PLATFORM_PROFILE_PATH, 'r') as file:
+      current_value = file.read()
+      file.close()
+
   if ASUSCTL_PATH:
     commands = [ASUSCTL_PATH, 'profile', '-P']
 
@@ -17,6 +23,10 @@ def set_asusctl_platform_profile(tdp):
       commands.append('Balanced')
     else:
       commands.append('Performance')
+
+    if commands[-1].lower() == current_value.strip():
+      # already set, return
+      return
 
     results = subprocess.call(commands)
 
