@@ -7,7 +7,7 @@ import decky_plugin
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
-def set_tdp_asusctl(tdp):
+def set_asusctl_platform_profile(tdp):
   if ASUSCTL_PATH:
     commands = [ASUSCTL_PATH, 'profile', '-P']
 
@@ -23,9 +23,11 @@ def set_tdp_asusctl(tdp):
     if results.stderr:
       decky_plugin.logger.error(f"{__name__} asusctl error {results.stderr}")
 
+    sleep(1.0)
+
     return results
 
-def set_tdp_platform_profile(tdp):
+def set_platform_profile(tdp):
 
   if os.path.exists(PLATFORM_PROFILE_PATH):
     with open(PLATFORM_PROFILE_PATH, 'r') as file:

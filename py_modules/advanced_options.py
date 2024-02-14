@@ -6,6 +6,7 @@ import decky_plugin
 from plugin_settings import get_nested_setting
 from enum import Enum
 
+ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
 class Devices(Enum):
@@ -18,8 +19,8 @@ class DefaultSettings(Enum):
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
 
 class RogAllySettings(Enum):
-  USE_ASUSCTL_TDP = 'useAsusCtlTdp'
-  USE_PLATFORM_PROFILE_TDP = 'platformProfileTdp'
+  USE_ASUSCTL = 'useAsusCtl'
+  USE_PLATFORM_PROFILE = 'platformProfile'
 
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -112,5 +113,23 @@ def get_advanced_options():
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
+  if device_name == Devices.ROG_ALLY.value:
+    if os.path.exists(PLATFORM_PROFILE_PATH):
+      options.append({
+        'name': 'Enable Asus Platform Profile management',
+        'type': 'boolean',
+        'defaultValue': True,
+        'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
+        'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value
+      })
+    if ASUSCTL_PATH:
+      options.append({
+        'name': 'Use asusctl for platform profile management',
+        'type': 'boolean',
+        'description': 'This is ignored if you disable platform profile management',
+        'defaultValue': True,
+        'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
+        'statePath': RogAllySettings.USE_ASUSCTL.value
+      })
 
   return options

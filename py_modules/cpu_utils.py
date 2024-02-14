@@ -7,6 +7,7 @@ import file_timeout
 import logging
 import plugin_settings
 import advanced_options
+from advanced_options import LegionGoSettings, Devices, RogAllySettings
 import glob
 from devices import legion_go, rog_ally
 
@@ -43,12 +44,15 @@ def ryzenadj(tdp: int):
 
     with file_timeout.time_limit(4):
       if advanced_options.get_setting(
-        advanced_options.LegionGoSettings.CUSTOM_TDP_MODE.value
+        LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
-
         return legion_go.ryzenadj(tdp)
-      elif advanced_options.get_device_name() == advanced_options.Devices.ROG_ALLY.value:
-        rog_ally.set_tdp_platform_profile(tdp)
+      elif advanced_options.get_device_name() == Devices.ROG_ALLY.value:
+        if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE):
+          if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL):
+            rog_ally.set_asusctl_platform_profile(tdp)
+          else:
+            rog_ally.set_platform_profile(tdp)
 
     tdp = tdp*1000
 
