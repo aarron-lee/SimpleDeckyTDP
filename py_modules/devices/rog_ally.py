@@ -63,6 +63,19 @@ def set_platform_profile(tdp):
       return result
 
 
+def ryzenadj(tdp):
+  try:
+    # fast limit
+    execute_bash_command(tdp+2, '/sys/devices/platform/asus-nb-wmi/ppt_fppt')
+
+    # slow limit
+    execute_bash_command(tdp, '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt')
+
+    # stapm limit
+    execute_bash_command(tdp, '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl')
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
+
 def execute_bash_command(command, path):
   cmd = f"echo '{command}' | tee {path}"
   result = subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
