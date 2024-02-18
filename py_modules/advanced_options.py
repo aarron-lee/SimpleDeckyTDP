@@ -76,7 +76,7 @@ def get_default_options():
   options.append(enable_steam_patch)
 
   enable_power_control = {
-    'name': 'Enable Power Controls',
+    'name': 'Enable CPU Controls',
     'type': 'boolean',
     'defaultValue': True,
     'description': 'Enables Power Governor and EPP controls',

@@ -48,7 +48,7 @@ const PowerControl = () => {
   }
 
   return (
-    <PanelSection title="Power Controls">
+    <PanelSection title="CPU Controls">
       {powerControlInfo.scalingDriver != "amd-pstate-epp" && (
         <CpuFeatureToggles />
       )}
