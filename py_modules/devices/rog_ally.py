@@ -7,6 +7,10 @@ import decky_plugin
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
+FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
+SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
+STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
+
 def set_asusctl_platform_profile(tdp):
   current_value = ''
   if os.path.exists(PLATFORM_PROFILE_PATH):
@@ -66,15 +70,20 @@ def set_platform_profile(tdp):
 def ryzenadj(tdp):
   try:
     # fast limit
-    execute_bash_command(tdp+2, '/sys/devices/platform/asus-nb-wmi/ppt_fppt')
+    execute_bash_command(tdp+2, FAST_WMI_PATH)
 
     # slow limit
-    execute_bash_command(tdp, '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt')
+    execute_bash_command(tdp, SLOW_WMI_PATH)
 
     # stapm limit
-    execute_bash_command(tdp, '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl')
+    execute_bash_command(tdp, STAPM_WMI_PATH)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
+
+def supports_wmi_tdp():
+  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exits(STAPM_WMI_PATH):
+    return True
+  return False
 
 def execute_bash_command(command, path):
   cmd = f"echo '{command}' | tee {path}"

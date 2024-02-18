@@ -21,6 +21,7 @@ class DefaultSettings(Enum):
 class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
   USE_PLATFORM_PROFILE = 'platformProfile'
+  USE_WMI = 'useWmi'
 
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -114,22 +115,44 @@ def get_advanced_options():
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
   if device_name == Devices.ROG_ALLY.value:
-    if os.path.exists(PLATFORM_PROFILE_PATH):
-      options.append({
-        'name': 'Enable Asus Platform Profile management',
-        'type': 'boolean',
-        'defaultValue': True,
-        'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
-        'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value
-      })
-    if ASUSCTL_PATH:
-      options.append({
-        'name': 'Use asusctl for platform profile management',
-        'type': 'boolean',
-        'description': 'This is ignored if you disable platform profile management',
-        'defaultValue': True,
-        'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
-        'statePath': RogAllySettings.USE_ASUSCTL.value
-      })
+    rog_ally_advanced_options(options)
+
 
   return options
+
+def rog_ally_advanced_options(options):
+  if os.path.exists(PLATFORM_PROFILE_PATH):
+    options.append({
+      'name': 'Enable Asus Platform Profile management',
+      'type': 'boolean',
+      'defaultValue': True,
+      'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
+      'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value
+    })
+  if ASUSCTL_PATH:
+    options.append({
+      'name': 'Use asusctl for platform profile management',
+      'type': 'boolean',
+      'description': 'This is ignored if you disable platform profile management',
+      'defaultValue': True,
+      'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
+      'statePath': RogAllySettings.USE_ASUSCTL.value
+    })
+  if supports_asus_wmi_tdp():
+    options.append({
+      'name': 'Use Asus WMI for TDP',
+      'type': 'boolean',
+      'description': 'Use Asus WMI calls instead of ryzenadj',
+      'defaultValue': False,
+      'currentValue': get_value(RogAllySettings.USE_WMI, False),
+      'statePath': RogAllySettings.USE_WMI.value
+    })
+
+FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
+SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
+STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
+
+def supports_asus_wmi_tdp():
+  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exits(STAPM_WMI_PATH):
+    return True
+  return False
