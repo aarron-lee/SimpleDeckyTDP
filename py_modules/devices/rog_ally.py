@@ -81,7 +81,7 @@ def ryzenadj(tdp):
     decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
 
 def supports_wmi_tdp():
-  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exits(STAPM_WMI_PATH):
+  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
     return True
   return False
 
