@@ -75,8 +75,24 @@ Run the following in terminal, then reboot. Note that this works both for instal
 
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+```
 
-# BazziteOS installer, does extra steps so that steam-fix functionality can work
+### BazziteOS installer
+
+The Bazzite installer does extra steps so that steam-fix functionality can work
+
+First install Decky Loader with: 
+
+```
+ujust setup-decky
+```
+
+Then install SimpleDeckyTDP with:
+
+```
+ujust setup-decky simpledeckytdp
+
+# old installer, if you're on an old version of BazziteOS
 ujust get-simpledeckytdp
 ```
 
