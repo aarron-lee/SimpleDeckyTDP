@@ -28,7 +28,6 @@ jobs:
         run: |
           npm i -g pnpm@8.5.1
           pnpm install --no-frozen-lockfile
-          pnpm update decky-frontend-lib --latest
           pnpm run build
           tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist py_modules bin ota_update.sh *.py *.json *.md *.js LICENSE
         continue-on-error: true
