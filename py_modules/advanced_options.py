@@ -129,24 +129,24 @@ def rog_ally_advanced_options(options):
       'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
       'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value
     })
-  if ASUSCTL_PATH:
-    options.append({
-      'name': 'Use asusctl for platform profile management',
-      'type': 'boolean',
-      'description': 'This is ignored if you disable platform profile management',
-      'defaultValue': True,
-      'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
-      'statePath': RogAllySettings.USE_ASUSCTL.value
-    })
-  if supports_asus_wmi_tdp():
-    options.append({
-      'name': 'Use Asus WMI for TDP',
-      'type': 'boolean',
-      'description': 'Use Asus WMI calls instead of ryzenadj',
-      'defaultValue': False,
-      'currentValue': get_value(RogAllySettings.USE_WMI, False),
-      'statePath': RogAllySettings.USE_WMI.value
-    })
+  # if ASUSCTL_PATH:
+  #   options.append({
+  #     'name': 'Use asusctl for platform profile management',
+  #     'type': 'boolean',
+  #     'description': 'This is ignored if you disable platform profile management',
+  #     'defaultValue': True,
+  #     'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
+  #     'statePath': RogAllySettings.USE_ASUSCTL.value
+  #   })
+  # if supports_asus_wmi_tdp():
+  #   options.append({
+  #     'name': 'Use Asus WMI for TDP',
+  #     'type': 'boolean',
+  #     'description': 'Use Asus WMI calls instead of ryzenadj',
+  #     'defaultValue': False,
+  #     'currentValue': get_value(RogAllySettings.USE_WMI, False),
+  #     'statePath': RogAllySettings.USE_WMI.value
+  #   })
 
 FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
 SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
