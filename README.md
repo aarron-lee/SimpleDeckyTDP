@@ -1,5 +1,7 @@
 # SimpleDeckyTDP
 
+[![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases) [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/latest/total)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest) [![](https://img.shields.io/github/v/release/aarron-lee/SimpleDeckyTDP)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest)
+
 This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended for devices compatible with ryzenadj.
 
 - [Compatibility](#compatibility)
@@ -29,7 +31,7 @@ Other distros not tested.
 
 Note that ryzenadj is NOT necessary if you plan on using a [ryzenadj override](#custom-tdp-method).
 
-ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed. 
+ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
@@ -81,7 +83,7 @@ curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
 The Bazzite installer does extra steps so that steam-fix functionality can work
 
-First install Decky Loader with: 
+First install Decky Loader with:
 
 ```
 ujust setup-decky
