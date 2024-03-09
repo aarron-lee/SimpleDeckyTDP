@@ -101,9 +101,9 @@ def get_default_options():
   max_tdp_on_resume = {
     'name': 'Temporarily Set Max TDP on Resume',
     'type': 'boolean',
-    'defaultValue': False,
-    'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes help clear audio glitches',
-    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, False),
+    'defaultValue': True,
+    'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes helps clear audio glitches',
+    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
     'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value
   }
 
