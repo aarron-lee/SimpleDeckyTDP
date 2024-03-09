@@ -31,7 +31,9 @@ export const suspendEventListener = () => {
   try {
     const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
       async () => {
-        store.dispatch(resumeAction());
+        setTimeout(() => {
+          store.dispatch(resumeAction());
+        }, 2000);
 
         /*
           Bug: ROG Ally doesn't register TDP changes via ryzenadj immediately.
