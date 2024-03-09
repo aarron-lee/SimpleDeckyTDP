@@ -5,6 +5,7 @@ export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
+  MAX_TDP_ON_RESUME = "maxTdpOnResume",
 }
 
 export enum GpuModes {

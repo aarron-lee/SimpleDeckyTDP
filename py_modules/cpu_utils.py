@@ -58,9 +58,10 @@ def ryzenadj(tdp: int):
         #   return rog_ally.ryzenadj(tdp)
 
     tdp = tdp*1000
+    fast_tdp = (tdp+2)*1000
 
     if RYZENADJ_PATH:
-      commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{tdp}", '--slow-limit', f"{tdp}"]
+      commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{fast_tdp}", '--slow-limit', f"{tdp}"]
 
       results = subprocess.call(commands)
       return results

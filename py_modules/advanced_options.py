@@ -17,6 +17,7 @@ class DefaultSettings(Enum):
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
+  MAX_TDP_ON_RESUME = 'maxTdpOnResume'
 
 class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
@@ -96,6 +97,17 @@ def get_default_options():
   }
 
   options.append(enable_background_polling)
+
+  max_tdp_on_resume = {
+    'name': 'Temporarily Set Max TDP on Resume',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes help clear audio glitches',
+    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, False),
+    'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value
+  }
+
+  options.append(max_tdp_on_resume)
 
   return options
 

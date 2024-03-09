@@ -3,8 +3,12 @@ import {
   // DEFAULT_START_TDP,
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
-import { setCurrentGameInfo } from "./redux-modules/settingsSlice";
+import {
+  getAdvancedOptionsInfoSelector,
+  setCurrentGameInfo,
+} from "./redux-modules/settingsSlice";
 import { resumeAction } from "./redux-modules/extraActions";
+import { AdvancedOptionsEnum, getServerApi } from "./backend/utils";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 
@@ -32,14 +36,21 @@ export const suspendEventListener = () => {
     const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
       async () => {
         setTimeout(() => {
-          store.dispatch(resumeAction());
+          const state = store.getState();
+
+          const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+          if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+            const serverApi = getServerApi();
+            if (serverApi) {
+              serverApi.callPluginMethod("set_max_tdp", {});
+            }
+          } else {
+            store.dispatch(resumeAction());
+          }
         }, 2000);
 
-        /*
-          Bug: ROG Ally doesn't register TDP changes via ryzenadj immediately.
-          Unknown if this is a ryzenadj bug, or otherwise
-          But for now send an additional resumeAction after 10s
-        */
+        // sets TDP, etc, to default expected values
         setTimeout(() => {
           store.dispatch(resumeAction());
         }, 10000);

@@ -161,6 +161,12 @@ class Plugin:
     except Exception as e:
       logging.error(e)
 
+  async def set_max_tdp(self):
+    settings = get_saved_settings()
+    max_tdp = settings.get('maxTdp')
+    if (max_tdp and max_tdp > 10):
+      cpu_utils.ryzenadj(max_tdp)
+
   async def ota_update(self):
     # trigger ota update
     try:
