@@ -195,3 +195,14 @@ Note that this will delete any of your saved TDP profiles, so you could optional
 If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has no control over the GPU slider showing up, the plugin can only modify it.
 
 If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin.
+
+### Steam TDP slider and GPU Slider not working consistently with the "Fix Steam Hardware Controls" enabled
+
+There's a few possibilities:
+
+1. The Steam Client recently updated and broke the patch functionality of the plugin.
+2. Your OS/Distro has a polkit file that is interfering with setting TDP/GPU values. This is a known issue on NobaraOS
+
+For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, and instead use the TDP + GPU sliders in the plugin
+
+For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file.
