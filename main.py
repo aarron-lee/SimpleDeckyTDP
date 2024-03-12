@@ -202,7 +202,6 @@ class Plugin:
   async def _migration(self):
     decky_plugin.logger.info("Migrating")
 
-    migrations.migrate_power_control()
     migrations.migrate_smt()
 
     # Here's a migration example for logs:
