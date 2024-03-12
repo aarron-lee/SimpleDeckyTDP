@@ -21,7 +21,7 @@ class EppOptions(Enum):
 
 RECOMMENDED_DEFAULTS = {
   'amd-pstate-epp': {
-    'epp': EppOptions.PERFORMANCE.value,
+    'epp': EppOptions.BALANCE_PERFORMANCE.value,
     'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
   },
   'amd-pstate': {
