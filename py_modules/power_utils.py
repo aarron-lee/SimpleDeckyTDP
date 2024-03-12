@@ -39,7 +39,6 @@ def set_power_governor(governor_option):
     power_governor_devices = cpu_utils.get_power_governor_paths()
 
     if len(power_governor_devices) > 0:
-      # return write_command(option, POWER_GOVERNOR_PATH)
       return write_command(option, power_governor_devices)
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error setting power governor {e}')
@@ -89,7 +88,6 @@ def set_epp(epp_option):
       return
     epp_devices = cpu_utils.get_epp_paths()
     if len(epp_devices) > 0:
-      # return write_command(epp_option, EPP_PATH)
       return write_command(epp_option, epp_devices)
 
   except Exception as e:
