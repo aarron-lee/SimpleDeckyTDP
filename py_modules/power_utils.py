@@ -1,8 +1,6 @@
 import os
-import glob
 from time import sleep
 import decky_plugin
-import subprocess
 import advanced_options
 import file_timeout
 from enum import Enum
