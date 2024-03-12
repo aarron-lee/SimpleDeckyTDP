@@ -121,7 +121,11 @@ class Plugin:
       }
       merge_tdp_profiles(tdp_profiles)
 
-      return cpu_utils.set_smt(smt)
+      tdp_profile = get_tdp_profile(gameId)
+
+      cpu_utils.set_smt(smt)
+      time.sleep(0.3)
+      plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
 
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {

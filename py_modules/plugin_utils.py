@@ -22,7 +22,7 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
   set_cpu_boost_for_tdp_profile(tdp_profile)
   set_smt_for_tdp_profile(tdp_profile)
   if set_governor:
-    sleep(0.2)
+    sleep(0.3)
     set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):

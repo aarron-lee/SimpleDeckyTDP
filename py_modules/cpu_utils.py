@@ -1,5 +1,6 @@
 from enum import Enum
 import os
+import re
 import subprocess
 import shutil
 import decky_plugin
@@ -15,9 +16,6 @@ RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
-
-SCALING_DRIVER_PATH="/sys/devices/system/cpu/cpufreq/policy*/scaling_driver"
-SCALING_DRIVER_DEVICES=glob.glob(SCALING_DRIVER_PATH)
 
 class ScalingDrivers(Enum):
   PSTATE_EPP = "amd-pstate-epp"
@@ -126,7 +124,83 @@ def set_amd_pstate_active():
       file.write('active')
       file.close()
 
+def check_cpu_online(cpu_id):
+    cpu_path = f"/sys/devices/system/cpu/cpu{cpu_id}/online"
+    if os.path.exists(cpu_path):
+        with open(cpu_path, 'r') as f:
+            status = f.read().strip()
+            return status == '1'
+    else:
+        return False
+
+def get_online_cpus():
+  online_cpus = []
+  cpu_path = '/sys/devices/system/cpu/'
+  cpu_pattern = re.compile(r'^cpu(\d+)$')
+
+  for cpu_dir in os.listdir(cpu_path):
+    match = cpu_pattern.match(cpu_dir)
+    if match:
+      cpu_id = match.group(1)
+      if check_cpu_online(cpu_id):
+        online_cpus.append(cpu_id)
+  
+  online_cpus.sort()
+
+  return online_cpus
+
+def get_epp_paths():
+  cpu_nums = get_online_cpus()
+
+  epp_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/energy_performance_preference',
+    cpu_nums
+  ))
+
+  return epp_paths
+
+def get_epp_option_paths():
+  cpu_nums = get_online_cpus()
+
+  epp_options_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/energy_performance_available_preferences',
+    cpu_nums
+  ))
+
+  return epp_options_paths
+
+def get_power_governor_paths():
+  cpu_nums = get_online_cpus()
+
+  power_governor_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/scaling_governor',
+    cpu_nums
+  ))
+
+  return power_governor_paths
+
+def get_power_governor_option_paths():
+  cpu_nums = get_online_cpus()
+
+  power_governor_option_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/scaling_available_governors',
+    cpu_nums
+  ))
+
+  return power_governor_option_paths
+
+def get_scaling_driver_devices():
+  cpu_nums = get_online_cpus()
+
+  scaling_driver_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpufreq/policy{cpu_num}/scaling_driver',
+    cpu_nums
+  ))
+
+  return scaling_driver_paths
+
 def get_scaling_driver():
+  SCALING_DRIVER_DEVICES = get_scaling_driver_devices()
   try:
     with file_timeout.time_limit(1):
       if os.path.exists(SCALING_DRIVER_DEVICES[0]):
