@@ -1,6 +1,5 @@
 import { ToggleField, PanelSectionRow } from "decky-frontend-lib";
 import { useCpuBoost } from "../../hooks/useCpuBoost";
-
 import { useEffect } from "react";
 import { useFetchPowerControlInfo } from "../molecules/PowerControl";
 
