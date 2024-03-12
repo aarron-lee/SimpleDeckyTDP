@@ -52,8 +52,8 @@ def ryzenadj(tdp: int):
         #     rog_ally.set_asusctl_platform_profile(tdp)
         #   else:
         #     rog_ally.set_platform_profile(tdp)
-        # if advanced_options.get_setting(RogAllySettings.USE_WMI):
-        #   return rog_ally.ryzenadj(tdp)
+        if advanced_options.get_setting(RogAllySettings.USE_WMI):
+          return rog_ally.ryzenadj(tdp)
 
     tdp = tdp*1000
     fast_tdp = (tdp+2)*1000

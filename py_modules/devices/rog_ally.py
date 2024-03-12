@@ -60,7 +60,7 @@ def set_platform_profile(tdp):
         # already set, return
         return
 
-      result = execute_bash_command(command, PLATFORM_PROFILE_PATH)
+      result = file_write(command, PLATFORM_PROFILE_PATH)
       if result.stderr:
         decky_plugin.logger.error(f"{__name__} platform_profile error {result.stderr}")
       sleep(1.0)
@@ -70,15 +70,12 @@ def set_platform_profile(tdp):
 def ryzenadj(tdp):
   try:
     # fast limit
-    # execute_bash_command(tdp+2, FAST_WMI_PATH)
     file_write(tdp+2, FAST_WMI_PATH)
 
     # slow limit
-    # execute_bash_command(tdp, SLOW_WMI_PATH)
     file_write(tdp, SLOW_WMI_PATH)
 
     # stapm limit
-    # execute_bash_command(tdp, STAPM_WMI_PATH)
     file_write(tdp, STAPM_WMI_PATH)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
