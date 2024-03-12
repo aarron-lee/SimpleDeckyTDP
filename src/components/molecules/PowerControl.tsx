@@ -1,4 +1,4 @@
-import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
+import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 import PowerGovernorSlider from "../atoms/PowerGovernorSlider";
 import EppSlider from "../atoms/EppSlider";
 import { CpuFeatureToggles } from "../atoms/CpuFeatureToggles";
@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
 import { fetchPowerControlInfo } from "../../redux-modules/thunks";
 import { AppDispatch } from "../../redux-modules/store";
+import { useSmt } from "../../hooks/useSmt";
 
 export const useFetchPowerControlInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +31,7 @@ const PowerControl = () => {
   const powerControlInfo = useSelector(selectPowerControlInfo);
   const powerControlsEnabled = usePowerControlsEnabled();
   const fetchPowerControlInfo = useFetchPowerControlInfo();
+  const { smt, setSmt } = useSmt();
 
   const { powerGovernor, epp } = useSelector(
     getPowerControlInfoSelector(powerControlInfo?.scalingDriver)
@@ -52,6 +54,16 @@ const PowerControl = () => {
       {powerControlInfo.scalingDriver != "amd-pstate-epp" && (
         <CpuFeatureToggles />
       )}
+      <PanelSectionRow>
+        <ToggleField
+          label="Enable SMT"
+          checked={smt}
+          onChange={(enabled: boolean) => {
+            setSmt(enabled);
+          }}
+          highlightOnFocus
+        />
+      </PanelSectionRow>
       <PanelSectionRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />

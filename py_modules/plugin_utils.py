@@ -3,7 +3,7 @@ import file_timeout
 from time import sleep
 import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
-from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver
+from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver, set_smt
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
@@ -20,8 +20,9 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
   if set_gpu:
     set_gpu_for_tdp_profile(tdp_profile)
   set_cpu_boost_for_tdp_profile(tdp_profile)
+  set_smt_for_tdp_profile(tdp_profile)
   if set_governor:
-    sleep(0.2)
+    sleep(0.3)
     set_power_governor_for_tdp_profile(tdp_profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
@@ -47,6 +48,11 @@ def set_epp_for_tdp_profile(tdp_profile):
 
   if epp:
     power_utils.set_epp(epp)
+
+def set_smt_for_tdp_profile(tdp_profile):
+    smt = tdp_profile.get('smt', False)
+
+    set_smt(smt)
 
 def set_cpu_boost_for_tdp_profile(tdp_profile):
   cpu_boost = tdp_profile.get('cpuBoost', False)

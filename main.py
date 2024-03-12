@@ -113,6 +113,20 @@ class Plugin:
     if tdp_profile and scaling_driver and epp:
       plugin_utils.set_epp_for_tdp_profile(tdp_profile)
 
+  async def persist_smt(self, smt, gameId):
+      tdp_profiles = {
+          f'{gameId}': {
+              'smt': smt
+          }
+      }
+      merge_tdp_profiles(tdp_profiles)
+
+      tdp_profile = get_tdp_profile(gameId)
+
+      cpu_utils.set_smt(smt)
+      time.sleep(0.3)
+      plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
+
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {
       f'{gameId}': {
@@ -189,6 +203,7 @@ class Plugin:
     decky_plugin.logger.info("Migrating")
 
     migrations.migrate_power_control()
+    migrations.migrate_smt()
 
     # Here's a migration example for logs:
     # - `~/.config/decky-template/template.log` will be migrated to `decky_plugin.DECKY_PLUGIN_LOG_DIR/template.log`
