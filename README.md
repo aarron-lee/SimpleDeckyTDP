@@ -15,6 +15,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - [Custom TDP Method](#custom-tdp-method)
   - [Custom Device Settings](#custom-device-settings)
 - [Troubleshooting](#troubleshooting)
+- [Attribution](#attribution)
 
 ![plugin image](./img/plugin_image_updated.png)
 ![steam patch](./img/steam-patch2.png)
@@ -206,3 +207,12 @@ There's a few possibilities:
 For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, and instead use the TDP + GPU sliders in the plugin
 
 For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file.
+
+# Attribution
+
+Thanks to the following for making this plugin possible:
+
+- [hhd-adjustor](https://github.com/hhd-dev/adjustor/)
+- [hhd-hwinfo](https://github.com/hhd-dev/hwinfo)
+- [decky loader](https://github.com/SteamDeckHomebrew/decky-loader/)
+- [ryzenadj](https://github.com/FlyGoat/RyzenAdj)
