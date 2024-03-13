@@ -343,7 +343,7 @@ export const settingsSlice = createSlice({
       if (isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]) {
         const newId = `${id}-ac-power`;
         state.currentGameId = newId;
-        state.gameDisplayNames[newId] = `${displayName} (AC Power)`;
+        state.gameDisplayNames[newId] = `(AC) ${displayName}`;
 
         bootstrapTdpProfile(state, id, newId);
       } else {
@@ -357,9 +357,7 @@ export const settingsSlice = createSlice({
 
 function bootstrapTdpProfile(state: any, id: string, acPowerId?: string) {
   if (acPowerId && !state.tdpProfiles[acPowerId]) {
-    const tdpProfile = state.tdpProfiles[id]
-      ? clone(state.tdpProfiles[id])
-      : clone(state.tdpProfiles.default);
+    const tdpProfile = getDefaultAcProfile(state, id);
     state.tdpProfiles[acPowerId] = tdpProfile;
     return;
   }
@@ -368,6 +366,19 @@ function bootstrapTdpProfile(state: any, id: string, acPowerId?: string) {
   if (!state.tdpProfiles[id]) {
     const defaultTdpProfile = clone(state.tdpProfiles.default);
     state.tdpProfiles[id] = defaultTdpProfile;
+  }
+}
+
+function getDefaultAcProfile(state: any, id: string) {
+  if (state.tdpProfiles[id]) {
+    // return already existing non-ac profile for game id
+    return clone(state.tdpProfiles[id]);
+  } else if (state.tdpProfiles[`default-ac-power`]) {
+    // return default ac-power profile
+    return clone(state.tdpProfiles[`default-ac-power`]);
+  } else {
+    // return regular default profile
+    return clone(state.tdpProfiles.default);
   }
 }
 
