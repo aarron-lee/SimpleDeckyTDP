@@ -18,6 +18,7 @@ import {
 } from "./backend/utils";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
+  acPowerEventListener,
   currentGameInfoListener,
   suspendEventListener,
 } from "./steamListeners";
@@ -109,6 +110,7 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
+  const unregisterAcPowerListener = acPowerEventListener();
 
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
@@ -118,6 +120,7 @@ export default definePlugin((serverApi: ServerAPI) => {
       if (unpatch) unpatch();
       if (onUnmount) onUnmount();
       if (unregisterSuspendListener) unregisterSuspendListener();
+      if (unregisterAcPowerListener) unregisterAcPowerListener();
       store.dispatch(cleanupAction());
     },
   };

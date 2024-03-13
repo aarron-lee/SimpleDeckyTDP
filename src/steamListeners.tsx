@@ -8,7 +8,7 @@ import {
   setCurrentGameInfo,
 } from "./redux-modules/settingsSlice";
 import { resumeAction } from "./redux-modules/extraActions";
-import { AdvancedOptionsEnum, getServerApi } from "./backend/utils";
+import { AdvancedOptionsEnum, getServerApi, logInfo } from "./backend/utils";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 
@@ -60,5 +60,27 @@ export const suspendEventListener = () => {
     return unregister;
   } catch (e) {
     console.log(e);
+  }
+};
+
+let eACState: number | undefined;
+
+export const acPowerEventListener = () => {
+  try {
+    const unregister = SteamClient.System.RegisterForBatteryStateChanges(
+      (e: any) => {
+        // eACState = 2 for AC power, 1 for Battery
+        // logInfo(e.eACState);
+        if (e.eACState !== eACState) {
+          eACState = e.eACState;
+          setTimeout(() => {
+            store.dispatch(resumeAction());
+          }, 2000);
+        }
+      }
+    );
+    return unregister;
+  } catch (e) {
+    logInfo(`error in ac power listener ${e}`);
   }
 };
