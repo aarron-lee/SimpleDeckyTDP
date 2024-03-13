@@ -5,6 +5,7 @@ import {
 import { store } from "./redux-modules/store";
 import {
   getAdvancedOptionsInfoSelector,
+  setAcPower,
   setCurrentGameInfo,
 } from "./redux-modules/settingsSlice";
 import { resumeAction } from "./redux-modules/extraActions";
@@ -73,6 +74,8 @@ export const acPowerEventListener = () => {
         // logInfo(e.eACState);
         if (e.eACState !== eACState) {
           eACState = e.eACState;
+          store.dispatch(setAcPower(e.eACState));
+
           setTimeout(() => {
             store.dispatch(resumeAction());
           }, 2000);

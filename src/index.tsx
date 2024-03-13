@@ -110,7 +110,7 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
-  const unregisterAcPowerListener = acPowerEventListener();
+  let unregisterAcPowerListener = acPowerEventListener();
 
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,

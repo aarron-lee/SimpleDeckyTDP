@@ -10,7 +10,7 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { AdvancedOptionsEnum, GpuModes } from "../backend/utils";
+import { AdvancedOptionsEnum, GpuModes, logInfo } from "../backend/utils";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -70,6 +70,7 @@ export interface SettingsState extends TdpRangeState, PollState, GpuState {
   advanced: { [optionName: string]: any };
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
+  isAcPower?: boolean;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -107,6 +108,16 @@ export const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
+    setAcPower(state, action: PayloadAction<number>) {
+      const event = action.payload;
+      if (event === 2) {
+        state.isAcPower = true;
+      }
+      if (event === 1) {
+        state.isAcPower = false;
+      }
+      // logInfo(state.isAcPower);
+    },
     setReduxTdp: (state, action: PayloadAction<number>) => {
       const tdp = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
@@ -520,6 +531,7 @@ export const {
   updatePowerGovernor,
   setReduxTdp,
   updateEpp,
+  setAcPower,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

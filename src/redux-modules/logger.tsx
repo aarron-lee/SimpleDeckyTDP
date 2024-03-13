@@ -3,7 +3,9 @@ import { getLogInfo } from "../backend/utils";
 export const logger = (store: any) => (next: any) => async (action: any) => {
   const logInfo = getLogInfo();
   await logInfo(
-    `----------------before ${action.type} ${action.payload}-------------`
+    `----------------before ${action.type} ${JSON.stringify(
+      action.payload
+    )}-------------`
   );
   await logInfo(store.getState());
   await logInfo(`-----------------------`);
@@ -11,7 +13,9 @@ export const logger = (store: any) => (next: any) => async (action: any) => {
   const result = next(action);
 
   await logInfo(
-    `----------------after ${action.type} ${action.payload}-------------`
+    `----------------after ${action.type} ${JSON.stringify(
+      action.payload
+    )}-------------`
   );
   await logInfo(store.getState());
   await logInfo(`-----------------------`);
