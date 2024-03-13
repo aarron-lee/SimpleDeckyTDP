@@ -71,12 +71,15 @@ def ryzenadj(tdp):
   try:
     # fast limit
     file_write(tdp+2, FAST_WMI_PATH)
+    sleep(0.1)
 
     # slow limit
     file_write(tdp, SLOW_WMI_PATH)
+    sleep(0.1)
 
     # stapm limit
     file_write(tdp, STAPM_WMI_PATH)
+    sleep(0.1)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
 

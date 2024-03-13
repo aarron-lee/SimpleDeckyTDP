@@ -11,9 +11,9 @@ def ryzenadj(tdp):
 
     sleep(0.3)
 
+    set_fast_tdp(tdp + 2)
     set_slow_tdp(tdp)
     set_steady_tdp(tdp)
-    set_fast_tdp(tdp + 2)
 
     sleep(0.3)
   except Exception as e:
