@@ -18,6 +18,7 @@ class DefaultSettings(Enum):
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
+  AC_POWER_PROFILES = 'acPowerProfiles'
 
 class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
@@ -108,6 +109,17 @@ def get_default_options():
   }
 
   options.append(max_tdp_on_resume)
+
+  ac_power_profiles = {
+    'name': 'Enable per-game AC profiles',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'When plugged in AC power, use a different per-game TDP profile',
+    'currentValue': get_value(DefaultSettings.AC_POWER_PROFILES, False),
+    'statePath': DefaultSettings.AC_POWER_PROFILES.value
+  }
+
+  options.append(ac_power_profiles)
 
   return options
 

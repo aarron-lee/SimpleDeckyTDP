@@ -1,12 +1,12 @@
 import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
-import { extractCurrentGameId } from "../utils/constants";
 
 export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
+  AC_POWER_PROFILES = "acPowerProfiles",
 }
 
 export enum GpuModes {
