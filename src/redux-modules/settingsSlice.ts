@@ -141,6 +141,13 @@ export const settingsSlice = createSlice({
       const { statePath, value } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
+
+      if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
+        set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
+      }
+      if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
+        set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
+      }
     },
     updatePowerGovernor: (
       state,
@@ -330,16 +337,33 @@ export const settingsSlice = createSlice({
       state,
       action: PayloadAction<{ id: string; displayName: string }>
     ) => {
+      const { isAcPower, advanced } = state;
       const { id, displayName } = action.payload;
       state.previousGameId = state.currentGameId;
-      state.currentGameId = id;
-      state.gameDisplayNames[id] = displayName;
-      bootstrapTdpProfile(state, id);
+      if (isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]) {
+        const newId = `${id}-ac-power`;
+        state.currentGameId = newId;
+        state.gameDisplayNames[newId] = `${displayName} (AC Power)`;
+
+        bootstrapTdpProfile(state, id, newId);
+      } else {
+        state.currentGameId = id;
+        state.gameDisplayNames[id] = displayName;
+        bootstrapTdpProfile(state, id);
+      }
     },
   },
 });
 
-function bootstrapTdpProfile(state: any, id: string) {
+function bootstrapTdpProfile(state: any, id: string, acPowerId?: string) {
+  if (acPowerId && !state.tdpProfiles[acPowerId]) {
+    const tdpProfile = state.tdpProfiles[id]
+      ? clone(state.tdpProfiles[id])
+      : clone(state.tdpProfiles.default);
+    state.tdpProfiles[acPowerId] = tdpProfile;
+    return;
+  }
+
   // bootstrap initial TDP profile if it doesn't exist
   if (!state.tdpProfiles[id]) {
     const defaultTdpProfile = clone(state.tdpProfiles.default);
@@ -511,6 +535,8 @@ export const getPowerControlInfoSelector =
 
     return { epp, powerGovernor };
   };
+
+export const acPowerSelector = (state: RootState) => state.settings.isAcPower;
 
 // Action creators are generated for each case reducer function
 export const {

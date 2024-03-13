@@ -12,6 +12,7 @@ import { resumeAction } from "./redux-modules/extraActions";
 import { AdvancedOptionsEnum, getServerApi, logInfo } from "./backend/utils";
 
 let currentGameInfoListenerIntervalId: undefined | number;
+let previousIsAcPower: boolean | undefined;
 
 export const currentGameInfoListener = () => {
   currentGameInfoListenerIntervalId = window.setInterval(() => {
@@ -19,7 +20,19 @@ export const currentGameInfoListener = () => {
 
     const { settings } = store.getState();
 
-    if (settings.currentGameId !== results.id) {
+    const { isAcPower, advanced } = settings;
+
+    const compareId =
+      isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
+        ? `${results.id}-ac-power`
+        : results.id;
+
+    if (
+      settings.currentGameId !== compareId ||
+      settings.isAcPower !== previousIsAcPower
+    ) {
+      previousIsAcPower = settings.isAcPower;
+
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
     }
@@ -71,14 +84,9 @@ export const acPowerEventListener = () => {
     const unregister = SteamClient.System.RegisterForBatteryStateChanges(
       (e: any) => {
         // eACState = 2 for AC power, 1 for Battery
-        // logInfo(e.eACState);
         if (e.eACState !== eACState) {
           eACState = e.eACState;
           store.dispatch(setAcPower(e.eACState));
-
-          setTimeout(() => {
-            store.dispatch(resumeAction());
-          }, 2000);
         }
       }
     );
