@@ -26,6 +26,8 @@ Tested on ChimeraOS Stable (45), NobaraOS 39, and Bazzite Deck Edition.
 
 Other distros not tested.
 
+Currently NOT compatible with Intel or Nvidia, this plugin is currently AMD APUs only
+
 ## Requirements
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
