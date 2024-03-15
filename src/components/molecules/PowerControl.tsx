@@ -14,6 +14,7 @@ import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
 import { fetchPowerControlInfo } from "../../redux-modules/thunks";
 import { AppDispatch } from "../../redux-modules/store";
 import { useSmt } from "../../hooks/useSmt";
+import { useCpuBoost } from "../../hooks/useCpuBoost";
 
 export const useFetchPowerControlInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,6 +33,7 @@ const PowerControl = () => {
   const powerControlsEnabled = usePowerControlsEnabled();
   const fetchPowerControlInfo = useFetchPowerControlInfo();
   const { smt, setSmt } = useSmt();
+  const { cpuBoost } = useCpuBoost();
 
   const { powerGovernor, epp } = useSelector(
     getPowerControlInfoSelector(powerControlInfo?.scalingDriver)
@@ -39,7 +41,7 @@ const PowerControl = () => {
 
   useEffect(() => {
     fetchPowerControlInfo();
-  }, [powerGovernor, epp, powerControlsEnabled]);
+  }, [powerGovernor, epp, powerControlsEnabled, cpuBoost]);
 
   if (!powerControlInfo) {
     return null;
@@ -51,9 +53,7 @@ const PowerControl = () => {
 
   return (
     <PanelSection title="CPU Controls">
-      {powerControlInfo.scalingDriver != "amd-pstate-epp" && (
-        <CpuFeatureToggles />
-      )}
+      <CpuFeatureToggles />
       <PanelSectionRow>
         <ToggleField
           label="Enable SMT"
