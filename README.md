@@ -11,6 +11,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - [Quick Install / Update](#quick-install--update)
   - [Manual Install](#manual-install)
 - [Manual Build](#manual-build)
+- [Uninstall Instructions](#uninstall-instructions)
 - [Advanced Configuration](#advanced-configuration)
   - [Custom TDP Method](#custom-tdp-method)
   - [Custom Device Settings](#custom-device-settings)
@@ -141,6 +142,15 @@ Afterwards, you can place the entire `SimpleDeckyTDP` folder in the `~/homebrew/
 sudo systemctl restart plugin_loader.service
 
 sudo systemctl reboot
+```
+
+### Uninstall Instructions
+
+In Desktop mode, run the following in terminal:
+
+```bash
+sudo rm -rf $HOME/homebrew/plugins/SimpleDeckyTDP
+sudo systemctl restart plugin_loader.service
 ```
 
 ## Advanced configuration
