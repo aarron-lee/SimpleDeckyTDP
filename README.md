@@ -210,6 +210,12 @@ For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, an
 
 For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file.
 
+### Are there CPU boost controls?
+
+CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. This current does NOT support CPU boost controls.
+
+If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
+
 # Attribution
 
 Thanks to the following for making this plugin possible:
