@@ -36,7 +36,7 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
 ] as string[];
 
-const debouncedPersistTdp = debounce(persistTdp, 10);
+const debouncedPersistTdp = debounce(persistTdp, 1000);
 
 const persistGpu = ({
   saveTdpProfiles,
@@ -51,7 +51,7 @@ const persistGpu = ({
   );
 };
 
-const debouncedPersistGpu = debounce(persistGpu, 100);
+const debouncedPersistGpu = debounce(persistGpu, 1000);
 
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {

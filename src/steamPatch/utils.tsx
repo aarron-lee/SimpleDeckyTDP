@@ -17,7 +17,7 @@ const setTdpOriginal = (updatedTdp: number) => {
   }
 };
 
-export const setTdp = debounce(setTdpOriginal, 100);
+export const setTdp = debounce(setTdpOriginal, 800);
 
 let previousMinGpu: number | undefined;
 let previousMaxGpu: number | undefined;
@@ -42,4 +42,4 @@ export const setGpuOriginal = (
   }
 };
 
-export const setGpu = debounce(setGpuOriginal, 100);
+export const setGpu = debounce(setGpuOriginal, 800);
