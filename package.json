@@ -1,6 +1,6 @@
 {
   "name": "simple-decky-tdp",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Very simple RyzenAdj Decky plugin",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c --silent",

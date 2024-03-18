@@ -46,14 +46,14 @@ def set_platform_profile(tdp):
   if tdp < 13:
     command = 'quiet'
   elif tdp < 20:
-      command = 'balanced'
+    command = 'balanced'
   else:
     command = 'performance'
   try:
     with open(PLATFORM_PROFILE_PATH, 'w') as file:
-        file.write(command)
+      file.write(command)
   except Exception as e:
-      decky_plugin.logger.error(f"{__name__} platform_profile error {result.stderr}")
+    decky_plugin.logger.error(f"{__name__} platform_profile error {e}")
         
   sleep(1.0)
   return True
