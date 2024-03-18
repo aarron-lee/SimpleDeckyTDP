@@ -117,11 +117,15 @@ export default definePlugin((serverApi: ServerAPI) => {
     content: <ContentContainer serverAPI={serverApi} />,
     icon: <FaShip />,
     onDismount: () => {
-      if (unpatch) unpatch();
-      if (onUnmount) onUnmount();
-      if (unregisterSuspendListener) unregisterSuspendListener();
-      if (unregisterAcPowerListener) unregisterAcPowerListener();
-      store.dispatch(cleanupAction());
+      try {
+        store.dispatch(cleanupAction());
+        if (unpatch) unpatch();
+        if (onUnmount) onUnmount();
+        if (unregisterSuspendListener) unregisterSuspendListener();
+        if (unregisterAcPowerListener) unregisterAcPowerListener();
+      } catch (e) {
+        console.error(e);
+      }
     },
   };
 });

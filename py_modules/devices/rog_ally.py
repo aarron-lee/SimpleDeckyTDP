@@ -60,7 +60,7 @@ def set_platform_profile(tdp):
         # already set, return
         return
 
-      result = file_write(command, PLATFORM_PROFILE_PATH)
+      result = execute_bash_command(command, PLATFORM_PROFILE_PATH)
       if result.stderr:
         decky_plugin.logger.error(f"{__name__} platform_profile error {result.stderr}")
       sleep(1.0)
