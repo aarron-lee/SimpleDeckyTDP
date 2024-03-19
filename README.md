@@ -1,7 +1,5 @@
 # SimpleDeckyTDP
 
-[![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases) [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/latest/total)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest) [![](https://img.shields.io/github/v/release/aarron-lee/SimpleDeckyTDP)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest)
-
 This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended for devices compatible with ryzenadj.
 
 - [Compatibility](#compatibility)
@@ -20,6 +18,22 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 
 ![plugin image](./img/plugin_image_updated.png)
 ![steam patch](./img/steam-patch2.png)
+
+## Features
+
+- per game TDP Profiles (and optional separate AC Power Profiles)
+  - custom TDP limits
+- Power Governor and Energy Performance Preference controls
+- GPU Controls
+- SMT control
+- CPU Boost control\*
+  - note, requires a AMD scaling driver that supports CPU boost, current amd-pstate-epp doesn't support CPU Boost
+- (optional) Fix Steam Client TDP and GPU Sliders
+- set TDP on AC Power events and suspend-resume events
+- TDP Polling - useful for devices that change TDP in the background
+- Legion Go TDP via WMI calls (allows for TDP control with secure boot)
+- ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
+- etc
 
 ## Compatibility
 
@@ -234,3 +248,5 @@ Thanks to the following for making this plugin possible:
 - [hhd-hwinfo](https://github.com/hhd-dev/hwinfo)
 - [decky loader](https://github.com/SteamDeckHomebrew/decky-loader/)
 - [ryzenadj](https://github.com/FlyGoat/RyzenAdj)
+
+<!-- [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases) [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/latest/total)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest) [![](https://img.shields.io/github/v/release/aarron-lee/SimpleDeckyTDP)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest) -->
