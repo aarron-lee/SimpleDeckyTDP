@@ -27,7 +27,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - GPU Controls
 - SMT control
 - CPU Boost control\*
-  - note, requires a AMD scaling driver that supports CPU boost, current amd-pstate-epp doesn't support CPU Boost
+  - note, requires a AMD scaling driver that supports CPU boost, currently amd-pstate-epp doesn't support CPU Boost
 - (optional) Fix Steam Client TDP and GPU Sliders
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
