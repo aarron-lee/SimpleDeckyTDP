@@ -46,13 +46,13 @@ def ryzenadj(tdp: int):
       ):
         return legion_go.ryzenadj(tdp)
       elif advanced_options.get_device_name() == Devices.ROG_ALLY.value:
-        if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE):
+        if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
-        #   if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL):
+        #   if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL.value):
         #     rog_ally.set_asusctl_platform_profile(tdp)
         #   else:
         #     rog_ally.set_platform_profile(tdp)
-        if advanced_options.get_setting(RogAllySettings.USE_WMI):
+        if advanced_options.get_setting(RogAllySettings.USE_WMI.value):
           return rog_ally.ryzenadj(tdp)
 
     fast_tdp = (tdp+2)*1000
