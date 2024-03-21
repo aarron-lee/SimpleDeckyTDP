@@ -223,6 +223,12 @@ If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has 
 
 If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin.
 
+### My eGPU is being affected by TDP settings
+
+The Steam GPU slider reportedly affects eGPUs, if you are using an eGPU you should disable the `Fix Steam Hardware Controls` toggle.
+
+You will also have to manually disable the GPU control toggle and TDP toggle in the Steam QAM, since it can still affect GPU clocks even if SimpleDeckyTDP is no longer managing the Steam Sliders.
+
 ### Steam TDP slider and GPU Slider not working consistently with the "Fix Steam Hardware Controls" enabled
 
 There's a few possibilities:
