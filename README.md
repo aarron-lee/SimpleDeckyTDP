@@ -28,6 +28,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - SMT control
 - CPU Boost control\*
   - note, requires a AMD scaling driver that supports CPU boost, currently amd-pstate-epp doesn't support CPU Boost
+    - [See here](#are-there-cpu-boost-controls) for instructions on changing the scaling driver on BazziteOS
 - (optional) Fix Steam Client TDP and GPU Sliders
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
@@ -245,6 +246,18 @@ For possibility #2, you can either enable polling to workaround the polkit file,
 CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. This current does NOT support CPU boost controls.
 
 If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
+
+For to change the scaling driver for to enable CPU boost on BazziteOS, run the following in terminal + reboot:
+
+```
+rpm-ostree kargs --append-if-missing=amd_pstate=passive
+```
+
+If you wish to reverse the changes, run the following:
+
+```
+rpm-ostree kargs --delete-if-present=amd_pstate=passive
+```
 
 # Attribution
 
