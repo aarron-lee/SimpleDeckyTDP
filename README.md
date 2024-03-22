@@ -247,6 +247,8 @@ CPU Boost controls require a scaling-driver that supports CPU boost. Many distro
 
 If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
 
+CPU Boost control is particularly useful on the ROG Ally, which has a known issue with problematic CPU boost settings.
+
 For to change the scaling driver for to enable CPU boost on BazziteOS, run the following in terminal + reboot:
 
 ```
