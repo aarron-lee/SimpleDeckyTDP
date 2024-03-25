@@ -114,9 +114,6 @@ Then install SimpleDeckyTDP with:
 
 ```
 ujust setup-decky simpledeckytdp
-
-# old installer, if you're on an old version of BazziteOS
-ujust get-simpledeckytdp
 ```
 
 ### Manual Install
