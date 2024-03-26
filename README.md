@@ -92,17 +92,9 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 Decky Loader must already be installed. If using ryzenadj for TDP control, secure boot must be disabled.
 
-### Quick Install / Update
-
-Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
-
-```
-curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
-```
-
 ### BazziteOS installer
 
-The Bazzite installer does extra steps so that steam-fix functionality can work
+The Bazzite installer does extra steps so that `Fix Steam Hardware Controls` functionality can work
 
 First install Decky Loader with:
 
@@ -114,6 +106,14 @@ Then install SimpleDeckyTDP with:
 
 ```
 ujust setup-decky simpledeckytdp
+```
+
+### Quick Install / Update
+
+Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
+
+```
+curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 ```
 
 ### Manual Install
@@ -240,6 +240,8 @@ Note that this will delete any of your saved TDP profiles, so you could optional
 ### Steam GPU slider does not appear with the "Fix Steam Hardware Controls" enabled
 
 If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has no control over the GPU slider showing up, the plugin can only modify it.
+
+If you are seeing this issue on BazziteOS, you need to install SimpleDeckyTDP with `ujust setup-decky simpledeckytdp` for the GPU slider
 
 If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin.
 
