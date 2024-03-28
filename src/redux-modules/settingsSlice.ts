@@ -148,6 +148,12 @@ export const settingsSlice = createSlice({
       if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
         set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
       }
+      if (
+        statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
+        value === true
+      ) {
+        set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
+      }
     },
     updatePowerGovernor: (
       state,
