@@ -51,9 +51,7 @@ const PowerControl = () => {
 
   return (
     <PanelSection title="CPU Controls">
-      {powerControlInfo.scalingDriver != "amd-pstate-epp" && (
-        <CpuFeatureToggles />
-      )}
+      {powerControlInfo.supportsCpuBoost && <CpuFeatureToggles />}
       <PanelSectionRow>
         <ToggleField
           label="Enable SMT"

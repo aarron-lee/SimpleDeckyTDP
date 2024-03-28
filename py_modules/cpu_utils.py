@@ -14,6 +14,7 @@ from devices import legion_go, rog_ally
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
+PSTATE_BOOST_PATH="/sys/devices/system/cpu/amd_pstate/cpb_boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
 
@@ -66,6 +67,11 @@ def ryzenadj(tdp: int):
   except Exception as e:
     logging.error(e)
 
+def supports_cpu_boost():
+  if os.path.exists(PSTATE_BOOST_PATH) or os.path.exists(BOOST_PATH):
+    return True
+  return False
+
 def set_cpu_boost(enabled = True):
   try:
     # logging.debug(f"set_cpu_boost to {enabled}")
@@ -75,6 +81,13 @@ def set_cpu_boost(enabled = True):
     #   with open(AMD_PSTATE_PATH, 'w') as f:
     #     f.write(pstate)
     #     f.close()
+    if os.path.exists(PSTATE_BOOST_PATH):
+      with open(PSTATE_BOOST_PATH, 'w') as file:
+        if enabled:
+          file.write('1')
+        else:
+          file.write('0')
+        file.close()
 
     if os.path.exists(BOOST_PATH):
       with open(BOOST_PATH, 'w') as file:

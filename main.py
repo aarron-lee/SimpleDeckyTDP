@@ -22,10 +22,12 @@ class Plugin:
       "eppOptions": [],
       "powerGovernorOptions": [],
       "scalingDriver": '',
+      'supportsCpuBoost': False
     }
     try:
       with file_timeout.time_limit(5):
         response['scalingDriver'] = cpu_utils.get_scaling_driver()
+        response['supportsCpuBoost'] = cpu_utils.supports_cpu_boost()
         response['powerControlsEnabled'] = power_utils.power_controls_enabled()
         pstate_status = cpu_utils.get_pstate_status()
         if pstate_status:
