@@ -111,17 +111,6 @@ def get_default_options():
 
   options.append(enable_background_polling)
 
-  max_tdp_on_resume = {
-    'name': 'Temporarily Set Max TDP on Resume',
-    'type': 'boolean',
-    'defaultValue': True,
-    'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes helps clear audio glitches',
-    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
-    'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value
-  }
-
-  options.append(max_tdp_on_resume)
-
   force_disable_tdp_on_resume = {
     'name': 'Force Disable Setting TDP on Resume',
     'type': 'boolean',
@@ -132,6 +121,17 @@ def get_default_options():
   }
 
   options.append(force_disable_tdp_on_resume)
+
+  max_tdp_on_resume = {
+    'name': 'Temporarily Set Max TDP on Resume',
+    'type': 'boolean',
+    'defaultValue': True,
+    'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes helps clear audio glitches',
+    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
+    'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value
+  }
+
+  options.append(max_tdp_on_resume)
 
   return options
 

@@ -142,18 +142,7 @@ export const settingsSlice = createSlice({
 
       set(state, `advanced.${statePath}`, value);
 
-      if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
-        set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
-      }
-      if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
-        set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
-      }
-      if (
-        statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
-        value === true
-      ) {
-        set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
-      }
+      handleAdvancedOptionsEdgeCases(state, statePath, value);
     },
     updatePowerGovernor: (
       state,
@@ -554,6 +543,33 @@ export const getPowerControlInfoSelector =
   };
 
 export const acPowerSelector = (state: RootState) => state.settings.isAcPower;
+
+function handleAdvancedOptionsEdgeCases(
+  state: any,
+  statePath: string,
+  value: boolean
+) {
+  if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
+    set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
+  }
+  if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
+    set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
+  }
+  if (
+    statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
+    value === true
+  ) {
+    set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
+  }
+
+  if (statePath === AdvancedOptionsEnum.MAX_TDP_ON_RESUME && value === true) {
+    set(
+      state,
+      `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
+      false
+    );
+  }
+}
 
 // Action creators are generated for each case reducer function
 export const {
