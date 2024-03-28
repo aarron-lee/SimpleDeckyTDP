@@ -54,6 +54,10 @@ export const suspendEventListener = () => {
 
           const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
+          if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
+            return;
+          }
+
           if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
             const serverApi = getServerApi();
             if (serverApi) {
@@ -63,6 +67,14 @@ export const suspendEventListener = () => {
             store.dispatch(resumeAction());
           }
         }, 2000);
+
+        const state = store.getState();
+
+        const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+        if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
+          return;
+        }
 
         // sets TDP, etc, to default expected values
         setTimeout(() => {

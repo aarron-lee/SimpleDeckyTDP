@@ -19,6 +19,7 @@ class DefaultSettings(Enum):
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
   AC_POWER_PROFILES = 'acPowerProfiles'
+  FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
 
 class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
@@ -120,6 +121,17 @@ def get_default_options():
   }
 
   options.append(max_tdp_on_resume)
+
+  force_disable_tdp_on_resume = {
+    'name': 'Force Disable Setting TDP on Resume',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'Disable automatically setting TDP, etc, on resume',
+    'currentValue': get_value(DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME, False),
+    'statePath': DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME.value
+  }
+
+  options.append(force_disable_tdp_on_resume)
 
   return options
 

@@ -7,6 +7,7 @@ export enum AdvancedOptionsEnum {
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
   AC_POWER_PROFILES = "acPowerProfiles",
+  FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
 }
 
 export enum GpuModes {
