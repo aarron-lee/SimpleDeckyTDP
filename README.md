@@ -16,6 +16,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - [Custom Device Settings](#custom-device-settings)
   - [CPU Boost Controls](#are-there-cpu-boost-controls)
 - [Troubleshooting](#troubleshooting)
+  - [ROG Ally Troubleshooting](#rog-ally-troubleshooting)
 - [Attribution](#attribution)
 
 ![plugin image](./img/plugin_image_updated.png)
@@ -202,7 +203,7 @@ CPU Boost controls require a scaling-driver that supports CPU boost. Many distro
 
 If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
 
-CPU Boost control is particularly useful on the ROG Ally, which has a known issue with problematic CPU boost settings.
+CPU Boost control is particularly useful on the ROG Ally, which has a reported issue with problematic CPU boost.
 
 For to change the scaling driver for to enable CPU boost on BazziteOS, run the following in terminal + reboot:
 
@@ -263,6 +264,14 @@ There's a few possibilities:
 For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, and instead use the TDP + GPU sliders in the plugin
 
 For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file.
+
+### ROG Ally Troubleshooting
+
+The ROG ally has some known issues related to CPU Boost and SMT.
+
+- Suspend often gets borked if you disable SMT
+  - recommendation is to leave SMT on at all times.
+- CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
 
 # Attribution
 
