@@ -12,7 +12,6 @@ import {
   setSteamPatchValuesForGameId,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { extractCurrentGameId } from "../utils/constants";
 import {
@@ -27,7 +26,7 @@ export const steamPatchMiddleware =
 
     const serverApi = getServerApi();
 
-    const { setSetting } = createServerApiHelpers(serverApi as ServerAPI);
+    const { setSetting } = createServerApiHelpers(serverApi as any);
 
     const state = store.getState();
 

@@ -1,15 +1,15 @@
-import { SliderField, PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import { useTdpRange } from "../../hooks/useTdpRange";
 import { FC } from "react";
 import { useSteamPatchDefaultTdp } from "../../hooks/useSteamPatch";
+import { DeckyRow, DeckySection, DeckySlider } from "../atoms/DeckyFrontendLib";
 
 export const SteamPatchDefaultTdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
   const { defaultTdp, setDefaultTdp } = useSteamPatchDefaultTdp();
   return (
-    <PanelSection title={"Steam TDP Slider Default"}>
-      <PanelSectionRow>
-        <SliderField
+    <DeckySection title={"Steam TDP Slider Default"}>
+      <DeckyRow>
+        <DeckySlider
           value={defaultTdp}
           label="Watts"
           min={minTdp}
@@ -19,7 +19,7 @@ export const SteamPatchDefaultTdpSlider: FC = () => {
           notchTicksVisible
           showValue
         />
-      </PanelSectionRow>
-    </PanelSection>
+      </DeckyRow>
+    </DeckySection>
   );
 };

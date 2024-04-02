@@ -1,5 +1,4 @@
 // TDP Range Slider
-import { SliderField } from "decky-frontend-lib";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentGpuFrequencySelector,
@@ -7,6 +6,7 @@ import {
   setGpuFrequency,
 } from "../../redux-modules/settingsSlice";
 import { FC } from "react";
+import { DeckySlider } from "./DeckyFrontendLib";
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
 
   return (
     <>
-      <SliderField
+      <DeckySlider
         label={"Minimum Frequency Limit"}
         value={currentMin}
         step={50}
@@ -47,7 +47,7 @@ const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
           return setMinFreq(newMin);
         }}
       />
-      <SliderField
+      <DeckySlider
         label={"Maximum Frequency Limit"}
         value={currentMax}
         step={50}

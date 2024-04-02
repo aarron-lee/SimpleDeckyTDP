@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { SliderField, NotchLabel } from "decky-frontend-lib";
 import { capitalize } from "lodash";
 import useGpuMode from "../../hooks/useGpuMode";
+import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 
 enum Mode {
   DEFAULT = 0,
@@ -28,7 +28,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
 
   return (
     <>
-      <SliderField
+      <DeckySlider
         label="GPU Frequency Mode"
         value={sliderValue || Mode.DEFAULT}
         min={0}

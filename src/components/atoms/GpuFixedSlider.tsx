@@ -1,11 +1,11 @@
 // TDP Range Slider
-import { SliderField } from "decky-frontend-lib";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentFixedGpuFrequencySelector,
   getGpuFrequencyRangeSelector,
   setFixedGpuFrequency,
 } from "../../redux-modules/settingsSlice";
+import { DeckySlider } from "./DeckyFrontendLib";
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const GpuFixedSlider = () => {
   }
 
   return (
-    <SliderField
+    <DeckySlider
       label={"Frequency"}
       value={currentFrequency}
       description={`${currentFrequency} MHz`}

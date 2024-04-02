@@ -2,11 +2,11 @@ import GpuRangeSliders from "../atoms/GpuRangeSliders";
 import GpuModeSlider from "../atoms/GpuModeSlider";
 import useGpuMode from "../../hooks/useGpuMode";
 import { GpuModes } from "../../backend/utils";
-import { PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import { useSelector } from "react-redux";
 import { getGpuFrequencyRangeSelector } from "../../redux-modules/settingsSlice";
 import GpuFixedSlider from "../atoms/GpuFixedSlider";
 import ErrorBoundary from "../ErrorBoundary";
+import { DeckyRow } from "../atoms/DeckyFrontendLib";
 
 const Gpu = () => {
   const { min, max } = useSelector(getGpuFrequencyRangeSelector);
@@ -19,19 +19,19 @@ const Gpu = () => {
   const { gpuMode } = useGpuMode();
   return (
     <ErrorBoundary title="GPU">
-      <PanelSectionRow>
+      <DeckyRow>
         <GpuModeSlider showSeparator={gpuMode == GpuModes.DEFAULT} />
-      </PanelSectionRow>
+      </DeckyRow>
 
       {gpuMode === GpuModes.RANGE && (
-        <PanelSectionRow>
+        <DeckyRow>
           <GpuRangeSliders showSeparator />
-        </PanelSectionRow>
+        </DeckyRow>
       )}
       {gpuMode === GpuModes.FIXED && (
-        <PanelSectionRow>
+        <DeckyRow>
           <GpuFixedSlider />
-        </PanelSectionRow>
+        </DeckyRow>
       )}
     </ErrorBoundary>
   );

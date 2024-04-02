@@ -1,4 +1,3 @@
-// import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {

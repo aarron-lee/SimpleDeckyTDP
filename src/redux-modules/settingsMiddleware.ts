@@ -20,7 +20,6 @@ import {
   persistTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { ServerAPI } from "decky-frontend-lib";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { debounce } from "lodash";
 import {
@@ -57,7 +56,7 @@ export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
     const { setSetting, saveTdpProfiles, setPollTdp } = createServerApiHelpers(
-      serverApi as ServerAPI
+      serverApi as any
     );
 
     const result = dispatch(action);

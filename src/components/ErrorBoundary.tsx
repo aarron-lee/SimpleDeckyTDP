@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { Field } from "decky-frontend-lib";
 import { Component } from "react";
 import { logInfo } from "../backend/utils";
+import { DeckyField } from "./atoms/DeckyFrontendLib";
 
 type PropsType = {
   children: any;
@@ -32,9 +32,9 @@ class ErrorBoundary extends Component<PropsType, StateType> {
   render() {
     if (this.state.hasError) {
       return (
-        <Field disabled label="Error">
+        <DeckyField disabled label="Error">
           Error while trying to render {this.props.title}
-        </Field>
+        </DeckyField>
       );
     }
     return this.props.children;

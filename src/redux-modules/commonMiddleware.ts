@@ -21,13 +21,12 @@ import {
   setPowerGovernor,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { ServerAPI } from "decky-frontend-lib";
 import { extractCurrentGameId } from "../utils/constants";
 
 export const commonMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
     const serverApi = getServerApi();
-    const { setSetting } = createServerApiHelpers(serverApi as ServerAPI);
+    const { setSetting } = createServerApiHelpers(serverApi as any);
 
     const result = dispatch(action);
 
