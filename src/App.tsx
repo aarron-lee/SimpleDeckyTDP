@@ -18,14 +18,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerControl from "./components/molecules/PowerControl";
 import { DeckySection } from "./components/atoms/DeckyFrontendLib";
-import { selectIsDesktop } from "./redux-modules/uiSlice";
+import { useIsDesktop } from "./hooks/desktopHooks";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
 
   const loading = useIsInitiallyLoading();
 
-  const isDesktop = useSelector(selectIsDesktop);
+  const isDesktop = useIsDesktop();
   const steamPatchEnabled = useIsSteamPatchEnabled();
 
   return (

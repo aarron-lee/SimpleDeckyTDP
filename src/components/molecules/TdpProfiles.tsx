@@ -3,11 +3,14 @@ import { useSelector } from "react-redux";
 import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
+import { useDesktopProfileChangeEffect } from "../../hooks/desktopHooks";
 
 export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] = useTdpProfilesEnabled();
 
   const { displayName } = useSelector(getCurrentTdpInfoSelector);
+
+  useDesktopProfileChangeEffect(tdpProfilesEnabled);
 
   const description = getDescription(
     isDesktop,
