@@ -1,4 +1,4 @@
-import { ServerAPI } from "decky-frontend-lib";
+// import { ServerAPI } from "decky-frontend-lib";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {
@@ -34,26 +34,26 @@ export enum ServerAPIMethods {
   GET_POWER_CONTROL_INFO = "get_power_control_info",
 }
 
-export const createLogInfo = (serverAPI: ServerAPI) => async (info: any) => {
+export const createLogInfo = (serverAPI: any) => async (info: any) => {
   await serverAPI.callPluginMethod(ServerAPIMethods.LOG_INFO, {
     info,
   });
 };
 
 export const createSetSetting =
-  (serverAPI: ServerAPI) =>
+  (serverAPI: any) =>
   async ({ fieldName, fieldValue }: { fieldName: string; fieldValue: any }) =>
     await serverAPI.callPluginMethod(ServerAPIMethods.SET_SETTING, {
       name: fieldName,
       value: fieldValue,
     });
 
-export const createGetSettings = (serverAPI: ServerAPI) => async () => {
+export const createGetSettings = (serverAPI: any) => async () => {
   return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {});
 };
 
 export const createSaveTdp =
-  (serverAPI: ServerAPI) => async (gameId: string, tdp: number) => {
+  (serverAPI: any) => async (gameId: string, tdp: number) => {
     const tdpProfiles = {
       [gameId]: {
         tdp,
@@ -67,7 +67,7 @@ export const createSaveTdp =
   };
 
 export const createSaveTdpProfiles =
-  (serverAPI: ServerAPI) =>
+  (serverAPI: any) =>
   async (tdpProfiles: TdpProfiles, currentGameId: string, advanced: any) => {
     return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
       tdpProfiles,
@@ -77,13 +77,13 @@ export const createSaveTdpProfiles =
   };
 
 export const createPollTdp =
-  (serverAPI: ServerAPI) => async (currentGameId: string) => {
+  (serverAPI: any) => async (currentGameId: string) => {
     return await serverAPI.callPluginMethod(ServerAPIMethods.POLL_TDP, {
       currentGameId,
     });
   };
 
-export const getLatestVersionNum = async (serverApi: ServerAPI) => {
+export const getLatestVersionNum = async (serverApi: any) => {
   const { result } = await serverApi.fetchNoCors(
     "https://raw.githubusercontent.com/aarron-lee/SimpleDeckyTDP/main/package.json",
     { method: "GET" }
@@ -97,11 +97,11 @@ export const getLatestVersionNum = async (serverApi: ServerAPI) => {
   return "";
 };
 
-export const otaUpdate = async (serverApi: ServerAPI) => {
+export const otaUpdate = async (serverApi: any) => {
   return serverApi.callPluginMethod("ota_update", {});
 };
 
-export const createServerApiHelpers = (serverAPI: ServerAPI) => {
+export const createServerApiHelpers = (serverAPI: any) => {
   return {
     getSettings: createGetSettings(serverAPI),
     setSetting: createSetSetting(serverAPI),
@@ -112,9 +112,9 @@ export const createServerApiHelpers = (serverAPI: ServerAPI) => {
   };
 };
 
-let serverApi: undefined | ServerAPI;
+let serverApi: undefined | any;
 
-export const saveServerApi = (s: ServerAPI) => {
+export const saveServerApi = (s: any) => {
   serverApi = s;
 };
 
