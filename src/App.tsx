@@ -3,7 +3,7 @@ import TdpRange from "./components/molecules/TdpRange";
 import { TdpSlider } from "./components/molecules/TdpSlider";
 import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
   useFetchInitialStateEffect,
@@ -18,35 +18,41 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerControl from "./components/molecules/PowerControl";
 import { DeckySection } from "./components/atoms/DeckyFrontendLib";
+import { selectIsDesktop } from "./redux-modules/uiSlice";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
 
   const loading = useIsInitiallyLoading();
 
+  const isDesktop = useSelector(selectIsDesktop);
   const steamPatchEnabled = useIsSteamPatchEnabled();
 
   return (
     <>
       {!loading && (
         <>
-          <DeckySection>
-            <TdpProfiles />
-            {!steamPatchEnabled && (
-              <>
-                <TdpSlider />
-                <Gpu />
-              </>
-            )}
-          </DeckySection>
+          {!isDesktop && (
+            <DeckySection>
+              <TdpProfiles />
+              {!steamPatchEnabled && (
+                <>
+                  <TdpSlider />
+                  <Gpu />
+                </>
+              )}
+            </DeckySection>
+          )}
           <PowerControl />
-          {steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
+          {!isDesktop && steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
           <TdpRange />
           <PollTdp />
           <AdvancedOptions />
-          <ErrorBoundary title="OTA Updates">
-            <OtaUpdates />
-          </ErrorBoundary>
+          {!isDesktop && (
+            <ErrorBoundary title="OTA Updates">
+              <OtaUpdates />
+            </ErrorBoundary>
+          )}
         </>
       )}
     </>
