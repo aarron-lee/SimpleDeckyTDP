@@ -9,8 +9,8 @@ import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 
 const getOptions = (eppOptions: EppOption[]) => {
-  const idxToOption = {};
-  const optionToIdx = {};
+  const idxToOption: { [key: string]: any } = {};
+  const optionToIdx: { [key: string]: any } = {};
   const notchLabels: NotchLabel[] = [];
 
   let notchIdx = 0;
