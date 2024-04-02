@@ -1,20 +1,15 @@
-import { getRouter } from "../components/atoms/DeckyFrontendLib";
+import {
+  getCurrentGameId,
+  getCurrentGameInfo,
+} from "../components/atoms/DeckyFrontendLib";
 
 export const MIN_TDP_RANGE = 4;
 export const DEFAULT_POLL_RATE = 10000;
 export const DEFAULT_START_TDP = 12;
 
-export const extractCurrentGameId = () =>
-  `${getRouter().MainRunningApp?.appid || "default"}`;
+export const extractCurrentGameId = getCurrentGameId;
 
-export const extractCurrentGameInfo = () => {
-  const results = {
-    id: extractCurrentGameId(),
-    displayName: `${getRouter().MainRunningApp?.display_name || "default"}`,
-  };
-
-  return results;
-};
+export const extractCurrentGameInfo = getCurrentGameInfo;
 
 export type PowerControlInfo = {
   powerControlsEnabled: boolean;

@@ -31,6 +31,15 @@ export type NotchLabel = {
   value?: number;
 };
 
-export function getRouter() {
-  return Router;
+export function getCurrentGameId() {
+  return `${Router.MainRunningApp?.appid || "default"}`;
+}
+
+export function getCurrentGameInfo() {
+  const results = {
+    id: getCurrentGameId(),
+    displayName: `${Router.MainRunningApp?.display_name || "default"}`,
+  };
+
+  return results;
 }
