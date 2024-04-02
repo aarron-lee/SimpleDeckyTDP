@@ -9,6 +9,7 @@ import {
   PanelSectionRow,
   SliderField,
   ToggleField,
+  Router,
 } from "decky-frontend-lib";
 
 export const DeckySection = PanelSection;
@@ -29,3 +30,7 @@ export type NotchLabel = {
   label: string;
   value?: number;
 };
+
+export function getRouter() {
+  return Router;
+}

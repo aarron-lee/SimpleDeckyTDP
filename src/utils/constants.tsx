@@ -1,16 +1,16 @@
-import { Router } from "decky-frontend-lib";
+import { getRouter } from "../components/atoms/DeckyFrontendLib";
 
 export const MIN_TDP_RANGE = 4;
 export const DEFAULT_POLL_RATE = 10000;
 export const DEFAULT_START_TDP = 12;
 
 export const extractCurrentGameId = () =>
-  `${Router.MainRunningApp?.appid || "default"}`;
+  `${getRouter().MainRunningApp?.appid || "default"}`;
 
 export const extractCurrentGameInfo = () => {
   const results = {
     id: extractCurrentGameId(),
-    displayName: `${Router.MainRunningApp?.display_name || "default"}`,
+    displayName: `${getRouter().MainRunningApp?.display_name || "default"}`,
   };
 
   return results;
