@@ -1,5 +1,5 @@
 // TDP Range Slider
-import { SliderField } from "decky-frontend-lib";
+import { DeckySlider } from "./DeckyFrontendLib";
 
 type PropType = {
   tdpRange: number[];
@@ -12,7 +12,7 @@ const TdpRangeSlider = ({ tdpRange, label, value, onChange }: PropType) => {
   const [min, max] = tdpRange;
 
   return (
-    <SliderField
+    <DeckySlider
       label={label}
       value={value}
       showValue

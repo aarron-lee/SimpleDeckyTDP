@@ -1,6 +1,6 @@
-import { ButtonItem, PanelSectionRow } from "decky-frontend-lib";
 import { FC, useEffect, useState } from "react";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { DeckyButton, DeckyRow } from "./DeckyFrontendLib";
 
 type Props = {
   cacheKey: string;
@@ -29,8 +29,8 @@ const ArrowToggleButton: FC<Props> = ({
 
   return (
     <>
-      <PanelSectionRow>
-        <ButtonItem
+      <DeckyRow>
+        <DeckyButton
           layout="below"
           bottomSeparator={showSliders ? "none" : "thick"}
           style={{
@@ -43,8 +43,8 @@ const ArrowToggleButton: FC<Props> = ({
           onClick={toggleState}
         >
           {showSliders ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-        </ButtonItem>
-      </PanelSectionRow>
+        </DeckyButton>
+      </DeckyRow>
       {showSliders && children}
     </>
   );

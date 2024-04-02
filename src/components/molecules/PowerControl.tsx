@@ -1,4 +1,3 @@
-import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 import PowerGovernorSlider from "../atoms/PowerGovernorSlider";
 import EppSlider from "../atoms/EppSlider";
 import { CpuFeatureToggles } from "../atoms/CpuFeatureToggles";
@@ -14,6 +13,7 @@ import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
 import { fetchPowerControlInfo } from "../../redux-modules/thunks";
 import { AppDispatch } from "../../redux-modules/store";
 import { useSmt } from "../../hooks/useSmt";
+import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
 
 export const useFetchPowerControlInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,10 +50,10 @@ const PowerControl = () => {
   }
 
   return (
-    <PanelSection title="CPU Controls">
+    <DeckySection title="CPU Controls">
       {powerControlInfo.supportsCpuBoost && <CpuFeatureToggles />}
-      <PanelSectionRow>
-        <ToggleField
+      <DeckyRow>
+        <DeckyToggle
           label="Enable SMT"
           checked={smt}
           onChange={(enabled: boolean) => {
@@ -61,18 +61,18 @@ const PowerControl = () => {
           }}
           highlightOnFocus
         />
-      </PanelSectionRow>
-      <PanelSectionRow>
+      </DeckyRow>
+      <DeckyRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
-      </PanelSectionRow>
-      <PanelSectionRow>
+      </DeckyRow>
+      <DeckyRow>
         <ErrorBoundary title="Epp Dropdown">
           <EppSlider powerControlInfo={powerControlInfo} />
         </ErrorBoundary>
-      </PanelSectionRow>
-    </PanelSection>
+      </DeckyRow>
+    </DeckySection>
   );
 };
 

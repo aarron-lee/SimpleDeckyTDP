@@ -6,13 +6,13 @@ import {
 } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
-import {
-  ButtonItem,
-  Field,
-  PanelSection,
-  PanelSectionRow,
-} from "decky-frontend-lib";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
+import {
+  DeckyButton,
+  DeckyField,
+  DeckyRow,
+  DeckySection,
+} from "../atoms/DeckyFrontendLib";
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
@@ -40,30 +40,30 @@ const OtaUpdates = () => {
   }
 
   return (
-    <PanelSection title="System Info">
-      <PanelSectionRow>
-        <Field disabled label={"Installed Version"} bottomSeparator="none">
+    <DeckySection title="System Info">
+      <DeckyRow>
+        <DeckyField disabled label={"Installed Version"} bottomSeparator="none">
           {installedVersionNum}
-        </Field>
-      </PanelSectionRow>
+        </DeckyField>
+      </DeckyRow>
 
       {Boolean(latestVersionNum) && (
-        <PanelSectionRow>
-          <Field disabled label={"Latest Version"} bottomSeparator="none">
+        <DeckyRow>
+          <DeckyField disabled label={"Latest Version"} bottomSeparator="none">
             {latestVersionNum}
-          </Field>
-        </PanelSectionRow>
+          </DeckyField>
+        </DeckyRow>
       )}
       {Boolean(scalingDriver) && (
-        <PanelSectionRow>
-          <Field disabled label={"Scaling Driver"} bottomSeparator="none">
+        <DeckyRow>
+          <DeckyField disabled label={"Scaling Driver"} bottomSeparator="none">
             {scalingDriver}
-          </Field>
-        </PanelSectionRow>
+          </DeckyField>
+        </DeckyRow>
       )}
       {Boolean(latestVersionNum) && (
-        <PanelSectionRow>
-          <ButtonItem
+        <DeckyRow>
+          <DeckyButton
             onClick={() => {
               const serverApi = getServerApi();
               if (serverApi) otaUpdate(serverApi);
@@ -77,10 +77,10 @@ const OtaUpdates = () => {
             layout={"below"}
           >
             {buttonText}
-          </ButtonItem>
-        </PanelSectionRow>
+          </DeckyButton>
+        </DeckyRow>
       )}
-    </PanelSection>
+    </DeckySection>
   );
 };
 

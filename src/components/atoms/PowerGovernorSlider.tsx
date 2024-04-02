@@ -1,4 +1,3 @@
-import { SliderField, NotchLabel } from "decky-frontend-lib";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPowerControlInfoSelector,
@@ -10,8 +9,8 @@ import {
   PowerGovernorOptions,
 } from "../../utils/constants";
 import { capitalize } from "lodash";
-import { logInfo } from "../../backend/utils";
 import { FC } from "react";
+import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 
 const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
   const idxToOption = {};
@@ -62,7 +61,7 @@ const PowerGovernorSlider: FC<{
   const sliderValue = optionToIdx[powerGovernor || "powersave"];
 
   return (
-    <SliderField
+    <DeckySlider
       label="Power Governor"
       value={sliderValue}
       min={0}

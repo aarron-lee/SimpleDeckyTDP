@@ -1,9 +1,4 @@
-import {
-  definePlugin,
-  PanelSection,
-  ServerAPI,
-  staticClasses,
-} from "decky-frontend-lib";
+import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
 import { FC, memo } from "react";
 import { FaShip } from "react-icons/fa";
 import TdpRange from "./components/molecules/TdpRange";
@@ -38,6 +33,7 @@ import steamPatch from "./steamPatch/steamPatch";
 import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerControl from "./components/molecules/PowerControl";
 import { fetchPowerControlInfo } from "./redux-modules/thunks";
+import { DeckySection } from "./components/atoms/DeckyFrontendLib";
 
 const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
   useFetchInitialStateEffect();
@@ -50,7 +46,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
     <>
       {!loading && (
         <>
-          <PanelSection>
+          <DeckySection>
             <TdpProfiles />
             {!steamPatchEnabled && (
               <>
@@ -58,7 +54,7 @@ const Content: FC<{ serverAPI?: ServerAPI }> = memo(({}) => {
                 <Gpu />
               </>
             )}
-          </PanelSection>
+          </DeckySection>
           <PowerControl />
           {steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
           <TdpRange />

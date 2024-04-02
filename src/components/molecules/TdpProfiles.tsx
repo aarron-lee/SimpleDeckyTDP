@@ -1,8 +1,8 @@
-import { ToggleField, PanelSection, PanelSectionRow } from "decky-frontend-lib";
 import { useTdpProfilesEnabled } from "../../hooks/useEnableTdpProfiles";
 import { useSelector } from "react-redux";
 import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import ErrorBoundary from "../ErrorBoundary";
+import { DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
 
 export function TdpProfiles() {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] = useTdpProfilesEnabled();
@@ -15,9 +15,9 @@ export function TdpProfiles() {
       : `Using - Default`;
 
   return (
-    <PanelSectionRow>
+    <DeckyRow>
       <ErrorBoundary title="Tdp Profiles">
-        <ToggleField
+        <DeckyToggle
           label="Enable per-game profiles"
           checked={tdpProfilesEnabled}
           onChange={(enabled: boolean) => {
@@ -27,6 +27,6 @@ export function TdpProfiles() {
           highlightOnFocus
         />
       </ErrorBoundary>
-    </PanelSectionRow>
+    </DeckyRow>
   );
 }

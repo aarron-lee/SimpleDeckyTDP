@@ -6,9 +6,9 @@ import {
   updateAdvancedOption,
 } from "../../redux-modules/settingsSlice";
 import { get } from "lodash";
-import { PanelSection, PanelSectionRow, ToggleField } from "decky-frontend-lib";
 import ErrorBoundary from "../ErrorBoundary";
 import ArrowToggleButton from "../atoms/ArrowToggleButton";
+import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
 
 export const useIsSteamPatchEnabled = () => {
   const steamPatchEnabled = useSelector(getSteamPatchEnabledSelector);
@@ -27,7 +27,7 @@ const AdvancedOptions = () => {
   }
 
   return (
-    <PanelSection title="Advanced Options">
+    <DeckySection title="Advanced Options">
       <ErrorBoundary title="Advanced Options">
         <ArrowToggleButton
           cacheKey="simpleDeckyTDP.advancedOptionButton"
@@ -39,8 +39,8 @@ const AdvancedOptions = () => {
 
             if (type === "boolean") {
               return (
-                <PanelSectionRow>
-                  <ToggleField
+                <DeckyRow>
+                  <DeckyToggle
                     key={idx}
                     label={name}
                     checked={value}
@@ -53,7 +53,7 @@ const AdvancedOptions = () => {
                       );
                     }}
                   />
-                </PanelSectionRow>
+                </DeckyRow>
               );
             }
 
@@ -61,7 +61,7 @@ const AdvancedOptions = () => {
           })}
         </ArrowToggleButton>
       </ErrorBoundary>
-    </PanelSection>
+    </DeckySection>
   );
 };
 
