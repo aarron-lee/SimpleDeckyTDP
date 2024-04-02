@@ -31,6 +31,7 @@ export enum ServerAPIMethods {
   SET_POWER_GOVERNOR = "set_power_governor",
   SET_EPP = "set_epp",
   GET_POWER_CONTROL_INFO = "get_power_control_info",
+  GET_IS_STEAM_RUNNING = "is_steam_running",
 }
 
 export const createLogInfo = (serverAPI: any) => async (info: any) => {
@@ -49,6 +50,13 @@ export const createSetSetting =
 
 export const createGetSettings = (serverAPI: any) => async () => {
   return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {});
+};
+
+export const createGetIsSteamRunning = (serverAPI: any) => async () => {
+  return await serverAPI.callPluginMethod(
+    ServerAPIMethods.GET_IS_STEAM_RUNNING,
+    {}
+  );
 };
 
 export const createSaveTdp =
@@ -108,6 +116,7 @@ export const createServerApiHelpers = (serverAPI: any) => {
     saveTdp: createSaveTdp(serverAPI),
     setPollTdp: createPollTdp(serverAPI),
     saveTdpProfiles: createSaveTdpProfiles(serverAPI),
+    isSteamRunning: createGetIsSteamRunning(serverAPI),
   };
 };
 

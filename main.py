@@ -10,11 +10,15 @@ from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_prof
 from gpu_utils import get_gpu_frequency_range
 import plugin_utils
 import migrations
+import steam_info
 
 class Plugin:
 
   async def log_info(self, info):
     logging.info(info)
+
+  async def is_steam_running(self):
+    return steam_info.is_steam_running()
 
   async def get_power_control_info(self):
     response = {
