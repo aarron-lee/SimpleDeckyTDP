@@ -9,6 +9,22 @@ export enum AdvancedOptionsEnum {
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
 }
 
+export enum RogAllyAdvancedOptions {
+  USE_PLATFORM_PROFILE = "platformProfile",
+  USE_WMI = "useWmi",
+}
+
+export enum LegionGoAdvancedOptions {
+  CUSTOM_TDP_MODE = "lenovoCustomTdpMode",
+}
+
+export const DesktopAdvancedOptions = [
+  AdvancedOptionsEnum.ENABLE_POWER_CONTROL,
+  LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
+  RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
+  RogAllyAdvancedOptions.USE_WMI,
+] as string[];
+
 export enum GpuModes {
   DEFAULT = "DEFAULT",
   RANGE = "RANGE",

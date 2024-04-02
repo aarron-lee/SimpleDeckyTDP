@@ -9,6 +9,8 @@ import { get } from "lodash";
 import ErrorBoundary from "../ErrorBoundary";
 import ArrowToggleButton from "../atoms/ArrowToggleButton";
 import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
+import { useIsDesktop } from "../../hooks/desktopHooks";
+import { DesktopAdvancedOptions } from "../../backend/utils";
 
 export const useIsSteamPatchEnabled = () => {
   const steamPatchEnabled = useSelector(getSteamPatchEnabledSelector);
@@ -18,6 +20,7 @@ export const useIsSteamPatchEnabled = () => {
 
 const AdvancedOptions = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const isDesktop = useIsDesktop();
   const { advancedState, advancedOptions } = useSelector(
     getAdvancedOptionsInfoSelector
   );
@@ -37,6 +40,10 @@ const AdvancedOptions = () => {
             const { name, type, statePath, defaultValue, description } = option;
             const value = get(advancedState, statePath, defaultValue);
 
+            if (isDesktop && !DesktopAdvancedOptions.includes(statePath)) {
+              return null;
+            }
+
             if (type === "boolean") {
               return (
                 <DeckyRow>
@@ -47,7 +54,7 @@ const AdvancedOptions = () => {
                     description={description}
                     highlightOnFocus
                     bottomSeparator="none"
-                    onChange={(enabled) => {
+                    onChange={(enabled: boolean) => {
                       return dispatch(
                         updateAdvancedOption({ statePath, value: enabled })
                       );

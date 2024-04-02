@@ -3,7 +3,7 @@ import TdpRange from "./components/molecules/TdpRange";
 import { TdpSlider } from "./components/molecules/TdpSlider";
 import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
   useFetchInitialStateEffect,
@@ -44,7 +44,7 @@ const App: FC = memo(({}) => {
           <PowerControl />
           {!isDesktop && steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
           <TdpRange />
-          <PollTdp />
+          {!isDesktop && <PollTdp />}
           <AdvancedOptions />
           {!isDesktop && (
             <ErrorBoundary title="OTA Updates">
