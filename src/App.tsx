@@ -32,17 +32,15 @@ const App: FC = memo(({}) => {
     <>
       {!loading && (
         <>
-          {!isDesktop && (
-            <DeckySection>
-              <TdpProfiles />
-              {!steamPatchEnabled && (
-                <>
-                  <TdpSlider />
-                  <Gpu />
-                </>
-              )}
-            </DeckySection>
-          )}
+          <DeckySection>
+            <TdpProfiles isDesktop={isDesktop} />
+            {!isDesktop && !steamPatchEnabled && (
+              <>
+                <TdpSlider />
+                <Gpu />
+              </>
+            )}
+          </DeckySection>
           <PowerControl />
           {!isDesktop && steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
           <TdpRange />
