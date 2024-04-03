@@ -176,13 +176,17 @@ sudo systemctl restart plugin_loader.service
 
 ### Desktop App
 
-[SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Electron frontend for the Decky Plugin's backend
+[SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Experimental Electron frontend for the SimpleDeckyTDP Plugin's backend
 
-- Note: the Desktop app does not have full feature parity with the Decky Plugin. Certain features cannot be implemented, such as:
+- Note: the Desktop app does not have full feature parity with the Decky Plugin. Certain features cannot be implemented yet, such as:
   - per-game profiles
   - set TDP on resume
   - TDP polling
   - etc
+
+The Desktop App also should not be used simultaneously with the SimpleDeckyTDP decky plugin, you should only use one or the other at any given time.
+
+This is because 2-way communication between the plugin and Desktop app is currently not possible.
 
 ### Custom TDP method
 
