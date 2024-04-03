@@ -12,6 +12,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - [Manual Build](#manual-build)
 - [Uninstall Instructions](#uninstall-instructions)
 - [Advanced Configuration](#advanced-configuration)
+  - [Desktop App](#desktop-app)
   - [Custom TDP Method](#custom-tdp-method)
   - [Custom Device Settings](#custom-device-settings)
   - [CPU Boost Controls](#are-there-cpu-boost-controls)
@@ -35,6 +36,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - (optional) Fix Steam Client TDP and GPU Sliders
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
+- Desktop App - see [Desktop App Section](#desktop-app) for more details
 - Legion Go TDP via WMI calls (allows for TDP control with secure boot)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
 - etc
@@ -171,6 +173,16 @@ sudo systemctl restart plugin_loader.service
 ```
 
 ## Advanced configuration
+
+### Desktop App
+
+[SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Electron frontend for the Decky Plugin's backend
+
+- Note: the Desktop app does not have full feature parity with the Decky Plugin. Certain features cannot be implemented, such as:
+  - per-game profiles
+  - set TDP on resume
+  - TDP polling
+  - etc
 
 ### Custom TDP method
 
