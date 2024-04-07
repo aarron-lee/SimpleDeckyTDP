@@ -34,7 +34,7 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {!steamPatchEnabled && (
+            {(!steamPatchEnabled || isDesktop) && (
               <>
                 <TdpSlider />
                 <Gpu />
