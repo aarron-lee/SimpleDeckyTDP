@@ -147,7 +147,8 @@ def check_cpu_online(cpu_id):
         return False
 
 def get_online_cpus():
-  online_cpus = []
+  # cpu0 is always online
+  online_cpus = ['0']
   cpu_path = '/sys/devices/system/cpu/'
   cpu_pattern = re.compile(r'^cpu(\d+)$')
 
