@@ -217,11 +217,11 @@ See [device settings README](./py_modules/devices/README.md)
 
 CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. This scaling driver does NOT support CPU boost controls.
 
+NOTE: CPU Boost controls are only recommended for the ROG Ally. For other PC handhelds, it shouldn't make much of a difference. Turning off CPU Boost is particularly useful on the ROG Ally because it has a reported excess power consumption issue.
+
 If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
 
-CPU Boost control is particularly useful on the ROG Ally, which has a reported issue with problematic CPU boost.
-
-For to change the scaling driver for to enable CPU boost on BazziteOS, run the following in terminal + reboot:
+For to change the scaling driver for to enable CPU boost controls on BazziteOS, run the following in terminal + reboot:
 
 ```
 rpm-ostree kargs --append-if-missing=amd_pstate=passive
