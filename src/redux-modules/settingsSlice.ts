@@ -549,6 +549,18 @@ function handleAdvancedOptionsEdgeCases(
   statePath: string,
   value: boolean
 ) {
+  if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
+    set(
+      state,
+      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+      false
+    );
+  }
+  if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
+    if (typeof state?.advanced?.platformProfile === "boolean") {
+      set(state, `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`, false);
+    }
+  }
   if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
     set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
   }

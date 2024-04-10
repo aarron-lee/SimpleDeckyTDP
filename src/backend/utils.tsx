@@ -7,6 +7,7 @@ export enum AdvancedOptionsEnum {
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
   AC_POWER_PROFILES = "acPowerProfiles",
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
+  USE_PLATFORM_PROFILE = "platformProfile",
 }
 
 export enum RogAllyAdvancedOptions {
