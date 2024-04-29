@@ -145,8 +145,8 @@ def get_advanced_options():
     options.append({
       'name': 'Lenovo Custom TDP Mode',
       'type': 'boolean',
-      'description': 'Requires Bios with TDP fixes (Bios version N3CN29WW_TDP02 or newer)',
-      'defaultValue': False,
+      'description': 'Use WMI for TDP control. Requires Bios with TDP fixes (Bios version v29.1 or newer)',
+      'defaultValue': True,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
