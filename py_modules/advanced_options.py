@@ -147,7 +147,7 @@ def get_advanced_options():
       'type': 'boolean',
       'description': 'Use WMI for TDP control. Requires Bios with TDP fixes (Bios version v29.1 or newer)',
       'defaultValue': True,
-      'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE),
+      'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE, True),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
     })
   if device_name == Devices.ROG_ALLY.value:
