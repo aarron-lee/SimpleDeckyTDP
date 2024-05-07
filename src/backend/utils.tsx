@@ -21,6 +21,7 @@ export enum LegionGoAdvancedOptions {
 
 export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_POWER_CONTROL,
+  AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
   RogAllyAdvancedOptions.USE_WMI,
