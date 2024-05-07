@@ -23,7 +23,7 @@ export function PollTdp() {
             min={5}
             max={20}
             bottomSeparator="none"
-            onChange={(rate_in_sec) => setPollRate(rate_in_sec * 1000)}
+            onChange={(rate_in_sec: number) => setPollRate(rate_in_sec * 1000)}
           />
         </DeckyRow>
       </ErrorBoundary>
