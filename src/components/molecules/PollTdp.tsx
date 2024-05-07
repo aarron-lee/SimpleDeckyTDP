@@ -21,7 +21,7 @@ export function PollTdp() {
             step={1}
             showValue
             min={5}
-            max={20}
+            max={60}
             bottomSeparator="none"
             onChange={(rate_in_sec: number) => setPollRate(rate_in_sec * 1000)}
           />
