@@ -67,22 +67,22 @@ def get_value(setting, default_value = False):
 def get_default_options():
   options = []
 
-  enable_steam_patch = {
-    'name': 'Fix Steam Hardware Controls (Experimental)',
-    'type': 'boolean',
-    'defaultValue': False,
-    'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros). Note, cannot be used with per-game AC profiles',
-    'currentValue': get_value(DefaultSettings.ENABLE_STEAM_PATCH),
-    'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
-  }
+  # enable_steam_patch = {
+  #   'name': 'Fix Steam Hardware Controls (Experimental)',
+  #   'type': 'boolean',
+  #   'defaultValue': False,
+  #   'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros). Note, cannot be used with per-game AC profiles',
+  #   'currentValue': get_value(DefaultSettings.ENABLE_STEAM_PATCH),
+  #   'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
+  # }
 
-  options.append(enable_steam_patch)
+  # options.append(enable_steam_patch)
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
     'type': 'boolean',
     'defaultValue': False,
-    'description': 'When plugged into AC power, use a separate per-game TDP profile. Note, cannot be used with Steam Hardware Control Fix',
+    'description': 'When plugged into AC power, use a separate per-game TDP profile.',
     'currentValue': get_value(DefaultSettings.AC_POWER_PROFILES, False),
     'statePath': DefaultSettings.AC_POWER_PROFILES.value
   }

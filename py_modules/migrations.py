@@ -1,6 +1,6 @@
 import decky_plugin
 import power_utils
-from plugin_settings import merge_tdp_profiles, get_saved_settings
+from plugin_settings import merge_tdp_profiles, get_saved_settings, set_setting
 
 def migrate_smt():
   try:
@@ -20,3 +20,13 @@ def migrate_smt():
     merge_tdp_profiles(tdp_profiles)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} error while setting default smt values {e}")
+
+def disable_steam_patch():
+  try:
+    settings = get_saved_settings()
+    if settings.get('advanced', {}).get('steamPatch', False):
+      advanced_settings = settings.get('advanced')
+      advanced_settings['steamPatch'] = False
+      set_setting('advanced', advanced_settings)
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error while disabling steam patch {e}")

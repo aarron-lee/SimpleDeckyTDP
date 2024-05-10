@@ -209,6 +209,7 @@ class Plugin:
     decky_plugin.logger.info("Migrating")
 
     migrations.migrate_smt()
+    migrations.disable_steam_patch()
 
     # Here's a migration example for logs:
     # - `~/.config/decky-template/template.log` will be migrated to `decky_plugin.DECKY_PLUGIN_LOG_DIR/template.log`
