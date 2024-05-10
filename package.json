@@ -1,6 +1,6 @@
 {
   "name": "simple-decky-tdp",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Very simple RyzenAdj Decky plugin",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c --silent",
@@ -52,6 +52,5 @@
         "react-dom"
       ]
     }
-  },
-  "packageManager": "pnpm@8.15.4+sha1.c85a4305534f76d461407b59277b954bac97b5c4"
+  }
 }
