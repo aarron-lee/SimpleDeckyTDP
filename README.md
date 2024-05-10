@@ -21,7 +21,8 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - [Attribution](#attribution)
 
 ![plugin image](./img/plugin_image_updated.png)
-![steam patch](./img/steam-patch2.png)
+
+<!-- ![steam patch](./img/steam-patch2.png) -->
 
 ## Features
 
@@ -31,9 +32,8 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - GPU Controls
 - SMT control
 - CPU Boost control\*
-  - note, requires a AMD scaling driver that supports CPU boost, currently amd-pstate-epp doesn't support CPU Boost
-    - [See here](#are-there-cpu-boost-controls) for instructions on changing the scaling driver on BazziteOS
-- (optional) Fix Steam Client TDP and GPU Sliders
+  - note, requires a AMD scaling driver that supports CPU boost, currently amd-pstate-epp doesn't support CPU Boost - [See here](#are-there-cpu-boost-controls) for instructions on changing the scaling driver on BazziteOS
+  <!-- - (optional) Fix Steam Client TDP and GPU Sliders -->
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
@@ -107,7 +107,7 @@ curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
 ### BazziteOS installer
 
-The Bazzite installer does extra steps so that `Fix Steam Hardware Controls` functionality can work
+<!-- The Bazzite installer does extra steps so that `Fix Steam Hardware Controls` functionality can work -->
 
 First install Decky Loader with this command in terminal:
 
@@ -235,6 +235,10 @@ rpm-ostree kargs --delete-if-present=amd_pstate=passive
 
 ## Troubleshooting
 
+### The "Fix Steam Hardware Controls" option is missing
+
+This is not a bug, Valve updated the Steam client and removed the TDP Slider on non-deck handhelds. Thus, the "Fix Steam Hardware Controls" option is no longer possible.
+
 ### TDP Control is not working
 
 First try updating the plugin to the latest version.
@@ -256,21 +260,22 @@ Try deleting the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json` file.
 
 Note that this will delete any of your saved TDP profiles, so you could optionally copy it somewhere else to keep it as a backup instead.
 
-### Steam GPU slider does not appear with the "Fix Steam Hardware Controls" enabled
+<!-- ### Steam GPU slider does not appear with the "Fix Steam Hardware Controls" enabled
 
 If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has no control over the GPU slider showing up, the plugin can only modify it.
 
 If you are seeing this issue on BazziteOS, you need to install SimpleDeckyTDP with `ujust setup-decky simpledeckytdp` for the GPU slider
 
-If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin.
+If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin. -->
 
 ### My eGPU is being affected by TDP settings
 
-The Steam GPU slider reportedly affects eGPUs, if you are using an eGPU you should disable the `Fix Steam Hardware Controls` toggle.
+The Steam GPU slider reportedly affects eGPUs, if you are using an eGPU you should disable Steam's GPU toggle.
 
-You will also have to manually disable the GPU control toggle and TDP toggle in the Steam QAM, since it can still affect GPU clocks even if SimpleDeckyTDP is no longer managing the Steam Sliders.
+<!--
+You will also have to manually disable the GPU control toggle and TDP toggle in the Steam QAM, since it can still affect GPU clocks even if SimpleDeckyTDP is no longer managing the Steam Sliders. -->
 
-### Steam TDP slider and GPU Slider not working consistently with the "Fix Steam Hardware Controls" enabled
+<!-- ### Steam TDP slider and GPU Slider not working consistently with the "Fix Steam Hardware Controls" enabled
 
 There's a few possibilities:
 
@@ -279,7 +284,7 @@ There's a few possibilities:
 
 For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, and instead use the TDP + GPU sliders in the plugin
 
-For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file.
+For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file. -->
 
 ### ROG Ally Troubleshooting
 
