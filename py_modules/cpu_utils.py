@@ -33,6 +33,9 @@ def modprobe_acpi_call():
   return True
 
 def ryzenadj(tdp: int):
+  if not advanced_options.tdp_control_enabled():
+    return
+
   settings = plugin_settings.get_saved_settings()
   try:
     if settings.get("overrideRyzenadj"):

@@ -19,6 +19,8 @@ import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDef
 import PowerControl from "./components/molecules/PowerControl";
 import { DeckySection } from "./components/atoms/DeckyFrontendLib";
 import { useIsDesktop } from "./hooks/desktopHooks";
+import { AdvancedOptionsEnum } from "./backend/utils";
+import { useAdvancedOption } from "./hooks/useAdvanced";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
@@ -27,6 +29,9 @@ const App: FC = memo(({}) => {
 
   const isDesktop = useIsDesktop();
   const steamPatchEnabled = useIsSteamPatchEnabled();
+  const tdpControlEnabled = useAdvancedOption(
+    AdvancedOptionsEnum.ENABLE_TDP_CONTROL
+  );
 
   return (
     <>
@@ -34,17 +39,23 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {(!steamPatchEnabled || isDesktop) && (
+            {tdpControlEnabled && (!steamPatchEnabled || isDesktop) && (
               <>
                 <TdpSlider />
-                <Gpu />
               </>
             )}
+            <Gpu />
           </DeckySection>
           <PowerControl />
-          {!isDesktop && steamPatchEnabled && <SteamPatchDefaultTdpSlider />}
-          <TdpRange />
-          <PollTdp />
+          {tdpControlEnabled && !isDesktop && steamPatchEnabled && (
+            <SteamPatchDefaultTdpSlider />
+          )}
+          {tdpControlEnabled && (
+            <>
+              <TdpRange />
+              <PollTdp />
+            </>
+          )}
           <AdvancedOptions />
           {!isDesktop && (
             <ErrorBoundary title="OTA Updates">

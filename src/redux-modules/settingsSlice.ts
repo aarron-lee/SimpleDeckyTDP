@@ -380,6 +380,12 @@ function getDefaultAcProfile(state: any, id: string) {
 export const allStateSelector = (state: any) => state;
 export const initialLoadSelector = (state: any) => state.settings.initialLoad;
 
+export const tdpControlEnabledSelector = (state: any) => {
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+  return Boolean(advancedState[AdvancedOptionsEnum.ENABLE_TDP_CONTROL]);
+};
+
 // tdp range selectors
 export const minTdpSelector = (state: any) => state.settings.minTdp;
 export const maxTdpSelector = (state: any) => state.settings.maxTdp;

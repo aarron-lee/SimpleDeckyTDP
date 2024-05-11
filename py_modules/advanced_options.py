@@ -14,6 +14,7 @@ class Devices(Enum):
   ROG_ALLY = "ROG Ally RC71L_RC71L"
 
 class DefaultSettings(Enum):
+  ENABLE_TDP_CONTROL = 'enableTdpControl'
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
@@ -77,6 +78,17 @@ def get_default_options():
   # }
 
   # options.append(enable_steam_patch)
+
+  enable_tdp_control = {
+    'name': 'Enable TDP Controls',
+    'type': 'boolean',
+    'defaultValue': True,
+    'description': 'Enables TDP Controls',
+    'currentValue': get_value(DefaultSettings.ENABLE_TDP_CONTROL, True),
+    'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
+  }
+
+  options.append(enable_tdp_control)
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
@@ -192,3 +204,6 @@ def supports_asus_wmi_tdp():
   if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
     return True
   return False
+
+def tdp_control_enabled():
+  return get_setting(DefaultSettings.ENABLE_TDP_CONTROL.value)
