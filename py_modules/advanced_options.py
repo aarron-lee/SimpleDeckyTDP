@@ -15,6 +15,7 @@ class Devices(Enum):
 
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
+  ENABLE_GPU_CONTROL = 'enableGpuControl'
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
@@ -83,12 +84,23 @@ def get_default_options():
     'name': 'Enable TDP Controls',
     'type': 'boolean',
     'defaultValue': True,
-    'description': 'Enables TDP Controls',
+    'description': 'Enables TDP Sliders, and other advanced options',
     'currentValue': get_value(DefaultSettings.ENABLE_TDP_CONTROL, True),
     'statePath': DefaultSettings.ENABLE_TDP_CONTROL.value
   }
 
   options.append(enable_tdp_control)
+
+  enable_gpu_control = {
+    'name': 'Enable GPU Controls',
+    'type': 'boolean',
+    'defaultValue': True,
+    'description': 'Enables GPU Slider',
+    'currentValue': get_value(DefaultSettings.ENABLE_GPU_CONTROL, True),
+    'statePath': DefaultSettings.ENABLE_GPU_CONTROL.value
+  }
+
+  options.append(enable_gpu_control)
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
@@ -225,3 +237,6 @@ def supports_asus_wmi_tdp():
 
 def tdp_control_enabled():
   return get_setting(DefaultSettings.ENABLE_TDP_CONTROL.value)
+
+def gpu_control_enabled():
+  return get_setting(DefaultSettings.ENABLE_GPU_CONTROL.value)

@@ -3,6 +3,7 @@ import glob
 import re
 import time
 import subprocess
+import advanced_options
 from plugin_enums import GpuModes, GpuRange
 from plugin_settings import get_saved_settings
 
@@ -61,6 +62,9 @@ def set_gpu_frequency(current_game_id):
   return True
 
 def set_gpu_frequency_range(new_min: int, new_max: int):
+  if not advanced_options.gpu_control_enabled():
+    decky_plugin.logger.info('gpu controls disabled, exiting set_gpu_frequency_range')
+    return
   try:
     min, max = get_gpu_frequency_range()
 
