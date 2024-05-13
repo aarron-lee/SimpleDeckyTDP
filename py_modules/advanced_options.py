@@ -118,7 +118,10 @@ def get_default_options():
     'defaultValue': False,
     'description': 'Polling will set TDP every few seconds',
     'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, False),
-    'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value
+    'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+    }
   }
 
   options.append(enable_background_polling)
@@ -129,7 +132,10 @@ def get_default_options():
     'defaultValue': False,
     'description': 'Disable automatically setting TDP, etc, on resume',
     'currentValue': get_value(DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME, False),
-    'statePath': DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME.value
+    'statePath': DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+    }
   }
 
   options.append(force_disable_tdp_on_resume)
@@ -140,7 +146,10 @@ def get_default_options():
     'defaultValue': True,
     'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes helps clear audio glitches',
     'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
-    'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value
+    'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+    }
   }
 
   options.append(max_tdp_on_resume)
@@ -160,7 +169,10 @@ def get_advanced_options():
       'description': 'Use WMI for TDP control. Requires Bios with TDP fixes (Bios version v29.1 or newer)',
       'defaultValue': True,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE, True),
-      'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value
+      'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
     })
   if device_name == Devices.ROG_ALLY.value:
     rog_ally_advanced_options(options)
@@ -175,7 +187,10 @@ def rog_ally_advanced_options(options):
       'type': 'boolean',
       'defaultValue': True,
       'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
-      'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value
+      'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
     })
   # if ASUSCTL_PATH:
   #   options.append({
@@ -193,7 +208,10 @@ def rog_ally_advanced_options(options):
       'description': 'Use Asus WMI calls instead of ryzenadj',
       'defaultValue': False,
       'currentValue': get_value(RogAllySettings.USE_WMI, False),
-      'statePath': RogAllySettings.USE_WMI.value
+      'statePath': RogAllySettings.USE_WMI.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
     })
 
 FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
