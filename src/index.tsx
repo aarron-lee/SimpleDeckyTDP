@@ -42,7 +42,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     }
   });
 
-  const unpatch = steamPatch();
+  // const unpatch = steamPatch();
 
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
@@ -55,7 +55,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     onDismount: () => {
       try {
         store.dispatch(cleanupAction());
-        if (unpatch) unpatch();
+        // if (unpatch) unpatch();
         if (onUnmount) onUnmount();
         if (unregisterSuspendListener) unregisterSuspendListener();
         if (unregisterAcPowerListener) unregisterAcPowerListener();
