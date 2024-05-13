@@ -16,13 +16,14 @@ type Partial<T> = {
   [P in keyof T]?: T[P];
 };
 
-type AdvancedOption = {
+export type AdvancedOption = {
   name: string;
   type: string;
   defaultValue: any;
   currentValue: any;
   statePath: string;
   description?: string;
+  disabled?: { [k: string]: any };
 };
 
 export interface TdpRangeState {
