@@ -387,6 +387,12 @@ export const tdpControlEnabledSelector = (state: any) => {
   return Boolean(advancedState[AdvancedOptionsEnum.ENABLE_TDP_CONTROL]);
 };
 
+export const gpuControlEnabledSelector = (state: any) => {
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+  return Boolean(advancedState[AdvancedOptionsEnum.ENABLE_GPU_CONTROL]);
+};
+
 // tdp range selectors
 export const minTdpSelector = (state: any) => state.settings.minTdp;
 export const maxTdpSelector = (state: any) => state.settings.maxTdp;

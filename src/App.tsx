@@ -32,6 +32,9 @@ const App: FC = memo(({}) => {
   const tdpControlEnabled = useAdvancedOption(
     AdvancedOptionsEnum.ENABLE_TDP_CONTROL
   );
+  const gpuControlEnabled = useAdvancedOption(
+    AdvancedOptionsEnum.ENABLE_GPU_CONTROL
+  );
 
   return (
     <>
@@ -44,7 +47,7 @@ const App: FC = memo(({}) => {
                 <TdpSlider />
               </>
             )}
-            <Gpu />
+            {gpuControlEnabled && <Gpu />}
           </DeckySection>
           <PowerControl />
           {tdpControlEnabled && !isDesktop && steamPatchEnabled && (
