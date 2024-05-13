@@ -1,6 +1,6 @@
 # SimpleDeckyTDP
 
-[![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases) [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/latest/total)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest) [![](https://img.shields.io/github/v/release/aarron-lee/SimpleDeckyTDP)](https://github.com/aarron-lee/SimpleDeckyTDP/releases/latest)
+[![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
 This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended for devices compatible with ryzenadj.
 
@@ -20,6 +20,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - [CPU Boost Controls](#are-there-cpu-boost-controls)
 - [Troubleshooting](#troubleshooting)
   - [ROG Ally Troubleshooting](#rog-ally-troubleshooting)
+  - [Ryzenadj Troubleshooting](#ryzenadj-troubleshooting)
 - [Attribution](#attribution)
 
 ![plugin image](./img/plugin_image_updated.png)
@@ -39,13 +40,13 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
-- Legion Go TDP via WMI calls (allows for TDP control with secure boot)
+- Legion Go TDP via WMI calls (allows for TDP control with secure boot, requires acpi_call)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
 - etc
 
 ## Compatibility
 
-Tested on ChimeraOS Stable (45), NobaraOS 39, and Bazzite Deck Edition.
+Tested on ChimeraOS Stable (45), NobaraOS 39 Deck Edition, and Bazzite.
 
 Other distros not tested.
 
@@ -70,26 +71,7 @@ $ which ryzenadj
 
 If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
 
-To test your ryzenadj to make sure that it's functional, run the following:
-
-```
-$ sudo ryzenadj -i
-```
-
-This should print out a table that looks something like the following:
-
-```
-CPU Family: Rembrandt
-SMU BIOS Interface Version: 18
-Version: v0.13.0
-PM Table Version: 450005
-|        Name         |   Value   |     Parameter      |
-|---------------------|-----------|--------------------|
-| STAPM LIMIT         |     8.000 | stapm-limit        |
-| STAPM VALUE         |     0.062 |                    |
-```
-
-If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel, or disable secure boot.
+See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
 # Install
 
@@ -182,8 +164,6 @@ sudo systemctl restart plugin_loader.service
 
 - Note: the Desktop app does not have full feature parity with the Decky Plugin. Certain features cannot be implemented yet, such as:
   - per-game profiles
-  - set TDP on resume
-  - TDP polling
   - etc
 
 The Desktop App also should not be used simultaneously with the SimpleDeckyTDP decky plugin, you should only use one or the other at any given time.
@@ -295,6 +275,45 @@ The ROG ally has some known issues related to CPU Boost and SMT.
 - Suspend often gets borked if you disable SMT
   - recommendation is to leave SMT on at all times.
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
+
+### Ryzenadj troubleshooting
+
+To test your ryzenadj, try the following:
+
+```
+$ sudo ryzenadj -a 14000 -b 14000 -c 14000
+```
+
+the command above sets 14W TDP. You should see the following if sucessful:
+
+```
+Sucessfully set stapm_limit to 14000
+Sucessfully set fast_limit to 14000
+Sucessfully set slow_limit to 14000
+```
+
+If you don't see the success messages, your ryzenadj is most likely not working or configured for your device.
+
+You can also test by running the following:
+
+```
+$ sudo ryzenadj -i
+```
+
+This should print out a table that looks something like the following:
+
+```
+CPU Family: Rembrandt
+SMU BIOS Interface Version: 18
+Version: v0.13.0
+PM Table Version: 450005
+|        Name         |   Value   |     Parameter      |
+|---------------------|-----------|--------------------|
+| STAPM LIMIT         |     8.000 | stapm-limit        |
+| STAPM VALUE         |     0.062 |                    |
+```
+
+If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel, or disable secure boot.
 
 # Attribution
 
