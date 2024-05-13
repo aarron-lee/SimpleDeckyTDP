@@ -63,7 +63,13 @@ def ryzenadj(tdp: int):
     tdp = tdp*1000
 
     if RYZENADJ_PATH:
-      commands = [RYZENADJ_PATH, '--stapm-limit', f"{tdp}", '--fast-limit', f"{fast_tdp}", '--slow-limit', f"{tdp}"]
+      commands = [
+        RYZENADJ_PATH,
+        '--stapm-limit', f"{tdp}",
+        '--fast-limit', f"{fast_tdp}",
+        '--slow-limit', f"{tdp}",
+        '--apu-slow-limit', f"{tdp}"
+      ]
 
       results = subprocess.call(commands)
       return results
