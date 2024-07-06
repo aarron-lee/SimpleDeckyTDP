@@ -10,6 +10,7 @@ import {
 } from "./redux-modules/settingsSlice";
 import { resumeAction } from "./redux-modules/extraActions";
 import { AdvancedOptionsEnum, getServerApi, logInfo } from "./backend/utils";
+import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 let previousIsAcPower: boolean | undefined;
@@ -91,15 +92,19 @@ export const suspendEventListener = () => {
 
 let eACState: number | undefined;
 
+let debouncedSetAcPower = debounce((newACState: number) => {
+  // eACState = 2 for AC power, 1 for Battery
+  if (newACState !== eACState) {
+    eACState = newACState;
+    store.dispatch(setAcPower(newACState));
+  }
+}, 1000);
+
 export const acPowerEventListener = () => {
   try {
     const unregister = SteamClient.System.RegisterForBatteryStateChanges(
       (e: any) => {
-        // eACState = 2 for AC power, 1 for Battery
-        if (e.eACState !== eACState) {
-          eACState = e.eACState;
-          store.dispatch(setAcPower(e.eACState));
-        }
+        debouncedSetAcPower(e.eACState);
       }
     );
     return unregister;
