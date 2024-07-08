@@ -11,7 +11,8 @@ PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
 class Devices(Enum):
   LEGION_GO = "83E1"
-  ROG_ALLY = "ROG Ally RC71L_RC71L"
+  ROG_ALLY = "ROG Ally RC71"
+  ROG_ALLY_X = "ROG Ally X RC72"
 
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
@@ -186,7 +187,7 @@ def get_advanced_options():
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-  if device_name == Devices.ROG_ALLY.value:
+  if Devices.ROG_ALLY.value in device_name or Devices.ROG_ALLY_X.value in device_name:
     rog_ally_advanced_options(options)
 
 
