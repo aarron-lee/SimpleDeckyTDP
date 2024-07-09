@@ -62,23 +62,30 @@ const OtaUpdates = () => {
         </DeckyRow>
       )}
       {Boolean(latestVersionNum) && (
-        <DeckyRow>
-          <DeckyButton
-            onClick={() => {
-              const serverApi = getServerApi();
-              if (serverApi) otaUpdate(serverApi);
-            }}
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            layout={"below"}
-          >
-            {buttonText}
-          </DeckyButton>
-        </DeckyRow>
+        <>
+          <DeckyRow>
+            <DeckyButton
+              onClick={() => {
+                const serverApi = getServerApi();
+                if (serverApi) otaUpdate(serverApi);
+              }}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              layout={"below"}
+            >
+              {buttonText}
+            </DeckyButton>
+          </DeckyRow>
+          <DeckyRow>
+            <DeckyField label={"Info"} bottomSeparator="none">
+              requires reboot to take effect
+            </DeckyField>
+          </DeckyRow>
+        </>
       )}
     </DeckySection>
   );
