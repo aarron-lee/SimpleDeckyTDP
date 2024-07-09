@@ -35,7 +35,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - GPU Controls
 - SMT control
 - CPU Boost control\*
-  - note, requires a AMD scaling driver that supports CPU boost, currently amd-pstate-epp doesn't support CPU Boost - [See here](#are-there-cpu-boost-controls) for instructions on changing the scaling driver on BazziteOS
+  - note, requires a newer kernel for CPU boost controls
   <!-- - (optional) Fix Steam Client TDP and GPU Sliders -->
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
@@ -179,19 +179,9 @@ See [device settings README](./py_modules/devices/README.md)
 
 ### Are there CPU boost controls?
 
-CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. This scaling driver does NOT support CPU boost controls.
+CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. You must be on a newer kernel for to get CPU Boost controls on `amd-pstate-epp`
 
-NOTE: CPU Boost controls are only recommended for the ROG Ally. For other PC handhelds, it shouldn't make much of a difference. Turning off CPU Boost is particularly useful on the ROG Ally because it has a reported excess power consumption issue.
-
-If you need CPU boost controls, you should investigate changing your default scaling driver to `amd-pstate = passive` or `acpi-cpufreq`.
-
-For to change the scaling driver for to enable CPU boost controls on BazziteOS, run the following in terminal + reboot:
-
-```
-rpm-ostree kargs --append-if-missing=amd_pstate=passive
-```
-
-If you wish to reverse the changes, run the following:
+If you previously changed to amd_pstate=passive for to get CPU boost controls, you can revert it via the following:
 
 ```
 rpm-ostree kargs --delete-if-present=amd_pstate=passive
