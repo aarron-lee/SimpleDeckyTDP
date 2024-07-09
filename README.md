@@ -36,6 +36,7 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - SMT control
 - CPU Boost control\*
   - note, requires a newer kernel for CPU boost controls
+  - CPU boost controls appear automatically if it's available
   <!-- - (optional) Fix Steam Client TDP and GPU Sliders -->
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
@@ -180,6 +181,8 @@ See [device settings README](./py_modules/devices/README.md)
 ### Are there CPU boost controls?
 
 CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. You must be on a newer kernel for to get CPU Boost controls on `amd-pstate-epp`
+
+CPU boost controls will appear automatically if they're available
 
 If you previously changed to amd_pstate=passive for to get CPU boost controls, you can revert it via the following:
 
