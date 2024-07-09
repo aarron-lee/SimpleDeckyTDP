@@ -93,9 +93,9 @@ def set_cpu_boost(enabled = True):
     if os.path.exists(PSTATE_BOOST_PATH):
       with open(PSTATE_BOOST_PATH, 'w') as file:
         if enabled:
-          file.write('1')
+          file.write('enabled')
         else:
-          file.write('0')
+          file.write('disabled')
         file.close()
 
     if os.path.exists(BOOST_PATH):
