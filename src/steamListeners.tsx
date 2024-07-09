@@ -98,7 +98,7 @@ let debouncedSetAcPower = debounce((newACState: number) => {
     eACState = newACState;
     store.dispatch(setAcPower(newACState));
   }
-}, 1000);
+}, 60000);
 
 export const acPowerEventListener = () => {
   try {
