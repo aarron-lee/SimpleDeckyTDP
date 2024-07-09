@@ -19,6 +19,9 @@ const OtaUpdates = () => {
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
 
+  const isUpdated =
+    installedVersionNum === latestVersionNum && Boolean(latestVersionNum);
+
   useEffect(() => {
     const fn = async () => {
       const serverApi = getServerApi();
@@ -35,34 +38,40 @@ const OtaUpdates = () => {
 
   let buttonText = `Update to ${latestVersionNum}`;
 
-  if (installedVersionNum === latestVersionNum && Boolean(latestVersionNum)) {
+  if (isUpdated) {
     buttonText = "Reinstall Plugin";
   }
 
   return (
     <DeckySection title="System Info">
       <DeckyRow>
-        <DeckyField disabled label={"Installed Version"} bottomSeparator="none">
+        <DeckyField label={"Installed Version"} bottomSeparator="none">
           {installedVersionNum}
         </DeckyField>
       </DeckyRow>
 
       {Boolean(latestVersionNum) && (
         <DeckyRow>
-          <DeckyField disabled label={"Latest Version"} bottomSeparator="none">
+          <DeckyField label={"Latest Version"} bottomSeparator="none">
             {latestVersionNum}
           </DeckyField>
         </DeckyRow>
       )}
       {Boolean(scalingDriver) && (
         <DeckyRow>
-          <DeckyField disabled label={"Scaling Driver"} bottomSeparator="none">
+          <DeckyField label={"Scaling Driver"} bottomSeparator="none">
             {scalingDriver}
           </DeckyField>
         </DeckyRow>
       )}
       {Boolean(latestVersionNum) && (
         <>
+          <DeckyRow>
+            <DeckyField label={"Info"} bottomSeparator="none">
+              {isUpdated ? "Reinstall" : "Update"} requires reboot to take
+              effect
+            </DeckyField>
+          </DeckyRow>
           <DeckyRow>
             <DeckyButton
               onClick={() => {
@@ -79,11 +88,6 @@ const OtaUpdates = () => {
             >
               {buttonText}
             </DeckyButton>
-          </DeckyRow>
-          <DeckyRow>
-            <DeckyField label={"Info"} bottomSeparator="none">
-              requires reboot to take effect
-            </DeckyField>
           </DeckyRow>
         </>
       )}
