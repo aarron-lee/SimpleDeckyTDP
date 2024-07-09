@@ -83,26 +83,8 @@ Decky Loader must already be installed. If using ryzenadj for TDP control, secur
 
 Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
 
-**IF ON BAZZITE OS, USE THE BAZZITE INSTALLER [HERE](#bazziteos-installer)**
-
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
-```
-
-### BazziteOS installer
-
-<!-- The Bazzite installer does extra steps so that `Fix Steam Hardware Controls` functionality can work -->
-
-First install Decky Loader with this command in terminal:
-
-```
-ujust setup-decky
-```
-
-Then install SimpleDeckyTDP with:
-
-```
-ujust setup-decky simpledeckytdp
 ```
 
 ### Manual Install
