@@ -52,6 +52,8 @@ class Plugin:
         with file_timeout.time_limit(5):
           settings['advancedOptions'] = advanced_options.get_advanced_options()
 
+          settings['supportsCustomAcPowerManagement'] = ac_power.supports_custom_ac_power_management()
+
           gpu_min, gpu_max = get_gpu_frequency_range()
           if (gpu_min and gpu_max):
             settings['minGpuFrequency'] = gpu_min
