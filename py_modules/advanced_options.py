@@ -3,16 +3,13 @@ import shutil
 import subprocess
 import file_timeout
 import decky_plugin
+from plugin_enums import Devices
 from plugin_settings import get_nested_setting
 from enum import Enum
 
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
-class Devices(Enum):
-  LEGION_GO = "83E1"
-  ROG_ALLY = "ROG Ally RC71"
-  ROG_ALLY_X = "ROG Ally X RC72"
 
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'

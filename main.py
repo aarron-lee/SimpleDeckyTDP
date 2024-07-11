@@ -1,3 +1,4 @@
+import ac_power
 import decky_plugin
 import plugin_update
 import logging
@@ -6,6 +7,7 @@ import file_timeout
 import advanced_options
 import power_utils
 import cpu_utils
+import os
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, per_game_profiles_enabled, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
 import plugin_utils
@@ -194,6 +196,19 @@ class Plugin:
         plugin_update.ota_update()
     except Exception as e:
       logging.error(e)
+
+  async def supports_custom_ac_power_management(self):
+    return ac_power.supports_custom_ac_power_management()
+
+  async def get_ac_power_status(self):
+    ac_power_path = ac_power.custom_ac_power_management_path()
+
+    if ac_power_path and os.path.exists(ac_power_path):
+      with open(ac_power_path, 'r') as file:
+        current_status = file.read().strip()
+        file.close()
+        return current_status
+    return None
 
   # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
   async def _main(self):
