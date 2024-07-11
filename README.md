@@ -184,7 +184,7 @@ CPU Boost controls require a scaling-driver that supports CPU boost. Many distro
 
 CPU boost controls will appear automatically if they're available
 
-If you previously changed to amd_pstate=passive for to get CPU boost controls, you can revert it via the following:
+If you previously changed to amd_pstate=passive for to get CPU boost controls on BazziteOS, you can revert it via the following:
 
 ```
 rpm-ostree kargs --delete-if-present=amd_pstate=passive
