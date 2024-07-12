@@ -2,7 +2,7 @@ import { useTdpProfilesEnabled } from "../../hooks/useEnableTdpProfiles";
 import { useSelector } from "react-redux";
 import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import ErrorBoundary from "../ErrorBoundary";
-import { DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
+import { DeckyField, DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
 
 export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] = useTdpProfilesEnabled();
@@ -18,6 +18,14 @@ export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   const label = isDesktop
     ? "Enable Desktop Profile"
     : "Enable per-game profiles";
+
+  if (isDesktop) {
+    return (
+      <DeckyRow>
+        <DeckyField label="Profile">{description}</DeckyField>
+      </DeckyRow>
+    );
+  }
 
   return (
     <DeckyRow>
