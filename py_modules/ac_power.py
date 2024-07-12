@@ -22,7 +22,7 @@ def custom_ac_power_management_path():
 
   return ac_power_online_path
 
-def supports_custom_ac_power_management(self):
+def supports_custom_ac_power_management():
   ac_power_path = custom_ac_power_management_path()
 
   return bool(ac_power_path) and os.path.exists(ac_power_path)
