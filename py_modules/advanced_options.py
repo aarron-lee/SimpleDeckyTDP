@@ -104,7 +104,7 @@ def get_default_options():
     'name': 'Enable per-game AC power TDP profiles',
     'type': 'boolean',
     'defaultValue': False,
-    'description': 'When plugged into AC power, use a separate per-game TDP profile.',
+    'description': 'When plugged into AC power, use a separate per-game TDP profile. Per-game profiles must be enabled',
     'currentValue': get_value(DefaultSettings.AC_POWER_PROFILES, False),
     'statePath': DefaultSettings.AC_POWER_PROFILES.value
   }
