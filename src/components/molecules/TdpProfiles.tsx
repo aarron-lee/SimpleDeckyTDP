@@ -9,7 +9,11 @@ export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
 
   const { displayName } = useSelector(getCurrentTdpInfoSelector);
 
-  const description = getDescription(displayName, tdpProfilesEnabled);
+  const description = getDescription(
+    isDesktop,
+    displayName,
+    tdpProfilesEnabled
+  );
 
   const label = isDesktop
     ? "Enable Desktop Profile"
@@ -32,10 +36,18 @@ export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   );
 }
 
-function getDescription(displayName: string, tdpProfilesEnabled: boolean) {
+function getDescription(
+  isDesktop: boolean,
+  displayName: string,
+  tdpProfilesEnabled: boolean
+) {
   if (tdpProfilesEnabled) {
+    const formattedDisplayName = isDesktop
+      ? displayName
+      : displayName.substring(0, 20);
+
     return Boolean(displayName) && displayName.toLowerCase() !== "default"
-      ? `Using - ${displayName.substring(0, 20)}...`
+      ? `Using - ${formattedDisplayName}...`
       : `Using - Default`;
   }
   return "";
