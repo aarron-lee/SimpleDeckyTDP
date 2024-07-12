@@ -55,6 +55,8 @@ export enum ServerAPIMethods {
   SET_EPP = "set_epp",
   GET_POWER_CONTROL_INFO = "get_power_control_info",
   GET_IS_STEAM_RUNNING = "is_steam_running",
+  GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT = "supports_custom_ac_power_management",
+  GET_CURRENT_AC_POWER_STATUS = "get_ac_power_status",
 }
 
 export const createLogInfo = (serverAPI: any) => async (info: any) => {
@@ -165,6 +167,20 @@ export const getLogInfo = () => {
 export const getPowerControlInfo = () => {
   return serverApi?.callPluginMethod(
     ServerAPIMethods.GET_POWER_CONTROL_INFO,
+    {}
+  );
+};
+
+export const getSupportsCustomAcPower = () => {
+  return serverApi?.callPluginMethod(
+    ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT,
+    {}
+  );
+};
+
+export const getCurrentAcPowerStatus = () => {
+  return serverApi?.callPluginMethod(
+    ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS,
     {}
   );
 };
