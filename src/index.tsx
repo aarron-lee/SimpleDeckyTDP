@@ -46,7 +46,12 @@ export default definePlugin((serverApi: ServerAPI) => {
 
   const onUnmount = currentGameInfoListener();
   const unregisterSuspendListener = suspendEventListener();
-  let unregisterAcPowerListener = acPowerEventListener();
+
+  let unregisterAcPowerListener: any;
+
+  acPowerEventListener().then((unregister) => {
+    unregisterAcPowerListener = unregister;
+  });
 
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
@@ -57,8 +62,16 @@ export default definePlugin((serverApi: ServerAPI) => {
         store.dispatch(cleanupAction());
         // if (unpatch) unpatch();
         if (onUnmount) onUnmount();
-        if (unregisterSuspendListener) unregisterSuspendListener();
-        if (unregisterAcPowerListener) unregisterAcPowerListener();
+        if (
+          unregisterSuspendListener &&
+          typeof unregisterSuspendListener === "function"
+        )
+          unregisterSuspendListener();
+        if (
+          unregisterAcPowerListener &&
+          typeof unregisterAcPowerListener === "function"
+        )
+          unregisterAcPowerListener();
       } catch (e) {
         console.error(e);
       }

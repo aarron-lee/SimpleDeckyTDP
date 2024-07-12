@@ -9,7 +9,13 @@ import {
   setCurrentGameInfo,
 } from "./redux-modules/settingsSlice";
 import { resumeAction } from "./redux-modules/extraActions";
-import { AdvancedOptionsEnum, getServerApi, logInfo } from "./backend/utils";
+import {
+  AdvancedOptionsEnum,
+  getCurrentAcPowerStatus,
+  getServerApi,
+  getSupportsCustomAcPower,
+  logInfo,
+} from "./backend/utils";
 import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
@@ -92,22 +98,47 @@ export const suspendEventListener = () => {
 
 let eACState: number | undefined;
 
-let debouncedSetAcPower = debounce((newACState: number) => {
+const setAcState = (newACState: number) => {
   // eACState = 2 for AC power, 1 for Battery
   if (newACState !== eACState) {
     eACState = newACState;
     store.dispatch(setAcPower(newACState));
   }
-}, 1000);
+};
 
-export const acPowerEventListener = () => {
+let debouncedSetAcPower = debounce(setAcState, 1000);
+
+export const acPowerEventListener = async () => {
   try {
-    const unregister = SteamClient.System.RegisterForBatteryStateChanges(
-      (e: any) => {
-        debouncedSetAcPower(e.eACState);
-      }
-    );
-    return unregister;
+    const supportsCustomAcPowerManagement = await getSupportsCustomAcPower();
+
+    if (supportsCustomAcPowerManagement) {
+      const intervalId = window.setInterval(async () => {
+        const current_ac_power_status = await getCurrentAcPowerStatus();
+
+        let newACState = 1;
+
+        if (current_ac_power_status === "1") {
+          newACState = 2;
+        }
+
+        setAcState(newACState);
+      }, 1000);
+
+      const unregister = () => {
+        window.clearInterval(intervalId);
+      };
+
+      return unregister;
+    } else {
+      // use steam's battery state change
+      const unregister = SteamClient.System.RegisterForBatteryStateChanges(
+        (e: any) => {
+          debouncedSetAcPower(e.eACState);
+        }
+      );
+      return unregister;
+    }
   } catch (e) {
     logInfo(`error in ac power listener ${e}`);
   }
