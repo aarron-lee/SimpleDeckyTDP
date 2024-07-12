@@ -112,13 +112,13 @@ export const acPowerEventListener = async () => {
   try {
     const supportsCustomAcPowerManagement = await getSupportsCustomAcPower();
 
-    if (supportsCustomAcPowerManagement) {
+    if (supportsCustomAcPowerManagement?.result) {
       const intervalId = window.setInterval(async () => {
         const current_ac_power_status = await getCurrentAcPowerStatus();
 
         let newACState = 1;
 
-        if (current_ac_power_status === "1") {
+        if (current_ac_power_status?.result === "1") {
           newACState = 2;
         }
 
