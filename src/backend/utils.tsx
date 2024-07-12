@@ -25,6 +25,7 @@ export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_TDP_CONTROL,
   AdvancedOptionsEnum.ENABLE_GPU_CONTROL,
   AdvancedOptionsEnum.ENABLE_POWER_CONTROL,
+  AdvancedOptionsEnum.AC_POWER_PROFILES,
   AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME,
   AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
