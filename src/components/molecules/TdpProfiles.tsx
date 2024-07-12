@@ -3,20 +3,13 @@ import { useSelector } from "react-redux";
 import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
-import { useDesktopProfileChangeEffect } from "../../hooks/desktopHooks";
 
 export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] = useTdpProfilesEnabled();
 
   const { displayName } = useSelector(getCurrentTdpInfoSelector);
 
-  useDesktopProfileChangeEffect(tdpProfilesEnabled);
-
-  const description = getDescription(
-    isDesktop,
-    displayName,
-    tdpProfilesEnabled
-  );
+  const description = getDescription(displayName, tdpProfilesEnabled);
 
   const label = isDesktop
     ? "Enable Desktop Profile"
@@ -39,23 +32,11 @@ export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   );
 }
 
-function getDescription(
-  isDesktop: boolean,
-  displayName: string,
-  tdpProfilesEnabled: boolean
-) {
-  if (!isDesktop) {
-    if (tdpProfilesEnabled) {
-      return Boolean(displayName) && displayName.toLowerCase() !== "default"
-        ? `Using - ${displayName.substring(0, 20)}...`
-        : `Using - Default`;
-    }
-    return "";
-  } else if (isDesktop) {
-    if (tdpProfilesEnabled) {
-      return "Using - Default (Desktop)";
-    }
-    return "Using - Default";
+function getDescription(displayName: string, tdpProfilesEnabled: boolean) {
+  if (tdpProfilesEnabled) {
+    return Boolean(displayName) && displayName.toLowerCase() !== "default"
+      ? `Using - ${displayName.substring(0, 20)}...`
+      : `Using - Default`;
   }
   return "";
 }
