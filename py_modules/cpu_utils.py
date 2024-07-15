@@ -118,7 +118,7 @@ def supports_cpu_boost():
 
 def set_cpu_boost(enabled = True):
   try:
-    set_cpb_boost()
+    set_cpb_boost(enabled)
   
     # legacy boost path for acpi cpufreq
     if os.path.exists(BOOST_PATH):
