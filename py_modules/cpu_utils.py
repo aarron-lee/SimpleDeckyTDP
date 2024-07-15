@@ -8,6 +8,7 @@ import file_timeout
 import logging
 import plugin_settings
 import advanced_options
+from time import sleep
 from advanced_options import LegionGoSettings, Devices, RogAllySettings
 import glob
 from devices import legion_go, rog_ally
@@ -76,29 +77,50 @@ def ryzenadj(tdp: int):
   except Exception as e:
     logging.error(e)
 
+def get_cpb_boost_paths():
+  cpu_nums = get_online_cpus()
+
+  cpb_cpu_boost_paths = list(map(
+    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/boost',
+    cpu_nums
+  ))
+
+  return cpb_cpu_boost_paths
+
+def set_cpb_boost(enabled):
+  if os.path.exists(PSTATE_BOOST_PATH):
+    try:
+      with open(PSTATE_BOOST_PATH, "w") as f:
+        f.write("enabled" if enabled else "disabled")
+    except Exception:
+      with open(PSTATE_BOOST_PATH, "w") as f:
+        f.write("1" if enabled else "0")
+  else:
+    # global cpb boost toggle doesn't exist, fallback to setting it per-cpu
+    paths = get_cpb_boost_paths()
+    with file_timeout.time_limit(4):
+      for p in paths:
+        try:
+          with open(p, 'w') as file:
+            file.write("1" if enabled else "0")
+            file.close()
+            sleep(0.1)
+        except Exception as e:
+          decky_plugin.logger.error(e)
+          continue
+
 def supports_cpu_boost():
   if os.path.exists(PSTATE_BOOST_PATH) or os.path.exists(BOOST_PATH):
+    return True
+  elif os.path.exists(get_cpb_boost_paths()[0]):
     return True
   return False
 
 def set_cpu_boost(enabled = True):
   try:
-    # logging.debug(f"set_cpu_boost to {enabled}")
-
-    # if os.path.exists(AMD_PSTATE_PATH):
-    #   pstate = 'active' if enabled else 'passive'
-    #   with open(AMD_PSTATE_PATH, 'w') as f:
-    #     f.write(pstate)
-    #     f.close()
-
-    if os.path.exists(PSTATE_BOOST_PATH):
-      try:
-        with open(PSTATE_BOOST_PATH, "w") as f:
-          f.write("enabled" if enabled else "disabled")
-      except Exception:
-        with open(PSTATE_BOOST_PATH, "w") as f:
-          f.write("1" if enabled else "0")
+    set_cpb_boost()
   
+    # legacy boost path for acpi cpufreq
     if os.path.exists(BOOST_PATH):
       with open(BOOST_PATH, 'w') as file:
         if enabled:
