@@ -90,14 +90,15 @@ def set_cpu_boost(enabled = True):
     #   with open(AMD_PSTATE_PATH, 'w') as f:
     #     f.write(pstate)
     #     f.close()
-    if os.path.exists(PSTATE_BOOST_PATH):
-      with open(PSTATE_BOOST_PATH, 'w') as file:
-        if enabled:
-          file.write('enabled')
-        else:
-          file.write('disabled')
-        file.close()
 
+    if os.path.exists(PSTATE_BOOST_PATH):
+      try:
+        with open(PSTATE_BOOST_PATH, "w") as f:
+          f.write("enabled" if enabled else "disabled")
+      except Exception:
+        with open(PSTATE_BOOST_PATH, "w") as f:
+          f.write("1" if enabled else "0")
+  
     if os.path.exists(BOOST_PATH):
       with open(BOOST_PATH, 'w') as file:
         if enabled:
