@@ -3,6 +3,7 @@ from plugin_enums import AcPowerPaths, Devices
 from advanced_options import get_device_name
 
 ACAD_DEVICES = [
+  # Devices.GPD_WIN4.value,
   Devices.MINISFORUM_V3.value,
   Devices.LEGION_GO.value
 ]

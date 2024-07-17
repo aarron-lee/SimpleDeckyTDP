@@ -11,7 +11,7 @@ class GpuRange(Enum):
   FIXED = "fixedGpuFrequency"
 
 class AcPowerPaths(Enum):
-  # Minisforum V3, LGO
+  # Minisforum V3, LGO, Win 4
   ACAD = '/sys/class/power_supply/ACAD/online'
   # GPD WM2
   ADP1 = '/sys/class/power_supply/ADP1/online'
@@ -22,3 +22,4 @@ class Devices(Enum):
   ROG_ALLY_X = "ROG Ally X RC72"
   MINISFORUM_V3 = "V3"
   GPD_WM2 = "G1619-04"
+  GPD_WIN4 = "G1618-04"
