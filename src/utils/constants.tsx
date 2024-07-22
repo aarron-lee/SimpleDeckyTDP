@@ -61,7 +61,7 @@ addReverseMapping(EppOptions);
 
 export const DEFAULT_POWER_CONTROLS = {
   "amd-pstate-epp": {
-    epp: EppOptions.BALANCE_PERFORMANCE,
+    epp: EppOptions.BALANCE_POWER_SAVE,
     powerGovernor: PowerGovernorOptions.POWER_SAVE,
   },
   "amd-pstate": {
