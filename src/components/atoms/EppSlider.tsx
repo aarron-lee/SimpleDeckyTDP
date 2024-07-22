@@ -73,7 +73,7 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
 
   return (
     <DeckySlider
-      label="Energy Performance Preference"
+      label="CPU Energy Performance Preference"
       value={sliderValue}
       min={0}
       max={notchLabels.length - 1}

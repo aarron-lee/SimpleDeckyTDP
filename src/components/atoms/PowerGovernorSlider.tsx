@@ -62,7 +62,7 @@ const PowerGovernorSlider: FC<{
 
   return (
     <DeckySlider
-      label="Power Governor"
+      label="CPU Power Governor"
       value={sliderValue}
       min={0}
       max={notchLabels.length - 1}
