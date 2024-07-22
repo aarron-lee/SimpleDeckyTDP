@@ -46,11 +46,13 @@ def ryzenadj(tdp: int):
       return results
 
     with file_timeout.time_limit(4):
-      if advanced_options.get_setting(
+      device_name = advanced_options.get_device_name()
+
+      if device_name == Devices.LEGION_GO.value and advanced_options.get_setting(
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
         return legion_go.ryzenadj(tdp)
-      elif advanced_options.get_device_name() == Devices.ROG_ALLY.value:
+      if Devices.ROG_ALLY.value in device_name or Devices.ROG_ALLY_X.value in device_name:
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
         #   if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL.value):
