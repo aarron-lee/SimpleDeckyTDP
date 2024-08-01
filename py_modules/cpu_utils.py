@@ -37,14 +37,7 @@ def ryzenadj(tdp: int):
   if not advanced_options.tdp_control_enabled():
     return
 
-  settings = plugin_settings.get_saved_settings()
   try:
-    if settings.get("overrideRyzenadj"):
-      # use custom Tdp instead of ryzenadj
-      commands = [settings.get("overrideRyzenadj"), tdp]
-      results = subprocess.call(commands)
-      return results
-
     with file_timeout.time_limit(4):
       device_name = advanced_options.get_device_name()
 

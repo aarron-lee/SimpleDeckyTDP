@@ -15,7 +15,6 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
 - [Uninstall Instructions](#uninstall-instructions)
 - [Advanced Configuration](#advanced-configuration)
   - [Desktop App](#desktop-app)
-  - [Custom TDP Method](#custom-tdp-method)
   - [Custom Device Settings](#custom-device-settings)
   - [CPU Boost Controls](#are-there-cpu-boost-controls)
 - [Troubleshooting](#troubleshooting)
@@ -153,27 +152,6 @@ sudo systemctl restart plugin_loader.service
 The Desktop App also should not be used simultaneously with the SimpleDeckyTDP decky plugin, you should only use one or the other at any given time.
 
 This is because 2-way communication between the plugin and Desktop app is currently not possible.
-
-### Custom TDP method
-
-If you'd prefer to use something other than `ryzenadj` for to set TDP, you can opt to override ryzenadj with an alternative.
-
-In the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json`, add an `overrideRyzenadj` value. Whatever value you set will be used as a command, with the tdp provided as a single additional arg
-
-e.g.
-
-```
-# settings.json
-{
-    "overrideRyzenadj": "/path/to/script.sh",
-    ...
-}
-
-# called later at app runtime, 15 = tdp value
-/path/to/script.sh 15
-```
-
-You can see how it's used in the code [here](https://github.com/aarron-lee/SimpleDeckyTDP/blob/1ab6b6df468e983a1246ff378875bb2a370b5698/py_modules/cpu_utils.py#L18)
 
 ### Custom Device settings
 
