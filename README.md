@@ -181,6 +181,8 @@ See [device settings README](./py_modules/devices/README.md)
 
 ### Are there CPU boost controls?
 
+Note, CPU Boost should generally be disabled for the ROG Ally and Ally X, CPU boost is known to cause excessive power draw on the Ally and Ally X
+
 CPU Boost controls require a scaling-driver that supports CPU boost. Many distros, by default, use `amd-pstate-epp` as the scaling driver. You must be on a newer kernel for to get CPU Boost controls on `amd-pstate-epp`
 
 CPU boost controls will appear automatically if they're available
