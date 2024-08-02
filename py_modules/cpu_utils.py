@@ -93,41 +93,48 @@ def set_cpb_boost(enabled):
   else:
     # global cpb boost toggle doesn't exist, fallback to setting it per-cpu
     paths = get_cpb_boost_paths()
-    with file_timeout.time_limit(4):
-      for p in paths:
-        try:
-          with open(p, 'w') as file:
-            file.write("1" if enabled else "0")
-            file.close()
-            sleep(0.1)
-        except Exception as e:
-          decky_plugin.logger.error(e)
-          continue
+    try:
+      with file_timeout.time_limit(4):
+        for p in paths:
+          try:
+            with open(p, 'w') as file:
+              file.write("1" if enabled else "0")
+              file.close()
+              sleep(0.1)
+          except Exception as e:
+            decky_plugin.logger.error(e)
+            continue
+    except Exception as e:
+      logging.error(e)
 
 def supports_cpu_boost():
-  if os.path.exists(PSTATE_BOOST_PATH) or os.path.exists(BOOST_PATH):
-    return True
+  try:
+    with file_timeout.time_limit(4):
+      if os.path.exists(PSTATE_BOOST_PATH) or os.path.exists(BOOST_PATH):
+        return True
 
-  cpu_boost_paths = get_cpb_boost_paths()
-  if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
-    return True
+      cpu_boost_paths = get_cpb_boost_paths()
+      if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
+        return True
+  except Exception as e:
+    logging.error(e)
 
   return False
 
 def set_cpu_boost(enabled = True):
   try:
-    set_cpb_boost(enabled)
-  
-    # legacy boost path for acpi cpufreq
-    if os.path.exists(BOOST_PATH):
-      with open(BOOST_PATH, 'w') as file:
-        if enabled:
-          file.write('1')
-        else:
-          file.write('0')
-        file.close()
+    with file_timeout.time_limit(3):
+      set_cpb_boost(enabled)
 
-    return True
+      # legacy boost path for acpi cpufreq
+      if os.path.exists(BOOST_PATH):
+        with open(BOOST_PATH, 'w') as file:
+          if enabled:
+            file.write('1')
+          else:
+            file.write('0')
+          file.close()
+      return True
   except Exception as e:
     logging.error(e)
     return False
