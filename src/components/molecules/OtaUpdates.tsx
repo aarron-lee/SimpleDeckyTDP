@@ -68,8 +68,7 @@ const OtaUpdates = () => {
         <>
           <DeckyRow>
             <DeckyField label={"Info"} bottomSeparator="none">
-              {isUpdated ? "Reinstall" : "Update"} requires reboot to take
-              effect
+              {isUpdated ? "Reinstall" : "Update"} can take up to 1 minute
             </DeckyField>
           </DeckyRow>
           <DeckyRow>
