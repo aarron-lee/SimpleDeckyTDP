@@ -14,7 +14,7 @@ import glob
 from devices import legion_go, rog_ally
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
-BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
+# BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
 PSTATE_BOOST_PATH="/sys/devices/system/cpu/amd_pstate/cpb_boost"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
@@ -76,7 +76,7 @@ def get_cpb_boost_paths():
   cpu_nums = get_online_cpus()
 
   cpb_cpu_boost_paths = list(map(
-    lambda cpu_num: f'/sys/devices/system/cpu/cpu{cpu_num}/cpufreq/boost',
+    lambda cpu_num: f'/sys/devices/system/cpu/cpufreq/policy{cpu_num}/boost',
     cpu_nums
   ))
 
@@ -110,7 +110,7 @@ def set_cpb_boost(enabled):
 def supports_cpu_boost():
   try:
     with file_timeout.time_limit(4):
-      if os.path.exists(PSTATE_BOOST_PATH) or os.path.exists(BOOST_PATH):
+      if os.path.exists(PSTATE_BOOST_PATH):
         return True
 
       cpu_boost_paths = get_cpb_boost_paths()
@@ -125,16 +125,6 @@ def set_cpu_boost(enabled = True):
   try:
     with file_timeout.time_limit(3):
       set_cpb_boost(enabled)
-
-      # legacy boost path for acpi cpufreq
-      if os.path.exists(BOOST_PATH):
-        with open(BOOST_PATH, 'w') as file:
-          if enabled:
-            file.write('1')
-          else:
-            file.write('0')
-          file.close()
-      return True
   except Exception as e:
     logging.error(e)
     return False
