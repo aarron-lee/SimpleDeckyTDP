@@ -4,7 +4,7 @@ from settings import SettingsManager
 from collections import deque 
 
 try:
-  LOG_LOCATION = f"/tmp/simpleTDP.log"
+  LOG_LOCATION = f"/tmp/simpleTDPDesktop.log"
   logging.basicConfig(
     level = logging.INFO,
     filename = LOG_LOCATION,
