@@ -49,6 +49,7 @@ export enum ServerAPIMethods {
   PERSIST_TDP = "persist_tdp",
   PERSIST_GPU = "persist_gpu",
   PERSIST_SMT = "persist_smt",
+  SET_SMT = "set_smt",
   PERSIST_CPU_BOOST = "persist_cpu_boost",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
   SET_STEAM_PATCH_VALUES_FOR_GAME_ID = "set_steam_patch_values_for_game_id",

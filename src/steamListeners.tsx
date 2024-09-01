@@ -15,6 +15,7 @@ import {
   getServerApi,
   getSupportsCustomAcPower,
   logInfo,
+  ServerAPIMethods,
 } from "./backend/utils";
 import { debounce } from "lodash";
 
@@ -53,6 +54,18 @@ export const currentGameInfoListener = () => {
 };
 
 export const suspendEventListener = () => {
+  const unregister = SteamClient.System.RegisterForOnSuspendRequest(
+    () => {
+      const serverApi = getServerApi();
+      serverApi.callPluginMethod(ServerAPIMethods.SET_SMT, {
+        smt: true
+      });
+    }
+  );
+  return unregister;
+}
+
+export const resumeFromSuspendEventListener = () => {
   try {
     const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
       async () => {

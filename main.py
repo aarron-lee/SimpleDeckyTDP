@@ -137,6 +137,9 @@ class Plugin:
       time.sleep(0.3)
       plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
 
+  async def set_smt(self, smt):
+      cpu_utils.set_smt(smt)
+
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {
       f'{gameId}': {

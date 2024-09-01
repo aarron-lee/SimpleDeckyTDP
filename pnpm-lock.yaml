@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@reduxjs/toolkit':
     specifier: ^1.9.7
@@ -47,8 +43,8 @@ devDependencies:
     specifier: ^5.28.0
     version: 5.28.1
   decky-frontend-lib:
-    specifier: ^3.24.5
-    version: 3.24.5
+    specifier: ^3.25.0
+    version: 3.25.0
   rollup:
     specifier: ^2.77.1
     version: 2.79.1
@@ -486,8 +482,8 @@ packages:
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
 
-  /decky-frontend-lib@3.24.5:
-    resolution: {integrity: sha512-eYlbKDOOcIBPI0b76Rqvlryq2ym/QNiry4xf2pFrXmBa1f95dflqbQAb2gTq9uHEa5gFmeV4lUcMPGJ3M14Xqw==}
+  /decky-frontend-lib@3.25.0:
+    resolution: {integrity: sha512-2lBoHS2AIRmuluq/bGdHBz+uyToQE7k3K/vDq1MQbDZ4eC+8CGDuh2T8yZOj3D0yjGP2MdikNNAWPA9Z5l2qDg==}
     dev: true
 
   /deepmerge@4.3.1:
@@ -1078,3 +1074,7 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
