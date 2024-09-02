@@ -1,5 +1,5 @@
 import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
-import { FaShip } from "react-icons/fa";
+import { BsCpuFill } from "react-icons/bs";
 import {
   createServerApiHelpers,
   saveServerApi,
@@ -62,7 +62,7 @@ export default definePlugin((serverApi: ServerAPI) => {
   return {
     title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
     content: <AppContainer />,
-    icon: <FaShip />,
+    icon: <BsCpuFill />,
     onDismount: () => {
       try {
         store.dispatch(cleanupAction());
