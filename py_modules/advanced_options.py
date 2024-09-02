@@ -9,6 +9,7 @@ from enum import Enum
 
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
+BATTERY_LIMIT_PATH = '/sys/class/power_supply/BAT0/charge_control_end_threshold'
 
 
 class DefaultSettings(Enum):
@@ -20,6 +21,7 @@ class DefaultSettings(Enum):
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
+  LIMIT_BATTERY_CHARGE = "limitBatteryCharge"
 
 class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
@@ -163,6 +165,17 @@ def get_default_options():
   }
 
   options.append(max_tdp_on_resume)
+
+  limit_battery_charge = {
+    'name': 'Limit max battery charge',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'Expand battery lifespan reducing max charge to 80%',
+    'currentValue': get_value(DefaultSettings.LIMIT_BATTERY_CHARGE, False),
+    'statePath': DefaultSettings.LIMIT_BATTERY_CHARGE.value
+  }
+
+  options.append(limit_battery_charge)
 
   return options
 

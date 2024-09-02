@@ -3,6 +3,7 @@ import { FaShip } from "react-icons/fa";
 import {
   createServerApiHelpers,
   saveServerApi,
+  setLimitBatteryCharge,
   setValuesForGameId,
 } from "./backend/utils";
 import { store } from "./redux-modules/store";
@@ -39,6 +40,9 @@ export default definePlugin((serverApi: ServerAPI) => {
 
       setTimeout(() => {
         setValuesForGameId("default");
+        if(results["advanced"]["limitBatteryCharge"]){
+          setLimitBatteryCharge(true);
+        }
       }, 0);
     }
   });

@@ -59,6 +59,7 @@ export enum ServerAPIMethods {
   GET_IS_STEAM_RUNNING = "is_steam_running",
   GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT = "supports_custom_ac_power_management",
   GET_CURRENT_AC_POWER_STATUS = "get_ac_power_status",
+  LIMIT_BATTERY_CHARGE = "limit_battery_charge"
 }
 
 export const createLogInfo = (serverAPI: any) => async (info: any) => {
@@ -69,11 +70,11 @@ export const createLogInfo = (serverAPI: any) => async (info: any) => {
 
 export const createSetSetting =
   (serverAPI: any) =>
-  async ({ fieldName, fieldValue }: { fieldName: string; fieldValue: any }) =>
-    await serverAPI.callPluginMethod(ServerAPIMethods.SET_SETTING, {
-      name: fieldName,
-      value: fieldValue,
-    });
+    async ({ fieldName, fieldValue }: { fieldName: string; fieldValue: any }) =>
+      await serverAPI.callPluginMethod(ServerAPIMethods.SET_SETTING, {
+        name: fieldName,
+        value: fieldValue,
+      });
 
 export const createGetSettings = (serverAPI: any) => async () => {
   return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {});
@@ -102,13 +103,13 @@ export const createSaveTdp =
 
 export const createSaveTdpProfiles =
   (serverAPI: any) =>
-  async (tdpProfiles: TdpProfiles, currentGameId: string, advanced: any) => {
-    return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
-      tdpProfiles,
-      currentGameId,
-      advanced,
-    });
-  };
+    async (tdpProfiles: TdpProfiles, currentGameId: string, advanced: any) => {
+      return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
+        tdpProfiles,
+        currentGameId,
+        advanced,
+      });
+    };
 
 export const createPollTdp =
   (serverAPI: any) => async (currentGameId: string) => {
@@ -162,7 +163,7 @@ export const getLogInfo = () => {
     const logInfo = createLogInfo(serverApi);
     return logInfo;
   } else {
-    return () => {};
+    return () => { };
   }
 };
 
@@ -225,6 +226,14 @@ export const setValuesForGameId = (gameId: string) => {
   if (serverApi) {
     serverApi.callPluginMethod(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, {
       gameId,
+    });
+  }
+};
+
+export const setLimitBatteryCharge = (limit: boolean) => {
+  if (serverApi) {
+    serverApi.callPluginMethod(ServerAPIMethods.LIMIT_BATTERY_CHARGE, {
+      limit,
     });
   }
 };

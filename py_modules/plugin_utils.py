@@ -68,6 +68,20 @@ def set_tdp_for_tdp_profile(tdp_profile):
     except Exception as e:
       logging.error(f'main#set_tdp_for_tdp_profile timeout {e}')
 
+def set_limit_battery_charge(limit):
+  try:
+    with open(advanced_options.BATTERY_LIMIT_PATH, 'w') as file:
+      level = "100"
+      if(limit):
+        level = "80"
+
+      logging.info(f'Setting max battery charge to {level}%')
+      file.write(level)
+      file.close()
+      sleep(0.1)
+  except Exception as e:
+    decky_plugin.logger.error(e)
+
 def set_gpu_for_tdp_profile(tdp_profile):
   gpu_mode = tdp_profile.get('gpuMode')
   fixed_frequency = tdp_profile.get('fixedGpuFrequency')

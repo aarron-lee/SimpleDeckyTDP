@@ -10,7 +10,7 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { AdvancedOptionsEnum, GpuModes, logInfo } from "../backend/utils";
+import { AdvancedOptionsEnum, getServerApi, GpuModes, logInfo, ServerAPIMethods, setLimitBatteryCharge } from "../backend/utils";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -145,6 +145,10 @@ export const settingsSlice = createSlice({
       set(state, `advanced.${statePath}`, value);
 
       handleAdvancedOptionsEdgeCases(state, statePath, value);
+
+      if (statePath == 'limitBatteryCharge') {
+        setLimitBatteryCharge(value)
+      }
     },
     updatePowerGovernor: (
       state,

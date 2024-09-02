@@ -156,6 +156,9 @@ class Plugin:
     # return True
 
 
+  async def limit_battery_charge(self, limit: bool): 
+    plugin_utils.set_limit_battery_charge(limit)
+
   async def poll_tdp(self, currentGameId: str):
     settings = get_saved_settings()
     tdp_profile = get_tdp_profile('default')
