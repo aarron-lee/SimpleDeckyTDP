@@ -18,9 +18,10 @@ import {
   createServerApiHelpers,
   getServerApi,
   persistTdp,
+  ServerAPIMethods,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { cleanupAction, resumeAction } from "./extraActions";
+import { cleanupAction, resumeAction, suspendAction } from "./extraActions";
 import { debounce } from "lodash";
 import {
   clearIntervalOnSteamPatchChange,
@@ -74,6 +75,12 @@ export const settingsMiddleware =
       if (action.type === resumeAction.type) {
         // pollTdp simply tells backend to set TDP according to settings.json
         setPollTdp(activeGameId);
+      }
+
+      if (action.type === suspendAction.type) {
+        serverApi.callPluginMethod(ServerAPIMethods.SET_SMT, {
+          smt: true
+        });
       }
 
       if (
