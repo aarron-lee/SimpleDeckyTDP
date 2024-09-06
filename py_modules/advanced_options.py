@@ -5,6 +5,7 @@ import file_timeout
 import decky_plugin
 from plugin_settings import get_nested_setting
 from enum import Enum
+from devices import rog_ally
 import device_utils
 
 ASUSCTL_PATH = shutil.which('asusctl')
@@ -198,27 +199,18 @@ def rog_ally_advanced_options(options):
   #     'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
   #     'statePath': RogAllySettings.USE_ASUSCTL.value
   #   })
-  if supports_asus_wmi_tdp():
+  if rog_ally.supports_wmi_tdp():
     options.append({
       'name': 'Use Asus WMI for TDP',
       'type': 'boolean',
       'description': 'Use Asus WMI calls instead of ryzenadj',
-      'defaultValue': False,
-      'currentValue': get_value(RogAllySettings.USE_WMI, False),
+      'defaultValue': True,
+      'currentValue': get_value(RogAllySettings.USE_WMI, True),
       'statePath': RogAllySettings.USE_WMI.value,
       'disabled': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-
-FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
-SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
-STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
-
-def supports_asus_wmi_tdp():
-  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
-    return True
-  return False
 
 def tdp_control_enabled():
   return get_setting(DefaultSettings.ENABLE_TDP_CONTROL.value)

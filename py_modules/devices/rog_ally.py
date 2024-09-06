@@ -43,10 +43,10 @@ STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
 #     return results
 
 def supports_bios_wmi_tdp():
-  allowed_names = {"ppt_fppt", "ppt_pl2_sppt", "ppt_pl1_spl"}
+  tdp_methods = {"ppt_fppt", "ppt_pl2_sppt", "ppt_pl1_spl"}
 
   settings = bios_settings.get_bios_settings()
-  filtered_data = [item for item in settings.get("BiosSettings") if item.get("Name") in allowed_names]
+  filtered_data = [item for item in settings.get("BiosSettings") if item.get("Name") in tdp_methods]
 
   if len(filtered_data) == 3:
     return True
