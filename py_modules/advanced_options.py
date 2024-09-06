@@ -3,9 +3,9 @@ import shutil
 import subprocess
 import file_timeout
 import decky_plugin
-from plugin_enums import Devices
 from plugin_settings import get_nested_setting
 from enum import Enum
+import device_utils
 
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
@@ -41,18 +41,6 @@ def modprobe_acpi_call():
 # e.g. get_setting(LegionGoSettings.CUSTOM_TDP_MODE.value)
 def get_setting(setting_name = ''):
   return get_nested_setting(f'advanced.{setting_name}')
-
-def get_device_name():
-  try:
-    with file_timeout.time_limit(2):
-      with open("/sys/devices/virtual/dmi/id/product_name", "r") as file:
-        device_name = file.read().strip()
-        file.close()
-
-        return device_name
-  except Exception as e:
-    decky_plugin.logger.error(f'{__name__} error while trying to read device name')
-    return ''
 
 def get_value(setting, default_value = False):
   current_val = get_nested_setting(
@@ -169,10 +157,9 @@ def get_default_options():
 
 def get_advanced_options():
   options = get_default_options()
-  device_name = get_device_name()
   supports_acpi_call = modprobe_acpi_call()
 
-  if device_name == Devices.LEGION_GO.value and supports_acpi_call:
+  if device_utils.is_legion_go() and supports_acpi_call:
     options.append({
       'name': 'Lenovo Custom TDP Mode',
       'type': 'boolean',
@@ -184,7 +171,7 @@ def get_advanced_options():
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-  if Devices.ROG_ALLY.value in device_name or Devices.ROG_ALLY_X.value in device_name:
+  if device_utils.is_rog_ally():
     rog_ally_advanced_options(options)
 
 

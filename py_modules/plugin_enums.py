@@ -15,11 +15,3 @@ class AcPowerPaths(Enum):
   ACAD = '/sys/class/power_supply/ACAD/online'
   # GPD WM2
   ADP1 = '/sys/class/power_supply/ADP1/online'
-
-class Devices(Enum):
-  LEGION_GO = "83E1"
-  ROG_ALLY = "ROG Ally RC71"
-  ROG_ALLY_X = "ROG Ally X RC72"
-  MINISFORUM_V3 = "V3"
-  GPD_WM2 = "G1619-04"
-  GPD_WIN4 = "G1618-04"

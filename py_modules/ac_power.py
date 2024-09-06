@@ -1,18 +1,18 @@
 import os
-from plugin_enums import AcPowerPaths, Devices
-from advanced_options import get_device_name
+from plugin_enums import AcPowerPaths
+import device_utils
 
 ACAD_DEVICES = [
-  # Devices.GPD_WIN4.value,
-  Devices.MINISFORUM_V3.value,
-  Devices.LEGION_GO.value
+  # device_utils.Devices.GPD_WIN4.value,
+  device_utils.Devices.MINISFORUM_V3.value,
+  device_utils.Devices.LEGION_GO.value
 ]
 ADP1_DEVICES = [
-#   Devices.GPD_WM2.value
+#   device_utils.Devices.GPD_WM2.value
 ]
 
 def custom_ac_power_management_path():
-  device_name = get_device_name()
+  device_name = device_utils.get_device_name()
 
   ac_power_online_path = None
 

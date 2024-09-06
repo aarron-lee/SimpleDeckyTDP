@@ -8,8 +8,9 @@ import file_timeout
 import logging
 import advanced_options
 from time import sleep
-from advanced_options import LegionGoSettings, Devices, RogAllySettings
+from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally
+import device_utils
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
@@ -35,13 +36,11 @@ def ryzenadj(tdp: int):
 
   try:
     with file_timeout.time_limit(4):
-      device_name = advanced_options.get_device_name()
-
-      if device_name == Devices.LEGION_GO.value and advanced_options.get_setting(
+      if device_utils.is_legion_go() and advanced_options.get_setting(
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
         return legion_go.ryzenadj(tdp)
-      elif Devices.ROG_ALLY.value in device_name or Devices.ROG_ALLY_X.value in device_name:
+      elif device_utils.is_rog_ally():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
         #   if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL.value):
