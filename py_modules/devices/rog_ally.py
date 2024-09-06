@@ -3,6 +3,7 @@ import shutil
 from time import sleep
 import os
 import decky_plugin
+import bios_settings
 
 ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
@@ -41,6 +42,25 @@ STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
 
 #     return results
 
+def supports_bios_wmi_tdp():
+  allowed_names = {"ppt_fppt", "ppt_pl2_sppt", "ppt_pl1_spl"}
+
+  settings = bios_settings.get_bios_settings()
+  filtered_data = [item for item in settings.get("BiosSettings") if item.get("Name") in allowed_names]
+
+  if len(filtered_data) == 3:
+    return True
+
+  return False
+
+def supports_wmi_tdp():
+  if supports_bios_wmi_tdp():
+    return True
+
+  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
+    return True
+  return False
+
 def set_platform_profile(tdp):
   command = 'quiet'
   if tdp < 13:
@@ -60,27 +80,33 @@ def set_platform_profile(tdp):
 
 def ryzenadj(tdp):
   try:
-    # fast limit
-    with open(FAST_WMI_PATH, 'w') as file:
-      file.write(f'{tdp+2}')
-    sleep(0.1)
+    if supports_bios_wmi_tdp():
+      tdp_values = {
+        'ppt_fppt': tdp + 2,
+        'ppt_pl2_sppt': tdp,
+        'ppt_pl1_spl': tdp
+      }
+      for (wmi_method, target_tdp) in tdp_values.items():
+        cmd = f'fwupdmgr set-bios-setting {wmi_method} {target_tdp}'
+        subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sleep(0.1)
+    else:
+      # fast limit
+      with open(FAST_WMI_PATH, 'w') as file:
+        file.write(f'{tdp+2}')
+      sleep(0.1)
 
-    # slow limit
-    with open(SLOW_WMI_PATH, 'w') as file:
-      file.write(f'{tdp}')
-    sleep(0.1)
+      # slow limit
+      with open(SLOW_WMI_PATH, 'w') as file:
+        file.write(f'{tdp}')
+      sleep(0.1)
 
-    # stapm limit
-    with open(STAPM_WMI_PATH, 'w') as file:
-      file.write(f'{tdp}')
-    sleep(0.1)
+      # stapm limit
+      with open(STAPM_WMI_PATH, 'w') as file:
+        file.write(f'{tdp}')
+      sleep(0.1)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
-
-def supports_wmi_tdp():
-  if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
-    return True
-  return False
 
 def execute_bash_command(command, path):
   cmd = f"echo '{command}' | tee {path}"

@@ -14,4 +14,3 @@ def get_bios_settings():
     except Exception as e:
         decky_plugin.logger.error(f'Error get_bios_setting {e}')
         return {}
-
