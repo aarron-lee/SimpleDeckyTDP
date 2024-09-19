@@ -13,6 +13,7 @@ from gpu_utils import get_gpu_frequency_range
 import plugin_utils
 import migrations
 import steam_info
+import device_utils
 
 class Plugin:
 
@@ -137,8 +138,10 @@ class Plugin:
       time.sleep(0.3)
       plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
 
-  async def set_smt(self, smt):
-      cpu_utils.set_smt(smt)
+  async def on_suspend(self):
+      if device_utils.is_rog_ally():
+        # suspend bug for ROG Ally, force enable smt on_suspend
+        cpu_utils.set_smt(True)
 
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {
