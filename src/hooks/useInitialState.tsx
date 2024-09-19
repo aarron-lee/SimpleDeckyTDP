@@ -17,12 +17,10 @@ export const useFetchInitialStateEffect = () => {
 
   useEffect(() => {
     getSettings().then((result) => {
-      if (result.success) {
-        const results = result.result || {};
+      const results = result || {};
 
-        //@ts-ignore
-        dispatch(updateInitialLoad(...results));
-      }
+      //@ts-ignore
+      dispatch(updateInitialLoad(...results));
     });
   }, []);
 };

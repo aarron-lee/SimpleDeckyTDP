@@ -19,20 +19,18 @@ import AppContainer from "./App";
 export default definePlugin(() => {
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
-    if (result.success) {
-      const results = result.result || {};
+    const results = result || {};
 
-      store.dispatch(
-        updateInitialLoad({
-          ...results,
-        })
-      );
-      store.dispatch(fetchPowerControlInfo());
+    store.dispatch(
+      updateInitialLoad({
+        ...results,
+      })
+    );
+    store.dispatch(fetchPowerControlInfo());
 
-      setTimeout(() => {
-        setValuesForGameId("default");
-      }, 0);
-    }
+    setTimeout(() => {
+      setValuesForGameId("default");
+    }, 0);
   });
 
   // const unpatch = steamPatch();
