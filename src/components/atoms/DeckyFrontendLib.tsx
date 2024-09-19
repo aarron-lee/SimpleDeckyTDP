@@ -10,7 +10,7 @@ import {
   SliderField,
   ToggleField,
   Router,
-} from "decky-frontend-lib";
+} from "@decky/ui";
 
 export const DeckySection = PanelSection;
 
@@ -24,7 +24,7 @@ export const DeckyButton = ButtonItem;
 
 export const DeckyField = Field;
 
-// from decky-frontend-lib
+// from @decky/ui
 export type NotchLabel = {
   notchIndex: number;
   label: string;

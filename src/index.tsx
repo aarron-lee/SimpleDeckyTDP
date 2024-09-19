@@ -1,4 +1,4 @@
-import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
+import { definePlugin, ServerAPI, staticClasses } from "@decky/ui";
 import { BsCpuFill } from "react-icons/bs";
 import {
   createServerApiHelpers,
