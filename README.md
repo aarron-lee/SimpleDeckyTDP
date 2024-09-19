@@ -229,7 +229,7 @@ For possibility #2, you can either enable polling to workaround the polkit file,
 The ROG ally has some known issues related to CPU Boost and SMT.
 
 - Suspend often gets borked if you disable SMT
-  - recommendation is to leave SMT on at all times.
+  - SDTDP ships a workaround for the SMT bug on the Ally and Ally X, where it will temporarily turn on SMT before suspend
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
 
 ### Ryzenadj troubleshooting
