@@ -19,9 +19,11 @@ import {
   persistSmt,
   setEpp,
   setPowerGovernor,
+  ServerAPIMethods,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { extractCurrentGameId } from "../utils/constants";
+import { suspendAction } from "./extraActions";
 
 export const commonMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
@@ -37,6 +39,10 @@ export const commonMiddleware =
     const activeGameId = steamPatchEnabled
       ? extractCurrentGameId()
       : activeGameIdSelector(state);
+
+    if (action.type === suspendAction.type) {
+      serverApi.callPluginMethod(ServerAPIMethods.ON_SUSPEND, {});
+    }
 
     if (action.type === setEnableTdpProfiles.type) {
       setSetting({
