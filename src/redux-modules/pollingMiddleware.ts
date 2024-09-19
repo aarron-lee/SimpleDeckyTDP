@@ -38,7 +38,7 @@ export const setPolling = () => {
       } else {
         const activeGameId = activeGameIdSelector(store.getState());
 
-        debouncedSetPollTdp(activeGameId);
+        debouncedSetPollTdp({ currentGameId: activeGameId });
       }
     }, pollRate);
   }
