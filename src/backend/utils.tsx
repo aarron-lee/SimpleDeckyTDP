@@ -136,47 +136,51 @@ export const getCurrentAcPowerStatus = callable(
 );
 
 export const setPowerGovernor = (powerGovernorInfo: any, gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_POWER_GOVERNOR, {
-      powerGovernorInfo,
-      gameId,
-    });
-  }
+  const setter = callable<[{ powerGovernorInfo: any; gameId: string }], any>(
+    ServerAPIMethods.SET_POWER_GOVERNOR
+  );
+  setter({
+    powerGovernorInfo,
+    gameId,
+  });
 };
 
 export const setEpp = (eppInfo: any, gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_EPP, {
-      eppInfo,
-      gameId,
-    });
-  }
+  const setter = callable<[{ eppInfo: any; gameId: string }], any>(
+    ServerAPIMethods.SET_EPP
+  );
+  setter({
+    eppInfo,
+    gameId,
+  });
 };
 
 export const persistTdp = (tdp: number, gameId: string) => {
-  serverApi.callPluginMethod(ServerAPIMethods.PERSIST_TDP, {
+  const setter = callable<[{ tdp: number; gameId: string }], any>(
+    ServerAPIMethods.PERSIST_TDP
+  );
+  setter({
     tdp,
     gameId,
   });
 };
 
 export const setValuesForGameId = (gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, {
-      gameId,
-    });
-  }
+  const setter = callable<[{ gameId: string }], any>(
+    ServerAPIMethods.SET_VALUES_FOR_GAME_ID
+  );
+  setter({
+    gameId,
+  });
 };
 
 export const setSteamPatchValuesForGameId = (gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(
-      ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID,
-      {
-        gameId,
-      }
-    );
-  }
+  const setter = callable<[{ gameId: string }], any>(
+    ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID
+  );
+  setter({
+    gameId,
+  });
 };
 
 export const persistGpu = (
@@ -184,29 +188,33 @@ export const persistGpu = (
   maxGpuFrequency: number,
   gameId: string
 ) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_GPU, {
-      minGpuFrequency,
-      maxGpuFrequency,
-      gameId,
-    });
-  }
+  const setter = callable<
+    [{ minGpuFrequency: number; maxGpuFrequency: number; gameId: string }],
+    any
+  >(ServerAPIMethods.PERSIST_GPU);
+  setter({
+    minGpuFrequency,
+    maxGpuFrequency,
+    gameId,
+  });
 };
 
 export const persistSmt = (smt: boolean, gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_SMT, {
-      smt,
-      gameId,
-    });
-  }
+  const setter = callable<[{ smt: boolean; gameId: string }], any>(
+    ServerAPIMethods.PERSIST_SMT
+  );
+  setter({
+    smt,
+    gameId,
+  });
 };
 
 export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
-  if (serverApi) {
-    serverApi.callPluginMethod(ServerAPIMethods.PERSIST_CPU_BOOST, {
-      cpuBoost,
-      gameId,
-    });
-  }
+  const setter = callable<[{ cpuBoost: boolean; gameId: string }], any>(
+    ServerAPIMethods.PERSIST_CPU_BOOST
+  );
+  setter({
+    cpuBoost,
+    gameId,
+  });
 };
