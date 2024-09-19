@@ -1,10 +1,7 @@
-import { definePlugin, ServerAPI, staticClasses } from "@decky/ui";
+import { staticClasses } from "@decky/ui";
+import { definePlugin } from "@decky/api";
 import { BsCpuFill } from "react-icons/bs";
-import {
-  createServerApiHelpers,
-  saveServerApi,
-  setValuesForGameId,
-} from "./backend/utils";
+import { createServerApiHelpers, setValuesForGameId } from "./backend/utils";
 import { store } from "./redux-modules/store";
 import {
   acPowerEventListener,
@@ -20,10 +17,8 @@ import steamPatch from "./steamPatch/steamPatch";
 import { fetchPowerControlInfo } from "./redux-modules/thunks";
 import AppContainer from "./App";
 
-export default definePlugin((serverApi: ServerAPI) => {
-  saveServerApi(serverApi);
-
-  const { getSettings } = createServerApiHelpers(serverApi);
+export default definePlugin(() => {
+  const { getSettings } = createServerApiHelpers();
 
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
@@ -56,7 +51,7 @@ export default definePlugin((serverApi: ServerAPI) => {
   });
 
   return {
-    title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
+    title: "SimpleDeckyTDP",
     content: <AppContainer />,
     icon: <BsCpuFill />,
     onDismount: () => {
