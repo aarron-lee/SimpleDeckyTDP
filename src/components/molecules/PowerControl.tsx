@@ -2,7 +2,7 @@ import PowerGovernorSlider from "../atoms/PowerGovernorSlider";
 import EppSlider from "../atoms/EppSlider";
 import { CpuFeatureToggles } from "../atoms/CpuFeatureToggles";
 import ErrorBoundary from "../ErrorBoundary";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   getAdvancedOptionsInfoSelector,
   getPowerControlInfoSelector,
@@ -10,16 +10,10 @@ import {
 import { AdvancedOptionsEnum } from "../../backend/utils";
 import { useEffect } from "react";
 import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
-import { fetchPowerControlInfo } from "../../redux-modules/thunks";
-import { AppDispatch } from "../../redux-modules/store";
+
 import { useSmt } from "../../hooks/useSmt";
 import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
-
-export const useFetchPowerControlInfo = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  return () => dispatch(fetchPowerControlInfo());
-};
+import { useFetchPowerControlInfo } from "../../hooks/useFetchPowerControlInfo";
 
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);

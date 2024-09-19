@@ -1,7 +1,7 @@
 import { useCpuBoost } from "../../hooks/useCpuBoost";
 import { useEffect } from "react";
-import { useFetchPowerControlInfo } from "../molecules/PowerControl";
 import { DeckyRow, DeckyToggle } from "./DeckyFrontendLib";
+import { useFetchPowerControlInfo } from "../../hooks/useFetchPowerControlInfo";
 
 export function CpuFeatureToggles() {
   const { cpuBoost, setCpuBoost } = useCpuBoost();

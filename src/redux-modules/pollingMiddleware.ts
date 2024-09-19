@@ -7,7 +7,9 @@ import {
 import { setSteamPatchValuesForGameId, setPollTdp } from "../backend/utils";
 import { extractCurrentGameId } from "../utils/constants";
 import { debounce } from "lodash";
-import { store } from "./store";
+
+let store: any;
+export const initializePollingStore = (s: any) => (store = s);
 
 let pollIntervalId: undefined | number;
 
@@ -20,27 +22,29 @@ const debouncedSetSteamPatchValuesForGameId = debounce(
 const debouncedSetPollTdp = debounce(setPollTdp, DEBOUNCE_TIME);
 
 export const setPolling = () => {
-  const state = store.getState();
-  clearPollingInterval();
+  if (store) {
+    const state = store.getState();
+    clearPollingInterval();
 
-  const pollEnabled = pollEnabledSelector(state);
-  const pollRate = pollRateSelector(state);
+    const pollEnabled = pollEnabledSelector(state);
+    const pollRate = pollRateSelector(state);
 
-  const steamPatchEnabled = getSteamPatchEnabledSelector(state);
+    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
-  if (pollEnabled) {
-    pollIntervalId = window.setInterval(() => {
-      if (steamPatchEnabled) {
-        // steam patch value
-        const id = extractCurrentGameId();
+    if (pollEnabled) {
+      pollIntervalId = window.setInterval(() => {
+        if (steamPatchEnabled) {
+          // steam patch value
+          const id = extractCurrentGameId();
 
-        debouncedSetSteamPatchValuesForGameId(id);
-      } else {
-        const activeGameId = activeGameIdSelector(store.getState());
+          debouncedSetSteamPatchValuesForGameId(id);
+        } else {
+          const activeGameId = activeGameIdSelector(store.getState());
 
-        debouncedSetPollTdp({ currentGameId: activeGameId });
-      }
-    }, pollRate);
+          debouncedSetPollTdp({ currentGameId: activeGameId });
+        }
+      }, pollRate);
+    }
   }
 };
 

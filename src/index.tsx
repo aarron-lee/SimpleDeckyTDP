@@ -15,8 +15,10 @@ import { cleanupAction } from "./redux-modules/extraActions";
 import steamPatch from "./steamPatch/steamPatch";
 import { fetchPowerControlInfo } from "./redux-modules/thunks";
 import AppContainer from "./App";
+import { initializePollingStore } from "./redux-modules/pollingMiddleware";
 
 export default definePlugin(() => {
+  initializePollingStore(store);
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
     const results = result || {};
