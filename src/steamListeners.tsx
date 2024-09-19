@@ -8,13 +8,14 @@ import {
   setAcPower,
   setCurrentGameInfo,
 } from "./redux-modules/settingsSlice";
-import { resumeAction } from "./redux-modules/extraActions";
+import { resumeAction, suspendAction } from "./redux-modules/extraActions";
 import {
   AdvancedOptionsEnum,
   getCurrentAcPowerStatus,
   getServerApi,
   getSupportsCustomAcPower,
   logInfo,
+  ServerAPIMethods,
 } from "./backend/utils";
 import { debounce } from "lodash";
 
@@ -53,6 +54,15 @@ export const currentGameInfoListener = () => {
 };
 
 export const suspendEventListener = () => {
+  const unregister = SteamClient.System.RegisterForOnSuspendRequest(
+    () => {
+      store.dispatch(suspendAction());
+    }
+  );
+  return unregister;
+}
+
+export const resumeFromSuspendEventListener = () => {
   try {
     const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
       async () => {

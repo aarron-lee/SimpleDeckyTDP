@@ -9,7 +9,8 @@ import { store } from "./redux-modules/store";
 import {
   acPowerEventListener,
   currentGameInfoListener,
-  suspendEventListener,
+  resumeFromSuspendEventListener,
+  suspendEventListener
 } from "./steamListeners";
 import { updateInitialLoad } from "./redux-modules/settingsSlice";
 
@@ -45,6 +46,7 @@ export default definePlugin((serverApi: ServerAPI) => {
   // const unpatch = steamPatch();
 
   const onUnmount = currentGameInfoListener();
+  const unregisterResumeFromSuspendListener = resumeFromSuspendEventListener();
   const unregisterSuspendListener = suspendEventListener();
 
   let unregisterAcPowerListener: any;
@@ -67,6 +69,11 @@ export default definePlugin((serverApi: ServerAPI) => {
           typeof unregisterSuspendListener === "function"
         )
           unregisterSuspendListener();
+        if (
+          unregisterResumeFromSuspendListener &&
+          typeof unregisterResumeFromSuspendListener === "function"
+        )
+          unregisterResumeFromSuspendListener();
         if (
           unregisterAcPowerListener &&
           typeof unregisterAcPowerListener === "function"
