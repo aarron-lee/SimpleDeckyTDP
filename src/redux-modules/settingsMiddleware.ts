@@ -16,7 +16,7 @@ import {
 } from "./settingsSlice";
 import {
   createServerApiHelpers,
-  getServerApi,
+  setSetting,
   persistTdp,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -54,10 +54,7 @@ const debouncedPersistGpu = debounce(persistGpu, 1000);
 
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
-    const serverApi = getServerApi();
-    const { setSetting, saveTdpProfiles, setPollTdp } = createServerApiHelpers(
-      serverApi as any
-    );
+    const { saveTdpProfiles, setPollTdp } = createServerApiHelpers();
 
     const result = dispatch(action);
 
@@ -96,8 +93,8 @@ export const settingsMiddleware =
       if (action.type === updatePollRate.type) {
         // action.type == number (rate in ms)
         setSetting({
-          fieldName: "pollRate",
-          fieldValue: action.payload,
+          name: "pollRate",
+          value: action.payload,
         });
         setPolling();
       }

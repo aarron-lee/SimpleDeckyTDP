@@ -1,3 +1,4 @@
+import { callable } from "@decky/api";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {
@@ -59,49 +60,35 @@ export enum ServerAPIMethods {
   GET_IS_STEAM_RUNNING = "is_steam_running",
   GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT = "supports_custom_ac_power_management",
   GET_CURRENT_AC_POWER_STATUS = "get_ac_power_status",
+  SET_MAX_TDP = "set_max_tdp",
 }
 
-export const createLogInfo = (serverAPI: any) => async (info: any) => {
-  await serverAPI.callPluginMethod(ServerAPIMethods.LOG_INFO, {
-    info,
+export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
+export const setSetting = callable<[{ name: String; value: any }], void>(
+  ServerAPIMethods.SET_SETTING
+);
+export const onSuspend = callable<[], any>(ServerAPIMethods.ON_SUSPEND);
+
+export const setMaxTdp = callable<[], void>(ServerAPIMethods.SET_MAX_TDP);
+export const isSteamRunning = callable<[], boolean>(
+  ServerAPIMethods.GET_IS_STEAM_RUNNING
+);
+
+export const createSaveTdp = () => async (gameId: string, tdp: number) => {
+  const tdpProfiles = {
+    [gameId]: {
+      tdp,
+    },
+  };
+
+  return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
+    tdpProfiles,
+    currentGameId: gameId,
   });
 };
 
-export const createSetSetting =
-  (serverAPI: any) =>
-  async ({ fieldName, fieldValue }: { fieldName: string; fieldValue: any }) =>
-    await serverAPI.callPluginMethod(ServerAPIMethods.SET_SETTING, {
-      name: fieldName,
-      value: fieldValue,
-    });
-
-export const createGetSettings = (serverAPI: any) => async () => {
-  return await serverAPI.callPluginMethod(ServerAPIMethods.GET_SETTINGS, {});
-};
-
-export const createGetIsSteamRunning = (serverAPI: any) => async () => {
-  return await serverAPI.callPluginMethod(
-    ServerAPIMethods.GET_IS_STEAM_RUNNING,
-    {}
-  );
-};
-
-export const createSaveTdp =
-  (serverAPI: any) => async (gameId: string, tdp: number) => {
-    const tdpProfiles = {
-      [gameId]: {
-        tdp,
-      },
-    };
-
-    return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
-      tdpProfiles,
-      currentGameId: gameId,
-    });
-  };
-
 export const createSaveTdpProfiles =
-  (serverAPI: any) =>
+  () =>
   async (tdpProfiles: TdpProfiles, currentGameId: string, advanced: any) => {
     return await serverAPI.callPluginMethod(ServerAPIMethods.SAVE_TDP, {
       tdpProfiles,
@@ -110,14 +97,13 @@ export const createSaveTdpProfiles =
     });
   };
 
-export const createPollTdp =
-  (serverAPI: any) => async (currentGameId: string) => {
-    return await serverAPI.callPluginMethod(ServerAPIMethods.POLL_TDP, {
-      currentGameId,
-    });
-  };
+export const createPollTdp = () => async (currentGameId: string) => {
+  return await serverAPI.callPluginMethod(ServerAPIMethods.POLL_TDP, {
+    currentGameId,
+  });
+};
 
-export const getLatestVersionNum = async (serverApi: any) => {
+export const getLatestVersionNum = async () => {
   const { result } = await serverApi.fetchNoCors(
     "https://raw.githubusercontent.com/aarron-lee/SimpleDeckyTDP/main/package.json",
     { method: "GET" }
@@ -131,19 +117,17 @@ export const getLatestVersionNum = async (serverApi: any) => {
   return "";
 };
 
-export const otaUpdate = async (serverApi: any) => {
+export const otaUpdate = async () => {
   return serverApi.callPluginMethod("ota_update", {});
 };
 
-export const createServerApiHelpers = (serverAPI: any) => {
+export const createServerApiHelpers = () => {
+  // export const is_paused = callable<[pid: number], boolean>("is_paused");
   return {
-    getSettings: createGetSettings(serverAPI),
-    setSetting: createSetSetting(serverAPI),
-    logInfo: createLogInfo(serverAPI),
+    logInfo: callable<[{ info: any }], any>(ServerAPIMethods.LOG_INFO),
     saveTdp: createSaveTdp(serverAPI),
     setPollTdp: createPollTdp(serverAPI),
     saveTdpProfiles: createSaveTdpProfiles(serverAPI),
-    isSteamRunning: createGetIsSteamRunning(serverAPI),
   };
 };
 
@@ -153,17 +137,8 @@ export const saveServerApi = (s: any) => {
   serverApi = s;
 };
 
-export const getServerApi = () => {
-  return serverApi;
-};
-
 export const getLogInfo = () => {
-  if (serverApi) {
-    const logInfo = createLogInfo(serverApi);
-    return logInfo;
-  } else {
-    return () => {};
-  }
+  return callable<[{ info: any }], any>(ServerAPIMethods.LOG_INFO);
 };
 
 export const getPowerControlInfo = () => {
@@ -274,8 +249,7 @@ export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
 
 export const logInfo = (info: any) => {
   if (serverApi) {
-    const logger = createLogInfo(serverApi);
-    const s = getServerApi();
-    s && logger(info);
+    const logger = getLogInfo();
+    logger(info);
   }
 };

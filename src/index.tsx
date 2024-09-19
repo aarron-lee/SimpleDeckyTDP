@@ -1,7 +1,6 @@
-import { staticClasses } from "@decky/ui";
 import { definePlugin } from "@decky/api";
 import { BsCpuFill } from "react-icons/bs";
-import { createServerApiHelpers, setValuesForGameId } from "./backend/utils";
+import { getSettings, setValuesForGameId } from "./backend/utils";
 import { store } from "./redux-modules/store";
 import {
   acPowerEventListener,
@@ -18,8 +17,6 @@ import { fetchPowerControlInfo } from "./redux-modules/thunks";
 import AppContainer from "./App";
 
 export default definePlugin(() => {
-  const { getSettings } = createServerApiHelpers();
-
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
     if (result.success) {
@@ -51,7 +48,7 @@ export default definePlugin(() => {
   });
 
   return {
-    title: "SimpleDeckyTDP",
+    name: "SimpleDeckyTDP",
     content: <AppContainer />,
     icon: <BsCpuFill />,
     onDismount: () => {
