@@ -13,6 +13,9 @@ export default defineConfig({
   input: "./src/index.tsx",
   plugins: [
     commonjs(),
+    nodeResolve({
+      browser: true
+    }),
     externalGlobals({
       react: 'SP_REACT',
       'react-dom': 'SP_REACTDOM',
