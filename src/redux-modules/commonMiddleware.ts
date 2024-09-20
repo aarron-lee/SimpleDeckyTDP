@@ -41,10 +41,16 @@ export const commonMiddleware =
     }
 
     if (action.type === setEnableTdpProfiles.type) {
-      setSetting("enableTdpProfiles", action.payload);
+      setSetting({
+        name: "enableTdpProfiles",
+        value: action.payload,
+      });
     }
     if (action.type === updateMinTdp.type) {
-      setSetting("minTdp", action.payload);
+      setSetting({
+        name: "minTdp",
+        value: action.payload,
+      });
     }
 
     if (action.type === updatePowerGovernor.type) {
@@ -56,12 +62,18 @@ export const commonMiddleware =
     }
 
     if (action.type === updateMaxTdp.type) {
-      setSetting("maxTdp", action.payload);
+      setSetting({
+        name: "maxTdp",
+        value: action.payload,
+      });
     }
 
     if (action.type === updateAdvancedOption.type) {
       const { advancedState } = getAdvancedOptionsInfoSelector(state);
-      setSetting("advanced", advancedState);
+      setSetting({
+        name: "advanced",
+        value: advancedState,
+      });
     }
 
     if (action.type === setSmt.type) {

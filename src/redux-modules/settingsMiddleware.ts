@@ -85,7 +85,10 @@ export const settingsMiddleware =
 
       if (action.type === updatePollRate.type) {
         // action.type == number (rate in ms)
-        setSetting("pollRate", action.payload);
+        setSetting({
+          name: "pollRate",
+          value: action.payload,
+        });
         setPolling();
       }
 
