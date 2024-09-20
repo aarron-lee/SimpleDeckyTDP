@@ -1,4 +1,4 @@
-import { afterPatch, findModuleChild } from "decky-frontend-lib";
+import { afterPatch, findModuleChild } from "@decky/ui";
 import { logInfo } from "../backend/utils";
 import { store } from "../redux-modules/store";
 import {

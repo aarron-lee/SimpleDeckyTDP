@@ -13,13 +13,12 @@ import {
   updatePowerGovernor,
 } from "./settingsSlice";
 import {
-  createServerApiHelpers,
-  getServerApi,
+  setSetting,
   persistCpuBoost,
   persistSmt,
   setEpp,
   setPowerGovernor,
-  ServerAPIMethods,
+  onSuspend,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { extractCurrentGameId } from "../utils/constants";
@@ -27,9 +26,6 @@ import { suspendAction } from "./extraActions";
 
 export const commonMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
-    const serverApi = getServerApi();
-    const { setSetting } = createServerApiHelpers(serverApi as any);
-
     const result = dispatch(action);
 
     const state = store.getState();
@@ -41,19 +37,19 @@ export const commonMiddleware =
       : activeGameIdSelector(state);
 
     if (action.type === suspendAction.type) {
-      serverApi.callPluginMethod(ServerAPIMethods.ON_SUSPEND, {});
+      onSuspend();
     }
 
     if (action.type === setEnableTdpProfiles.type) {
       setSetting({
-        fieldName: "enableTdpProfiles",
-        fieldValue: action.payload,
+        name: "enableTdpProfiles",
+        value: action.payload,
       });
     }
     if (action.type === updateMinTdp.type) {
       setSetting({
-        fieldName: "minTdp",
-        fieldValue: action.payload,
+        name: "minTdp",
+        value: action.payload,
       });
     }
 
@@ -67,16 +63,16 @@ export const commonMiddleware =
 
     if (action.type === updateMaxTdp.type) {
       setSetting({
-        fieldName: "maxTdp",
-        fieldValue: action.payload,
+        name: "maxTdp",
+        value: action.payload,
       });
     }
 
     if (action.type === updateAdvancedOption.type) {
       const { advancedState } = getAdvancedOptionsInfoSelector(state);
       setSetting({
-        fieldName: "advanced",
-        fieldValue: advancedState,
+        name: "advanced",
+        value: advancedState,
       });
     }
 

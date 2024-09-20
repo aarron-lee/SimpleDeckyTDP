@@ -6,9 +6,6 @@ export const fetchPowerControlInfo = createAsyncThunk(
   async () => {
     const result = await getPowerControlInfo();
 
-    if (result && result.success) {
-      return result.result;
-    }
-    return undefined;
+    return result;
   }
 );

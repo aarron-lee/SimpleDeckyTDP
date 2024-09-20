@@ -15,9 +15,10 @@ import {
   updateTdpProfiles,
 } from "./settingsSlice";
 import {
-  createServerApiHelpers,
-  getServerApi,
+  setSetting,
+  setPollTdp,
   persistTdp,
+  saveTdpProfiles,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { cleanupAction, resumeAction } from "./extraActions";
@@ -37,28 +38,18 @@ const resetTdpActionTypes = [
 
 const debouncedPersistTdp = debounce(persistTdp, 1000);
 
-const persistGpu = ({
-  saveTdpProfiles,
-  state,
-  activeGameId,
-  advancedState,
-}: any) => {
-  return saveTdpProfiles(
-    state.settings.tdpProfiles,
-    activeGameId,
-    advancedState
-  );
+const persistGpu = ({ state, activeGameId, advancedState }: any) => {
+  return saveTdpProfiles({
+    tdpProfiles: state.settings.tdpProfiles,
+    currentGameId: activeGameId,
+    advanced: advancedState,
+  });
 };
 
 const debouncedPersistGpu = debounce(persistGpu, 1000);
 
 export const settingsMiddleware =
   (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
-    const serverApi = getServerApi();
-    const { setSetting, saveTdpProfiles, setPollTdp } = createServerApiHelpers(
-      serverApi as any
-    );
-
     const result = dispatch(action);
 
     const state = store.getState();
@@ -73,7 +64,7 @@ export const settingsMiddleware =
 
       if (action.type === resumeAction.type) {
         // pollTdp simply tells backend to set TDP according to settings.json
-        setPollTdp(activeGameId);
+        setPollTdp({ currentGameId: activeGameId });
       }
 
       if (
@@ -82,7 +73,6 @@ export const settingsMiddleware =
         action.type === setFixedGpuFrequency.type
       ) {
         debouncedPersistGpu({
-          saveTdpProfiles,
           state,
           activeGameId,
           advancedState,
@@ -96,8 +86,8 @@ export const settingsMiddleware =
       if (action.type === updatePollRate.type) {
         // action.type == number (rate in ms)
         setSetting({
-          fieldName: "pollRate",
-          fieldValue: action.payload,
+          name: "pollRate",
+          value: action.payload,
         });
         setPolling();
       }
@@ -107,11 +97,11 @@ export const settingsMiddleware =
       }
 
       if (resetTdpActionTypes.includes(action.type)) {
-        saveTdpProfiles(
-          state.settings.tdpProfiles,
-          activeGameId,
-          advancedState
-        );
+        saveTdpProfiles({
+          tdpProfiles: state.settings.tdpProfiles,
+          currentGameId: activeGameId,
+          advanced: advancedState,
+        });
         setPolling();
       }
 

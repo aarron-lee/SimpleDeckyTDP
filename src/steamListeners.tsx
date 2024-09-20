@@ -12,10 +12,9 @@ import { resumeAction, suspendAction } from "./redux-modules/extraActions";
 import {
   AdvancedOptionsEnum,
   getCurrentAcPowerStatus,
-  getServerApi,
   getSupportsCustomAcPower,
   logInfo,
-  ServerAPIMethods,
+  setMaxTdp,
 } from "./backend/utils";
 import { debounce } from "lodash";
 
@@ -54,13 +53,11 @@ export const currentGameInfoListener = () => {
 };
 
 export const suspendEventListener = () => {
-  const unregister = SteamClient.System.RegisterForOnSuspendRequest(
-    () => {
-      store.dispatch(suspendAction());
-    }
-  );
+  const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {
+    store.dispatch(suspendAction());
+  });
   return unregister;
-}
+};
 
 export const resumeFromSuspendEventListener = () => {
   try {
@@ -76,10 +73,7 @@ export const resumeFromSuspendEventListener = () => {
           }
 
           if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
-            const serverApi = getServerApi();
-            if (serverApi) {
-              serverApi.callPluginMethod("set_max_tdp", {});
-            }
+            setMaxTdp();
           } else {
             store.dispatch(resumeAction());
           }
@@ -122,13 +116,13 @@ export const acPowerEventListener = async () => {
   try {
     const supportsCustomAcPowerManagement = await getSupportsCustomAcPower();
 
-    if (supportsCustomAcPowerManagement?.result) {
+    if (supportsCustomAcPowerManagement) {
       const intervalId = window.setInterval(async () => {
         const current_ac_power_status = await getCurrentAcPowerStatus();
 
         let newACState = 1;
 
-        if (current_ac_power_status?.result === "1") {
+        if (current_ac_power_status === "1") {
           newACState = 2;
         }
 

@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getLatestVersionNum,
-  getServerApi,
-  otaUpdate,
-} from "../../backend/utils";
+import { getLatestVersionNum, otaUpdate } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
@@ -24,13 +20,9 @@ const OtaUpdates = () => {
 
   useEffect(() => {
     const fn = async () => {
-      const serverApi = getServerApi();
+      const fetchedVersionNum = await getLatestVersionNum();
 
-      if (serverApi) {
-        const fetchedVersionNum = await getLatestVersionNum(serverApi);
-
-        setLatestVersionNum(fetchedVersionNum);
-      }
+      setLatestVersionNum(fetchedVersionNum);
     };
 
     fn();
@@ -74,8 +66,7 @@ const OtaUpdates = () => {
           <DeckyRow>
             <DeckyButton
               onClick={() => {
-                const serverApi = getServerApi();
-                if (serverApi) otaUpdate(serverApi);
+                otaUpdate();
               }}
               style={{
                 width: "100%",

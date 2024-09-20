@@ -1,10 +1,6 @@
-import { definePlugin, ServerAPI, staticClasses } from "decky-frontend-lib";
+import { definePlugin } from "@decky/api";
 import { BsCpuFill } from "react-icons/bs";
-import {
-  createServerApiHelpers,
-  saveServerApi,
-  setValuesForGameId,
-} from "./backend/utils";
+import { getSettings, setValuesForGameId } from "./backend/utils";
 import { store } from "./redux-modules/store";
 import {
   acPowerEventListener,
@@ -19,28 +15,24 @@ import { cleanupAction } from "./redux-modules/extraActions";
 import steamPatch from "./steamPatch/steamPatch";
 import { fetchPowerControlInfo } from "./redux-modules/thunks";
 import AppContainer from "./App";
+import { initializePollingStore } from "./redux-modules/pollingMiddleware";
 
-export default definePlugin((serverApi: ServerAPI) => {
-  saveServerApi(serverApi);
-
-  const { getSettings } = createServerApiHelpers(serverApi);
-
+export default definePlugin(() => {
+  initializePollingStore(store);
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
-    if (result.success) {
-      const results = result.result || {};
+    const results = result || {};
 
-      store.dispatch(
-        updateInitialLoad({
-          ...results,
-        })
-      );
-      store.dispatch(fetchPowerControlInfo());
+    store.dispatch(
+      updateInitialLoad({
+        ...results,
+      })
+    );
+    store.dispatch(fetchPowerControlInfo());
 
-      setTimeout(() => {
-        setValuesForGameId("default");
-      }, 0);
-    }
+    setTimeout(() => {
+      setValuesForGameId("default");
+    }, 0);
   });
 
   // const unpatch = steamPatch();
@@ -56,7 +48,7 @@ export default definePlugin((serverApi: ServerAPI) => {
   });
 
   return {
-    title: <div className={staticClasses.Title}>SimpleDeckyTDP</div>,
+    name: "SimpleDeckyTDP",
     content: <AppContainer />,
     icon: <BsCpuFill />,
     onDismount: () => {

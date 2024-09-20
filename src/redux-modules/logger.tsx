@@ -1,7 +1,6 @@
-import { getLogInfo } from "../backend/utils";
+import { logInfo } from "../backend/utils";
 
 export const logger = (store: any) => (next: any) => async (action: any) => {
-  const logInfo = getLogInfo();
   await logInfo(
     `----------------before ${action.type} ${JSON.stringify(
       action.payload

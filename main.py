@@ -11,7 +11,7 @@ import os
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, per_game_profiles_enabled, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
 import plugin_utils
-import migrations
+# import migrations
 import steam_info
 import device_utils
 
@@ -157,7 +157,9 @@ class Plugin:
     # # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
     # plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
     # return True
-
+  
+  async def get_latest_version_num(self):
+    return plugin_update.get_latest_version()
 
   async def poll_tdp(self, currentGameId: str):
     settings = get_saved_settings()
@@ -220,33 +222,16 @@ class Plugin:
 
   # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
   async def _main(self):
-    decky_plugin.logger.info("Hello World!")
+    decky_plugin.logger.info("SimpleDeckyTDP Starting")
 
   # Function called first during the unload process, utilize this to handle your plugin being removed
   async def _unload(self):
-    decky_plugin.logger.info("Goodbye World!")
+    decky_plugin.logger.info("SimpleDeckyTDP Unloading")
     pass
 
   # Migrations that should be performed before entering `_main()`.
   async def _migration(self):
     decky_plugin.logger.info("Migrating")
 
-    migrations.migrate_smt()
-    migrations.disable_steam_patch()
-
-    # Here's a migration example for logs:
-    # - `~/.config/decky-template/template.log` will be migrated to `decky_plugin.DECKY_PLUGIN_LOG_DIR/template.log`
-    # decky_plugin.migrate_logs(os.path.join(decky_plugin.DECKY_USER_HOME,
-    #                    ".config", "decky-template", "template.log"))
-    # Here's a migration example for settings:
-    # - `~/homebrew/settings/template.json` is migrated to `decky_plugin.DECKY_PLUGIN_SETTINGS_DIR/template.json`
-    # - `~/.config/decky-template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_SETTINGS_DIR/`
-    # decky_plugin.migrate_settings(
-    #   os.path.join(decky_plugin.DECKY_HOME, "settings", "template.json"),
-    #   os.path.join(decky_plugin.DECKY_USER_HOME, ".config", "decky-template"))
-    # Here's a migration example for runtime data:
-    # - `~/homebrew/template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_RUNTIME_DIR/`
-    # - `~/.local/share/decky-template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_RUNTIME_DIR/`
-    # decky_plugin.migrate_runtime(
-    #   os.path.join(decky_plugin.DECKY_HOME, "template"),
-    #   os.path.join(decky_plugin.DECKY_USER_HOME, ".local", "share", "decky-template"))
+    # migrations.migrate_smt()
+    # migrations.disable_steam_patch()
