@@ -34,6 +34,21 @@ devDependencies:
   '@decky/rollup':
     specifier: ^1.0.1
     version: 1.0.1
+  '@rollup/plugin-commonjs':
+    specifier: ^26.0.1
+    version: 26.0.1(rollup@4.21.3)
+  '@rollup/plugin-json':
+    specifier: ^6.1.0
+    version: 6.1.0(rollup@4.21.3)
+  '@rollup/plugin-node-resolve':
+    specifier: ^15.2.3
+    version: 15.2.3(rollup@4.21.3)
+  '@rollup/plugin-replace':
+    specifier: ^5.0.7
+    version: 5.0.7(rollup@4.21.3)
+  '@rollup/plugin-typescript':
+    specifier: ^11.1.6
+    version: 11.1.6(rollup@4.21.3)(tslib@2.7.0)(typescript@5.6.2)
   '@types/lodash':
     specifier: ^4.14.201
     version: 4.14.201
@@ -49,6 +64,15 @@ devDependencies:
   rollup:
     specifier: ^4.18.1
     version: 4.21.3
+  rollup-plugin-delete:
+    specifier: ^2.1.0
+    version: 2.1.0(rollup@4.21.3)
+  rollup-plugin-external-globals:
+    specifier: ^0.12.0
+    version: 0.12.0(rollup@4.21.3)
+  rollup-plugin-import-assets:
+    specifier: ^1.1.1
+    version: 1.1.1(rollup@4.21.3)
   typescript:
     specifier: ^5.5.3
     version: 5.6.2
@@ -104,7 +128,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/set-array': 1.1.2
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.18
     dev: true
 
@@ -127,10 +151,6 @@ packages:
 
   /@jridgewell/sourcemap-codec@1.4.14:
     resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
-    dev: true
-
-  /@jridgewell/sourcemap-codec@1.4.15:
-    resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
   /@jridgewell/sourcemap-codec@1.5.0:
@@ -282,7 +302,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@types/estree': 1.0.1
+      '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 4.21.3
@@ -426,7 +446,7 @@ packages:
   /@types/eslint@8.40.0:
     resolution: {integrity: sha512-nbq2mvc/tBrK9zQQuItvjJl++GTN5j06DaPtp3hZCpngmG6Q3xoyEmd0TwZI0gAy/G1X0zhGBbr2imsGFdFV0g==}
     dependencies:
-      '@types/estree': 1.0.1
+      '@types/estree': 1.0.5
       '@types/json-schema': 7.0.12
     dev: true
 
@@ -871,7 +891,7 @@ packages:
   /estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
     dependencies:
-      '@types/estree': 1.0.1
+      '@types/estree': 1.0.5
     dev: true
 
   /events@3.3.0:
@@ -1084,7 +1104,7 @@ packages:
   /is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
-      '@types/estree': 1.0.1
+      '@types/estree': 1.0.5
     dev: true
 
   /is-reference@3.0.2:
@@ -1383,6 +1403,18 @@ packages:
 
   /rollup-plugin-external-globals@0.11.0(rollup@4.21.3):
     resolution: {integrity: sha512-LR+sH2WkgWMPxsA5o5rT7uW7BeWXSeygLe60QQi9qoN/ufaCuHDaVOIbndIkqDPnZt/wZugJh5DCzkZFdSWlLQ==}
+    peerDependencies:
+      rollup: ^2.25.0 || ^3.3.0 || ^4.1.4
+    dependencies:
+      '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
+      estree-walker: 3.0.3
+      is-reference: 3.0.2
+      magic-string: 0.30.11
+      rollup: 4.21.3
+    dev: true
+
+  /rollup-plugin-external-globals@0.12.0(rollup@4.21.3):
+    resolution: {integrity: sha512-65Tqhh/f7hDY0qHmT4lYTVdDkY/BZU5bUQwS+SPvy6seSlACpcFRu2HzOmbLozXJS0/mOjwFyLlzJjlT2MTt8g==}
     peerDependencies:
       rollup: ^2.25.0 || ^3.3.0 || ^4.1.4
     dependencies:
