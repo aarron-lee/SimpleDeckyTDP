@@ -14,7 +14,6 @@ import {
   getCurrentAcPowerStatus,
   getSupportsCustomAcPower,
   logInfo,
-  ServerAPIMethods,
   setMaxTdp,
 } from "./backend/utils";
 import { debounce } from "lodash";

@@ -4,7 +4,7 @@ import {
   allStateSelector,
   updateInitialLoad,
 } from "../redux-modules/settingsSlice";
-import { getSettings, logInfo } from "../backend/utils";
+import { getSettings } from "../backend/utils";
 import { useEffect } from "react";
 import { AppDispatch } from "../redux-modules/store";
 
@@ -17,7 +17,6 @@ export const useFetchInitialStateEffect = () => {
 
   useEffect(() => {
     getSettings().then((result) => {
-      logInfo(result);
       const results = result || {};
 
       //@ts-ignore

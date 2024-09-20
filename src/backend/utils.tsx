@@ -1,5 +1,4 @@
 import { callable, call, fetchNoCors } from "@decky/api";
-import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {
   ENABLE_TDP_CONTROL = "enableTdpControl",
@@ -138,11 +137,11 @@ export const getPowerControlInfo = callable(
   ServerAPIMethods.GET_POWER_CONTROL_INFO
 );
 
-export const getSupportsCustomAcPower = callable(
+export const getSupportsCustomAcPower = callable<[], boolean>(
   ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT
 );
 
-export const getCurrentAcPowerStatus = callable(
+export const getCurrentAcPowerStatus = callable<[], "0" | "1">(
   ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS
 );
 
