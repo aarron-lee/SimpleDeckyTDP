@@ -1,4 +1,4 @@
-import { callable, fetchNoCors } from "@decky/api";
+import { callable, call, fetchNoCors } from "@decky/api";
 import { TdpProfiles } from "../redux-modules/settingsSlice";
 
 export enum AdvancedOptionsEnum {
@@ -65,14 +65,16 @@ export enum ServerAPIMethods {
 }
 
 export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
-export const setSetting = callable<[{ name: String; value: any }], void>(
-  ServerAPIMethods.SET_SETTING
-);
+export const setSetting = ({ name, value }: { name: string; value: any }) =>
+  call<[name: String, value: any], void>(
+    ServerAPIMethods.SET_SETTING,
+    name,
+    value
+  );
 export const onSuspend = callable<[], any>(ServerAPIMethods.ON_SUSPEND);
 
-export const setPollTdp = callable<[{ currentGameId: string }], void>(
-  ServerAPIMethods.POLL_TDP
-);
+export const setPollTdp = ({ currentGameId }: { currentGameId: string }) =>
+  call<[currentGameId: string], void>(ServerAPIMethods.POLL_TDP, currentGameId);
 export const setMaxTdp = callable<[], void>(ServerAPIMethods.SET_MAX_TDP);
 export const isSteamRunning = callable<[], boolean>(
   ServerAPIMethods.GET_IS_STEAM_RUNNING
@@ -89,19 +91,28 @@ export const saveTdp = async (gameId: string, tdp: number) => {
     },
   };
 
-  const save = callable<[{ tdpProfiles: any; currentGameId: any }], any>(
-    ServerAPIMethods.SAVE_TDP
-  );
-
-  return await save({
+  call<[tdpProfiles: any, currentGameId: any], any>(
+    ServerAPIMethods.SAVE_TDP,
     tdpProfiles,
-    currentGameId: gameId,
-  });
+    gameId
+  );
 };
 
-export const saveTdpProfiles = callable<
-  [{ tdpProfiles: any; currentGameId: any; advanced: any }, void]
->(ServerAPIMethods.SAVE_TDP);
+export const saveTdpProfiles = ({
+  tdpProfiles,
+  currentGameId,
+  advanced,
+}: {
+  tdpProfiles: any;
+  currentGameId: any;
+  advanced: any;
+}) =>
+  call<[tdpProfiles: any, currentGameId: any, advanced: any, void]>(
+    ServerAPIMethods.SAVE_TDP,
+    tdpProfiles,
+    currentGameId,
+    advanced
+  );
 
 export const getLatestVersionNum = async () => {
   try {
@@ -136,51 +147,38 @@ export const getCurrentAcPowerStatus = callable(
 );
 
 export const setPowerGovernor = (powerGovernorInfo: any, gameId: string) => {
-  const setter = callable<[{ powerGovernorInfo: any; gameId: string }], any>(
-    ServerAPIMethods.SET_POWER_GOVERNOR
-  );
-  setter({
+  call<[powerGovernorInfo: any, gameId: string], any>(
+    ServerAPIMethods.SET_POWER_GOVERNOR,
     powerGovernorInfo,
-    gameId,
-  });
+    gameId
+  );
 };
 
 export const setEpp = (eppInfo: any, gameId: string) => {
-  const setter = callable<[{ eppInfo: any; gameId: string }], any>(
-    ServerAPIMethods.SET_EPP
-  );
-  setter({
+  call<[eppInfo: any, gameId: string], any>(
+    ServerAPIMethods.SET_EPP,
     eppInfo,
-    gameId,
-  });
+    gameId
+  );
 };
 
 export const persistTdp = (tdp: number, gameId: string) => {
-  const setter = callable<[{ tdp: number; gameId: string }], any>(
-    ServerAPIMethods.PERSIST_TDP
-  );
-  setter({
+  call<[tdp: number, gameId: string], any>(
+    ServerAPIMethods.PERSIST_TDP,
     tdp,
-    gameId,
-  });
+    gameId
+  );
 };
 
 export const setValuesForGameId = (gameId: string) => {
-  const setter = callable<[{ gameId: string }], any>(
-    ServerAPIMethods.SET_VALUES_FOR_GAME_ID
-  );
-  setter({
-    gameId,
-  });
+  call<[gameId: string], any>(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, gameId);
 };
 
 export const setSteamPatchValuesForGameId = (gameId: string) => {
-  const setter = callable<[{ gameId: string }], any>(
-    ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID
+  call<[gameId: string], any>(
+    ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID,
+    gameId
   );
-  setter({
-    gameId,
-  });
 };
 
 export const persistGpu = (
@@ -188,33 +186,26 @@ export const persistGpu = (
   maxGpuFrequency: number,
   gameId: string
 ) => {
-  const setter = callable<
-    [{ minGpuFrequency: number; maxGpuFrequency: number; gameId: string }],
-    any
-  >(ServerAPIMethods.PERSIST_GPU);
-  setter({
+  call<[minGpuFrequency: number, maxGpuFrequency: number, gameId: string], any>(
+    ServerAPIMethods.PERSIST_GPU,
     minGpuFrequency,
     maxGpuFrequency,
-    gameId,
-  });
+    gameId
+  );
 };
 
 export const persistSmt = (smt: boolean, gameId: string) => {
-  const setter = callable<[{ smt: boolean; gameId: string }], any>(
-    ServerAPIMethods.PERSIST_SMT
-  );
-  setter({
+  call<[smt: boolean, gameId: string], any>(
+    ServerAPIMethods.PERSIST_SMT,
     smt,
-    gameId,
-  });
+    gameId
+  );
 };
 
 export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
-  const setter = callable<[{ cpuBoost: boolean; gameId: string }], any>(
-    ServerAPIMethods.PERSIST_CPU_BOOST
-  );
-  setter({
+  call<[cpuBoost: boolean, gameId: string], any>(
+    ServerAPIMethods.PERSIST_CPU_BOOST,
     cpuBoost,
-    gameId,
-  });
+    gameId
+  );
 };
