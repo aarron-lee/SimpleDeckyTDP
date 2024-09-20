@@ -65,7 +65,7 @@ export enum ServerAPIMethods {
 }
 
 export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
-export const setSetting = callable<[{ name: String; value: any }], void>(
+export const setSetting = callable<[name: String, value: any], void>(
   ServerAPIMethods.SET_SETTING
 );
 export const onSuspend = callable<[], any>(ServerAPIMethods.ON_SUSPEND);
