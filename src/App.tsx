@@ -76,7 +76,6 @@ const AppContainer: FC = ({}) => {
     <Provider store={store}>
       <ErrorBoundary title="App">
         <App />
-        <></>
       </ErrorBoundary>
     </Provider>
   );
