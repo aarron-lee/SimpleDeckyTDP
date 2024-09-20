@@ -157,7 +157,9 @@ class Plugin:
     # # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
     # plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
     # return True
-
+  
+  async def get_latest_version_num(self):
+    return plugin_update.get_latest_version()
 
   async def poll_tdp(self, currentGameId: str):
     settings = get_saved_settings()

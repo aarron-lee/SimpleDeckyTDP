@@ -1,4 +1,4 @@
-import { callable, call, fetchNoCors } from "@decky/api";
+import { callable, call } from "@decky/api";
 
 export enum AdvancedOptionsEnum {
   ENABLE_TDP_CONTROL = "enableTdpControl",
@@ -61,6 +61,7 @@ export enum ServerAPIMethods {
   GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT = "supports_custom_ac_power_management",
   GET_CURRENT_AC_POWER_STATUS = "get_ac_power_status",
   SET_MAX_TDP = "set_max_tdp",
+  GET_LATEST_VERSION_NUM = "get_latest_version_num",
 }
 
 export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
@@ -113,23 +114,9 @@ export const saveTdpProfiles = ({
     advanced
   );
 
-export const getLatestVersionNum = async () => {
-  try {
-    const result = await fetchNoCors(
-      "https://raw.githubusercontent.com/aarron-lee/SimpleDeckyTDP/main/package.json",
-      { method: "GET" }
-    );
-
-    if (result.ok) {
-      return (await result.json())["version"];
-    } else {
-      return "";
-    }
-  } catch (e) {
-    console.log("Error fetching latest version", e);
-    return "";
-  }
-};
+export const getLatestVersionNum = callable<[], any>(
+  ServerAPIMethods.GET_LATEST_VERSION_NUM
+);
 
 export const otaUpdate = callable<[], void>(ServerAPIMethods.OTA_UPDATE);
 

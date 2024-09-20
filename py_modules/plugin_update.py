@@ -7,6 +7,8 @@ import json
 import ssl
 import shutil
 
+API_URL = "https://api.github.com/repos/aarron-lee/SimpleDeckyTDP/releases/latest"
+
 def recursive_chmod(path, perms):
   for dirpath, dirnames, filenames in os.walk(path):
     current_perms = os.stat(dirpath).st_mode
@@ -16,11 +18,9 @@ def recursive_chmod(path, perms):
 
 def download_latest_build():
   # ssl._create_default_https_context = ssl._create_unverified_context
-  url = "http://api.github.com/repos/aarron-lee/SimpleDeckyTDP/releases/latest"
-
   gcontext = ssl.SSLContext()
 
-  response = urllib.request.urlopen(url, context=gcontext)
+  response = urllib.request.urlopen(API_URL, context=gcontext)
   json_data = json.load(response)
 
   download_url = json_data.get("assets")[0].get("browser_download_url")
@@ -57,3 +57,15 @@ def ota_update():
     result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     return result
+
+def get_latest_version():
+    gcontext = ssl.SSLContext()
+
+    response = urllib.request.urlopen(API_URL, context=gcontext)
+    json_data = json.load(response)
+
+    tag = json_data.get("tag_name")
+    # if tag is a v* tag, remove the v
+    if tag.startswith("v"):
+        tag = tag[1:]
+    return tag
