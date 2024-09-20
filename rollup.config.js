@@ -24,12 +24,13 @@ export default defineConfig({
     }),
   ],
   context: "window",
-  external: ["react", "react-dom", "@decky/ui"],
+  external: ["react", "react-dom", "@decky/ui", "@decky/manifest"],
   output: {
     globals: {
       react: "SP_REACT",
       "react-dom": "SP_REACTDOM",
       "@decky/ui": "DFL",
+      "@decky/manifest": JSON.stringify(manifest),
     },
     dir: 'dist',
     format: 'esm',
