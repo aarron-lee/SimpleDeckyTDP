@@ -26,15 +26,18 @@ export default defineConfig({
   context: "window",
   external: ["react", "react-dom", "@decky/ui", "@decky/manifest"],
   output: {
-    file: "dist/index.js",
     globals: {
       react: "SP_REACT",
       "react-dom": "SP_REACTDOM",
       "@decky/ui": "DFL",
       "@decky/manifest": JSON.stringify(manifest),
     },
-    format: "iife",
-    exports: "default",
+    dir: 'dist',
+    format: 'esm',
+    sourcemap: true,
+    // **Don't** change this.
+    sourcemapPathTransform: (relativeSourcePath) => relativeSourcePath.replace(/^\.\.\//, `decky://decky/plugin/${encodeURIComponent(manifest.name)}/`),
+    exports: 'default'
   },
   onwarn: () => undefined,
 });
