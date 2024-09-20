@@ -5,6 +5,7 @@ import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
 import { defineConfig } from "rollup";
 import importAssets from "rollup-plugin-import-assets";
+import externalGlobals from 'rollup-plugin-external-globals';
 
 import manifest from './plugin.json' with { type: 'json' };
 
@@ -12,6 +13,12 @@ export default defineConfig({
   input: "./src/index.tsx",
   plugins: [
     commonjs(),
+    externalGlobals({
+      react: 'SP_REACT',
+      'react-dom': 'SP_REACTDOM',
+      '@decky/ui': 'DFL',
+      '@decky/manifest': JSON.stringify(manifest)
+    }),
     nodeResolve(),
     typescript(),
     json(),
