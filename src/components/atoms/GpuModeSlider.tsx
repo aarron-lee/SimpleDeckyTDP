@@ -22,7 +22,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   const MODES: NotchLabel[] = Object.keys(Mode)
     .filter((key) => isNaN(Number(key)))
     .map((mode, idx) => {
-      return { notchIndex: idx, label: capitalize(mode), value: idx };
+      return { notchIndex: idx, label: capitalize(mode.slice(0,7) + " " + mode.slice(7)), value: idx };
     });
 
   // known bug: typescript has incorrect type for reverse mapping from enums
