@@ -6,7 +6,7 @@ import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 enum Mode {
   BATTERY = 0,
   BALANCE = 1,
-  PERFORMANCE = 2
+  PERFORMANCE = 2,
   RANGE = 3,
   FIXED = 4,
 }
