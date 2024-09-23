@@ -32,7 +32,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
     <>
       <DeckySlider
         label="GPU Mode"
-        value={sliderValue || Mode.BATTERY}
+        value={sliderValue || Mode.BALANCE}
         min={0}
         max={MODES.length - 1}
         step={1}
