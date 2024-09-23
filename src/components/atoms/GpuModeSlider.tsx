@@ -4,9 +4,11 @@ import useGpuMode from "../../hooks/useGpuMode";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 
 enum Mode {
-  DEFAULT = 0,
-  RANGE = 1,
-  FIXED = 2,
+  BATTERY = 0,
+  BALANCE = 1,
+  PERFORMANCE = 2,
+  RANGE = 3,
+  FIXED = 4,
 }
 
 const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
@@ -20,7 +22,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   const MODES: NotchLabel[] = Object.keys(Mode)
     .filter((key) => isNaN(Number(key)))
     .map((mode, idx) => {
-      return { notchIndex: idx, label: capitalize(mode), value: idx };
+      return { notchIndex: idx, label: capitalize(mode.slice(0,7) + " " + mode.slice(7)), value: idx };
     });
 
   // known bug: typescript has incorrect type for reverse mapping from enums
@@ -29,8 +31,8 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   return (
     <>
       <DeckySlider
-        label="GPU Frequency Mode"
-        value={sliderValue || Mode.DEFAULT}
+        label="GPU Mode"
+        value={sliderValue}
         min={0}
         max={MODES.length - 1}
         step={1}

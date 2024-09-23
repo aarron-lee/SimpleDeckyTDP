@@ -28,8 +28,8 @@ const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   );
   const { setMinFreq, setMaxFreq } = useSetGpuFrequency();
 
-  if (!(min && max)) {
-    return <span>Error: Missing GPU Information</span>;
+  if (!(min && max) || currentMin < 1) {
+    return <span>Unsupported on this device.</span>;
   }
 
   return (

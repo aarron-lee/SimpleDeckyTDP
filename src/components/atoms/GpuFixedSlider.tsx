@@ -23,8 +23,8 @@ const GpuFixedSlider = () => {
   const currentFrequency = useSelector(getCurrentFixedGpuFrequencySelector);
   const setFreq = useSetGpuFrequency();
 
-  if (!(min && max)) {
-    return <span>Error: Missing GPU Information</span>;
+  if (!(min && max) || currentFrequency < 1) {
+    return <span>Unsupported on this device.</span>;
   }
 
   return (
