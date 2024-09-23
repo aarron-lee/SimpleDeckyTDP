@@ -30,3 +30,22 @@ def disable_steam_patch():
       set_setting('advanced', advanced_settings)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} error while disabling steam patch {e}")
+
+def migrate_gpu_mode():
+  try:
+    settings = get_saved_settings()
+    if not settings.get('tdpProfiles'):
+      settings['tdpProfiles'] = {}
+    tdp_profiles = settings.get('tdpProfiles')
+
+    for game_id in tdp_profiles:
+      profile = tdp_profiles[game_id]
+
+      mode = profile.get('gpuMode', None)
+
+      if mode == 'DEFAULT':
+        profile['gpuMode'] = 'BALANCE'
+
+    merge_tdp_profiles(tdp_profiles)
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error while setting default smt values {e}")

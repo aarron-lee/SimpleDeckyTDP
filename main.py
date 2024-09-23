@@ -11,7 +11,7 @@ import os
 from plugin_settings import merge_tdp_profiles, get_saved_settings, get_tdp_profile, get_active_tdp_profile, per_game_profiles_enabled, set_setting as persist_setting
 from gpu_utils import get_gpu_frequency_range
 import plugin_utils
-# import migrations
+import migrations
 import steam_info
 import device_utils
 
@@ -235,3 +235,4 @@ class Plugin:
 
     # migrations.migrate_smt()
     # migrations.disable_steam_patch()
+    migrations.migrate_gpu_mode()
