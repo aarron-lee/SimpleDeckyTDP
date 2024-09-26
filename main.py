@@ -150,12 +150,7 @@ class Plugin:
     }
     merge_tdp_profiles(tdp_profiles)
 
-    return cpu_utils.set_cpu_boost(cpuBoost)
-    # tdp_profile = get_tdp_profile(gameId)
-    # time.sleep(0.3)
-    # # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
-    # plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
-    # return True
+    return plugin_utils.set_values_for_game_id(gameId)
   
   async def get_latest_version_num(self):
     return plugin_update.get_latest_version()
