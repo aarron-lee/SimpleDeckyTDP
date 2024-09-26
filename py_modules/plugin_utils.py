@@ -3,7 +3,7 @@ import file_timeout
 from time import sleep
 import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
-from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver, set_smt, supports_cpu_boost
+from cpu_utils import ScalingDrivers, ryzenadj, set_cpu_boost, get_scaling_driver, set_smt, supports_cpu_boost
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
@@ -43,15 +43,18 @@ def set_power_governor_for_tdp_profile(tdp_profile):
   if governor:
     power_utils.set_power_governor(governor)
 
-    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and SCALING_DRIVER == 'amd-pstate-epp':
-      # epp is automatically changed to `performance` when governor is performance
+    if governor != power_utils.PowerGovernorOptions.PERFORMANCE.value and (
+      SCALING_DRIVER == ScalingDrivers.PSTATE_EPP.value or
+      SCALING_DRIVER == ScalingDrivers.INTEL_PSTATE.value
+    ):
+      # epp cannot be changed when governor is performance
       # this is to handle for all other governor options
       sleep(0.3)
       set_epp_for_tdp_profile(tdp_profile)
 
 def set_epp_for_tdp_profile(tdp_profile):
-  default_epp = power_utils.RECOMMENDED_DEFAULTS.get('amd-pstate-epp').get('epp')
-  power_controls = tdp_profile.get('powerControls', {}).get('amd-pstate-epp', {})
+  default_epp = power_utils.RECOMMENDED_DEFAULTS.get(SCALING_DRIVER).get('epp')
+  power_controls = tdp_profile.get('powerControls', {}).get(SCALING_DRIVER, {})
 
   epp = power_controls.get('epp', default_epp)
 

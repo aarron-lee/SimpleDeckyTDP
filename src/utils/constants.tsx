@@ -34,6 +34,21 @@ export const EppOptions: { [optionName: string]: EppOption } = {
   PERFORM_ANCE: "performance",
 };
 
+export type ScalingDriverOption =
+  | "intel_pstate"
+  | "amd-pstate"
+  | "amd-pstate-epp"
+  | "acpi-cpufreq";
+
+export const ScalingDrivers: {
+  [optionName: string]: ScalingDriverOption;
+} = {
+  INTEL_PSTATE: "intel_pstate",
+  PSTATE_EPP: "amd-pstate-epp",
+  PSTATE: "amd-pstate",
+  ACPI_CPUFREQ: "acpi-cpufreq",
+};
+
 export type PowerGovernorOption =
   | "powersave"
   | "performance"
@@ -60,14 +75,18 @@ addReverseMapping(PowerGovernorOptions);
 addReverseMapping(EppOptions);
 
 export const DEFAULT_POWER_CONTROLS = {
-  "amd-pstate-epp": {
+  [ScalingDrivers.INTEL_PSTATE]: {
     epp: EppOptions.BALANCE_POWER_SAVE,
     powerGovernor: PowerGovernorOptions.POWER_SAVE,
   },
-  "amd-pstate": {
+  [ScalingDrivers.PSTATE_EPP]: {
+    epp: EppOptions.BALANCE_POWER_SAVE,
     powerGovernor: PowerGovernorOptions.POWER_SAVE,
   },
-  "acpi-cpufreq": {
+  [ScalingDrivers.PSTATE]: {
+    powerGovernor: PowerGovernorOptions.POWER_SAVE,
+  },
+  [ScalingDrivers.ACPI_CPUFREQ]: {
     powerGovernor: PowerGovernorOptions.POWER_SAVE,
   },
 };

@@ -3,7 +3,12 @@ import {
   getPowerControlInfoSelector,
   updateEpp,
 } from "../../redux-modules/settingsSlice";
-import { EppOption, EppOptions, PowerControlInfo } from "../../utils/constants";
+import {
+  EppOption,
+  EppOptions,
+  PowerControlInfo,
+  ScalingDrivers,
+} from "../../utils/constants";
 import { capitalize } from "lodash";
 import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
@@ -61,7 +66,8 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
   if (
     powerGovernor === "performance" &&
     pstateStatus === "active" &&
-    scalingDriver === "amd-pstate-epp"
+    (scalingDriver === ScalingDrivers.PSTATE_EPP ||
+      scalingDriver == ScalingDrivers.INTEL_PSTATE)
   ) {
     // return (
     //   <Field disabled>

@@ -15,7 +15,10 @@ RYZENADJ_PATH = shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
 
+INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
+
 class ScalingDrivers(Enum):
+  INTEL_PSTATE = "intel_pstate"
   PSTATE_EPP = "amd-pstate-epp"
   PSTATE = "amd-pstate"
   ACPI_CPUFREQ = "acpi-cpufreq"
@@ -137,14 +140,23 @@ def get_pstate_status():
         pstate = file.read()
         file.close()
         return pstate.strip()
+    if os.path.exists(INTEL_PSTATE_PATH):
+      with open(INTEL_PSTATE_PATH, 'r') as file:
+        pstate = file.read()
+        file.close()
+        return pstate.strip()
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} get_pstate_status {e}')
     return False
   return None
 
-def set_amd_pstate_active():
+def set_pstate_active():
   if os.path.exists(AMD_PSTATE_PATH):
     with open(AMD_PSTATE_PATH, 'w') as file:
+      file.write('active')
+      file.close()
+  if os.path.exists(INTEL_PSTATE_PATH):
+    with open(INTEL_PSTATE_PATH, 'w') as file:
       file.write('active')
       file.close()
 
