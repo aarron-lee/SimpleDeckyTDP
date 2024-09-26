@@ -89,6 +89,17 @@ def get_default_options():
 
   options.append(enable_gpu_control)
 
+  enable_power_control = {
+    'name': 'Enable manual CPU Controls',
+    'type': 'boolean',
+    'defaultValue': False,
+    'description': 'Enables manual CPU boost, SMT, Power Governor, and EPP controls',
+    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, False),
+    'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
+  }
+
+  options.append(enable_power_control)
+
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
     'type': 'boolean',
@@ -99,17 +110,6 @@ def get_default_options():
   }
 
   options.append(ac_power_profiles)
-
-  enable_power_control = {
-    'name': 'Enable CPU Controls',
-    'type': 'boolean',
-    'defaultValue': True,
-    'description': 'Enables Power Governor and EPP controls',
-    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, True),
-    'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
-  }
-
-  options.append(enable_power_control)
 
   enable_background_polling = {
     'name': 'Enable Background Polling',
