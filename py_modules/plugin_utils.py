@@ -123,7 +123,7 @@ def persist_tdp(tdp, game_id):
 
   try:
     with file_timeout.time_limit(3):
-      ryzenadj(tdp)
+      set_values_for_game_id(game_id)
   except Exception as e:
     decky_plugin.logger.error(f'main#set_steam_patch timeout {e}')
 
