@@ -1,7 +1,7 @@
 import logging
 import file_timeout
 from time import sleep
-# import advanced_options
+import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
 from cpu_utils import ryzenadj, set_cpu_boost, get_scaling_driver, set_smt, supports_cpu_boost
 from gpu_utils import set_gpu_frequency_range
@@ -19,11 +19,20 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     set_tdp_for_tdp_profile(tdp_profile)
   if set_gpu:
     set_gpu_for_tdp_profile(tdp_profile)
-  set_cpu_boost_for_tdp_profile(tdp_profile)
-  set_smt_for_tdp_profile(tdp_profile)
+
+  profile = tdp_profile
+
+  # if user has manual CPU controls disabled, use default CPU profile instead
+  if advanced_options.get_setting(
+    advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
+  ) == False:
+    profile = power_utils.DEFAULT_CPU_PROFILE
+
+  set_cpu_boost_for_tdp_profile(profile)
+  set_smt_for_tdp_profile(profile)
   if set_governor:
     sleep(0.3)
-    set_power_governor_for_tdp_profile(tdp_profile)
+    set_power_governor_for_tdp_profile(profile)
 
 def set_power_governor_for_tdp_profile(tdp_profile):
   default_power_governor = power_utils.RECOMMENDED_DEFAULTS.get(SCALING_DRIVER, {}).get('powerGovernor')
