@@ -1,4 +1,4 @@
-import logging
+import decky_plugin
 import file_timeout
 from time import sleep
 import advanced_options
@@ -27,6 +27,11 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
     advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
   ):
     profile = power_utils.DEFAULT_CPU_PROFILE
+
+  decky_plugin.logger.info(profile)
+  decky_plugin.logger.info(advanced_options.get_setting(
+    advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
+  ))
 
   set_cpu_boost_for_tdp_profile(profile)
   set_smt_for_tdp_profile(profile)
@@ -75,7 +80,7 @@ def set_tdp_for_tdp_profile(tdp_profile):
       with file_timeout.time_limit(3):
         ryzenadj(tdp_profile.get('tdp'))
     except Exception as e:
-      logging.error(f'main#set_tdp_for_tdp_profile timeout {e}')
+      decky_plugin.logger.error(f'main#set_tdp_for_tdp_profile timeout {e}')
 
 def set_gpu_for_tdp_profile(tdp_profile):
   gpu_mode = tdp_profile.get('gpuMode')
@@ -104,7 +109,7 @@ def set_gpu_for_tdp_profile(tdp_profile):
           return True
         return False
     except Exception as e:
-      logging.error(f'main#set_gpu_for_game_id timeout {e}')
+      decky_plugin.logger.error(f'main#set_gpu_for_game_id timeout {e}')
 
 
 def persist_tdp(tdp, game_id):
@@ -120,7 +125,7 @@ def persist_tdp(tdp, game_id):
     with file_timeout.time_limit(3):
       ryzenadj(tdp)
   except Exception as e:
-    logging.error(f'main#set_steam_patch timeout {e}')
+    decky_plugin.logger.error(f'main#set_steam_patch timeout {e}')
 
 
 def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
@@ -156,7 +161,7 @@ def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
     with file_timeout.time_limit(3):
       set_gpu_frequency_range(minGpuFrequency, maxGpuFrequency)
   except Exception as e:
-    logging.error(f'main#steam_patch_gpu error {e}')
+    decky_plugin.logger.error(f'main#steam_patch_gpu error {e}')
 
 def set_steam_patch_values_for_game_id(game_id, per_game_profiles_enabled):
   tdp_profile = get_tdp_profile(game_id)

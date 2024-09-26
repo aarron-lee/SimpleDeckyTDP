@@ -5,7 +5,6 @@ import subprocess
 import shutil
 import decky_plugin
 import file_timeout
-import logging
 import advanced_options
 from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
@@ -26,7 +25,7 @@ def modprobe_acpi_call():
   result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
   if result.stderr:
-    logging.error(f"modprobe_acpi_call error: {result.stderr}")
+    decky_plugin.logger.error(f"modprobe_acpi_call error: {result.stderr}")
     return False
   return True
 
@@ -67,7 +66,7 @@ def ryzenadj(tdp: int):
       results = subprocess.call(commands)
       return results
   except Exception as e:
-    logging.error(e)
+    decky_plugin.logger.error(e)
 
 def get_cpb_boost_paths():
   cpu_nums = get_online_cpus()
@@ -94,7 +93,7 @@ def set_cpb_boost(enabled):
           decky_plugin.logger.error(e)
           continue
   except Exception as e:
-    logging.error(e)
+    decky_plugin.logger.error(e)
 
 def supports_cpu_boost():
   try:
@@ -103,7 +102,7 @@ def supports_cpu_boost():
       if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
         return True
   except Exception as e:
-    logging.error(e)
+    decky_plugin.logger.error(e)
 
   return False
 
@@ -112,12 +111,12 @@ def set_cpu_boost(enabled = True):
     with file_timeout.time_limit(3):
       set_cpb_boost(enabled)
   except Exception as e:
-    logging.error(e)
+    decky_plugin.logger.error(e)
     return False
 
 def set_smt(enabled = True):
   try:
-    # logging.debug(f"set_smt to {enabled}")
+    # decky_plugin.logger.debug(f"set_smt to {enabled}")
 
     if os.path.exists(AMD_SMT_PATH):
       with open(AMD_SMT_PATH, 'w') as file:
@@ -129,7 +128,7 @@ def set_smt(enabled = True):
 
     return True
   except Exception as e:
-    logging.error(e)
+    decky_plugin.logger.error(e)
     return False
 
 def get_pstate_status():
@@ -140,7 +139,7 @@ def get_pstate_status():
         file.close()
         return pstate.strip()
   except Exception as e:
-    logging.error(f'{__name__} get_pstate_status {e}')
+    decky_plugin.logger.error(f'{__name__} get_pstate_status {e}')
     return False
   return None
 
@@ -236,5 +235,5 @@ def get_scaling_driver():
           file.close()
           return scaling_driver
   except Exception as e:
-    logging.error(f'{__name__} get_scaling_driver {e}')
+    decky_plugin.logger.error(f'{__name__} get_scaling_driver {e}')
     return ''
