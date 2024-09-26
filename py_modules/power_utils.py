@@ -17,6 +17,25 @@ class EppOptions(Enum):
   BALANCE_POWER = 'balance_power'
   POWER_SAVE = 'power'
 
+# if manual CPU controls are disabled by the end user, these values are used by default instead
+DEFAULT_CPU_PROFILE = {
+  "cpuBoost": False,
+  "smt": True,
+  "powerControls": {
+      "amd-pstate-epp": {
+          "epp": EppOptions.BALANCE_POWER.value,
+          "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
+      },
+      "amd-pstate": {
+          "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
+      },
+      "acpi-cpufreq": {
+          "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
+      }
+  }
+}
+
+# these are used when the user enables manual CPU controls
 RECOMMENDED_DEFAULTS = {
   'amd-pstate-epp': {
     'epp': EppOptions.BALANCE_POWER.value,
@@ -62,8 +81,6 @@ def get_available_epp_options():
 
 def get_available_governor_options():
   try:
-    if not power_controls_enabled():
-      return
     power_governor_option_paths = cpu_utils.get_power_governor_option_paths()
     if len(power_governor_option_paths) > 0:
       path = power_governor_option_paths[0]
@@ -80,8 +97,6 @@ def get_available_governor_options():
 
 def set_epp(epp_option):
   try:
-    if not power_controls_enabled():
-      return
     if epp_option not in get_available_epp_options():
       return
     epp_devices = cpu_utils.get_epp_paths()

@@ -1,7 +1,6 @@
 import ac_power
 import decky_plugin
 import plugin_update
-import logging
 import time
 import file_timeout
 import advanced_options
@@ -18,7 +17,7 @@ import device_utils
 class Plugin:
 
   async def log_info(self, info):
-    logging.info(info)
+    decky_plugin.logger.info(info)
 
   async def is_steam_running(self):
     return steam_info.is_steam_running()
@@ -60,18 +59,18 @@ class Plugin:
             settings['minGpuFrequency'] = gpu_min
             settings['maxGpuFrequency'] = gpu_max
       except Exception as e:
-        logging.error(f"main#get_settings failed to get info {e}")
+        decky_plugin.logger.error(f"main#get_settings failed to get info {e}")
 
       settings['pluginVersionNum'] = f'{decky_plugin.DECKY_PLUGIN_VERSION}'
       return settings
     except Exception as e:
-      logging.error(f"get_settings failed to get settings {e}")
+      decky_plugin.logger.error(f"get_settings failed to get settings {e}")
 
   async def set_setting(self, name: str, value):
     try:
       return persist_setting(name, value)
     except Exception as e:
-      logging.error(f"error failed to set_setting {name}={value} {e}")
+      decky_plugin.logger.error(f"error failed to set_setting {name}={value} {e}")
 
   async def set_values_for_game_id(self, gameId):
     plugin_utils.set_values_for_game_id(gameId)
@@ -151,12 +150,7 @@ class Plugin:
     }
     merge_tdp_profiles(tdp_profiles)
 
-    return cpu_utils.set_cpu_boost(cpuBoost)
-    # tdp_profile = get_tdp_profile(gameId)
-    # time.sleep(0.3)
-    # # changing cpu_boost can change governor automatically from amd-pstate-epp to amd-pstate
-    # plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
-    # return True
+    return plugin_utils.set_values_for_game_id(gameId)
   
   async def get_latest_version_num(self):
     return plugin_update.get_latest_version()
@@ -172,7 +166,7 @@ class Plugin:
       with file_timeout.time_limit(3):
         plugin_utils.set_values_for_tdp_profile(tdp_profile)
     except Exception as e:
-      logging.error(f'main#poll_tdp file timeout {e}')
+      decky_plugin.logger.error(f'main#poll_tdp file timeout {e}')
       return False
 
     return True      
@@ -188,10 +182,10 @@ class Plugin:
         with file_timeout.time_limit(3):
           plugin_utils.set_values_for_tdp_profile(tdp_profile)
       except Exception as e:
-        logging.error(f'main#save_tdp file timeout {e}')
+        decky_plugin.logger.error(f'main#save_tdp file timeout {e}')
 
     except Exception as e:
-      logging.error(e)
+      decky_plugin.logger.error(e)
 
   async def set_max_tdp(self):
     settings = get_saved_settings()
@@ -205,7 +199,7 @@ class Plugin:
       with file_timeout.time_limit(15):
         plugin_update.ota_update()
     except Exception as e:
-      logging.error(e)
+      decky_plugin.logger.error(e)
 
   async def supports_custom_ac_power_management(self):
     return ac_power.supports_custom_ac_power_management()
