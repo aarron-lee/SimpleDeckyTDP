@@ -28,11 +28,6 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
   ):
     profile = power_utils.DEFAULT_CPU_PROFILE
 
-  decky_plugin.logger.info(profile)
-  decky_plugin.logger.info(advanced_options.get_setting(
-    advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
-  ))
-
   set_cpu_boost_for_tdp_profile(profile)
   set_smt_for_tdp_profile(profile)
   if set_governor:
