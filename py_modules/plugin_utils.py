@@ -23,9 +23,9 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
   profile = tdp_profile
 
   # if user has manual CPU controls disabled, use default CPU profile instead
-  if advanced_options.get_setting(
+  if not advanced_options.get_setting(
     advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
-  ) == False:
+  ):
     profile = power_utils.DEFAULT_CPU_PROFILE
 
   set_cpu_boost_for_tdp_profile(profile)
