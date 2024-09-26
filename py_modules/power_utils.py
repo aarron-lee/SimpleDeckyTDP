@@ -81,8 +81,6 @@ def get_available_epp_options():
 
 def get_available_governor_options():
   try:
-    if not power_controls_enabled():
-      return
     power_governor_option_paths = cpu_utils.get_power_governor_option_paths()
     if len(power_governor_option_paths) > 0:
       path = power_governor_option_paths[0]
@@ -99,8 +97,6 @@ def get_available_governor_options():
 
 def set_epp(epp_option):
   try:
-    if not power_controls_enabled():
-      return
     if epp_option not in get_available_epp_options():
       return
     epp_devices = cpu_utils.get_epp_paths()
