@@ -33,6 +33,11 @@ def get_cpu_manufacturer():
       decky_plugin.logger.error(f'{__name__} error while trying to read cpu manufacturer')
   return CPU_VENDOR
 
+def is_intel():
+  vendor = get_cpu_manufacturer()
+
+  return vendor == CpuVendors.INTEL.value
+
 def get_device_name():
   global DEVICE_NAME
 

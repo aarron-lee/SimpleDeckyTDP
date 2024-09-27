@@ -55,7 +55,7 @@ class Plugin:
           settings['supportsCustomAcPowerManagement'] = ac_power.supports_custom_ac_power_management()
           settings['cpuVendor'] = device_utils.get_cpu_manufacturer()
 
-          if settings['cpuVendor'] == device_utils.CpuVendors.INTEL.value:
+          if device_utils.is_intel():
             # hardcode min/max TDP values for Intel
             min_tdp, max_tdp = cpu_utils.get_intel_tdp_limits()
             settings['maxTdp'] = max_tdp
@@ -198,7 +198,7 @@ class Plugin:
     settings = get_saved_settings()
     max_tdp = settings.get('maxTdp')
     if (max_tdp and max_tdp > 10):
-      cpu_utils.ryzenadj(max_tdp)
+      cpu_utils.set_tdp(max_tdp)
 
   async def ota_update(self):
     # trigger ota update

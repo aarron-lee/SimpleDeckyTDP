@@ -76,7 +76,7 @@ def set_tdp_for_tdp_profile(tdp_profile):
   if tdp_profile.get('tdp'):
     try:
       with file_timeout.time_limit(3):
-        ryzenadj(tdp_profile.get('tdp'))
+        set_tdp(tdp_profile.get('tdp'))
     except Exception as e:
       decky_plugin.logger.error(f'main#set_tdp_for_tdp_profile timeout {e}')
 

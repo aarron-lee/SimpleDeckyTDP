@@ -33,16 +33,28 @@ def modprobe_acpi_call():
     return False
   return True
 
-def ryzenadj(tdp: int):
+def set_tdp(tdp: int):
   if not advanced_options.tdp_control_enabled():
     return
 
+  if device_utils.is_intel():
+    tdp_milliwatts = tdp * 1000000
+    try:
+      cmd = f"echo '{tdp_milliwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_mw"
+      result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      return result
+    except Exception as e:
+      decky_plugin.logger.error(f'{__name__} Error: set_tdp intel {e}')
+  else:
+    return set_amd_tdp(tdp)
+
+def set_amd_tdp(tdp: int):
   try:
     with file_timeout.time_limit(4):
       if device_utils.is_legion_go() and advanced_options.get_setting(
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
-        return legion_go.ryzenadj(tdp)
+        return legion_go.set_tdp(tdp)
       elif device_utils.is_rog_ally():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
@@ -51,7 +63,7 @@ def ryzenadj(tdp: int):
         #   else:
         #     rog_ally.set_platform_profile(tdp)
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value):
-          return rog_ally.ryzenadj(tdp)
+          return rog_ally.set_tdp(tdp)
 
     tdp = tdp*1000
 

@@ -78,7 +78,7 @@ def set_platform_profile(tdp):
   sleep(1.0)
   return True
 
-def ryzenadj(tdp):
+def set_tdp(tdp):
   try:
     if supports_bios_wmi_tdp():
       tdp_values = {

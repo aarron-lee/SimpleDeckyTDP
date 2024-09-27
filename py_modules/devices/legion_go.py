@@ -2,7 +2,7 @@ import decky_plugin
 from time import sleep
 from decky_acpi import call, read
 
-def ryzenadj(tdp):
+def set_tdp(tdp):
   try:
     tdp_mode = get_tdp_mode()
 
