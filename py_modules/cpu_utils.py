@@ -160,31 +160,33 @@ def set_pstate_active():
       file.write('active')
       file.close()
 
-def check_cpu_online(cpu_id):
-    cpu_path = f"/sys/devices/system/cpu/cpu{cpu_id}/online"
-    if os.path.exists(cpu_path):
-        with open(cpu_path, 'r') as f:
-            status = f.read().strip()
-            return status == '1'
-    else:
-        return False
-
 def get_online_cpus():
-  # cpu0 is always online
-  online_cpus = ['0']
-  cpu_path = '/sys/devices/system/cpu/'
-  cpu_pattern = re.compile(r'^cpu(\d+)$')
+  try:
+    with open('/sys/devices/system/cpu/online', 'r') as file:
+      online_cpus = file.read().strip()
+      file.close()
+      # example online_cpus:
+      # 0-2,3,4,5,6-8,10
+      # 0-15
+      # 0-1,3-15
+      parts = online_cpus.split(',')
 
-  for cpu_dir in os.listdir(cpu_path):
-    match = cpu_pattern.match(cpu_dir)
-    if match:
-      cpu_id = match.group(1)
-      if check_cpu_online(cpu_id):
-        online_cpus.append(cpu_id)
+      result = []
+      for part in parts:
+        if '-' in part:
+          # Handle range
+          start, end = map(int, part.split('-'))
+          result.extend(range(start, end + 1))
+        else:
+          # Handle single value
+          result.append(int(part))
+      return result
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error while getting online_cpus {e}')
   
-  online_cpus.sort()
+  # cpu 0 is always online
+  return [0]
 
-  return online_cpus
 
 def get_epp_paths():
   cpu_nums = get_online_cpus()
