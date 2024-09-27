@@ -250,3 +250,22 @@ def get_scaling_driver():
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} get_scaling_driver {e}')
     return ''
+
+def get_intel_tdp_limits():
+  # while there is a max TDP provided by intel, there is no min
+  min_tdp = 5
+  MAX_TDP_PATH = '/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_0_max_power_uw'
+
+  try:
+    with file_timeout.time_limit(1):
+      if os.path.exists(MAX_TDP_PATH):
+        with open(MAX_TDP_PATH, 'r') as file:
+          max_tdp = int(file.read().strip()) / 1000000
+          file.close()
+
+          return [min_tdp, max_tdp]
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error: get_intel_tdp_limits {e}')
+
+  # default to reasonably safe value for TDP limits
+  return [min_tdp, 15]
