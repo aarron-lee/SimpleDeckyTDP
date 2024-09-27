@@ -13,9 +13,10 @@ import device_utils
 
 RYZENADJ_PATH = shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
-AMD_SMT_PATH="/sys/devices/system/cpu/smt/control"
 
 INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
+
+SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
 class ScalingDrivers(Enum):
   INTEL_PSTATE = "intel_pstate"
@@ -118,10 +119,9 @@ def set_cpu_boost(enabled = True):
 
 def set_smt(enabled = True):
   try:
-    # decky_plugin.logger.debug(f"set_smt to {enabled}")
-
-    if os.path.exists(AMD_SMT_PATH):
-      with open(AMD_SMT_PATH, 'w') as file:
+    # SMT_PATH is identical for both AMD and Intel
+    if os.path.exists(SMT_PATH):
+      with open(SMT_PATH, 'w') as file:
         if enabled:
           file.write('on')
         else:
