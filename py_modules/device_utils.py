@@ -12,7 +12,7 @@ class Devices(Enum):
   GPD_WM2 = "G1619-04"
   GPD_WIN4 = "G1618-04"
 
-class Vendors(Enum):
+class CpuVendors(Enum):
   INTEL = "GenuineIntel"
   AMD = "AuthenticAMD"
 

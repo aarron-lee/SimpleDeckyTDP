@@ -53,6 +53,12 @@ class Plugin:
           settings['advancedOptions'] = advanced_options.get_advanced_options()
 
           settings['supportsCustomAcPowerManagement'] = ac_power.supports_custom_ac_power_management()
+          settings['cpuVendor'] = device_utils.get_cpu_manufacturer()
+
+          # if settings['cpuVendor'] == device_utils.CpuVendors.INTEL.value:
+          #   # hardcode min/max TDP values
+          #   settings['maxTdp']
+          #   settings['minTdp']
 
           gpu_min, gpu_max = get_gpu_frequency_range()
           if (gpu_min and gpu_max):

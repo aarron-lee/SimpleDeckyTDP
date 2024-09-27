@@ -3,6 +3,11 @@ import {
   getCurrentGameInfo,
 } from "../components/atoms/DeckyFrontendLib";
 
+export const CpuVendors = {
+  INTEL: "GenuineIntel",
+  AMD: "AuthenticAMD",
+};
+
 export const MIN_TDP_RANGE = 4;
 export const DEFAULT_POLL_RATE = 10000;
 export const DEFAULT_START_TDP = 12;

@@ -72,6 +72,7 @@ export interface SettingsState extends TdpRangeState, PollState, GpuState {
   steamPatchDefaultTdp: number;
   pluginVersionNum: string;
   supportsCustomAcPowerManagement?: boolean;
+  cpuVendor?: string;
   isAcPower?: boolean;
 }
 
@@ -196,8 +197,10 @@ export const settingsSlice = createSlice({
         pluginVersionNum,
         steamPatchDefaultTdp,
         supportsCustomAcPowerManagement,
+        cpuVendor,
       } = action.payload;
       state.initialLoad = false;
+      state.cpuVendor = cpuVendor;
       state.supportsCustomAcPowerManagement = supportsCustomAcPowerManagement;
       state.minTdp = action.payload.minTdp || MIN_TDP_RANGE;
       state.maxTdp = action.payload.maxTdp || 15;
@@ -557,6 +560,8 @@ export const getPowerControlInfoSelector =
 
     return { epp, powerGovernor };
   };
+
+export const cpuVendorSelector = (state: RootState) => state.settings.cpuVendor;
 
 export const acPowerSelector = (state: RootState) => state.settings.isAcPower;
 
