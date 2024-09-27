@@ -198,31 +198,9 @@ Try deleting the `$HOME/homebrew/settings/SimpleDeckyTDP/settings.json` file.
 
 Note that this will delete any of your saved TDP profiles, so you could optionally copy it somewhere else to keep it as a backup instead.
 
-<!-- ### Steam GPU slider does not appear with the "Fix Steam Hardware Controls" enabled
-
-If the Steam GPU Slider does not show up, this is an OS bug. SimpleDeckyTDP has no control over the GPU slider showing up, the plugin can only modify it.
-
-If you are seeing this issue on BazziteOS, you need to install SimpleDeckyTDP with `ujust setup-decky simpledeckytdp` for the GPU slider
-
-If you encounter this issue, turn off `Fix Steam Hardware Controls` and use the GPU slider in the SimpleDeckyTDP plugin. -->
-
 ### My eGPU is being affected by TDP settings
 
 The Steam GPU slider reportedly affects eGPUs, if you are using an eGPU you should disable Steam's GPU toggle.
-
-<!--
-You will also have to manually disable the GPU control toggle and TDP toggle in the Steam QAM, since it can still affect GPU clocks even if SimpleDeckyTDP is no longer managing the Steam Sliders. -->
-
-<!-- ### Steam TDP slider and GPU Slider not working consistently with the "Fix Steam Hardware Controls" enabled
-
-There's a few possibilities:
-
-1. The Steam Client recently updated and broke the patch functionality of the plugin.
-2. Your OS/Distro has a polkit file that is interfering with setting TDP/GPU values. This is a known issue on NobaraOS
-
-For possibility #1, you can disable the `Fix Steam Hardware Controls` toggle, and instead use the TDP + GPU sliders in the plugin
-
-For possibility #2, you can either enable polling to workaround the polkit file, or ask your distro maintainer to patch/update the polkit file. -->
 
 ### ROG Ally Troubleshooting
 
@@ -271,10 +249,13 @@ PM Table Version: 450005
 
 If you see an error, you may need to set `iomem=relaxed` as a boot parameter for your kernel, or disable secure boot.
 
+Note that if you have SELinux + early lockdown enabled, ryzenadj will not work when trying to set TDP.
+
 # Attribution
 
 Thanks to the following for making this plugin possible:
 
+- [PowerControl](https://github.com/mengmeet/PowerControl/)
 - [hhd-adjustor](https://github.com/hhd-dev/adjustor/)
 - [hhd-hwinfo](https://github.com/hhd-dev/hwinfo)
 - [decky loader](https://github.com/SteamDeckHomebrew/decky-loader/)
