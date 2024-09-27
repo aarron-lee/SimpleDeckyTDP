@@ -15,6 +15,7 @@ RYZENADJ_PATH = shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 
 INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
+INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
 
 SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
@@ -94,27 +95,42 @@ def get_cpb_boost_paths():
   return cpb_cpu_boost_paths
 
 def set_cpb_boost(enabled):
-  # global cpb boost toggle doesn't exist, fallback to setting it per-cpu
-  paths = get_cpb_boost_paths()
-  try:
-    with file_timeout.time_limit(4):
-      for p in paths:
-        try:
-          with open(p, 'w') as file:
-            file.write("1" if enabled else "0")
-            file.close()
-            sleep(0.1)
-        except Exception as e:
-          decky_plugin.logger.error(e)
-          continue
-  except Exception as e:
-    decky_plugin.logger.error(e)
+  if device_utils.is_intel():
+    if os.path.exists(INTEL_CPU_BOOST_PATH):
+      try:
+        with open(p, 'w') as file:
+          # sys endpoint is named 'no_turbo'
+          # so no_turbo == 0 == cpu boost on
+          # no_turbo == 1 == cpu boost off
+          file.write("0" if enabled else "1")
+          file.close()
+          sleep(0.1)
+      except Exception as e:
+        decky_plugin.logger.error(e)
+  else:
+    # AMD CPU boost global cpb boost toggle doesn't exist, fallback to setting it per-cpu
+    paths = get_cpb_boost_paths()
+    try:
+      with file_timeout.time_limit(4):
+        for p in paths:
+          try:
+            with open(p, 'w') as file:
+              file.write("1" if enabled else "0")
+              file.close()
+              sleep(0.1)
+          except Exception as e:
+            decky_plugin.logger.error(e)
+            continue
+    except Exception as e:
+      decky_plugin.logger.error(e)
 
 def supports_cpu_boost():
   try:
     with file_timeout.time_limit(4):
       cpu_boost_paths = get_cpb_boost_paths()
       if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
+        return True
+      if os.path.exists(INTEL_CPU_BOOST_PATH):
         return True
   except Exception as e:
     decky_plugin.logger.error(e)
