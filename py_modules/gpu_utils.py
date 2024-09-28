@@ -20,8 +20,7 @@ def get_gpu_frequency_range():
     return GPU_FREQUENCY_RANGE
 
   if device_utils.is_intel():
-      min, max = get_intel_gpu_clocks()
-      GPU_FREQUENCY_RANGE = [min, max]
+      GPU_FREQUENCY_RANGE = get_intel_gpu_clocks()
   else:
     try:
       freq_string = open(GPU_FREQUENCY_PATH,"r").read()
@@ -143,14 +142,13 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
 
 def get_intel_gpu_clocks():
     try:
-        cmd = 'cat /sys/class/drm/card?/gt_RP0_freq_mhz'
-        result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        max_gpu_clock = int(result.stdout)
+        max_cmd = 'cat /sys/class/drm/card?/gt_RP0_freq_mhz'
+        max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        max_gpu_clock = int(max_result.stdout.strip())
 
-        cmd = 'cat /sys/class/drm/card?/gt_RPn_freq_mhz'
-        result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        min_gpu_clock = int(result.stdout)
+        mind_cmd = 'cat /sys/class/drm/card?/gt_RPn_freq_mhz'
+        min_result = subprocess.run(mind_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        min_gpu_clock = int(min_result.stdout.strip())
 
         return [min_gpu_clock, max_gpu_clock]
     except Exception as e:
