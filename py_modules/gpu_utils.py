@@ -21,6 +21,7 @@ def get_gpu_frequency_range():
 
   if device_utils.is_intel():
       GPU_FREQUENCY_RANGE = get_intel_gpu_clocks()
+      return GPU_FREQUENCY_RANGE
   else:
     try:
       freq_string = open(GPU_FREQUENCY_PATH,"r").read()
@@ -38,6 +39,31 @@ def get_gpu_frequency_range():
       decky_plugin.logger.error(e)
 
 def set_gpu_frequency(current_game_id):
+  if device_utils.is_intel():
+    set_intel_gpu_frequency(current_game_id)
+  else:
+    set_amd_gpu_frequency(current_game_id)
+
+def set_intel_gpu_frequency(current_game_id):
+  settings = get_saved_settings()
+  tdp_profile = settings.get("tdpProfiles").get("default")
+  if settings.get("enableTdpProfiles"):
+    current_tdp_profile = settings.get("tdpProfiles").get(current_game_id)
+    if current_tdp_profile:
+      tdp_profile = current_tdp_profile
+  min, max = get_intel_gpu_clocks()
+  new_min = tdp_profile.get(GpuRange.MIN.value, min)
+  new_max = tdp_profile.get(GpuRange.MAX.value, max)
+
+  # intel only supports setting GPU clocks, no auto/high/low
+  max_cmd = f'echo {new_max} | sudo tee /sys/class/drm/card?/gt_max_freq_mhz'
+  subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+  min_cmd = f'echo {new_min} | sudo tee /sys/class/drm/card?/gt_min_freq_mhz'
+  subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def set_amd_gpu_frequency(current_game_id):
   settings = get_saved_settings()
   gpu_mode = GpuModes.BALANCE.value
   tdp_profile = settings.get("tdpProfiles").get("default")
@@ -146,8 +172,8 @@ def get_intel_gpu_clocks():
         max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         max_gpu_clock = int(max_result.stdout.strip())
 
-        mind_cmd = 'cat /sys/class/drm/card?/gt_RPn_freq_mhz'
-        min_result = subprocess.run(mind_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        min_cmd = 'cat /sys/class/drm/card?/gt_RPn_freq_mhz'
+        min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         min_gpu_clock = int(min_result.stdout.strip())
 
         return [min_gpu_clock, max_gpu_clock]

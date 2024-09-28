@@ -3,20 +3,19 @@
 import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
 import { useIsSteamPatchEnabled } from "./AdvancedOptions";
-import { CpuVendors, MIN_TDP_RANGE } from "../../utils/constants";
+import { MIN_TDP_RANGE } from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
-import { useSelector } from "react-redux";
-import { cpuVendorSelector } from "../../redux-modules/settingsSlice";
+import useIsIntel from "../../hooks/useIsIntel";
 
 const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
   const [maxTdp, setMaxTdp] = useMaxTdp();
 
   const steamPatchEnabled = useIsSteamPatchEnabled();
-  const cpuVendor = useSelector(cpuVendorSelector);
+  const isIntel = useIsIntel();
 
-  if (cpuVendor === CpuVendors.INTEL) {
+  if (isIntel) {
     // intel provides TDP limit values, custom TDP range is unnecessary
     return null;
   }
