@@ -3,7 +3,7 @@ import file_timeout
 from time import sleep
 import advanced_options
 from plugin_settings import bootstrap_profile, merge_tdp_profiles, get_tdp_profile, set_setting as persist_setting
-from cpu_utils import ScalingDrivers, ryzenadj, set_cpu_boost, get_scaling_driver, set_smt, supports_cpu_boost
+from cpu_utils import ScalingDrivers, set_tdp, set_cpu_boost, get_scaling_driver, set_smt, supports_cpu_boost
 from gpu_utils import set_gpu_frequency_range
 import power_utils
 
