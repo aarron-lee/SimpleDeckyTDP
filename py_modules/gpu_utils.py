@@ -1,6 +1,8 @@
 import decky_plugin
+import device_utils
 import glob
 import re
+import os
 import time
 import subprocess
 import advanced_options
@@ -16,20 +18,25 @@ def get_gpu_frequency_range():
   global GPU_FREQUENCY_RANGE
   if GPU_FREQUENCY_RANGE:
     return GPU_FREQUENCY_RANGE
-  try:
-    freq_string = open(GPU_FREQUENCY_PATH,"r").read()
-    od_sclk_matches = re.findall(r"OD_RANGE:\s*SCLK:\s*(\d+)Mhz\s*(\d+)Mhz", freq_string)
 
-    if od_sclk_matches:
-      frequency_range = [int(od_sclk_matches[0][0]), int(od_sclk_matches[0][1])]
-      GPU_FREQUENCY_RANGE = frequency_range
-      return frequency_range
-    else:
-      frequency_range = [-2, -2]
-      GPU_FREQUENCY_RANGE = frequency_range
-      return frequency_range
-  except Exception as e:
-    decky_plugin.logger.error(e)
+  if device_utils.is_intel():
+      min, max = get_intel_gpu_clocks()
+      GPU_FREQUENCY_RANGE = [min, max]
+  else:
+    try:
+      freq_string = open(GPU_FREQUENCY_PATH,"r").read()
+      od_sclk_matches = re.findall(r"OD_RANGE:\s*SCLK:\s*(\d+)Mhz\s*(\d+)Mhz", freq_string)
+
+      if od_sclk_matches:
+        frequency_range = [int(od_sclk_matches[0][0]), int(od_sclk_matches[0][1])]
+        GPU_FREQUENCY_RANGE = frequency_range
+        return frequency_range
+      else:
+        frequency_range = [-2, -2]
+        GPU_FREQUENCY_RANGE = frequency_range
+        return frequency_range
+    except Exception as e:
+      decky_plugin.logger.error(e)
 
 def set_gpu_frequency(current_game_id):
   settings = get_saved_settings()
@@ -133,7 +140,23 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
   except Exception as e:
     decky_plugin.logger.error(f"set_gpu_frequency_range {new_min} {new_max} error {e}")
     return False
-  
+
+def get_intel_gpu_clocks():
+    try:
+        cmd = 'cat /sys/class/drm/card?/gt_RP0_freq_mhz'
+        result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        max_gpu_clock = int(result.stdout)
+
+        cmd = 'cat /sys/class/drm/card?/gt_RPn_freq_mhz'
+        result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        min_gpu_clock = int(result.stdout)
+
+        return [min_gpu_clock, max_gpu_clock]
+    except Exception as e:
+        decky_plugin.logger.error('error while getting intel gpu clocks')
+        return [None, None]
+
 
 def execute_gpu_frequency_command(command):
   cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
