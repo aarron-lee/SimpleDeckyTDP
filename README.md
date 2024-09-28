@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
-This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended for devices compatible with ryzenadj.
+This is a Linux TDP Decky Plugin with support for AMD and Intel devices
 
 - [Features](#features)
 - [Compatibility](#compatibility)
@@ -32,31 +32,33 @@ This is a (formerly simple) Linux TDP Decky Plugin that wraps ryzenadj. Intended
   - custom TDP limits
 - Power Governor and Energy Performance Preference controls
 - GPU Controls
+  - GPU Controls are not available on Intel
 - SMT control
 - CPU Boost control\*
-  - note, requires a newer kernel for CPU boost controls
+  - note, AMD devices require a newer kernel for CPU boost controls
   - CPU boost controls appear automatically if it's available
   <!-- - (optional) Fix Steam Client TDP and GPU Sliders -->
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
+  - Intel support a WIP
 - Legion Go TDP via WMI calls (allows for TDP control with secure boot, requires acpi_call)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
 - etc
 
 ## Compatibility
 
-Tested on ChimeraOS Stable (45), NobaraOS 39 Deck Edition, and Bazzite.
+Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite.
 
 Other distros not tested.
 
-Currently NOT compatible with Intel or Nvidia, this plugin is currently AMD APUs only
+Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin is currently for APUs only
 
 ## Requirements
 
-### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
+### AMD
 
-Note that ryzenadj is NOT necessary if you plan on using a [ryzenadj override](#custom-tdp-method).
+### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
 ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
@@ -73,11 +75,21 @@ If you do not have ryzenadj installed, you will need to get a working copy insta
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
+### Intel
+
+Intel support was buil for the `intel_pstate` scaling driver. To check if your system is compatible, run the following in terminal:
+
+```bash
+cat /sys/devices/system/cpu/cpufreq/policy*/scaling_driver
+```
+
+If the scaling is `intel_pstate`, then your device should be compatible
+
 # Install
 
 ### Prerequisites
 
-Decky Loader must already be installed. If using ryzenadj for TDP control, secure boot must be disabled.
+Decky Loader must already be installed. If using ryzenadj for TDP control, secure boot + early lockdown must be disabled.
 
 ### Quick Install / Update
 
@@ -144,6 +156,8 @@ sudo systemctl restart plugin_loader.service
 
 [SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Desktop port of SimpleDeckyTDP
 
+Intel support is still a work in progress for the Desktop app
+
 - Note: the Desktop app does not have full feature parity with the Decky Plugin. Certain features cannot be implemented yet, such as:
   - per-game profiles
   - AC Profiles (in the Desktop app, AC Profiles are only supported on select devices)
@@ -152,10 +166,6 @@ sudo systemctl restart plugin_loader.service
 The Desktop App also should not be used simultaneously with the SimpleDeckyTDP decky plugin, you should only use one or the other at any given time.
 
 This is because 2-way communication between the plugin and Desktop app is currently not possible.
-
-### Custom Device settings
-
-See [device settings README](./py_modules/devices/README.md)
 
 ### Are there CPU boost controls?
 
@@ -260,3 +270,5 @@ Thanks to the following for making this plugin possible:
 - [hhd-hwinfo](https://github.com/hhd-dev/hwinfo)
 - [decky loader](https://github.com/SteamDeckHomebrew/decky-loader/)
 - [ryzenadj](https://github.com/FlyGoat/RyzenAdj)
+
+As well as a big shoutout to SteamFork folks for troubleshooting and testing Intel support
