@@ -182,11 +182,11 @@ def set_amd_gpu_frequency_range(new_min, new_max):
 
 def get_intel_gpu_clocks():
     try:
-        max_cmd = 'cat /sys/class/drm/card?/gt_min_freq_mhz'
+        max_cmd = 'cat /sys/class/drm/card?/gt_max_freq_mhz'
         max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         max_gpu_clock = int(max_result.stdout.strip())
 
-        min_cmd = 'cat /sys/class/drm/card?/gt_max_freq_mhz'
+        min_cmd = 'cat /sys/class/drm/card?/gt_min_freq_mhz'
         min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         min_gpu_clock = int(min_result.stdout.strip())
 
