@@ -9,8 +9,12 @@ import advanced_options
 from plugin_enums import GpuModes, GpuRange
 from plugin_settings import get_saved_settings
 
-GPU_FREQUENCY_PATH = glob.glob("/sys/class/drm/card?/device/pp_od_clk_voltage")[0]
-GPU_LEVEL_PATH = glob.glob("/sys/class/drm/card?/device/power_dpm_force_performance_level")[0]
+GPU_FREQUENCY_PATH = None
+GPU_LEVEL_PATH = None
+
+if not device_utils.is_intel():
+  GPU_FREQUENCY_PATH = glob.glob("/sys/class/drm/card?/device/pp_od_clk_voltage")[0]
+  GPU_LEVEL_PATH = glob.glob("/sys/class/drm/card?/device/power_dpm_force_performance_level")[0]
 
 GPU_FREQUENCY_RANGE = None
 
