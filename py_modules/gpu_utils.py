@@ -63,11 +63,23 @@ def set_intel_gpu_frequency(current_game_id):
 
 def set_intel_gpu_frequency_range(new_min, new_max):
   # intel only supports setting GPU clocks, no auto/high/low
-  max_cmd = f'echo {new_max} | sudo tee /sys/class/drm/card?/gt_RP0_freq_mhz'
-  subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  max_cmd = 'ls /sys/class/drm/card*/gt_RP0_freq_mhz'
+  max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  max_gpu_filepath = max_result.stdout.strip()
 
-  min_cmd = f'echo {new_min} | sudo tee /sys/class/drm/card?/gt_RPn_freq_mhz'
-  subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  min_cmd = 'ls /sys/class/drm/card*/gt_RPn_freq_mhz'
+  min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  min_gpu_filepath = min_result.stdout.strip()
+
+  try:
+    with open(max_gpu_filepath, 'w') as file:
+      file.write(new_max)
+      file.close()
+    with open(min_gpu_filepath, 'w') as file:
+      file.write(new_min)
+      file.close()
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__}: {e}')
 
 def set_amd_gpu_frequency(current_game_id):
   settings = get_saved_settings()
