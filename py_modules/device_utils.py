@@ -34,6 +34,7 @@ def get_cpu_manufacturer():
           if match:
               vendor_id = match.group(1)
               CPU_VENDOR = vendor_id.strip()
+              decky_plugin.logger.info(f"cpu vendor: {CPU_VENDOR}")
           else:
               decky_plugin.logger.error("No CPU vendor_id found")          
     except Exception as e:
