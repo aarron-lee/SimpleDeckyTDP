@@ -20,12 +20,11 @@ const Gpu = () => {
         </DeckyRow>
       )}
 
-      {gpuMode === GpuModes.RANGE ||
-        (isIntel && (
-          <DeckyRow>
-            <GpuRangeSliders showSeparator />
-          </DeckyRow>
-        ))}
+      {(gpuMode === GpuModes.RANGE || isIntel) && (
+        <DeckyRow>
+          <GpuRangeSliders showSeparator />
+        </DeckyRow>
+      )}
       {gpuMode === GpuModes.FIXED && (
         <DeckyRow>
           <GpuFixedSlider />
