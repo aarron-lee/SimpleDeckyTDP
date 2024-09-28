@@ -44,7 +44,8 @@ def get_gpu_frequency_range():
 
 def set_gpu_frequency(current_game_id):
   if device_utils.is_intel():
-    set_intel_gpu_frequency(current_game_id)
+    return
+    # set_intel_gpu_frequency(current_game_id)
   else:
     set_amd_gpu_frequency(current_game_id)
 
@@ -141,8 +142,10 @@ def set_gpu_frequency_range(new_min: int, new_max: int):
     return
 
   if device_utils.is_intel():
-    set_intel_gpu_frequency_range(new_min, new_max)
-    return True
+    # set_intel_gpu_frequency_range(new_min, new_max)
+
+    # intel doesn't support manual GPU clocks on iGPU
+    return False
   else:
     return set_amd_gpu_frequency_range(new_min, new_max)
 

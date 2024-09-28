@@ -8,8 +8,12 @@ import { DeckyRow } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
 
 const Gpu = () => {
-  // intel only supports GPU mhz range
   const isIntel = useIsIntel();
+
+  if (isIntel) {
+    // intel currently doesn't support manual GPU clocks on iGPU
+    return null;
+  }
 
   const { gpuMode } = useGpuMode();
   return (

@@ -1,7 +1,6 @@
 import os
 import shutil
 import subprocess
-import file_timeout
 import decky_plugin
 from plugin_settings import get_nested_setting
 from enum import Enum
@@ -78,27 +77,31 @@ def get_default_options():
 
   options.append(enable_tdp_control)
 
-  enable_gpu_control = {
-    'name': 'Enable GPU Controls',
-    'type': 'boolean',
-    'defaultValue': True,
-    'description': 'Enables GPU Slider',
-    'currentValue': get_value(DefaultSettings.ENABLE_GPU_CONTROL, True),
-    'statePath': DefaultSettings.ENABLE_GPU_CONTROL.value
-  }
+  if not device_utils.is_intel():
+    # GPU controls on AMD only
+    enable_gpu_control = {
+      'name': 'Enable GPU Controls',
+      'type': 'boolean',
+      'defaultValue': True,
+      'description': 'Enables GPU Slider',
+      'currentValue': get_value(DefaultSettings.ENABLE_GPU_CONTROL, True),
+      'statePath': DefaultSettings.ENABLE_GPU_CONTROL.value
+    }
 
-  options.append(enable_gpu_control)
+    options.append(enable_gpu_control)
 
-  enable_power_control = {
+  manual_cpu_controls_default = True if device_utils.is_intel() else False
+
+  manual_cpu_controls = {
     'name': 'Enable manual CPU Controls',
     'type': 'boolean',
-    'defaultValue': False,
+    'defaultValue': manual_cpu_controls_default,
     'description': 'Enables manual CPU boost, SMT, Power Governor, and EPP controls',
-    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, False),
+    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, manual_cpu_controls_default),
     'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
   }
 
-  options.append(enable_power_control)
+  options.append(manual_cpu_controls)
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
