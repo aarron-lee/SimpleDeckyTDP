@@ -98,7 +98,7 @@ def set_cpb_boost(enabled):
   if device_utils.is_intel():
     if os.path.exists(INTEL_CPU_BOOST_PATH):
       try:
-        with open(p, 'w') as file:
+        with open(INTEL_CPU_BOOST_PATH, 'w') as file:
           # sys endpoint is named 'no_turbo'
           # so no_turbo == 0 == cpu boost on
           # no_turbo == 1 == cpu boost off
