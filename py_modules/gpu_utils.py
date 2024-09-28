@@ -63,10 +63,10 @@ def set_intel_gpu_frequency(current_game_id):
 
 def set_intel_gpu_frequency_range(new_min, new_max):
   # intel only supports setting GPU clocks, no auto/high/low
-  max_cmd = f'echo {new_max} | sudo tee /sys/class/drm/card?/gt_max_freq_mhz'
+  max_cmd = f'echo {new_max} | sudo tee /sys/class/drm/card?/gt_RP0_freq_mhz'
   subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-  min_cmd = f'echo {new_min} | sudo tee /sys/class/drm/card?/gt_min_freq_mhz'
+  min_cmd = f'echo {new_min} | sudo tee /sys/class/drm/card?/gt_RPn_freq_mhz'
   subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def set_amd_gpu_frequency(current_game_id):
