@@ -39,9 +39,9 @@ def set_tdp(tdp: int):
     return
 
   if device_utils.is_intel():
-    tdp_milliwatts = tdp * 1000000
+    tdp_microwatts = tdp * 1000000
     try:
-      cmd = f"echo '{tdp_milliwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_uw"
+      cmd = f"echo '{tdp_microwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_uw"
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       return result
     except Exception as e:
