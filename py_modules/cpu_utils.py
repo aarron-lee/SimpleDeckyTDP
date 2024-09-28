@@ -41,7 +41,7 @@ def set_tdp(tdp: int):
   if device_utils.is_intel():
     tdp_milliwatts = tdp * 1000000
     try:
-      cmd = f"echo '{tdp_milliwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_mw"
+      cmd = f"echo '{tdp_milliwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_uw"
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       return result
     except Exception as e:
@@ -211,7 +211,7 @@ def get_online_cpus():
       return result
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error while getting online_cpus {e}')
-  
+
   # cpu 0 is always online
   return [0]
 
