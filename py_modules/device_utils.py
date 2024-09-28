@@ -1,8 +1,7 @@
 from enum import Enum
 import file_timeout
 import decky_plugin
-import subprocess
-import json
+import re
 
 class Devices(Enum):
   LEGION_GO = "83E1"
@@ -24,11 +23,19 @@ def get_cpu_manufacturer():
 
   if not CPU_VENDOR:
     try:
-      cmd = 'sed -En \'s/ *(( ?[^ :\t])+)\\s*(:?)/"\\1"\\3/gp\' /proc/cpuinfo'
-      result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-      json_partial = ",".join(result.stdout.split("\n"))[:-1]
-      cpu_info = json.loads(f"{{{json_partial}}}")
-      CPU_VENDOR = cpu_info.get('vendor_id')
+      with open("/proc/cpuinfo", "r") as file:
+          cpuinfo = file.read().strip()
+          file.close()
+
+          pattern = r'vendor_id\s*:\s*(\S+)'
+
+          match = re.search(pattern, cpuinfo)
+
+          if match:
+              vendor_id = match.group(1)
+              CPU_VENDOR = vendor_id
+          else:
+              decky_plugin.logger.error("No CPU vendor_id found")          
     except Exception as e:
       decky_plugin.logger.error(f'{__name__} error while trying to read cpu manufacturer')
   return CPU_VENDOR
