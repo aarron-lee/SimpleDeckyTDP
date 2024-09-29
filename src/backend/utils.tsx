@@ -149,7 +149,13 @@ export const setEpp = ({
   );
 };
 
-export const persistTdp = (tdp: number, gameId: string) => {
+export const persistTdp = ({
+  tdp,
+  gameId,
+}: {
+  tdp: number;
+  gameId: string;
+}) => {
   call<[tdp: number, gameId: string], any>(
     ServerAPIMethods.PERSIST_TDP,
     tdp,

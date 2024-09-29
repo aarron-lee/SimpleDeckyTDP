@@ -13,7 +13,7 @@ const setTdpOriginal = (updatedTdp: number) => {
     previousGameIdForTdp = id;
     previousTdp = updatedTdp;
 
-    persistTdp(updatedTdp, id);
+    persistTdp({ tdp: updatedTdp, gameId: id });
   }
 };
 

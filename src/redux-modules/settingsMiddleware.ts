@@ -80,7 +80,7 @@ export const settingsMiddleware =
       }
 
       if (action.type === setReduxTdp.type) {
-        debouncedPersistTdp(action.payload, activeGameId);
+        debouncedPersistTdp({ tdp: action.payload, gameId: activeGameId });
       }
 
       if (action.type === updatePollRate.type) {
