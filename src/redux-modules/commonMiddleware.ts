@@ -80,11 +80,11 @@ export const commonMiddleware =
     }
 
     if (action.type === setSmt.type) {
-      persistSmt(action.payload, activeGameId);
+      persistSmt({ smt: action.payload, gameId: activeGameId });
     }
 
     if (action.type === setCpuBoost.type) {
-      persistCpuBoost(action.payload, activeGameId);
+      persistCpuBoost({ cpuBoost: action.payload, gameId: activeGameId });
     }
 
     return result;

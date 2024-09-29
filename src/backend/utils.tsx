@@ -195,7 +195,13 @@ export const persistGpu = ({
   );
 };
 
-export const persistSmt = (smt: boolean, gameId: string) => {
+export const persistSmt = ({
+  smt,
+  gameId,
+}: {
+  smt: boolean;
+  gameId: string;
+}) => {
   call<[smt: boolean, gameId: string], any>(
     ServerAPIMethods.PERSIST_SMT,
     smt,
@@ -203,7 +209,13 @@ export const persistSmt = (smt: boolean, gameId: string) => {
   );
 };
 
-export const persistCpuBoost = (cpuBoost: boolean, gameId: string) => {
+export const persistCpuBoost = ({
+  cpuBoost,
+  gameId,
+}: {
+  cpuBoost: boolean;
+  gameId: string;
+}) => {
   call<[cpuBoost: boolean, gameId: string], any>(
     ServerAPIMethods.PERSIST_CPU_BOOST,
     cpuBoost,
