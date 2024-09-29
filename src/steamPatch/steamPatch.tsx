@@ -50,7 +50,7 @@ const findSteamPerfModule = () => {
               manageGpu();
               manageTdp();
             } catch (e) {
-              logInfo(e);
+              logInfo({ info: e });
             }
           }
         }
@@ -64,7 +64,7 @@ const findSteamPerfModule = () => {
       patch.unpatch();
     };
   } catch (e) {
-    logInfo(`failed to afterPatch ${e}`);
+    logInfo({ info: `failed to afterPatch ${e}` });
   }
 
   return () => {};
@@ -199,7 +199,7 @@ export const subscribeToTdpRangeChanges = () => {
       unpatch = undefined;
     };
   } catch (e) {
-    logInfo(e);
+    logInfo({ info: e });
   }
   return () => {
     unpatch && unpatch();

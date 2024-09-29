@@ -144,6 +144,6 @@ export const acPowerEventListener = async () => {
       return unregister;
     }
   } catch (e) {
-    logInfo(`error in ac power listener ${e}`);
+    logInfo({ info: `error in ac power listener ${e}` });
   }
 };

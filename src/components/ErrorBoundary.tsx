@@ -19,14 +19,16 @@ class ErrorBoundary extends Component<PropsType, StateType> {
   }
 
   static getDerivedStateFromError(error) {
-    logInfo(JSON.stringify(error));
+    logInfo({ info: JSON.stringify(error) });
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
     logInfo({
-      error: JSON.stringify(error),
-      errorInfo: JSON.stringify(errorInfo),
+      info: {
+        error: JSON.stringify(error),
+        errorInfo: JSON.stringify(errorInfo),
+      },
     });
   }
   render() {

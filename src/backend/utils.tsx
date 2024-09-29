@@ -82,7 +82,7 @@ export const isSteamRunning = callable<[], boolean>(
   ServerAPIMethods.GET_IS_STEAM_RUNNING
 );
 
-export const logInfo = (info: any) => {
+export const logInfo = ({ info }: { info: any }) => {
   const logger = callable<[{ info: any }], any>(ServerAPIMethods.LOG_INFO);
   logger(info);
 };

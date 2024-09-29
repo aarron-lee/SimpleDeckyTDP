@@ -10,7 +10,7 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { AdvancedOptionsEnum, GpuModes, logInfo } from "../backend/utils";
+import { AdvancedOptionsEnum, GpuModes } from "../backend/utils";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -119,7 +119,6 @@ export const settingsSlice = createSlice({
       if (event === 1) {
         state.isAcPower = false;
       }
-      // logInfo(state.isAcPower);
     },
     setReduxTdp: (state, action: PayloadAction<number>) => {
       const tdp = action.payload;
