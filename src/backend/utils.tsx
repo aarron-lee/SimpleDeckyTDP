@@ -163,7 +163,7 @@ export const persistTdp = ({
   );
 };
 
-export const setValuesForGameId = (gameId: string) => {
+export const setValuesForGameId = ({ gameId }: { gameId: string }) => {
   call<[gameId: string], any>(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, gameId);
 };
 
