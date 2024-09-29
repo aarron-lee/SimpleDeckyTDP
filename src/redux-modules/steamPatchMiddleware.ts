@@ -35,7 +35,7 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === resumeAction.type) {
-        setSteamPatchValuesForGameId(id);
+        setSteamPatchValuesForGameId({ gameId: id });
       }
 
       if (action.type === updatePollRate.type) {
@@ -52,7 +52,7 @@ export const steamPatchMiddleware =
       }
 
       if (action.type === setCurrentGameInfo.type) {
-        setSteamPatchValuesForGameId(id);
+        setSteamPatchValuesForGameId({ gameId: id });
       }
 
       if (action.type === cleanupAction.type) {

@@ -167,7 +167,11 @@ export const setValuesForGameId = ({ gameId }: { gameId: string }) => {
   call<[gameId: string], any>(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, gameId);
 };
 
-export const setSteamPatchValuesForGameId = (gameId: string) => {
+export const setSteamPatchValuesForGameId = ({
+  gameId,
+}: {
+  gameId: string;
+}) => {
   call<[gameId: string], any>(
     ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID,
     gameId

@@ -37,7 +37,7 @@ export const setPolling = () => {
           // steam patch value
           const id = extractCurrentGameId();
 
-          debouncedSetSteamPatchValuesForGameId(id);
+          debouncedSetSteamPatchValuesForGameId({ gameId: id });
         } else {
           const activeGameId = activeGameIdSelector(store.getState());
 
