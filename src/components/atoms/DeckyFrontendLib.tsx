@@ -12,6 +12,8 @@ import {
   Router,
 } from "@decky/ui";
 
+export const IS_DESKTOP = false;
+
 export const DeckySection = PanelSection;
 
 export const DeckyRow = PanelSectionRow;
