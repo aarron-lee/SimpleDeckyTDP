@@ -121,7 +121,13 @@ export const getCurrentAcPowerStatus = callable<[], "0" | "1">(
   ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS
 );
 
-export const setPowerGovernor = (powerGovernorInfo: any, gameId: string) => {
+export const setPowerGovernor = ({
+  powerGovernorInfo,
+  gameId,
+}: {
+  powerGovernorInfo: any;
+  gameId: string;
+}) => {
   call<[powerGovernorInfo: any, gameId: string], any>(
     ServerAPIMethods.SET_POWER_GOVERNOR,
     powerGovernorInfo,

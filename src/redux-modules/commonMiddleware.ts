@@ -54,7 +54,10 @@ export const commonMiddleware =
     }
 
     if (action.type === updatePowerGovernor.type) {
-      setPowerGovernor(action.payload, activeGameId);
+      setPowerGovernor({
+        powerGovernorInfo: action.payload,
+        gameId: activeGameId,
+      });
     }
 
     if (action.type === updateEpp.type) {
