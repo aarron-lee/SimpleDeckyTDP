@@ -86,19 +86,6 @@ export const logInfo = ({ info }: { info: any }) => {
   const logger = callable<[{ info: any }], any>(ServerAPIMethods.LOG_INFO);
   logger(info);
 };
-export const saveTdp = async (gameId: string, tdp: number) => {
-  const tdpProfiles = {
-    [gameId]: {
-      tdp,
-    },
-  };
-
-  call<[tdpProfiles: any, currentGameId: any], any>(
-    ServerAPIMethods.SAVE_TDP,
-    tdpProfiles,
-    gameId
-  );
-};
 
 export const saveTdpProfiles = ({
   tdpProfiles,
