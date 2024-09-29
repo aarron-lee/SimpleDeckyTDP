@@ -61,7 +61,7 @@ export const commonMiddleware =
     }
 
     if (action.type === updateEpp.type) {
-      setEpp(action.payload, activeGameId);
+      setEpp({ eppInfo: action.payload, gameId: activeGameId });
     }
 
     if (action.type === updateMaxTdp.type) {

@@ -135,7 +135,13 @@ export const setPowerGovernor = ({
   );
 };
 
-export const setEpp = (eppInfo: any, gameId: string) => {
+export const setEpp = ({
+  eppInfo,
+  gameId,
+}: {
+  eppInfo: any;
+  gameId: string;
+}) => {
   call<[eppInfo: any, gameId: string], any>(
     ServerAPIMethods.SET_EPP,
     eppInfo,
