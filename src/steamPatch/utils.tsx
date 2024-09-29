@@ -38,7 +38,11 @@ export const setGpuOriginal = (
     previousMinGpu = updatedMinGpu;
     previousMaxGpu = updatedMaxGpu;
 
-    persistGpu(updatedMinGpu, updatedMaxGpu, id);
+    persistGpu({
+      minGpuFrequency: updatedMinGpu,
+      maxGpuFrequency: updatedMaxGpu,
+      gameId: id,
+    });
   }
 };
 

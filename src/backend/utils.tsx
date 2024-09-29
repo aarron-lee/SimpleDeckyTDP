@@ -178,11 +178,15 @@ export const setSteamPatchValuesForGameId = ({
   );
 };
 
-export const persistGpu = (
-  minGpuFrequency: number,
-  maxGpuFrequency: number,
-  gameId: string
-) => {
+export const persistGpu = ({
+  minGpuFrequency,
+  maxGpuFrequency,
+  gameId,
+}: {
+  minGpuFrequency: number;
+  maxGpuFrequency: number;
+  gameId: string;
+}) => {
   call<[minGpuFrequency: number, maxGpuFrequency: number, gameId: string], any>(
     ServerAPIMethods.PERSIST_GPU,
     minGpuFrequency,
