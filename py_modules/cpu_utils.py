@@ -11,7 +11,9 @@ from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally
 import device_utils
 
-RYZENADJ_PATH = shutil.which('ryzenadj')
+RYZENADJ_PATH = None
+if not device_utils.is_intel():
+  shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 
 INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
