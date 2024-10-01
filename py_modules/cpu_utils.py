@@ -171,6 +171,12 @@ def set_cpu_boost(enabled = True):
     decky_plugin.logger.error(e)
     return False
 
+def supports_smt():
+  if os.path.exists(SMT_PATH):
+    return True
+
+  return False
+
 def set_smt(enabled = True):
   try:
     # SMT_PATH is identical for both AMD and Intel

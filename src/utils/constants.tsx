@@ -23,6 +23,7 @@ export type PowerControlInfo = {
   powerGovernorOptions: PowerGovernorOption[];
   scalingDriver: string;
   supportsCpuBoost: boolean;
+  supportsSmt: boolean;
   pstateStatus?: string;
 };
 

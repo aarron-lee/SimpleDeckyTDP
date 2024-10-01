@@ -46,16 +46,18 @@ const PowerControl = () => {
   return (
     <DeckySection title="CPU Controls">
       {powerControlInfo.supportsCpuBoost && <CpuFeatureToggles />}
-      <DeckyRow>
-        <DeckyToggle
-          label="Enable SMT"
-          checked={smt}
-          onChange={(enabled: boolean) => {
-            setSmt(enabled);
-          }}
-          highlightOnFocus
-        />
-      </DeckyRow>
+      {powerControlInfo.supportsSmt && (
+        <DeckyRow>
+          <DeckyToggle
+            label="Enable SMT"
+            checked={smt}
+            onChange={(enabled: boolean) => {
+              setSmt(enabled);
+            }}
+            highlightOnFocus
+          />
+        </DeckyRow>
+      )}
       <DeckyRow>
         <ErrorBoundary title="Power Governor Slider">
           <PowerGovernorSlider powerControlInfo={powerControlInfo} />
