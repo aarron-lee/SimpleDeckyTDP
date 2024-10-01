@@ -36,8 +36,9 @@ class Plugin:
         response['supportsCpuBoost'] = cpu_utils.supports_cpu_boost()
         response['powerControlsEnabled'] = power_utils.power_controls_enabled()
         pstate_status = cpu_utils.get_pstate_status()
-        if pstate_status:
-          response['pstateStatus'] = pstate_status
+        if pstate_status == 'passive' and device_utils.is_intel():
+          cpu_utils.set_pstate_active()
+          response['pstateStatus'] = 'active'
         if response['powerControlsEnabled']:
           response['eppOptions'] = power_utils.get_available_epp_options()
           response['powerGovernorOptions'] = power_utils.get_available_governor_options()

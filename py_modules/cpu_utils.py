@@ -22,6 +22,7 @@ INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
 SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
 class ScalingDrivers(Enum):
+  INTEL_CPUFREQ = "intel_cpufreq"
   INTEL_PSTATE = "intel_pstate"
   PSTATE_EPP = "amd-pstate-epp"
   PSTATE = "amd-pstate"

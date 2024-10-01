@@ -40,6 +40,7 @@ export const EppOptions: { [optionName: string]: EppOption } = {
 };
 
 export type ScalingDriverOption =
+  | "intel_cpufreq"
   | "intel_pstate"
   | "amd-pstate"
   | "amd-pstate-epp"
@@ -48,6 +49,7 @@ export type ScalingDriverOption =
 export const ScalingDrivers: {
   [optionName: string]: ScalingDriverOption;
 } = {
+  INTEL_CPUFREQ: "intel_cpufreq",
   INTEL_PSTATE: "intel_pstate",
   PSTATE_EPP: "amd-pstate-epp",
   PSTATE: "amd-pstate",
@@ -80,6 +82,9 @@ addReverseMapping(PowerGovernorOptions);
 addReverseMapping(EppOptions);
 
 export const DEFAULT_POWER_CONTROLS = {
+  [ScalingDrivers.INTEL_CPUFREQ]: {
+    powerGovernor: PowerGovernorOptions.POWER_SAVE,
+  },
   [ScalingDrivers.INTEL_PSTATE]: {
     epp: EppOptions.BALANCE_POWER_SAVE,
     powerGovernor: PowerGovernorOptions.POWER_SAVE,

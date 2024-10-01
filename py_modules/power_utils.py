@@ -22,6 +22,9 @@ DEFAULT_CPU_PROFILE = {
   "cpuBoost": False,
   "smt": True,
   "powerControls": {
+      "intel_cpufreq": {
+        "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
+      },
       "intel_pstate": {
           "epp": EppOptions.BALANCE_POWER.value,
           "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
@@ -41,6 +44,9 @@ DEFAULT_CPU_PROFILE = {
 
 # these are used when the user enables manual CPU controls
 RECOMMENDED_DEFAULTS = {
+  "intel_cpufreq": {
+    "powerGovernor": PowerGovernorOptions.POWER_SAVE.value
+  },
   'intel_pstate': {
     'epp': EppOptions.BALANCE_POWER.value,
     'powerGovernor': PowerGovernorOptions.POWER_SAVE.value
