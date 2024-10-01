@@ -21,8 +21,7 @@ INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
 
 SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
-INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/"
-INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0/"
+INTEL_TDP_PATH = None
 
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
@@ -40,18 +39,35 @@ def modprobe_acpi_call():
     return False
   return True
 
+def intel_tdp_path():
+  global INTEL_TDP_PATH
+  intel_tdp_prefix="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
+  intel_legacy_tdp_prefix="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
+
+  if INTEL_TDP_PATH:
+    return INTEL_TDP_PATH
+
+  if os.path.exists(intel_tdp_prefix):
+    INTEL_TDP_PATH = f'{intel_tdp_prefix}/constraint_*_power_limit_uw'
+  elif os.path.exists(intel_legacy_tdp_prefix):
+    INTEL_TDP_PATH = f'{intel_legacy_tdp_prefix}/constraint_*_power_limit_uw'
+  return INTEL_TDP_PATH
+
 def set_tdp(tdp: int):
   if not advanced_options.tdp_control_enabled():
     return
 
   if device_utils.is_intel():
-    prefix = INTEL_TDP_PREFIX
-    if not os.path.exists(INTEL_TDP_PREFIX) and os.path.exists(INTEL_LEGACY_TDP_PREFIX):
-      prefix = INTEL_LEGACY_TDP_PREFIX
+    tdp_path = intel_tdp_path()
+
+    if not tdp_path:
+      # TDP not supported on this intel chipset, no known path to set TDP
+      decky_plugin.logger.info("No Known Path for to set TDP on this Intel chipset")
+      return
 
     tdp_microwatts = tdp * 1000000
     try:
-      cmd = f"echo '{tdp_microwatts}' | sudo tee {prefix}constraint_*_power_limit_uw"
+      cmd = f"echo '{tdp_microwatts}' | sudo tee {tdp_path}"
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       return result
     except Exception as e:
