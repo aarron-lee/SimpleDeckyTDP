@@ -21,6 +21,9 @@ INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
 
 SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
+INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/"
+INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0/"
+
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
   INTEL_PSTATE = "intel_pstate"
@@ -42,9 +45,13 @@ def set_tdp(tdp: int):
     return
 
   if device_utils.is_intel():
+    prefix = INTEL_TDP_PREFIX
+    if not os.path.exists(INTEL_TDP_PREFIX) and os.path.exists(INTEL_LEGACY_TDP_PREFIX):
+      prefix = INTEL_LEGACY_TDP_PREFIX
+
     tdp_microwatts = tdp * 1000000
     try:
-      cmd = f"echo '{tdp_microwatts}' | sudo tee /sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_*_power_limit_uw"
+      cmd = f"echo '{tdp_microwatts}' | sudo tee {prefix}constraint_*_power_limit_uw"
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       return result
     except Exception as e:
