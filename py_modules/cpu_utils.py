@@ -22,6 +22,8 @@ INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
 SMT_PATH= "/sys/devices/system/cpu/smt/control"
 
 INTEL_TDP_PATH = None
+INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
+INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
 
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
@@ -39,18 +41,27 @@ def modprobe_acpi_call():
     return False
   return True
 
+def use_legacy_intel_tdp():
+
+  if os.path.exists(INTEL_LEGACY_TDP_PREFIX):
+    return True
+  elif os.path.exists(INTEL_TDP_PREFIX):
+    return False
+
+  decky_plugin.logger.info("Warning: /sys endpoint for intel tdp not found")
+  return False
+
 def intel_tdp_path():
   global INTEL_TDP_PATH
-  intel_tdp_prefix="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
-  intel_legacy_tdp_prefix="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
 
   if INTEL_TDP_PATH:
     return INTEL_TDP_PATH
 
-  if os.path.exists(intel_tdp_prefix):
-    INTEL_TDP_PATH = f'{intel_tdp_prefix}/constraint_*_power_limit_uw'
-  elif os.path.exists(intel_legacy_tdp_prefix):
-    INTEL_TDP_PATH = f'{intel_legacy_tdp_prefix}/constraint_*_power_limit_uw'
+  if use_legacy_intel_tdp():
+    INTEL_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX}/constraint_*_power_limit_uw'
+  else:
+    INTEL_TDP_PATH = f'{INTEL_TDP_PREFIX}/constraint_*_power_limit_uw'
+
   return INTEL_TDP_PATH
 
 def set_tdp(tdp: int):
@@ -313,8 +324,8 @@ def get_scaling_driver():
 
 def get_intel_tdp_limits():
   # while there is a max TDP provided by intel, there is no min
-  min_tdp = 5
-  MAX_TDP_PATH = '/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0/constraint_0_max_power_uw'
+  min_tdp = 4
+  MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_max_power_uw'
 
   try:
     with file_timeout.time_limit(1):
