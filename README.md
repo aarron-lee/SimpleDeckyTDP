@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/github/downloads/aarron-lee/SimpleDeckyTDP/total.svg)](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
-This is a Linux TDP Decky Plugin with support for AMD and Intel devices
+This is a Linux TDP Decky Plugin with support for AMD and experimental Intel devices
 
 - [Features](#features)
 - [Compatibility](#compatibility)
@@ -41,7 +41,6 @@ This is a Linux TDP Decky Plugin with support for AMD and Intel devices
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
-  - Intel support a WIP
 - Legion Go TDP via WMI calls (allows for TDP control with secure boot, requires acpi_call)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
 - etc
@@ -50,7 +49,7 @@ This is a Linux TDP Decky Plugin with support for AMD and Intel devices
 
 Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite.
 
-Other distros not tested.
+Other distros not tested. Intel support is experimental and still a work in progress.
 
 Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin is currently for APUs only
 
@@ -77,7 +76,9 @@ See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
 ### Intel
 
-Intel support was buil for the `intel_pstate` scaling driver. To check if your system is compatible, run the following in terminal:
+Intel support was built for the `intel_pstate` scaling driver, and is still an experimental work in progress.
+
+To check if your system is compatible, run the following in terminal:
 
 ```bash
 cat /sys/devices/system/cpu/cpufreq/policy*/scaling_driver
