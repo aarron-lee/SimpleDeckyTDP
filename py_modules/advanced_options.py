@@ -30,13 +30,18 @@ class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
 
 def modprobe_acpi_call():
-  os.system("modprobe acpi_call")
-  result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+  # legion go currently requires acpi_call for using WMI to set TDP
+  # using WMI to set TDP is safer on the Legion Go, ryzenadj is dangerous on the LGO
+  # there is upstream work to formally add the wmi calls to a /sys endpoint, but it's not available yet
+  if device_utils.is_legion_go():
+    os.system("modprobe acpi_call")
+    result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-  if result.stderr:
-    decky_plugin.logger.error(f"modprobe_acpi_call error: {result.stderr}")
-    return False
-  return True
+    if result.stderr:
+      decky_plugin.logger.error(f"modprobe_acpi_call error: {result.stderr}")
+      return False
+    return True
+  return False
 
 # e.g. get_setting(LegionGoSettings.CUSTOM_TDP_MODE.value)
 def get_setting(setting_name = ''):

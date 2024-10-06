@@ -32,15 +32,6 @@ class ScalingDrivers(Enum):
   PSTATE = "amd-pstate"
   ACPI_CPUFREQ = "acpi-cpufreq"
 
-def modprobe_acpi_call():
-  os.system("modprobe acpi_call")
-  result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-  if result.stderr:
-    decky_plugin.logger.error(f"modprobe_acpi_call error: {result.stderr}")
-    return False
-  return True
-
 def use_legacy_intel_tdp():
 
   if os.path.exists(INTEL_LEGACY_TDP_PREFIX):
