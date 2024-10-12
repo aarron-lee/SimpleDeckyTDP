@@ -34,10 +34,10 @@ class ScalingDrivers(Enum):
 
 def use_legacy_intel_tdp():
 
-  if os.path.exists(INTEL_LEGACY_TDP_PREFIX):
-    return True
-  elif os.path.exists(INTEL_TDP_PREFIX):
+  if os.path.exists(INTEL_TDP_PREFIX):
     return False
+  elif os.path.exists(INTEL_LEGACY_TDP_PREFIX):
+    return True
 
   decky_plugin.logger.info("Warning: /sys endpoint for intel tdp not found")
   return False
