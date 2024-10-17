@@ -24,7 +24,7 @@ jobs:
 
       - name: build plugin
         run: |
-          npm i -g pnpm@8.5.1
+          npm i -g pnpm
           pnpm install --no-frozen-lockfile
           pnpm run build
           tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist py_modules bin ota_update.sh *.py *.json *.md *.js LICENSE

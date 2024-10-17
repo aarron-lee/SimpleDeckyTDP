@@ -22,11 +22,11 @@ jobs:
           pacman -Syu git npm --noconfirm
           git config --global --add safe.directory $(realpath .)
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: build plugin
         run: |
-          npm i -g pnpm@8.5.1
+          npm i -g pnpm
           pnpm install --no-frozen-lockfile
           pnpm run build
           tar -czvf SimpleDeckyTDP.tar.gz --transform 's,^,SimpleDeckyTDP/,' dist py_modules bin ota_update.sh *.py *.json *.md *.js LICENSE
@@ -37,7 +37,7 @@ jobs:
           tar -tzvf SimpleDeckyTDP.tar.gz
 
       - name: Publish Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SimpleDeckyTDP
           path: SimpleDeckyTDP.tar.gz
@@ -50,7 +50,7 @@ jobs:
       - run: mkdir /tmp/artifacts
 
       - name: download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: /tmp/artifacts
 
