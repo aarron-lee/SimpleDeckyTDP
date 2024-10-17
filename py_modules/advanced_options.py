@@ -214,7 +214,8 @@ def rog_ally_advanced_options(options):
     })
   if rog_ally.supports_mcu_powersave() and is_bazzite_deck():
     options.append({
-      'name': 'Enable Extreme Powersave (saves power during suspend)',
+      'name': 'Enable Asus Extreme Powersave',
+      'description': 'Reduces power consumption during suspend',
       'type': 'boolean',
       'defaultValue': False,
       'currentValue': get_value(RogAllySettings.USE_EXTREME_POWERSAVE, False),
