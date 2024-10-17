@@ -12,6 +12,10 @@ FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
 SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
 STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
 
+ASUS_ARMORY_FAST_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_fppt/current_value"
+ASUS_ARMORY_SLOW_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl2_sppt/current_value"
+ASUS_ARMORY_STAPM_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl1_spl/current_value"
+
 # def set_asusctl_platform_profile(tdp):
 #   current_value = ''
 #   if os.path.exists(PLATFORM_PROFILE_PATH):
@@ -59,6 +63,8 @@ def supports_wmi_tdp():
 
   if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
     return True
+  elif os.path.exists(ASUS_ARMORY_FAST_WMI_PATH) and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH) and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH):
+    return True
   return False
 
 def set_platform_profile(tdp):
@@ -90,6 +96,23 @@ def set_tdp(tdp):
         cmd = f'fwupdmgr set-bios-setting {wmi_method} {target_tdp}'
         subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sleep(0.1)
+
+    elif os.path.exists(ASUS_ARMORY_FAST_WMI_PATH) and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH) and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH):
+        # fast limit
+      with open(ASUS_ARMORY_FAST_WMI_PATH, 'w') as file:
+        file.write(f'{tdp+2}')
+      sleep(0.1)
+
+      # slow limit
+      with open(ASUS_ARMORY_SLOW_WMI_PATH, 'w') as file:
+        file.write(f'{tdp}')
+      sleep(0.1)
+
+      # stapm limit
+      with open(ASUS_ARMORY_STAPM_WMI_PATH, 'w') as file:
+        file.write(f'{tdp}')
+      sleep(0.1)
+
     else:
       # fast limit
       with open(FAST_WMI_PATH, 'w') as file:
