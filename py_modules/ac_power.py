@@ -1,27 +1,27 @@
 import os
-from plugin_enums import AcPowerPaths
-import device_utils
+import decky_plugin
 
-ACAD_DEVICES = [
-  # device_utils.Devices.GPD_WIN4.value,
-  device_utils.Devices.MINISFORUM_V3.value,
-  device_utils.Devices.LEGION_GO.value
-]
-ADP1_DEVICES = [
-#   device_utils.Devices.GPD_WM2.value
-]
+AC_POWER_PATH = None
 
 def custom_ac_power_management_path():
-  device_name = device_utils.get_device_name()
+  global AC_POWER_PATH
 
-  ac_power_online_path = None
+  if bool(AC_POWER_PATH):
+    return AC_POWER_PATH
 
-  if device_name in ACAD_DEVICES:
-    ac_power_online_path = AcPowerPaths.ACAD.value
-  if device_name in ADP1_DEVICES:
-    ac_power_online_path = AcPowerPaths.ADP1.value
+  filename = None
+  try:
+    for n in os.listdir("/sys/class/power_supply"):
+      if n.startswith("AC") or n.startswith("ADP"):
+        filename = n
 
-  return ac_power_online_path
+    if filename is None:
+      return None
+    AC_POWER_PATH = f'/sys/class/power_supply/{filename}/online'
+    return AC_POWER_PATH
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} custom ac power path error {e}")
+    return None
 
 def supports_custom_ac_power_management():
   ac_power_path = custom_ac_power_management_path()
