@@ -16,18 +16,21 @@ ASUS_ARMORY_FAST_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/att
 ASUS_ARMORY_SLOW_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl2_sppt/current_value"
 ASUS_ARMORY_STAPM_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl1_spl/current_value"
 
-LEGACY_MCU_POWERSAVE_PATH = "/sys/class/firmware-attributes/asus-armoury/attributes/mcu_powersave"
+LEGACY_MCU_POWERSAVE_PATH = "/sys/devices/platform/asus-nb-wmi/mcu_powersave"
 ASUS_ARMORY_MCU_POWERSAVE_PATH = "/sys/class/firmware-attributes/asus-armoury/attributes/mcu_powersave"
 
 def set_mcu_powersave(enabled):
-  if os.path.exists(LEGACY_MCU_POWERSAVE_PATH):
-      with open(LEGACY_MCU_POWERSAVE_PATH, 'w') as file:
-        file.write('1' if enabled else '0')
-        file.close()
-  if os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH):
-      with open(ASUS_ARMORY_MCU_POWERSAVE_PATH, 'w') as file:
-        file.write('1' if enabled else '0')
-        file.close()
+  try:
+    if os.path.exists(LEGACY_MCU_POWERSAVE_PATH):
+        with open(LEGACY_MCU_POWERSAVE_PATH, 'w') as file:
+          file.write('1' if enabled else '0')
+          file.close()
+    elif os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH):
+        with open(ASUS_ARMORY_MCU_POWERSAVE_PATH, 'w') as file:
+          file.write('1' if enabled else '0')
+          file.close()
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} mcu_powersave error {e}")
 
 # def set_asusctl_platform_profile(tdp):
 #   current_value = ''
