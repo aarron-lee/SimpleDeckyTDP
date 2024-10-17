@@ -16,6 +16,7 @@ export enum AdvancedOptionsEnum {
 export enum RogAllyAdvancedOptions {
   USE_PLATFORM_PROFILE = "platformProfile",
   USE_WMI = "useWmi",
+  USE_EXTREME_POWERSAVE = "useExtremePowersave",
 }
 
 export enum LegionGoAdvancedOptions {
@@ -32,6 +33,7 @@ export const DesktopAdvancedOptions = [
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
   RogAllyAdvancedOptions.USE_WMI,
+  RogAllyAdvancedOptions.USE_EXTREME_POWERSAVE,
 ] as string[];
 
 export enum GpuModes {

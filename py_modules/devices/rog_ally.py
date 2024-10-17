@@ -16,6 +16,19 @@ ASUS_ARMORY_FAST_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/att
 ASUS_ARMORY_SLOW_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl2_sppt/current_value"
 ASUS_ARMORY_STAPM_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl1_spl/current_value"
 
+LEGACY_MCU_POWERSAVE_PATH = "/sys/class/firmware-attributes/asus-armoury/attributes/mcu_powersave"
+ASUS_ARMORY_MCU_POWERSAVE_PATH = "/sys/class/firmware-attributes/asus-armoury/attributes/mcu_powersave"
+
+def set_mcu_powersave(enabled):
+  if os.path.exists(LEGACY_MCU_POWERSAVE_PATH):
+      with open(LEGACY_MCU_POWERSAVE_PATH, 'w') as file:
+        file.write('1' if enabled else '0')
+        file.close()
+  if os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH):
+      with open(ASUS_ARMORY_MCU_POWERSAVE_PATH, 'w') as file:
+        file.write('1' if enabled else '0')
+        file.close()
+
 # def set_asusctl_platform_profile(tdp):
 #   current_value = ''
 #   if os.path.exists(PLATFORM_PROFILE_PATH):
@@ -135,3 +148,7 @@ def execute_bash_command(command, path):
   cmd = f"echo '{command}' | tee {path}"
   result = subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   return result
+
+
+def supports_mcu_powersave():
+  return os.path.exists(LEGACY_MCU_POWERSAVE_PATH) or os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH)

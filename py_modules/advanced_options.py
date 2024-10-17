@@ -25,6 +25,7 @@ class RogAllySettings(Enum):
   USE_ASUSCTL = 'useAsusCtl'
   USE_PLATFORM_PROFILE = 'platformProfile'
   USE_WMI = 'useWmi'
+  USE_EXTREME_POWERSAVE = 'useExtremePowersave'
 
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
@@ -198,6 +199,14 @@ def rog_ally_advanced_options(options):
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
+  if rog_ally.supports_mcu_powersave():
+    options.append({
+      'name': 'Enable Extreme Powersave (saves power during suspend)',
+      'type': 'boolean',
+      'defaultValue': False,
+      'currentValue': get_value(RogAllySettings.USE_EXTREME_POWERSAVE, False),
+      'statePath': RogAllySettings.USE_EXTREME_POWERSAVE.value,
+    })
   # if ASUSCTL_PATH:
   #   options.append({
   #     'name': 'Use asusctl for platform profile management',
@@ -225,3 +234,11 @@ def tdp_control_enabled():
 
 def gpu_control_enabled():
   return get_setting(DefaultSettings.ENABLE_GPU_CONTROL.value)
+
+def handle_advanced_option_change(new_values):
+  if device_utils.is_rog_ally():
+    if rog_ally.supports_mcu_powersave():
+      powersave_enabled = new_values.get(RogAllySettings.USE_EXTREME_POWERSAVE.value, None)
+
+      if isinstance(powersave_enabled, bool):
+        rog_ally.set_mcu_powersave(powersave_enabled)
