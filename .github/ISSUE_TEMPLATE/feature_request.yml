@@ -1,0 +1,9 @@
+name: Feature request
+description: Share ideas for new features
+body:
+  - type: textarea
+    attributes:
+      label: Feature request
+      description: Share your idea for a new feature within SimpleDeckyTDP
+    validations:
+      required: false
