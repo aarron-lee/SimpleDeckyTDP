@@ -1,6 +1,6 @@
 {
   "name": "simple-decky-tdp",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Very simple RyzenAdj Decky plugin",
   "type": "module",
   "scripts": {
