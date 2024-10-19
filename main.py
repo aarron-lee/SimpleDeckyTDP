@@ -79,7 +79,8 @@ class Plugin:
 
   async def set_setting(self, name: str, value):
     try:
-      advanced_options.handle_advanced_option_change(value)
+      if name == "advanced":
+        advanced_options.handle_advanced_option_change(value)
 
       return persist_setting(name, value)
     except Exception as e:
