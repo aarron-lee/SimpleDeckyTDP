@@ -90,7 +90,7 @@ If the scaling is `intel_pstate`, then your device should be compatible
 
 ### Prerequisites
 
-Decky Loader must already be installed. If using ryzenadj for TDP control, secure boot + early lockdown must be disabled.
+Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device.
 
 ### Quick Install / Update
 
