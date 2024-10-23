@@ -91,7 +91,7 @@ def set_amd_tdp(tdp: int):
         #     rog_ally.set_asusctl_platform_profile(tdp)
         #   else:
         #     rog_ally.set_platform_profile(tdp)
-        if advanced_options.get_setting(RogAllySettings.USE_WMI.value):
+        if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
           return rog_ally.set_tdp(tdp)
 
     tdp = tdp*1000
