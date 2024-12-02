@@ -102,6 +102,7 @@ def set_amd_tdp(tdp: int):
         '--stapm-limit', f"{tdp}",
         '--fast-limit', f"{tdp}",
         '--slow-limit', f"{tdp}",
+        '--apu-slow-limit', f"{tdp}",
         '--tctl-temp', f"95",
         '--apu-skin-temp', f"95",
         '--dgpu-skin-temp', f"95"
