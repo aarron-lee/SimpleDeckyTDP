@@ -4,6 +4,7 @@ import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
 export enum AdvancedOptionsEnum {
   ENABLE_TDP_CONTROL = "enableTdpControl",
   ENABLE_GPU_CONTROL = "enableGpuControl",
+  ENABLE_APU_SLOW_LIMIT = "enableApuSlowLimit",
   STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
