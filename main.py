@@ -209,7 +209,7 @@ class Plugin:
     # trigger ota update
     try:
       with file_timeout.time_limit(15):
-        plugin_update.ota_update()
+        return plugin_update.ota_update()
     except Exception as e:
       decky_plugin.logger.error(e)
 

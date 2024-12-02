@@ -12,6 +12,8 @@ import {
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
+  const [updateInProgress, setUpdateInProgress] = useState(false);
+
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
 
@@ -65,8 +67,10 @@ const OtaUpdates = () => {
           </DeckyRow>
           <DeckyRow>
             <DeckyButton
-              onClick={() => {
-                otaUpdate();
+              onClick={async () => {
+                setUpdateInProgress(true);
+                await otaUpdate();
+                setUpdateInProgress(false);
               }}
               style={{
                 width: "100%",
@@ -76,7 +80,7 @@ const OtaUpdates = () => {
               }}
               layout={"below"}
             >
-              {buttonText}
+              {updateInProgress ? "Updating..." : buttonText}
             </DeckyButton>
           </DeckyRow>
         </>
