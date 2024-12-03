@@ -107,6 +107,14 @@ def set_amd_tdp(tdp: int):
         '--dgpu-skin-temp', f"95"
       ]
 
+      if advanced_options.get_setting(
+        advanced_options.DefaultSettings.ENABLE_APU_SLOW_LIMIT.value
+      ):
+        commands.append('--apu-slow-limit')
+        commands.append(f"{tdp}")
+
+      decky_plugin.logger.info(f'setting TDP via ryzenadj with args {commands}')
+
       results = subprocess.call(commands)
       return results
   except Exception as e:

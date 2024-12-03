@@ -15,6 +15,7 @@ PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
   ENABLE_GPU_CONTROL = 'enableGpuControl'
+  ENABLE_APU_SLOW_LIMIT = 'enableApuSlowLimit'
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
@@ -174,6 +175,19 @@ def get_default_options():
   }
 
   options.append(max_tdp_on_resume)
+
+  if not device_utils.is_intel():
+    # enable apu-slow-limit control
+    enable_apu_slow_limit = {
+      'name': 'Enable APU Slow Limit',
+      'type': 'boolean',
+      'defaultValue': False,
+      'description': 'Enables the --apu-slow-limit value for ryzenadj',
+      'currentValue': get_value(DefaultSettings.ENABLE_APU_SLOW_LIMIT, False),
+      'statePath': DefaultSettings.ENABLE_APU_SLOW_LIMIT.value
+    }
+
+    options.append(enable_apu_slow_limit)
 
   return options
 
