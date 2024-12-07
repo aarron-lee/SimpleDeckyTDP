@@ -8,7 +8,6 @@ from devices import rog_ally
 import device_utils
 import json
 
-ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
 
@@ -24,7 +23,6 @@ class DefaultSettings(Enum):
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
 
 class RogAllySettings(Enum):
-  USE_ASUSCTL = 'useAsusCtl'
   USE_PLATFORM_PROFILE = 'platformProfile'
   USE_WMI = 'useWmi'
   USE_EXTREME_POWERSAVE = 'useExtremePowersave'
@@ -235,15 +233,6 @@ def rog_ally_advanced_options(options):
       'currentValue': get_value(RogAllySettings.USE_EXTREME_POWERSAVE, False),
       'statePath': RogAllySettings.USE_EXTREME_POWERSAVE.value,
     })
-  # if ASUSCTL_PATH:
-  #   options.append({
-  #     'name': 'Use asusctl for platform profile management',
-  #     'type': 'boolean',
-  #     'description': 'This is ignored if you disable platform profile management',
-  #     'defaultValue': True,
-  #     'currentValue': get_value(RogAllySettings.USE_ASUSCTL, True),
-  #     'statePath': RogAllySettings.USE_ASUSCTL.value
-  #   })
   if rog_ally.supports_wmi_tdp():
     options.append({
       'name': 'Use Asus WMI for TDP',

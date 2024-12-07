@@ -87,10 +87,6 @@ def set_amd_tdp(tdp: int):
       elif device_utils.is_rog_ally():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
-        #   if advanced_options.get_setting(RogAllySettings.USE_ASUSCTL.value):
-        #     rog_ally.set_asusctl_platform_profile(tdp)
-        #   else:
-        #     rog_ally.set_platform_profile(tdp)
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
           return rog_ally.set_tdp(tdp)
 

@@ -5,7 +5,6 @@ import os
 import decky_plugin
 import bios_settings
 
-ASUSCTL_PATH = shutil.which('asusctl')
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
 FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
@@ -31,36 +30,6 @@ def set_mcu_powersave(enabled):
           file.close()
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} mcu_powersave error {e}")
-
-# def set_asusctl_platform_profile(tdp):
-#   current_value = ''
-#   if os.path.exists(PLATFORM_PROFILE_PATH):
-#     with open(PLATFORM_PROFILE_PATH, 'r') as file:
-#       current_value = file.read()
-#       file.close()
-
-#   if ASUSCTL_PATH:
-#     commands = [ASUSCTL_PATH, 'profile', '-P']
-
-#     if tdp < 13:
-#       commands.append('Quiet')
-#     elif tdp < 20:
-#       commands.append('Balanced')
-#     else:
-#       commands.append('Performance')
-
-#     if commands[-1].lower() == current_value.strip():
-#       # already set, return
-#       return
-
-#     results = subprocess.call(commands)
-
-#     if results.stderr:
-#       decky_plugin.logger.error(f"{__name__} asusctl error {results.stderr}")
-
-#     sleep(1.0)
-
-#     return results
 
 def supports_bios_wmi_tdp():
   tdp_methods = {"ppt_fppt", "ppt_pl2_sppt", "ppt_pl1_spl"}
