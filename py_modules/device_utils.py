@@ -61,10 +61,17 @@ def get_device_name():
       decky_plugin.logger.error(f'{__name__} error while trying to read device name')
   return DEVICE_NAME or ''
 
+def is_rog_ally_x():
+  device_name = get_device_name()
+
+  if Devices.ROG_ALLY_X.value in device_name:
+    return True
+  return False
+
 def is_rog_ally():
   device_name = get_device_name()
 
-  if Devices.ROG_ALLY.value in device_name or Devices.ROG_ALLY_X.value in device_name:
+  if Devices.ROG_ALLY.value in device_name:
     return True
   return False
 
