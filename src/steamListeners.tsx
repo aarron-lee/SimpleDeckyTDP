@@ -21,7 +21,6 @@ import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 let previousIsAcPower: boolean | undefined;
-let tempMaxTdpProfileTimeoutId: undefined | number;
 
 export const currentGameInfoListener = () => {
   currentGameInfoListenerIntervalId = window.setInterval(() => {
@@ -32,41 +31,49 @@ export const currentGameInfoListener = () => {
     const { isAcPower, advanced } = settings;
 
     // shortcircuit steamListener while tempMaxTdpProfile is enabled
-    if (tempMaxTdpProfileTimeoutId !== undefined) {
-      return;
-    }
+    // if (
+    //   settings.previousGameId !== MAX_TDP_PROFILE_ID &&
+    //   settings.currentGameId === MAX_TDP_PROFILE_ID
+    // ) {
+    //   return;
+    // }
 
-    const tempMaxTdpProfileDuration =
-      advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
+    // const tempMaxTdpProfileDuration =
+    //   advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
 
-    if (tempMaxTdpProfileDuration > 0) {
-      // temporarily set maxTdpProfile for X seconds
-      store.dispatch(
-        setCurrentGameInfo({
-          id: MAX_TDP_PROFILE_ID,
-          displayName: `Max TDP Profile`,
-        })
-      );
+    // if (
+    //   tempMaxTdpProfileDuration > 0 &&
+    //   settings.previousGameId !== MAX_TDP_PROFILE_ID
+    // ) {
+    //   // temporarily set maxTdpProfile for X seconds
+    //   store.dispatch(
+    //     setCurrentGameInfo({
+    //       id: MAX_TDP_PROFILE_ID,
+    //       displayName: `Max TDP Profile`,
+    //     })
+    //   );
 
-      tempMaxTdpProfileTimeoutId = window.setTimeout(() => {
-        tempMaxTdpProfileTimeoutId = undefined;
-      }, tempMaxTdpProfileDuration * 1000);
-      return;
-    }
+    //   const a = setCurrentGameInfoReduxAction(
+    //     isAcPower,
+    //     advanced,
+    //     results,
+    //     settings
+    //   );
 
-    const compareId =
-      isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
-        ? `${results.id}-ac-power`
-        : results.id;
+    //   window.setTimeout(() => {
+    //     if (a) store.dispatch(a);
+    //   }, tempMaxTdpProfileDuration * 1000);
+    //   return;
+    // }
 
-    if (
-      settings.currentGameId !== compareId ||
-      settings.isAcPower !== previousIsAcPower
-    ) {
-      previousIsAcPower = settings.isAcPower;
-
-      // new currentGameId, dispatch to the store
-      store.dispatch(setCurrentGameInfo(results));
+    const action = setCurrentGameInfoReduxAction(
+      isAcPower,
+      advanced,
+      results,
+      settings
+    );
+    if (action) {
+      store.dispatch(action);
     }
   }, 1000);
 
@@ -76,6 +83,29 @@ export const currentGameInfoListener = () => {
     }
   };
 };
+
+function setCurrentGameInfoReduxAction(
+  isAcPower: boolean,
+  advanced: any,
+  results: any,
+  settings: any
+) {
+  const compareId =
+    isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
+      ? `${results.id}-ac-power`
+      : results.id;
+
+  if (
+    settings.currentGameId !== compareId ||
+    settings.isAcPower !== previousIsAcPower
+  ) {
+    previousIsAcPower = settings.isAcPower;
+
+    // new currentGameId, dispatch to the store
+    return setCurrentGameInfo(results);
+  }
+  return;
+}
 
 export const suspendEventListener = () => {
   const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {
