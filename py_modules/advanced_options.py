@@ -179,22 +179,6 @@ def get_default_options():
 
   options.append(max_tdp_on_resume)
 
-  max_tdp_on_game_profile_change = {
-    'name': 'Temporarily Set Max TDP when you select a game',
-    'type': AdvancedOptionsType.NUMBER_RANGE.value,
-    'range': [10, 20],
-    'defaultValue': 15,
-    'step': 1,
-    'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
-    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 15),
-    'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
-    'disabled': {
-      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
-    }
-  }
-
-  options.append(max_tdp_on_game_profile_change)
-
 
   if not device_utils.is_intel():
     # enable apu-slow-limit control
@@ -208,6 +192,23 @@ def get_default_options():
     }
 
     options.append(enable_apu_slow_limit)
+
+    max_tdp_on_game_profile_change = {
+      'name': 'Temp Max TDP Profile',
+      'type': AdvancedOptionsType.NUMBER_RANGE.value,
+      'range': [10, 20],
+      'defaultValue': 15,
+      'step': 1,
+      'valueSuffix': 's',
+      'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
+      'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 15),
+      'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
+    }
+
+    options.append(max_tdp_on_game_profile_change)
 
   return options
 

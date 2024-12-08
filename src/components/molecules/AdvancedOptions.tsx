@@ -111,7 +111,14 @@ const AdvancedOptions = () => {
               );
             }
             if (type === AdvancedOptionsType.NUMBER_RANGE) {
-              const { range, step } = option;
+              const {
+                range,
+                step,
+                showValue = true,
+                showName = true,
+                showDescription = true,
+                valueSuffix,
+              } = option;
               const [min, max] = range;
 
               return (
@@ -119,18 +126,20 @@ const AdvancedOptions = () => {
                   <DeckySlider
                     value={value}
                     key={idx}
-                    label={name}
+                    label={showName ? name : undefined}
                     min={min}
                     max={max}
                     step={step}
+                    description={showDescription ? description : undefined}
                     onChange={(newValue: number) => {
                       return dispatch(
                         updateAdvancedOption({ statePath, value: newValue })
                       );
                     }}
+                    valueSuffix={valueSuffix}
                     disabled={calculateDisabled(option, advancedState)}
                     highlightOnFocus
-                    showValue
+                    showValue={showValue}
                   />
                 </DeckyRow>
               );
