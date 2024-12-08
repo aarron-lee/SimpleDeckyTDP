@@ -1,6 +1,6 @@
 import {
   extractCurrentGameInfo,
-  MAX_TDP_PROFILE_ID
+  MAX_TDP_PROFILE_ID,
   // DEFAULT_START_TDP,
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
@@ -52,6 +52,7 @@ export const currentGameInfoListener = () => {
 
         tempMaxTdpProfileTimeoutId = undefined;
       }, tempMaxTdpProfileDuration * 1000);
+      return;
     }
 
     const compareId =
