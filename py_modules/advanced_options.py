@@ -75,6 +75,16 @@ def get_value(setting, default_value = False):
   else:
     return default_value
 
+def get_number_value(setting, default_value):
+  current_val = get_nested_setting(
+    f'advanced.{setting.value}'
+  )
+
+  if isinstance(current_val, int):
+    return current_val
+  else:
+    return default_value
+
 def get_default_options():
   options = []
 
@@ -201,7 +211,7 @@ def get_default_options():
       'step': 1,
       'valueSuffix': 's',
       'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
-      'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 0),
+      'currentValue': get_number_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 0),
       'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
       'disabled': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
