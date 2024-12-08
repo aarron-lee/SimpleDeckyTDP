@@ -6,7 +6,6 @@ import {
   DEFAULT_POWER_CONTROLS,
   DEFAULT_START_TDP,
   EppOption,
-  MAX_TDP_PROFILE_ID,
   MIN_TDP_RANGE,
   PowerGovernorOption,
 } from "../utils/constants";
@@ -341,14 +340,6 @@ export const settingsSlice = createSlice({
     ) => {
       const { isAcPower, advanced } = state;
       const { id, displayName } = action.payload;
-
-      if (id === MAX_TDP_PROFILE_ID) {
-        const { maxTdp } = state;
-        const maxTdpProfile = clone(state.tdpProfiles.default);
-        maxTdpProfile.tdp = maxTdp;
-
-        state.tdpProfiles[MAX_TDP_PROFILE_ID] = maxTdpProfile;
-      }
 
       state.previousGameId = state.currentGameId;
       if (isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]) {
