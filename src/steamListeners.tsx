@@ -15,11 +15,13 @@ import {
   getSupportsCustomAcPower,
   logInfo,
   setMaxTdp,
+  setPollTdp,
 } from "./backend/utils";
 import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 let previousIsAcPower: boolean | undefined;
+let tempMaxTdpTimeoutId: number | undefined;
 
 export const currentGameInfoListener = () => {
   currentGameInfoListenerIntervalId = window.setInterval(() => {
@@ -38,12 +40,14 @@ export const currentGameInfoListener = () => {
       settings.currentGameId !== compareId ||
       settings.isAcPower !== previousIsAcPower
     ) {
+      handleTempMaxTdpProfile(compareId, advanced);
+
       previousIsAcPower = settings.isAcPower;
 
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
     }
-  }, 500);
+  }, 1000);
 
   return () => {
     if (currentGameInfoListenerIntervalId) {
@@ -51,6 +55,26 @@ export const currentGameInfoListener = () => {
     }
   };
 };
+
+function handleTempMaxTdpProfile(compareId: string, advanced: any) {
+  if (tempMaxTdpTimeoutId !== undefined) {
+    clearTimeout(tempMaxTdpTimeoutId);
+    tempMaxTdpTimeoutId = undefined;
+  }
+
+  const tempMaxTdpProfileDuration =
+    advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
+
+  if (tempMaxTdpProfileDuration > 0 && !compareId.includes("default")) {
+    tempMaxTdpTimeoutId = window.setTimeout(() => {
+      setMaxTdp();
+
+      tempMaxTdpTimeoutId = window.setTimeout(() => {
+        setPollTdp({ currentGameId: compareId });
+      }, tempMaxTdpProfileDuration * 1000);
+    }, 500);
+  }
+}
 
 export const suspendEventListener = () => {
   const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {

@@ -10,6 +10,10 @@ import json
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
+class AdvancedOptionsType(Enum):
+  BOOLEAN = 'boolean'
+  NUMBER_RANGE = 'number_range'
+
 
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
@@ -19,6 +23,7 @@ class DefaultSettings(Enum):
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
+  MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange'
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
 
@@ -70,12 +75,22 @@ def get_value(setting, default_value = False):
   else:
     return default_value
 
+def get_number_value(setting, default_value):
+  current_val = get_nested_setting(
+    f'advanced.{setting.value}'
+  )
+
+  if isinstance(current_val, int):
+    return current_val
+  else:
+    return default_value
+
 def get_default_options():
   options = []
 
   # enable_steam_patch = {
   #   'name': 'Fix Steam Hardware Controls (Experimental)',
-  #   'type': 'boolean',
+  #   'type': AdvancedOptionsType.BOOLEAN.value,
   #   'defaultValue': False,
   #   'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros). Note, cannot be used with per-game AC profiles',
   #   'currentValue': get_value(DefaultSettings.ENABLE_STEAM_PATCH),
@@ -86,7 +101,7 @@ def get_default_options():
 
   enable_tdp_control = {
     'name': 'Enable TDP Controls',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': True,
     'description': 'Enables TDP Sliders, and other advanced options',
     'currentValue': get_value(DefaultSettings.ENABLE_TDP_CONTROL, True),
@@ -99,7 +114,7 @@ def get_default_options():
     # GPU controls on AMD only
     enable_gpu_control = {
       'name': 'Enable GPU Controls',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'defaultValue': True,
       'description': 'Enables GPU Slider',
       'currentValue': get_value(DefaultSettings.ENABLE_GPU_CONTROL, True),
@@ -112,7 +127,7 @@ def get_default_options():
 
   manual_cpu_controls = {
     'name': 'Enable manual CPU Controls',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': manual_cpu_controls_default,
     'description': 'Enables manual CPU boost, SMT, Power Governor, and EPP controls',
     'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, manual_cpu_controls_default),
@@ -123,7 +138,7 @@ def get_default_options():
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': False,
     'description': 'When plugged into AC power, use a separate per-game TDP profile. Per-game profiles must be enabled',
     'currentValue': get_value(DefaultSettings.AC_POWER_PROFILES, False),
@@ -134,7 +149,7 @@ def get_default_options():
 
   enable_background_polling = {
     'name': 'Enable Background Polling',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': False,
     'description': 'Polling will set TDP every few seconds',
     'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, False),
@@ -148,7 +163,7 @@ def get_default_options():
 
   force_disable_tdp_on_resume = {
     'name': 'Force Disable Setting TDP on Resume',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': False,
     'description': 'Disable automatically setting TDP, etc, on resume',
     'currentValue': get_value(DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME, False),
@@ -162,7 +177,7 @@ def get_default_options():
 
   max_tdp_on_resume = {
     'name': 'Temporarily Set Max TDP on Resume',
-    'type': 'boolean',
+    'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': True,
     'description': 'After resume from suspend, temporarily sets TDP to max value. This sometimes helps clear audio glitches',
     'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
@@ -174,11 +189,12 @@ def get_default_options():
 
   options.append(max_tdp_on_resume)
 
+
   if not device_utils.is_intel():
     # enable apu-slow-limit control
     enable_apu_slow_limit = {
       'name': 'Enable APU Slow Limit',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'defaultValue': False,
       'description': 'Enables the --apu-slow-limit value for ryzenadj',
       'currentValue': get_value(DefaultSettings.ENABLE_APU_SLOW_LIMIT, False),
@@ -186,6 +202,23 @@ def get_default_options():
     }
 
     options.append(enable_apu_slow_limit)
+
+    max_tdp_on_game_profile_change = {
+      'name': 'Temp Max TDP Profile',
+      'type': AdvancedOptionsType.NUMBER_RANGE.value,
+      'range': [0, 20],
+      'defaultValue': 0,
+      'step': 1,
+      'valueSuffix': 's',
+      'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
+      'currentValue': get_number_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 0),
+      'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
+    }
+
+    options.append(max_tdp_on_game_profile_change)
 
   return options
 
@@ -197,7 +230,7 @@ def get_advanced_options():
   if device_utils.is_legion_go() and supports_acpi_call:
     options.append({
       'name': 'Lenovo Custom TDP Mode',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'description': 'Use WMI for TDP control. Requires Bios with TDP fixes (Bios version v29.1 or newer)',
       'defaultValue': True,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE, True),
@@ -216,7 +249,7 @@ def rog_ally_advanced_options(options):
   if os.path.exists(PLATFORM_PROFILE_PATH):
     options.append({
       'name': 'Enable Asus Platform Profile management',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'defaultValue': True,
       'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
       'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value,
@@ -228,7 +261,7 @@ def rog_ally_advanced_options(options):
     options.append({
       'name': 'Enable Asus Extreme Powersave',
       'description': 'Reduces power consumption during suspend',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'defaultValue': False,
       'currentValue': get_value(RogAllySettings.USE_EXTREME_POWERSAVE, False),
       'statePath': RogAllySettings.USE_EXTREME_POWERSAVE.value,
@@ -236,7 +269,7 @@ def rog_ally_advanced_options(options):
   if rog_ally.supports_wmi_tdp():
     options.append({
       'name': 'Use Asus WMI for TDP',
-      'type': 'boolean',
+      'type': AdvancedOptionsType.BOOLEAN.value,
       'description': 'Use Asus WMI calls instead of ryzenadj',
       'defaultValue': True,
       'currentValue': get_value(RogAllySettings.USE_WMI, True),

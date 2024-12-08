@@ -340,6 +340,7 @@ export const settingsSlice = createSlice({
     ) => {
       const { isAcPower, advanced } = state;
       const { id, displayName } = action.payload;
+
       state.previousGameId = state.currentGameId;
       if (isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]) {
         const newId = `${id}-ac-power`;
