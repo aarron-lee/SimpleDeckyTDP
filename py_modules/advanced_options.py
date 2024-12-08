@@ -196,12 +196,12 @@ def get_default_options():
     max_tdp_on_game_profile_change = {
       'name': 'Temp Max TDP Profile',
       'type': AdvancedOptionsType.NUMBER_RANGE.value,
-      'range': [10, 20],
-      'defaultValue': 15,
+      'range': [0, 20],
+      'defaultValue': 0,
       'step': 1,
       'valueSuffix': 's',
       'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
-      'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 15),
+      'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 0),
       'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
       'disabled': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
