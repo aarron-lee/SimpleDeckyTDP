@@ -121,7 +121,7 @@ const AdvancedOptions = () => {
               } = option;
               const [min, max] = range;
 
-              if (typeof value !== "number") return null
+              if (typeof value !== "number") return null;
 
               return (
                 <DeckyRow>

@@ -16,6 +16,7 @@ import {
   getSupportsCustomAcPower,
   logInfo,
   setMaxTdp,
+  setPollTdp,
 } from "./backend/utils";
 import { debounce } from "lodash";
 
@@ -30,50 +31,32 @@ export const currentGameInfoListener = () => {
 
     const { isAcPower, advanced } = settings;
 
-    // shortcircuit steamListener while tempMaxTdpProfile is enabled
-    // if (
-    //   settings.previousGameId !== MAX_TDP_PROFILE_ID &&
-    //   settings.currentGameId === MAX_TDP_PROFILE_ID
-    // ) {
-    //   return;
-    // }
+    const compareId =
+      isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
+        ? `${results.id}-ac-power`
+        : results.id;
 
-    // const tempMaxTdpProfileDuration =
-    //   advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
+    if (
+      settings.currentGameId !== compareId ||
+      settings.isAcPower !== previousIsAcPower
+    ) {
+      const tempMaxTdpProfileDuration =
+        advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
 
-    // if (
-    //   tempMaxTdpProfileDuration > 0 &&
-    //   settings.previousGameId !== MAX_TDP_PROFILE_ID
-    // ) {
-    //   // temporarily set maxTdpProfile for X seconds
-    //   store.dispatch(
-    //     setCurrentGameInfo({
-    //       id: MAX_TDP_PROFILE_ID,
-    //       displayName: `Max TDP Profile`,
-    //     })
-    //   );
+      if (tempMaxTdpProfileDuration > 0) {
+        setTimeout(() => {
+          setMaxTdp();
 
-    //   const a = setCurrentGameInfoReduxAction(
-    //     isAcPower,
-    //     advanced,
-    //     results,
-    //     settings
-    //   );
+          setTimeout(() => {
+            setPollTdp({ currentGameId: compareId })
+          }, tempMaxTdpProfileDuration * 1000);
+        }, 500);
+      }
 
-    //   window.setTimeout(() => {
-    //     if (a) store.dispatch(a);
-    //   }, tempMaxTdpProfileDuration * 1000);
-    //   return;
-    // }
+      previousIsAcPower = settings.isAcPower;
 
-    const action = setCurrentGameInfoReduxAction(
-      isAcPower,
-      advanced,
-      results,
-      settings
-    );
-    if (action) {
-      store.dispatch(action);
+      // new currentGameId, dispatch to the store
+      store.dispatch(setCurrentGameInfo(results));
     }
   }, 1000);
 
@@ -83,29 +66,6 @@ export const currentGameInfoListener = () => {
     }
   };
 };
-
-function setCurrentGameInfoReduxAction(
-  isAcPower: boolean,
-  advanced: any,
-  results: any,
-  settings: any
-) {
-  const compareId =
-    isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
-      ? `${results.id}-ac-power`
-      : results.id;
-
-  if (
-    settings.currentGameId !== compareId ||
-    settings.isAcPower !== previousIsAcPower
-  ) {
-    previousIsAcPower = settings.isAcPower;
-
-    // new currentGameId, dispatch to the store
-    return setCurrentGameInfo(results);
-  }
-  return;
-}
 
 export const suspendEventListener = () => {
   const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {
