@@ -9,6 +9,7 @@ export enum AdvancedOptionsEnum {
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
+  MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange',
   AC_POWER_PROFILES = "acPowerProfiles",
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
   USE_PLATFORM_PROFILE = "platformProfile",

@@ -19,6 +19,7 @@ class DefaultSettings(Enum):
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
+  MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange'
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
 
@@ -173,6 +174,22 @@ def get_default_options():
   }
 
   options.append(max_tdp_on_resume)
+
+  max_tdp_on_game_profile_change = {
+    'name': 'Temporarily Set Max TDP when you select a game',
+    'type': 'number_range',
+    'range': [10, 20],
+    'defaultValue': 15,
+    'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
+    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 15),
+    'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+    }
+  }
+
+  options.append(max_tdp_on_game_profile_change)
+
 
   if not device_utils.is_intel():
     # enable apu-slow-limit control
