@@ -184,6 +184,7 @@ def get_default_options():
     'type': AdvancedOptionsType.NUMBER_RANGE.value,
     'range': [10, 20],
     'defaultValue': 15,
+    'step': 1,
     'description': 'When you start a game, temporarily sets TDP to max value for X seconds.',
     'currentValue': get_value(DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE, 15),
     'statePath': DefaultSettings.MAX_TDP_ON_GAME_PROFILE_CHANGE.value,

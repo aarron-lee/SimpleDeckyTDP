@@ -10,7 +10,12 @@ import {
 import { get } from "lodash";
 import ErrorBoundary from "../ErrorBoundary";
 import ArrowToggleButton from "../atoms/ArrowToggleButton";
-import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
+import {
+  DeckyRow,
+  DeckySection,
+  DeckySlider,
+  DeckyToggle,
+} from "../atoms/DeckyFrontendLib";
 import { useIsDesktop } from "../../hooks/desktopHooks";
 import {
   AdvancedOptionsEnum,
@@ -106,8 +111,29 @@ const AdvancedOptions = () => {
               );
             }
             if (type === AdvancedOptionsType.BOOLEAN) {
+              const { range, step } = option;
+              const [min, max] = range;
 
-              return null
+              return (
+                <DeckyRow>
+                  <DeckySlider
+                    value={value}
+                    key={idx}
+                    label={name}
+                    min={min}
+                    max={max}
+                    step={step}
+                    onChange={(newValue: number) => {
+                      return dispatch(
+                        updateAdvancedOption({ statePath, value: newValue })
+                      );
+                    }}
+                    disabled={calculateDisabled(option, advancedState)}
+                    highlightOnFocus
+                    showValue
+                  />
+                </DeckyRow>
+              );
             }
 
             return null;
