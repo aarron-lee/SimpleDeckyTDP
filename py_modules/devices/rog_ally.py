@@ -4,6 +4,8 @@ from time import sleep
 import os
 import decky_plugin
 import bios_settings
+import json
+import device_utils
 
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
@@ -121,6 +123,48 @@ def execute_bash_command(command, path):
   result = subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   return result
 
+def is_bazzite_deck():
+  IMAGE_INFO = "/usr/share/ublue-os/image-info.json"
+  if os.path.exists(IMAGE_INFO):
+    try:
+      with open(IMAGE_INFO, 'r') as f:
+        info = json.loads(f.read().strip())
+        f.close()
+        return info.get("image-name") == "bazzite-deck"
+    except Exception as e:
+      decky_plugin.logger.error(f'{__name__} error checking bazzite image {e}')
+  return False
 
 def supports_mcu_powersave():
-  return os.path.exists(LEGACY_MCU_POWERSAVE_PATH) or os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH)
+  mc_path_exists = os.path.exists(LEGACY_MCU_POWERSAVE_PATH) or os.path.exists(ASUS_ARMORY_MCU_POWERSAVE_PATH)
+
+  if mc_path_exists:
+    # bazzite has it's own workaround for MCU
+    if is_bazzite_deck():
+      return True
+
+    # check MCU version
+    mc_version = get_mcu_version()
+
+    if device_utils.is_rog_ally() and mc_version >= 319:
+      return True
+    if device_utils.is_rog_ally_x() and mc_version >= 314:
+      return True
+
+  return False
+
+def get_mcu_version():
+  command = "dmesg | grep -oP 'MCU version: \\K\\d+'"
+  try:
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+    version_str = str(result.stdout).strip()
+
+    if (version_str == ''):
+      return 0
+
+    return int(version_str)
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error getting mcu version {e}')
+
+    return 0
