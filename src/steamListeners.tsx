@@ -41,15 +41,14 @@ export const currentGameInfoListener = () => {
 
     if (tempMaxTdpProfileDuration > 0) {
       // temporarily set maxTdpProfile for X seconds
+      store.dispatch(
+        setCurrentGameInfo({
+          id: MAX_TDP_PROFILE_ID,
+          displayName: `Max TDP Profile`,
+        })
+      );
 
       tempMaxTdpProfileTimeoutId = window.setTimeout(() => {
-        store.dispatch(
-          setCurrentGameInfo({
-            id: MAX_TDP_PROFILE_ID,
-            displayName: `Max TDP Profile`,
-          })
-        );
-
         tempMaxTdpProfileTimeoutId = undefined;
       }, tempMaxTdpProfileDuration * 1000);
       return;
