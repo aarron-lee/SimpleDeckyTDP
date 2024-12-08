@@ -1,5 +1,6 @@
 import {
   extractCurrentGameInfo,
+  MAX_TDP_PROFILE_ID
   // DEFAULT_START_TDP,
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
@@ -20,6 +21,7 @@ import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 let previousIsAcPower: boolean | undefined;
+let tempMaxTdpProfileTimeoutId: undefined | number;
 
 export const currentGameInfoListener = () => {
   currentGameInfoListenerIntervalId = window.setInterval(() => {
@@ -28,6 +30,29 @@ export const currentGameInfoListener = () => {
     const { settings } = store.getState();
 
     const { isAcPower, advanced } = settings;
+
+    // shortcircuit steamListener while tempMaxTdpProfile is enabled
+    if (tempMaxTdpProfileTimeoutId !== undefined) {
+      return;
+    }
+
+    const tempMaxTdpProfileDuration =
+      advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
+
+    if (tempMaxTdpProfileDuration > 0) {
+      // temporarily set maxTdpProfile for X seconds
+
+      tempMaxTdpProfileTimeoutId = window.setTimeout(() => {
+        store.dispatch(
+          setCurrentGameInfo({
+            id: MAX_TDP_PROFILE_ID,
+            displayName: `Max TDP Profile`,
+          })
+        );
+
+        tempMaxTdpProfileTimeoutId = undefined;
+      }, tempMaxTdpProfileDuration * 1000);
+    }
 
     const compareId =
       isAcPower && advanced[AdvancedOptionsEnum.AC_POWER_PROFILES]
@@ -43,7 +68,7 @@ export const currentGameInfoListener = () => {
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
     }
-  }, 500);
+  }, 1000);
 
   return () => {
     if (currentGameInfoListenerIntervalId) {
