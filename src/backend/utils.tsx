@@ -15,6 +15,11 @@ export enum AdvancedOptionsEnum {
   USE_PLATFORM_PROFILE = "platformProfile",
 }
 
+export enum AdvancedOptionsType {
+  BOOLEAN = 'boolean',
+  NUMBER_RANGE = 'number_range'
+}
+
 export enum RogAllyAdvancedOptions {
   USE_PLATFORM_PROFILE = "platformProfile",
   USE_WMI = "useWmi",

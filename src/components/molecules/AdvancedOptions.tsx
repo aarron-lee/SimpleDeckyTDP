@@ -14,6 +14,7 @@ import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
 import { useIsDesktop } from "../../hooks/desktopHooks";
 import {
   AdvancedOptionsEnum,
+  AdvancedOptionsType,
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 
@@ -84,7 +85,7 @@ const AdvancedOptions = () => {
               }
             }
 
-            if (type === "boolean") {
+            if (type === AdvancedOptionsType.BOOLEAN) {
               return (
                 <DeckyRow>
                   <DeckyToggle
@@ -103,6 +104,10 @@ const AdvancedOptions = () => {
                   />
                 </DeckyRow>
               );
+            }
+            if (type === AdvancedOptionsType.BOOLEAN) {
+
+              return null
             }
 
             return null;
