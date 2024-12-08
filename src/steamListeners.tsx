@@ -43,12 +43,12 @@ export const currentGameInfoListener = () => {
       const tempMaxTdpProfileDuration =
         advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
 
-      if (tempMaxTdpProfileDuration > 0) {
+      if (tempMaxTdpProfileDuration > 0 && !compareId.includes("default")) {
         setTimeout(() => {
           setMaxTdp();
 
           setTimeout(() => {
-            setPollTdp({ currentGameId: compareId })
+            setPollTdp({ currentGameId: compareId });
           }, tempMaxTdpProfileDuration * 1000);
         }, 500);
       }
