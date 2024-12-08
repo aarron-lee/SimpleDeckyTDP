@@ -110,7 +110,7 @@ const AdvancedOptions = () => {
                 </DeckyRow>
               );
             }
-            if (type === AdvancedOptionsType.BOOLEAN) {
+            if (type === AdvancedOptionsType.NUMBER_RANGE) {
               const { range, step } = option;
               const [min, max] = range;
 
