@@ -10,10 +10,16 @@ import {
 import { get } from "lodash";
 import ErrorBoundary from "../ErrorBoundary";
 import ArrowToggleButton from "../atoms/ArrowToggleButton";
-import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
+import {
+  DeckyRow,
+  DeckySection,
+  DeckySlider,
+  DeckyToggle,
+} from "../atoms/DeckyFrontendLib";
 import { useIsDesktop } from "../../hooks/desktopHooks";
 import {
   AdvancedOptionsEnum,
+  AdvancedOptionsType,
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 
@@ -84,7 +90,7 @@ const AdvancedOptions = () => {
               }
             }
 
-            if (type === "boolean") {
+            if (type === AdvancedOptionsType.BOOLEAN) {
               return (
                 <DeckyRow>
                   <DeckyToggle
@@ -100,6 +106,42 @@ const AdvancedOptions = () => {
                       );
                     }}
                     disabled={calculateDisabled(option, advancedState)}
+                  />
+                </DeckyRow>
+              );
+            }
+            if (type === AdvancedOptionsType.NUMBER_RANGE) {
+              const {
+                range,
+                step,
+                showValue = true,
+                showName = true,
+                showDescription = true,
+                valueSuffix,
+              } = option;
+              const [min, max] = range;
+
+              if (typeof value !== "number") return null;
+
+              return (
+                <DeckyRow>
+                  <DeckySlider
+                    value={value}
+                    key={idx}
+                    label={showName ? name : undefined}
+                    min={min}
+                    max={max}
+                    step={step}
+                    description={showDescription ? description : undefined}
+                    onChange={(newValue: number) => {
+                      return dispatch(
+                        updateAdvancedOption({ statePath, value: newValue })
+                      );
+                    }}
+                    valueSuffix={valueSuffix}
+                    disabled={calculateDisabled(option, advancedState)}
+                    highlightOnFocus
+                    showValue={showValue}
                   />
                 </DeckyRow>
               );

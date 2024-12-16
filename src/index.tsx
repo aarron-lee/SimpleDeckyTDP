@@ -19,6 +19,7 @@ import { initializePollingStore } from "./redux-modules/pollingMiddleware";
 
 export default definePlugin(() => {
   initializePollingStore(store);
+
   // fetch settings from backend, send into redux state
   getSettings().then((result) => {
     const results = result || {};
@@ -37,7 +38,7 @@ export default definePlugin(() => {
 
   // const unpatch = steamPatch();
 
-  const onUnmount = currentGameInfoListener();
+  const unregisterCurrentGameListener = currentGameInfoListener();
   const unregisterResumeFromSuspendListener = resumeFromSuspendEventListener();
   const unregisterSuspendListener = suspendEventListener();
 
@@ -55,7 +56,7 @@ export default definePlugin(() => {
       try {
         store.dispatch(cleanupAction());
         // if (unpatch) unpatch();
-        if (onUnmount) onUnmount();
+        if (unregisterCurrentGameListener) unregisterCurrentGameListener();
         if (
           unregisterSuspendListener &&
           typeof unregisterSuspendListener === "function"
