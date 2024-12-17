@@ -6,7 +6,6 @@ from plugin_settings import get_nested_setting
 from enum import Enum
 from devices import rog_ally
 import device_utils
-import json
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
@@ -34,18 +33,6 @@ class RogAllySettings(Enum):
 
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
-
-def is_bazzite_deck():
-  IMAGE_INFO = "/usr/share/ublue-os/image-info.json"
-  if os.path.exists(IMAGE_INFO):
-    try:
-      with open(IMAGE_INFO, 'r') as f:
-        info = json.loads(f.read().strip())
-        f.close()
-        return info.get("image-name") == "bazzite-deck"
-    except Exception as e:
-      decky_plugin.logger.error(f'{__name__} error checking bazzite image {e}')
-  return False
 
 def modprobe_acpi_call():
   # legion go currently requires acpi_call for using WMI to set TDP
@@ -239,7 +226,7 @@ def get_advanced_options():
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-  if device_utils.is_rog_ally():
+  if device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
     rog_ally_advanced_options(options)
 
 
@@ -257,7 +244,7 @@ def rog_ally_advanced_options(options):
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-  if rog_ally.supports_mcu_powersave() and is_bazzite_deck():
+  if rog_ally.supports_mcu_powersave():
     options.append({
       'name': 'Enable Asus Extreme Powersave',
       'description': 'Reduces power consumption during suspend',
@@ -286,7 +273,7 @@ def gpu_control_enabled():
   return get_setting(DefaultSettings.ENABLE_GPU_CONTROL.value)
 
 def handle_advanced_option_change(new_values):
-  if device_utils.is_rog_ally():
+  if device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
     if rog_ally.supports_mcu_powersave():
       powersave_enabled = new_values.get(RogAllySettings.USE_EXTREME_POWERSAVE.value, None)
 
