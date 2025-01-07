@@ -150,7 +150,7 @@ def set_cpb_boost(enabled):
   else:
     # AMD CPU boost global cpb boost toggle doesn't exist, set it per-cpu
     paths = get_cpb_boost_paths()
-    if len(paths) > 0:
+    if len(paths) > 0 and os.path.exists(paths[0]):
       try:
         with file_timeout.time_limit(4):
           for p in paths:
