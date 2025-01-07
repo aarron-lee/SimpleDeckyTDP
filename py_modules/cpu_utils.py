@@ -139,21 +139,25 @@ def set_cpb_boost(enabled):
       except Exception as e:
         decky_plugin.logger.error(e)
   else:
-    # AMD CPU boost global cpb boost toggle doesn't exist, fallback to setting it per-cpu
+    # AMD CPU boost global cpb boost toggle doesn't exist, set it per-cpu
     paths = get_cpb_boost_paths()
-    try:
-      with file_timeout.time_limit(4):
-        for p in paths:
-          try:
-            with open(p, 'w') as file:
-              file.write("1" if enabled else "0")
-              file.close()
-              sleep(0.1)
-          except Exception as e:
-            decky_plugin.logger.error(e)
-            continue
-    except Exception as e:
-      decky_plugin.logger.error(e)
+    if len(paths) > 0:
+      try:
+        with file_timeout.time_limit(4):
+          for p in paths:
+            try:
+              with open(p, 'w') as file:
+                file.write("1" if enabled else "0")
+                file.close()
+                sleep(0.1)
+            except Exception as e:
+              decky_plugin.logger.error(e)
+              continue
+      except Exception as e:
+        decky_plugin.logger.error(e)
+    else:
+      # fallback to legacy cpu boost
+      set_cpu_boost(enabled)
 
 def supports_cpu_boost():
   try:
@@ -173,7 +177,6 @@ def supports_cpu_boost():
 def set_cpu_boost(enabled = True):
   try:
     with file_timeout.time_limit(3):
-      set_cpb_boost(enabled)
       if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
         with open(AMD_LEGACY_CPU_BOOST_PATH, 'w') as file:
           if enabled:
