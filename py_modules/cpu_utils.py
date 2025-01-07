@@ -15,6 +15,7 @@ RYZENADJ_PATH = None
 if not device_utils.is_intel():
   RYZENADJ_PATH = shutil.which('ryzenadj')
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
+AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
 
 INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
 INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
@@ -162,6 +163,8 @@ def supports_cpu_boost():
       cpu_boost_paths = get_cpb_boost_paths()
       if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
         return True
+      if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
+        return True
       if os.path.exists(INTEL_CPU_BOOST_PATH):
         return True
   except Exception as e:
@@ -173,6 +176,13 @@ def set_cpu_boost(enabled = True):
   try:
     with file_timeout.time_limit(3):
       set_cpb_boost(enabled)
+      if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
+        with open(AMD_LEGACY_CPU_BOOST_PATH, 'w') as file:
+          if enabled:
+            file.write('1')
+          else:
+            file.write('0')
+          file.close()
   except Exception as e:
     decky_plugin.logger.error(e)
     return False
