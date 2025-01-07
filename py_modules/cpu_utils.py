@@ -11,9 +11,7 @@ from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally
 import device_utils
 
-RYZENADJ_PATH = None
-if not device_utils.is_intel():
-  RYZENADJ_PATH = shutil.which('ryzenadj')
+RYZENADJ_PATH = "/home/deck/.local/bin/ryzenadj"
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
 
