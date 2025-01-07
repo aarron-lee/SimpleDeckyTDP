@@ -47,7 +47,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 
 ## Compatibility
 
-Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite.
+Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite. Also usable on official SteamOS, but requires a manual ryzenadj installation.
 
 Other distros not tested. Intel support is experimental and still a work in progress.
 
@@ -71,6 +71,10 @@ $ which ryzenadj
 ```
 
 If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
+
+**For official SteamOS**, you must place your `ryzenadj` binary at the follow location:
+
+`/home/deck/.local/bin/ryzenadj`
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 

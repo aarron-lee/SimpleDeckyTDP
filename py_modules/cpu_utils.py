@@ -11,7 +11,16 @@ from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally
 import device_utils
 
-RYZENADJ_PATH = "/home/deck/.local/bin/ryzenadj"
+LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
+
+RYZENADJ_PATH = None
+if not device_utils.is_intel():
+  # allow for custom override of ryzenadj for SteamOS
+  if os.path.exists(LOCAL_RYZENADJ):
+    RYZENADJ_PATH = LOCAL_RYZENADJ
+  else:
+    RYZENADJ_PATH = shutil.which('ryzenadj')
+
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
 
