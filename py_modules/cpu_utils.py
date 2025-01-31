@@ -11,10 +11,21 @@ from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally
 import device_utils
 
+LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
+NIX_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.nix-profile/bin/ryzenadj'
+
 RYZENADJ_PATH = None
 if not device_utils.is_intel():
-  RYZENADJ_PATH = shutil.which('ryzenadj')
+  # allow for custom override of ryzenadj for SteamOS
+  if os.path.exists(LOCAL_RYZENADJ):
+    RYZENADJ_PATH = LOCAL_RYZENADJ
+  elif os.path.exists(NIX_RYZENADJ):
+    RYZENADJ_PATH = NIX_RYZENADJ
+  else:
+    RYZENADJ_PATH = shutil.which('ryzenadj')
+
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
+AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
 
 INTEL_PSTATE_PATH="/sys/devices/system/cpu/intel_pstate/status"
 INTEL_CPU_BOOST_PATH = '/sys/devices/system/cpu/intel_pstate/no_turbo'
@@ -140,27 +151,33 @@ def set_cpb_boost(enabled):
       except Exception as e:
         decky_plugin.logger.error(e)
   else:
-    # AMD CPU boost global cpb boost toggle doesn't exist, fallback to setting it per-cpu
+    # AMD CPU boost global cpb boost toggle doesn't exist, set it per-cpu
     paths = get_cpb_boost_paths()
-    try:
-      with file_timeout.time_limit(4):
-        for p in paths:
-          try:
-            with open(p, 'w') as file:
-              file.write("1" if enabled else "0")
-              file.close()
-              sleep(0.1)
-          except Exception as e:
-            decky_plugin.logger.error(e)
-            continue
-    except Exception as e:
-      decky_plugin.logger.error(e)
+    if len(paths) > 0 and os.path.exists(paths[0]):
+      try:
+        with file_timeout.time_limit(4):
+          for p in paths:
+            try:
+              with open(p, 'w') as file:
+                file.write("1" if enabled else "0")
+                file.close()
+                sleep(0.1)
+            except Exception as e:
+              decky_plugin.logger.error(e)
+              continue
+      except Exception as e:
+        decky_plugin.logger.error(e)
+    else:
+      # fallback to legacy cpu boost
+      set_cpu_boost(enabled)
 
 def supports_cpu_boost():
   try:
     with file_timeout.time_limit(4):
       cpu_boost_paths = get_cpb_boost_paths()
       if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
+        return True
+      if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
         return True
       if os.path.exists(INTEL_CPU_BOOST_PATH):
         return True
@@ -172,7 +189,13 @@ def supports_cpu_boost():
 def set_cpu_boost(enabled = True):
   try:
     with file_timeout.time_limit(3):
-      set_cpb_boost(enabled)
+      if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
+        with open(AMD_LEGACY_CPU_BOOST_PATH, 'w') as file:
+          if enabled:
+            file.write('1')
+          else:
+            file.write('0')
+          file.close()
   except Exception as e:
     decky_plugin.logger.error(e)
     return False

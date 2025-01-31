@@ -9,6 +9,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 - [Requirements](#requirements)
 - [Installation](#install)
   - [Prerequisites](#prerequisites)
+  - [SteamOS Installation](#steamos-installation)
   - [Quick Install / Update](#quick-install--update)
   - [Manual Install](#manual-install)
 - [Manual Build](#manual-build)
@@ -47,7 +48,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 
 ## Compatibility
 
-Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite.
+Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite. Also usable on official SteamOS, but requires a manual ryzenadj installation.
 
 Other distros not tested. Intel support is experimental and still a work in progress.
 
@@ -59,7 +60,7 @@ Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin 
 
 ### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
 
-ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
+ChimeraOS, Bazzite Deck Edition, SteamFork, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
@@ -71,6 +72,8 @@ $ which ryzenadj
 ```
 
 If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
+
+**For official SteamOS**, see SteamOS install instructions for more info.
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
@@ -91,6 +94,26 @@ If the scaling is `intel_pstate`, then your device should be compatible
 ### Prerequisites
 
 Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device.
+
+### SteamOS Installation
+
+For installing this on official SteamOS, you must install your own copy of ryzenadj.
+
+There's two options for to do so:
+
+1. Setup nix as a package manager, and then install ryzenadj via nix
+
+Install instructions for setting nix can be found [here](https://rasmuskirk.com/articles/2024-12-23_why-nix-is-the-perfect-package-manager-for-your-steam-deck/) ([archive.org mirror](https://archive.is/TVoYY))
+
+If you install ryzenadj through nix, you should find the ryzenadj binary at the following path: `/home/deck/.nix-profile/bin/ryzenadj`
+
+2. Manually compile a ryzenadj binary, you can place your `ryzenadj` binary at the follow location:
+
+`/home/deck/.local/bin/ryzenadj`
+
+Don't forget to make it executable by running `chmod +x /home/deck/.local/bin/ryzenadj`
+
+After ryzenadj is installed, you can install SDTDP via the regular install methods, and it should work.
 
 ### Quick Install / Update
 
@@ -184,10 +207,6 @@ rpm-ostree kargs --delete-if-present=amd_pstate=passive
 
 ## Troubleshooting
 
-### The "Fix Steam Hardware Controls" option is missing
-
-This is not a bug, Valve updated the Steam client and removed the TDP Slider on non-deck handhelds. Thus, the "Fix Steam Hardware Controls" option is no longer possible.
-
 ### TDP Control is not working
 
 First try updating the plugin to the latest version.
@@ -220,6 +239,13 @@ The ROG ally has some known issues related to CPU Boost and SMT.
 - Suspend often gets borked if you disable SMT
   - SDTDP ships a workaround for the SMT bug on the Ally and Ally X, where it will temporarily turn on SMT before suspend
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
+
+### Legion Go Troubleshooting
+
+The Legion Go requires using Lenovo's built-in WMI methods for device stability. There are currently only two ways to do so:
+
+1. use the `acpi_call` kernel module for wmi calls, which is supported in SDTDP. If this is working, you should see a `Use Lenovo WMI` option in SDTDP
+2. use a WIP Legion Go driver that adds TDP controls in the kernel. While this is the proper solution, it currently isn't finished + stable yet.
 
 ### Ryzenadj troubleshooting
 
