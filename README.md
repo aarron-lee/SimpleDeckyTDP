@@ -103,7 +103,13 @@ There's two options for to do so:
 
 1. Setup nix as a package manager, and then install ryzenadj via nix
 
-Install instructions for setting nix can be found [here](https://rasmuskirk.com/articles/2024-12-23_why-nix-is-the-perfect-package-manager-for-your-steam-deck/) ([archive.org mirror](https://archive.is/TVoYY))
+Install instructions for setting up nix can be found [here](https://rasmuskirk.com/articles/2024-12-23_why-nix-is-the-perfect-package-manager-for-your-steam-deck/) ([archive.org mirror](https://archive.is/TVoYY))
+
+After setting up nix, you should be able to install ryzenadj with the following:
+
+```
+ nix profile install nixpkgs#ryzenadj
+```
 
 If you install ryzenadj through nix, you should find the ryzenadj binary at the following path: `/home/deck/.nix-profile/bin/ryzenadj`
 
