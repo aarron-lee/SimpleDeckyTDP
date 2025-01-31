@@ -12,12 +12,15 @@ from devices import legion_go, rog_ally
 import device_utils
 
 LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
+NIX_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.nix-profile/bin/ryzenadj'
 
 RYZENADJ_PATH = None
 if not device_utils.is_intel():
   # allow for custom override of ryzenadj for SteamOS
   if os.path.exists(LOCAL_RYZENADJ):
     RYZENADJ_PATH = LOCAL_RYZENADJ
+  elif os.path.exists(NIX_RYZENADJ):
+    RYZENADJ_PATH = NIX_RYZENADJ
   else:
     RYZENADJ_PATH = shutil.which('ryzenadj')
 
