@@ -95,7 +95,7 @@ def set_amd_tdp(tdp: int):
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
         return legion_go.set_tdp(tdp)
-      elif device_utils.is_rog_ally():
+      elif device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
