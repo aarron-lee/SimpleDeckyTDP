@@ -9,8 +9,8 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 - [Requirements](#requirements)
 - [Installation](#install)
   - [Prerequisites](#prerequisites)
-  - [SteamOS Installation](#steamos-installation)
   - [Quick Install / Update](#quick-install--update)
+  - [SteamOS Installation](#steamos-installation)
   - [Manual Install](#manual-install)
 - [Manual Build](#manual-build)
 - [Uninstall Instructions](#uninstall-instructions)
@@ -73,7 +73,7 @@ $ which ryzenadj
 
 If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
 
-**For official SteamOS**, see SteamOS install instructions for more info.
+**For official SteamOS**, see [SteamOS Install instructions](#steamos-installation) for more info.
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
@@ -95,6 +95,14 @@ If the scaling is `intel_pstate`, then your device should be compatible
 
 Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device.
 
+### Quick Install / Update
+
+Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
+
+```
+curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+```
+
 ### SteamOS Installation
 
 For installing this on official SteamOS, you must install your own copy of ryzenadj.
@@ -113,21 +121,13 @@ After setting up nix, you should be able to install ryzenadj with the following:
 
 If you install ryzenadj through nix, you should find the ryzenadj binary at the following path: `/home/deck/.nix-profile/bin/ryzenadj`
 
-2. Manually compile a ryzenadj binary, you can place your `ryzenadj` binary at the follow location:
+2. If you'd rather not use nix, you can alternatively manually compile a ryzenadj binary, you can place your `ryzenadj` binary at the follow location:
 
 `/home/deck/.local/bin/ryzenadj`
 
 Don't forget to make it executable by running `chmod +x /home/deck/.local/bin/ryzenadj`
 
 After ryzenadj is installed, you can install SDTDP via the regular install methods, and it should work.
-
-### Quick Install / Update
-
-Run the following in terminal, then reboot. Note that this works both for installing or updating the plugin
-
-```
-curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
-```
 
 ### Manual Install
 
