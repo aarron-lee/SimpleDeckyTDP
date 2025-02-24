@@ -246,6 +246,12 @@ The ROG ally has some known issues related to CPU Boost and SMT.
   - SDTDP ships a workaround for the SMT bug on the Ally and Ally X, where it will temporarily turn on SMT before suspend
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
 
+Extreme Power Save (aka MCU Powersave)
+
+After enabling Extreme Powersave mode (aka MCU powersave), make sure you're on the latest MCU firmware (119 if original ROG Ally).
+
+If you encounter issues with suspend, or back buttons not working after suspend-resume, it is likely due to your MCU firmware not being up to date.
+
 ### Legion Go Troubleshooting
 
 The Legion Go requires using Lenovo's built-in WMI methods for device stability. There are currently only two ways to do so:
