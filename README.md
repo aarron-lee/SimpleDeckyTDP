@@ -73,6 +73,8 @@ $ which ryzenadj
 
 If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
 
+For Arch users, you'll need both ryzenadj and ryzen_smu-dkms-git.
+
 **For official SteamOS**, see [SteamOS Install instructions](#steamos-installation) for more info.
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
