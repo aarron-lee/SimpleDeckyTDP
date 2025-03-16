@@ -21,7 +21,7 @@ class DefaultSettings(Enum):
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
-  ENABLE_AUTOMATIC_EPP_MANAGEMENT = 'enableAutomaticEppManagement'
+  ENABLE_AUTOMATIC_CPU_MANAGEMENT = 'enableAutomaticEppManagement'
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
   MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange'
   AC_POWER_PROFILES = 'acPowerProfiles'
@@ -124,20 +124,20 @@ def get_default_options():
 
   options.append(manual_cpu_controls)
 
-  enable_automatic_epp_management = {
-    'name': 'Enable Automatic EPP and Governor',
+  enable_automatic_cpu_management = {
+    'name': 'Enable Automatic CPU management',
     'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': True,
-    'description': 'Enables automatic management of EPP and Governor',
-    'currentValue': get_value(DefaultSettings.ENABLE_AUTOMATIC_EPP_MANAGEMENT, True),
-    'statePath': DefaultSettings.ENABLE_AUTOMATIC_EPP_MANAGEMENT.value,
+    'description': 'Enables automatic management of CPU Boost, EPP, SMT, and Governor',
+    'currentValue': get_value(DefaultSettings.ENABLE_AUTOMATIC_CPU_MANAGEMENT, True),
+    'statePath': DefaultSettings.ENABLE_AUTOMATIC_CPU_MANAGEMENT.value,
     'disabled': {
       'ifTruthy': [DefaultSettings.ENABLE_POWER_CONTROL.value],
       'hideIfDisabled': True
     }
   }
 
-  options.append(enable_automatic_epp_management)
+  options.append(enable_automatic_cpu_management)
 
   ac_power_profiles = {
     'name': 'Enable per-game AC power TDP profiles',

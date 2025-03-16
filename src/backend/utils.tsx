@@ -8,7 +8,7 @@ export enum AdvancedOptionsEnum {
   STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
-  ENABLE_AUTOMATIC_EPP_MANAGEMENT = "enableAutomaticEppManagement",
+  ENABLE_AUTOMATIC_CPU_MANAGEMENT = "enableAutomaticEppManagement",
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
   MAX_TDP_ON_GAME_PROFILE_CHANGE = "maxTdpOnGameProfileChange",
   AC_POWER_PROFILES = "acPowerProfiles",
