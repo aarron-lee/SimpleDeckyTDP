@@ -48,7 +48,7 @@ const calculateDisabled = (
         }
       }
     }
-    if (disabled.isTruthy) {
+    if (disabled.ifTruthy) {
       // ifTruthy = arr of advancedOptions
       const { ifTruthy, hideIfDisabled = false } = disabled;
 
