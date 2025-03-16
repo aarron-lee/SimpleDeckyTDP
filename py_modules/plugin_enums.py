@@ -3,7 +3,6 @@ from enum import Enum
 class GpuModes(Enum):
   BATTERY = "BATTERY"
   BALANCE = "BALANCE"
-  PERFORMANCE = "PERFORMANCE"
   RANGE = "RANGE"
   FIXED = "FIXED"
 

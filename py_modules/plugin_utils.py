@@ -96,9 +96,6 @@ def set_gpu_for_tdp_profile(tdp_profile):
         elif gpu_mode == 'BALANCE':
           set_gpu_frequency_range(0, 0)
           return True
-        elif gpu_mode == 'PERFORMANCE':
-          set_gpu_frequency_range(-1, 0)
-          return True
         elif gpu_mode == 'FIXED' and fixed_frequency:
           set_gpu_frequency_range(fixed_frequency, fixed_frequency)
           return True

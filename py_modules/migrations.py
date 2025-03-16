@@ -43,7 +43,7 @@ def migrate_gpu_mode():
 
       mode = profile.get('gpuMode', None)
 
-      if mode == 'DEFAULT':
+      if mode == 'PERFORMANCE':
         profile['gpuMode'] = 'BALANCE'
 
     merge_tdp_profiles(tdp_profiles)

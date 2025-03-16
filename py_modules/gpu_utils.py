@@ -107,16 +107,6 @@ def set_amd_gpu_frequency(current_game_id):
     except Exception as e:
       decky_plugin.logger.error(f"{__name__} balance mode error {e}")
       return False
-  elif gpu_mode == GpuModes.PERFORMANCE.value:
-    try:
-      decky_plugin.logger.error(f"{__name__} set performance")
-      with open(GPU_LEVEL_PATH,'w') as f:
-        f.write("high")
-        f.close()
-      return True
-    except Exception as e:
-      decky_plugin.logger.error(f"{__name__} performance mode error {e}")
-      return False
   elif gpu_mode == GpuModes.BATTERY.value:
     try:
       decky_plugin.logger.error(f"{__name__} set battery")

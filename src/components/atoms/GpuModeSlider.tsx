@@ -7,9 +7,8 @@ import useIsIntel from "../../hooks/useIsIntel";
 enum Mode {
   BATTERY = 0,
   BALANCE = 1,
-  PERFORMANCE = 2,
-  RANGE = 3,
-  FIXED = 4,
+  RANGE = 2,
+  FIXED = 3,
 }
 
 const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
