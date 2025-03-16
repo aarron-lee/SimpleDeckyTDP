@@ -4,6 +4,7 @@ import {
   AdvancedOption,
   getAdvancedOptionsInfoSelector,
   getSteamPatchEnabledSelector,
+  RangedAdvancedOption,
   supportsCustomAcPowerSelector,
   updateAdvancedOption,
 } from "../../redux-modules/settingsSlice";
@@ -39,17 +40,27 @@ const calculateDisabled = (
 
     if (disabled.ifFalsy) {
       // ifFalsy = arr of advancedOptions
-      const { ifFalsy } = disabled;
+      const { ifFalsy, hideIfDisabled = false } = disabled;
 
       for (let i = 0; i < ifFalsy.length; i++) {
         if (!advancedState[ifFalsy[i]]) {
-          return true;
+          return { disabled: true, hideIfDisabled };
+        }
+      }
+    }
+    if (disabled.isTruthy) {
+      // ifTruthy = arr of advancedOptions
+      const { ifTruthy, hideIfDisabled = false } = disabled;
+
+      for (let i = 0; i < ifTruthy.length; i++) {
+        if (advancedState[ifTruthy[i]]) {
+          return { disabled: true, hideIfDisabled };
         }
       }
     }
   }
 
-  return false;
+  return { disabled: false, hideIfDisabled: false };
 };
 
 const AdvancedOptions = () => {
@@ -91,6 +102,15 @@ const AdvancedOptions = () => {
             }
 
             if (type === AdvancedOptionsType.BOOLEAN) {
+              const { disabled, hideIfDisabled } = calculateDisabled(
+                option,
+                advancedState
+              );
+
+              if (disabled && hideIfDisabled) {
+                return null;
+              }
+
               return (
                 <DeckyRow>
                   <DeckyToggle
@@ -105,7 +125,7 @@ const AdvancedOptions = () => {
                         updateAdvancedOption({ statePath, value: enabled })
                       );
                     }}
-                    disabled={calculateDisabled(option, advancedState)}
+                    disabled={disabled}
                   />
                 </DeckyRow>
               );
@@ -118,10 +138,19 @@ const AdvancedOptions = () => {
                 showName = true,
                 showDescription = true,
                 valueSuffix,
-              } = option;
+              } = option as RangedAdvancedOption;
               const [min, max] = range;
 
               if (typeof value !== "number") return null;
+
+              const { disabled, hideIfDisabled } = calculateDisabled(
+                option,
+                advancedState
+              );
+
+              if (disabled && hideIfDisabled) {
+                return null;
+              }
 
               return (
                 <DeckyRow>
@@ -139,7 +168,7 @@ const AdvancedOptions = () => {
                       );
                     }}
                     valueSuffix={valueSuffix}
-                    disabled={calculateDisabled(option, advancedState)}
+                    disabled={disabled}
                     highlightOnFocus
                     showValue={showValue}
                   />

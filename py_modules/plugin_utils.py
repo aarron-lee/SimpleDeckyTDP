@@ -22,14 +22,24 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
 
   profile = tdp_profile
 
-  # if user has manual CPU controls disabled, use default CPU profile instead
-  if not advanced_options.get_setting(
+  manual_cpu_management_enabled = advanced_options.get_setting(
     advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
-  ):
-    profile = power_utils.DEFAULT_CPU_PROFILE
+  )
+
+  automatic_epp_management_enabled = advanced_options.get_setting(
+    advanced_options.DefaultSettings.ENABLE_AUTOMATIC_EPP_MANAGEMENT.value
+  )
 
   set_cpu_boost_for_tdp_profile(profile)
   set_smt_for_tdp_profile(profile)
+
+  if not manual_cpu_management_enabled and not automatic_epp_management_enabled:
+    return
+
+  # if user has manual CPU controls disabled, use default CPU profile instead
+  if not manual_cpu_management_enabled:
+    profile = power_utils.DEFAULT_CPU_PROFILE
+
   if set_governor:
     sleep(0.3)
     set_power_governor_for_tdp_profile(profile)
