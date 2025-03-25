@@ -33,7 +33,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           make
           chmod +x ryzenadj
-          cp -f ryzenadj ../../../bin
+          cp -f ryzenadj ../../../bin/ryzenadj
           cd ../..
 
       - name: build plugin
