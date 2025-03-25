@@ -30,6 +30,7 @@ jobs:
       - name: build RyzenAdj
         run: |
           pacman -S base-devel pciutils cmake --noconfirm --needed --overwrite='*'
+          mkdir bin
           cd submodule/RyzenAdj
           mkdir build && cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
