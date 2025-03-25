@@ -48,7 +48,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 
 ## Compatibility
 
-Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite. Also usable on official SteamOS, but requires a manual ryzenadj installation.
+Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite. Also usable on official SteamSO + non-deck devices.
 
 Other distros not tested. Intel support is experimental and still a work in progress.
 
@@ -58,30 +58,9 @@ Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin 
 
 ### AMD
 
-### WARNING: This plugin assumes you already have ryzenadj installed and can be located in your PATH
+### Note: This plugin builds + ships ryzenadj for TDP control, but will prioritize any pre-installed ryzenadj binary that can be located in your PATH
 
-ChimeraOS, Bazzite Deck Edition, SteamFork, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
-
-The ROG Ally and Ally X do not need ryzenadj.
-
-To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
-
-e.g.
-
-```
-$ which ryzenadj
-/usr/bin/ryzenadj
-```
-
-If you do not have ryzenadj installed, you will need to get a working copy installed onto your machine.
-
-For Arch users, you'll need both ryzenadj and ryzen_smu-dkms-git.
-
-**For official SteamOS**, see [SteamOS Install instructions](#steamos-installation) for more info.
-
-The ROG Ally and Ally X do not need ryzenadj.
-
-See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
+ChimeraOS, Bazzite Deck Edition, SteamFork, and NobaraOS Deck edition, should already have ryzenadj pre-installed. The ROG Ally and Ally X do not need ryzenadj.
 
 ### Intel (experimental)
 
@@ -99,7 +78,7 @@ If the scaling is `intel_pstate`, then your device should be compatible
 
 ### Prerequisites
 
-Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device. The ROG Ally and Ally X do not need ryzenadj.
+Decky Loader must already be installed.
 
 ### Quick Install / Update
 
@@ -108,32 +87,6 @@ Run the following in terminal, then reboot. Note that this works both for instal
 ```
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 ```
-
-### SteamOS Installation
-
-For installing this on official SteamOS, you must install your own copy of ryzenadj. The ROG Ally and Ally X do not need ryzenadj.
-
-There's two options for to do so:
-
-1. Setup nix as a package manager, and then install ryzenadj via nix
-
-Install instructions for setting up nix can be found [here](https://rasmuskirk.com/articles/2024-12-23_why-nix-is-the-perfect-package-manager-for-your-steam-deck/) ([archive.org mirror](https://archive.is/TVoYY))
-
-After setting up nix, you should be able to install ryzenadj with the following:
-
-```
- nix profile install nixpkgs#ryzenadj
-```
-
-If you install ryzenadj through nix, you should find the ryzenadj binary at the following path: `/home/deck/.nix-profile/bin/ryzenadj`
-
-2. If you'd rather not use nix, you can alternatively manually compile a ryzenadj binary, you can place your `ryzenadj` binary at the follow location:
-
-`/home/deck/.local/bin/ryzenadj`
-
-Don't forget to make it executable by running `chmod +x /home/deck/.local/bin/ryzenadj`
-
-After ryzenadj is installed, you can install SDTDP via the regular install methods, and it should work.
 
 ### Manual Install
 
