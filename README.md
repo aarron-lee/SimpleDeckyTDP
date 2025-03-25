@@ -62,6 +62,8 @@ Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin 
 
 ChimeraOS, Bazzite Deck Edition, SteamFork, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
+The ROG Ally and Ally X do not need ryzenadj.
+
 To check this, you can run `which ryzenadj` in a terminal/console, which should print out a path to a ryzenadj binary.
 
 e.g.
@@ -76,6 +78,8 @@ If you do not have ryzenadj installed, you will need to get a working copy insta
 For Arch users, you'll need both ryzenadj and ryzen_smu-dkms-git.
 
 **For official SteamOS**, see [SteamOS Install instructions](#steamos-installation) for more info.
+
+The ROG Ally and Ally X do not need ryzenadj.
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
@@ -95,7 +99,7 @@ If the scaling is `intel_pstate`, then your device should be compatible
 
 ### Prerequisites
 
-Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device.
+Decky Loader must already be installed. If using ryzenadj for TDP control, test ryzenadj first to make sure it's working on your device. The ROG Ally and Ally X do not need ryzenadj.
 
 ### Quick Install / Update
 
@@ -107,7 +111,7 @@ curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
 ### SteamOS Installation
 
-For installing this on official SteamOS, you must install your own copy of ryzenadj.
+For installing this on official SteamOS, you must install your own copy of ryzenadj. The ROG Ally and Ally X do not need ryzenadj.
 
 There's two options for to do so:
 
