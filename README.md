@@ -83,7 +83,7 @@ The ROG Ally and Ally X do not need ryzenadj.
 
 See [here](#ryzenadj-troubleshooting) for more info on ryzenadj
 
-### Intel
+### Intel (experimental)
 
 Intel support was built for the `intel_pstate` scaling driver, and is still an experimental work in progress.
 
