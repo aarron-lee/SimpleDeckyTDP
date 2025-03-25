@@ -25,7 +25,7 @@ if not device_utils.is_intel():
   else:
     RYZENADJ_PATH = shutil.which('ryzenadj')
 
-if RYZENADJ_PATH == None:
+if RYZENADJ_PATH == None and os.path.exists(FALLBACK_RYZENADJ):
   # last resort fallback
   RYZENADJ_PATH = FALLBACK_RYZENADJ
 
