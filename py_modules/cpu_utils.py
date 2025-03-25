@@ -13,6 +13,7 @@ import device_utils
 
 LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
 NIX_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.nix-profile/bin/ryzenadj'
+FALLBACK_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/bin/ryzenadj'
 
 RYZENADJ_PATH = None
 if not device_utils.is_intel():
@@ -23,6 +24,10 @@ if not device_utils.is_intel():
     RYZENADJ_PATH = NIX_RYZENADJ
   else:
     RYZENADJ_PATH = shutil.which('ryzenadj')
+
+if RYZENADJ_PATH == None:
+  # last resort fallback
+  RYZENADJ_PATH = FALLBACK_RYZENADJ
 
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
