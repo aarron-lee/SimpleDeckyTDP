@@ -259,6 +259,20 @@ If you see an error, you may need to set `iomem=relaxed` as a boot parameter for
 
 Note that if you have SELinux + early lockdown enabled, ryzenadj will not work when trying to set TDP.
 
+For Bazzite users, you can enable `iomem=relaxed` via running the following:
+
+```bash
+# for Bazzite users
+rpm-ostree kargs --append-if-missing=iomem=relaxed
+```
+
+If you later want to remove the karg, run:
+
+```bash
+# for Bazzite users
+rpm-ostree kargs --delete-if-present="iomem=relaxed"
+```
+
 # Attribution
 
 Thanks to the following for making this plugin possible:
