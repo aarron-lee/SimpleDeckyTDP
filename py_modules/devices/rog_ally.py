@@ -9,16 +9,20 @@ import device_utils
 
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
-FAST_WMI_PATH ='/sys/devices/platform/asus-nb-wmi/ppt_fppt'
-SLOW_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
+FAST_WMI_PATH  = '/sys/devices/platform/asus-nb-wmi/ppt_fppt'
+SLOW_WMI_PATH  = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
 STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
 
-ASUS_ARMORY_FAST_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_fppt/current_value"
-ASUS_ARMORY_SLOW_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl2_sppt/current_value"
-ASUS_ARMORY_STAPM_WMI_PATH = "cat /sys/class/firmware-attributes/asus-armoury/attributes/ppt_pl1_spl/current_value"
+ASUS_ARMORY_WMI_BASE = "/sys/class/firmware-attributes/asus-armoury/attributes"
+
+ASUS_ARMORY_FAST_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_fppt/current_value"
+ASUS_ARMORY_SLOW_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl2_sppt/current_value"
+ASUS_ARMORY_STAPM_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl1_spl/current_value"
+
+UPDATED_ASUS_ARMORY_FAST_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl3_fppt/current_value"
 
 LEGACY_MCU_POWERSAVE_PATH = "/sys/devices/platform/asus-nb-wmi/mcu_powersave"
-ASUS_ARMORY_MCU_POWERSAVE_PATH = "/sys/class/firmware-attributes/asus-armoury/attributes/mcu_powersave"
+ASUS_ARMORY_MCU_POWERSAVE_PATH = f"{ASUS_ARMORY_WMI_BASE}/mcu_powersave"
 
 def set_mcu_powersave(enabled):
   try:
@@ -34,23 +38,30 @@ def set_mcu_powersave(enabled):
     decky_plugin.logger.error(f"{__name__} mcu_powersave error {e}")
 
 def supports_bios_wmi_tdp():
-  tdp_methods = {"ppt_fppt", "ppt_pl2_sppt", "ppt_pl1_spl"}
+  tdp_methods = {"ppt_fppt", 'ppt_pl3_fppt', "ppt_pl2_sppt", "ppt_pl1_spl"}
 
   settings = bios_settings.get_bios_settings()
   filtered_data = [item for item in settings.get("BiosSettings") if item.get("Name") in tdp_methods]
 
   if len(filtered_data) == 3:
-    return True
+    return list(map(lambda x: x.get('Name'), filtered_data))
 
-  return False
+  return None
 
 def supports_wmi_tdp():
-  if supports_bios_wmi_tdp():
+  if bool(supports_bios_wmi_tdp()):
     return True
 
   if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
     return True
-  elif os.path.exists(ASUS_ARMORY_FAST_WMI_PATH) and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH) and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH):
+  elif (
+    (
+      os.path.exists(ASUS_ARMORY_FAST_WMI_PATH)
+      or os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
+    )
+    and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH)
+    and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
+  ):
     return True
   return False
 
@@ -73,21 +84,29 @@ def set_platform_profile(tdp):
 
 def set_tdp(tdp):
   try:
-    if supports_bios_wmi_tdp():
-      tdp_values = {
-        'ppt_fppt': tdp + 2,
-        'ppt_pl2_sppt': tdp,
-        'ppt_pl1_spl': tdp
-      }
-      for (wmi_method, target_tdp) in tdp_values.items():
-        cmd = f'fwupdmgr set-bios-setting {wmi_method} {target_tdp}'
+    wmi_methods = supports_bios_wmi_tdp()
+    if bool(wmi_methods):
+      for wmi_method in wmi_methods:
+        cmd = f'fwupdmgr set-bios-setting {wmi_method} {tdp}'
         subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sleep(0.1)
+    elif (
+      (
+        os.path.exists(ASUS_ARMORY_FAST_WMI_PATH)
+        or os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
+      )
+      and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH)
+      and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
+    ):
+      # fast limit
+      fast_limit_path = ASUS_ARMORY_FAST_WMI_PATH
+      if (
+        os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
+      ):
+        fast_limit_path = UPDATED_ASUS_ARMORY_FAST_WMI_PATH
 
-    elif os.path.exists(ASUS_ARMORY_FAST_WMI_PATH) and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH) and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH):
-        # fast limit
-      with open(ASUS_ARMORY_FAST_WMI_PATH, 'w') as file:
-        file.write(f'{tdp+2}')
+      with open(fast_limit_path, 'w') as file:
+        file.write(f'{tdp}')
       sleep(0.1)
 
       # slow limit
