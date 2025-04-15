@@ -9,6 +9,8 @@ LENOVO_WMI_FAST_PATH = f"{LENOVO_WMI_PATH}/ppt_pl3_fppt/current_value"
 LENOVO_WMI_SLOW_PATH = f"{LENOVO_WMI_PATH}/ppt_pl2_sppt/current_value"
 LENOVO_WMI_STAPM_PATH = f"{LENOVO_WMI_PATH}/ppt_pl1_spl/current_value"
 
+# credit: https://github.com/mengmeet/PowerControl/blob/main/py_modules/devices/lenovo/lenovo_device.py
+
 def set_tdp(tdp):
     set_custom_platform_profile()
     if (
