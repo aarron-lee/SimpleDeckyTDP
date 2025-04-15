@@ -86,6 +86,7 @@ def set_tdp(tdp):
   try:
     wmi_methods = supports_bios_wmi_tdp()
     if bool(wmi_methods):
+      decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via fwupdmgr WMI")
       for wmi_method in wmi_methods:
         cmd = f'fwupdmgr set-bios-setting {wmi_method} {tdp}'
         subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -98,6 +99,8 @@ def set_tdp(tdp):
       and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH)
       and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
     ):
+      decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Asus Armoury WMI")
+
       # fast limit
       fast_limit_path = ASUS_ARMORY_FAST_WMI_PATH
       if (
@@ -120,6 +123,7 @@ def set_tdp(tdp):
       sleep(0.1)
 
     else:
+      decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Legacy WMI")
       # fast limit
       with open(FAST_WMI_PATH, 'w') as file:
         file.write(f'{tdp+2}')
@@ -135,7 +139,7 @@ def set_tdp(tdp):
         file.write(f'{tdp}')
       sleep(0.1)
   except Exception as e:
-    decky_plugin.logger.error(f"{__name__} asus wmi tdp error {e}")
+    decky_plugin.logger.error(f"{__name__} asus wmi tdp {tdp} error {e}")
 
 def execute_bash_command(command, path):
   cmd = f"echo '{command}' | tee {path}"

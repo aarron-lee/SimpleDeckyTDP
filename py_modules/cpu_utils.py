@@ -8,7 +8,7 @@ import file_timeout
 import advanced_options
 from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
-from devices import legion_go, rog_ally
+from devices import legion_go, rog_ally, wmi_tdp
 import device_utils
 
 LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
@@ -96,9 +96,12 @@ def set_tdp(tdp: int):
 def set_amd_tdp(tdp: int):
   try:
     with file_timeout.time_limit(4):
-      if device_utils.is_legion_go() and advanced_options.get_setting(
+      if wmi_tdp.supports_wmi_tdp():
+        return wmi_tdp.set_tdp(tdp)
+      elif device_utils.is_legion_go() and advanced_options.get_setting(
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
+        # legacy acpi_call tdp for legion go
         return legion_go.set_tdp(tdp)
       elif device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):

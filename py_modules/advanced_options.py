@@ -29,8 +29,8 @@ class DefaultSettings(Enum):
 
 class RogAllySettings(Enum):
   USE_PLATFORM_PROFILE = 'platformProfile'
-  USE_WMI = 'useWmi'
   USE_EXTREME_POWERSAVE = 'useExtremePowersave'
+  USE_WMI = 'useWmi'
 
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
