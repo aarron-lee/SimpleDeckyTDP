@@ -1,6 +1,17 @@
 import { callable, call } from "@decky/api";
 import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
 
+export enum Devices {
+  LEGION_GO = "83E1",
+  ROG_ALLY = "ROG Ally RC71",
+  ROG_ALLY_X = "ROG Ally X RC72",
+  MINISFORUM_V3 = "V3",
+  GPD_WM2 = "G1619-04",
+  GPD_WIN4 = "G1618-04",
+  ASUS_FLOW_Z13 = "ROG Flow Z13 GZ302EA_GZ302EA",
+  ASUS_FLOW_Z13_SHORT = "ROG Flow Z13 GZ302",
+}
+
 export enum AdvancedOptionsEnum {
   ENABLE_TDP_CONTROL = "enableTdpControl",
   ENABLE_GPU_CONTROL = "enableGpuControl",

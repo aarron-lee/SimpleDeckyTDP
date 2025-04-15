@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { getLatestVersionNum, otaUpdate } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
-import { selectScalingDriver } from "../../redux-modules/uiSlice";
+import {
+  selectDeviceName,
+  selectScalingDriver,
+} from "../../redux-modules/uiSlice";
 import {
   DeckyButton,
   DeckyField,
@@ -16,6 +19,7 @@ const OtaUpdates = () => {
 
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
+  const deviceName = useSelector(selectDeviceName);
 
   const isUpdated =
     installedVersionNum === latestVersionNum && Boolean(latestVersionNum);
@@ -55,6 +59,13 @@ const OtaUpdates = () => {
         <DeckyRow>
           <DeckyField label={"Scaling Driver"} bottomSeparator="none">
             {scalingDriver}
+          </DeckyField>
+        </DeckyRow>
+      )}
+      {Boolean(deviceName) && (
+        <DeckyRow>
+          <DeckyField label={"Device Name"} bottomSeparator="none">
+            {deviceName}
           </DeckyField>
         </DeckyRow>
       )}

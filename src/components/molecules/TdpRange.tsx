@@ -7,6 +7,22 @@ import { MIN_TDP_RANGE } from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
+import useDeviceName from "../../hooks/useDeviceName";
+import { Devices } from "../../backend/utils";
+
+const useMaxSupportedTdpValue = () => {
+  let maxTdp = 40;
+  const deviceName = useDeviceName();
+
+  if (
+    deviceName.includes(Devices.ASUS_FLOW_Z13) ||
+    deviceName.includes(Devices.ASUS_FLOW_Z13_SHORT)
+  ) {
+    maxTdp = 120;
+  }
+
+  return maxTdp;
+};
 
 const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
@@ -14,6 +30,7 @@ const TdpRange = () => {
 
   const steamPatchEnabled = useIsSteamPatchEnabled();
   const isIntel = useIsIntel();
+  const maxSupportedTdpValue = useMaxSupportedTdpValue();
 
   if (isIntel) {
     // intel provides TDP limit values, custom TDP range is unnecessary
@@ -35,7 +52,7 @@ const TdpRange = () => {
         </DeckyRow>
         <DeckyRow>
           <TdpRangeSlider
-            tdpRange={[15, 40]}
+            tdpRange={[15, maxSupportedTdpValue]}
             label="Max TDP"
             value={maxTdp}
             onChange={setMaxTdp}

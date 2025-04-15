@@ -10,6 +10,7 @@ class Devices(Enum):
   MINISFORUM_V3 = "V3"
   GPD_WM2 = "G1619-04"
   GPD_WIN4 = "G1618-04"
+  ASUS_FLOW_Z13 = "ROG Flow Z13 GZ302EA_GZ302EA"
 
 class CpuVendors(Enum):
   INTEL = "GenuineIntel"

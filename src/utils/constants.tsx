@@ -25,6 +25,7 @@ export type PowerControlInfo = {
   supportsCpuBoost: boolean;
   supportsSmt: boolean;
   pstateStatus?: string;
+  deviceName?: string;
 };
 
 export type EppOption =

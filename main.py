@@ -28,7 +28,8 @@ class Plugin:
       "eppOptions": [],
       "powerGovernorOptions": [],
       "scalingDriver": '',
-      'supportsCpuBoost': False
+      'supportsCpuBoost': False,
+      'deviceName': ''
     }
     try:
       with file_timeout.time_limit(5):
@@ -38,6 +39,7 @@ class Plugin:
           cpu_utils.set_pstate_active()
           response['pstateStatus'] = 'active'
 
+        response['deviceName'] = device_utils.get_device_name()
         response['supportsSmt'] = cpu_utils.supports_smt()
         response['scalingDriver'] = cpu_utils.get_scaling_driver()
         response['supportsCpuBoost'] = cpu_utils.supports_cpu_boost()
