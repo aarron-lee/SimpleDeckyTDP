@@ -225,13 +225,13 @@ def get_default_options():
     options.append(enable_ryzenadj_undervolt)
 
     ryzenadj_undervolt_slider = {
-      'name': '(Experimental) Ryzenadj undervolt',
+      'name': 'Ryzenadj undervolt',
       'type': AdvancedOptionsType.NUMBER_RANGE.value,
       'range': [0, 30],
       'defaultValue': 0,
       'step': 1,
       'valueSuffix': '',
-      'description': '(Warning!, use this carefully.) value for the ryzenadj --set-coall flag',
+      'description': 'Warning, use carefully. Value for the ryzenadj --set-coall flag',
       'currentValue': get_number_value(DefaultSettings.RYZENADJ_UNDERVOLT, 0),
       'statePath': DefaultSettings.RYZENADJ_UNDERVOLT.value,
       'disabled': {
