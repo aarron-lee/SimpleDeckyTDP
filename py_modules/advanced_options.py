@@ -217,7 +217,8 @@ def get_default_options():
       'currentValue': get_value(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT, False),
       'statePath': DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value,
       'disabled': {
-        'ifFalsy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value]
+        'ifTruthy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value],
+        'hideIfDisabled': True
       }
     }
 
@@ -234,7 +235,8 @@ def get_default_options():
       'currentValue': get_number_value(DefaultSettings.RYZENADJ_UNDERVOLT, 0),
       'statePath': DefaultSettings.RYZENADJ_UNDERVOLT.value,
       'disabled': {
-        'ifFalsy': [DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value]
+        'ifFalsy': [DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value],
+        'hideIfDisabled': True
       }
     }
 
