@@ -35,7 +35,8 @@ def get_ryzenadj_path():
   return RYZENADJ_PATH
 
 def set_ryzenadj_undervolt(new_undervolt_value):
-  cmd = f'{get_ryzenadj_path()} --set-coall {new_undervolt_value}'
+  baseline = 0x100000
+  cmd = f'{get_ryzenadj_path()} --set-coall={hex(baseline-new_undervolt_value)}'
   result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   sleep(0.1)
   return result
