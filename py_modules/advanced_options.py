@@ -337,5 +337,4 @@ def handle_advanced_option_change(new_values):
       new_values.get(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value, False)
       and new_undervolt_value >= 0
     ):
-    # set ryzenadj --set-coall
-    ryzenadj.set_ryzenadj_undervolt(new_undervolt_value)
+    ryzenadj._set_ryzenadj_undervolt(new_undervolt_value)

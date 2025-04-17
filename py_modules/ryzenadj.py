@@ -34,9 +34,20 @@ def get_ryzenadj_path():
 
   return RYZENADJ_PATH
 
-def set_ryzenadj_undervolt(new_undervolt_value):
+def set_undervolt():
+  # DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT
+  undervolt_value = int(get_advanced_option_value('ryzenadjUndervolt') or 0)
+  undervolt_enabled = bool(get_advanced_option_value('enableRyzenadjUndervolt'))
+  if (
+    undervolt_enabled
+    and undervolt_value >= 0
+  ):
+    return _set_ryzenadj_undervolt(undervolt_value)
+
+def _set_ryzenadj_undervolt(new_undervolt_value):
   baseline = 0x100000
   cmd = f'{get_ryzenadj_path()} --set-coall={hex(baseline-new_undervolt_value)}'
+  decky_plugin.logger.info(f'ryzenadj undervolt with command: {cmd}')
   result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   sleep(0.1)
   return result
