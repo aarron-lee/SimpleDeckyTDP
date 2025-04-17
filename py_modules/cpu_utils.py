@@ -10,24 +10,9 @@ from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
 from devices import legion_go, rog_ally, wmi_tdp
 import device_utils
+import ryzenadj
 
-LOCAL_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.local/bin/ryzenadj'
-NIX_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/.nix-profile/bin/ryzenadj'
-FALLBACK_RYZENADJ = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/bin/ryzenadj'
-
-RYZENADJ_PATH = None
-if not device_utils.is_intel():
-  # allow for custom override of ryzenadj for SteamOS
-  if os.path.exists(LOCAL_RYZENADJ):
-    RYZENADJ_PATH = LOCAL_RYZENADJ
-  elif os.path.exists(NIX_RYZENADJ):
-    RYZENADJ_PATH = NIX_RYZENADJ
-  else:
-    RYZENADJ_PATH = shutil.which('ryzenadj')
-
-if RYZENADJ_PATH == None and os.path.exists(FALLBACK_RYZENADJ):
-  # last resort fallback
-  RYZENADJ_PATH = FALLBACK_RYZENADJ
+RYZENADJ_PATH = ryzenadj.get_ryzenadj_path()
 
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
@@ -109,29 +94,8 @@ def set_amd_tdp(tdp: int):
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
           return rog_ally.set_tdp(tdp)
 
-    tdp = tdp*1000
-
-    if RYZENADJ_PATH:
-      commands = [
-        RYZENADJ_PATH,
-        '--stapm-limit', f"{tdp}",
-        '--fast-limit', f"{tdp}",
-        '--slow-limit', f"{tdp}",
-        '--tctl-temp', f"95",
-        '--apu-skin-temp', f"95",
-        '--dgpu-skin-temp', f"95"
-      ]
-
-      if advanced_options.get_setting(
-        advanced_options.DefaultSettings.ENABLE_APU_SLOW_LIMIT.value
-      ):
-        commands.append('--apu-slow-limit')
-        commands.append(f"{tdp}")
-
-      decky_plugin.logger.info(f'setting TDP via ryzenadj with args {commands}')
-
-      results = subprocess.call(commands)
-      return results
+    # use ryzenadj by default
+    return ryzenadj.set_tdp(tdp)
   except Exception as e:
     decky_plugin.logger.error(e)
 
