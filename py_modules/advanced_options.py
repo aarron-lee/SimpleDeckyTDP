@@ -6,6 +6,7 @@ from plugin_settings import get_nested_setting
 from enum import Enum
 from devices import rog_ally
 import device_utils
+import ryzenadj
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
@@ -18,6 +19,8 @@ class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
   ENABLE_GPU_CONTROL = 'enableGpuControl'
   ENABLE_APU_SLOW_LIMIT = 'enableApuSlowLimit'
+  ENABLE_RYZENADJ_UNDERVOLT = 'enableRyzenadjUndervolt'
+  RYZENADJ_UNDERVOLT = 'ryzenadjUndervolt'
   ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
@@ -206,6 +209,40 @@ def get_default_options():
 
     options.append(enable_apu_slow_limit)
 
+    if bool(ryzenadj._set_ryzenadj_undervolt(0)):
+      enable_ryzenadj_undervolt = {
+        'name': '(Experimental) Enable undervolting via ryzenadj',
+        'type': AdvancedOptionsType.BOOLEAN.value,
+        'defaultValue': False,
+        'description': 'Enables the --set-coall value for ryzenadj',
+        'currentValue': get_value(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT, False),
+        'statePath': DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value,
+        'disabled': {
+          'ifTruthy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value],
+          'hideIfDisabled': True
+        }
+      }
+
+      options.append(enable_ryzenadj_undervolt)
+
+      ryzenadj_undervolt_slider = {
+        'name': 'Ryzenadj undervolt',
+        'type': AdvancedOptionsType.NUMBER_RANGE.value,
+        'range': [0, 30],
+        'defaultValue': 0,
+        'step': 1,
+        'valueSuffix': '',
+        'description': 'Warning, use carefully. Value for the ryzenadj --set-coall flag',
+        'currentValue': get_number_value(DefaultSettings.RYZENADJ_UNDERVOLT, 0),
+        'statePath': DefaultSettings.RYZENADJ_UNDERVOLT.value,
+        'disabled': {
+          'ifFalsy': [DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value],
+          'hideIfDisabled': True
+        }
+      }
+
+      options.append(ryzenadj_undervolt_slider)
+
     max_tdp_on_game_profile_change = {
       'name': 'Temp Max TDP Profile',
       'type': AdvancedOptionsType.NUMBER_RANGE.value,
@@ -295,3 +332,10 @@ def handle_advanced_option_change(new_values):
 
       if isinstance(powersave_enabled, bool):
         rog_ally.set_mcu_powersave(powersave_enabled)
+
+  new_undervolt_value = new_values.get(DefaultSettings.RYZENADJ_UNDERVOLT.value, 0)
+  if (
+      new_values.get(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value, False)
+      and new_undervolt_value >= 0
+    ):
+    ryzenadj._set_ryzenadj_undervolt(new_undervolt_value)
