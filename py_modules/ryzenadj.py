@@ -48,9 +48,13 @@ def _set_ryzenadj_undervolt(new_undervolt_value):
   baseline = 0x100000
   cmd = f'{get_ryzenadj_path()} --set-coall={hex(baseline-new_undervolt_value)}'
   decky_plugin.logger.info(f'ryzenadj undervolt with command: {cmd}')
-  result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  sleep(0.1)
-  return result
+  try:
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sleep(0.1)
+    return result
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error {e}')
+    return 0
 
 def set_tdp(tdp: int):
   tdp = tdp * 1000
