@@ -204,7 +204,11 @@ def get_default_options():
       'defaultValue': False,
       'description': 'Enables the --apu-slow-limit value for ryzenadj',
       'currentValue': get_value(DefaultSettings.ENABLE_APU_SLOW_LIMIT, False),
-      'statePath': DefaultSettings.ENABLE_APU_SLOW_LIMIT.value
+      'statePath': DefaultSettings.ENABLE_APU_SLOW_LIMIT.value,
+      'disabled': {
+          'ifTruthy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value],
+          'hideIfDisabled': True
+      }
     }
 
     options.append(enable_apu_slow_limit)
