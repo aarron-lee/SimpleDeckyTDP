@@ -12,8 +12,6 @@ from devices import legion_go, rog_ally, wmi_tdp
 import device_utils
 import ryzenadj
 
-RYZENADJ_PATH = ryzenadj.get_ryzenadj_path()
-
 AMD_PSTATE_PATH="/sys/devices/system/cpu/amd_pstate/status"
 AMD_LEGACY_CPU_BOOST_PATH = "/sys/devices/system/cpu/cpufreq/boost"
 
