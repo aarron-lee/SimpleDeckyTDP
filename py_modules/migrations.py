@@ -1,6 +1,19 @@
 import decky_plugin
 import power_utils
 from plugin_settings import merge_tdp_profiles, get_saved_settings, set_setting
+import device_utils
+import ryzenadj
+
+def check_ryzenadj_coall_support():
+  if not device_utils.is_intel():
+    try:
+      settings = get_saved_settings()
+      if settings.get('supportsRyzenadjCoall', None) == None:
+        undervolt_supported = bool(ryzenadj._set_ryzenadj_undervolt(0))
+
+        set_setting('supportsRyzenadjCoall', undervolt_supported)
+    except Exception as e:
+      decky_plugin.logger.error(f"{__name__} error while checking undervolt support {e}")
 
 def migrate_smt():
   try:
@@ -16,7 +29,7 @@ def migrate_smt():
 
       if not isinstance(smt, bool):
         profile['smt'] = True
-    
+
     merge_tdp_profiles(tdp_profiles)
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} error while setting default smt values {e}")

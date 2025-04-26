@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import decky_plugin
-from plugin_settings import get_nested_setting
+from plugin_settings import get_nested_setting, get_saved_settings
 from enum import Enum
 from devices import rog_ally
 import device_utils
@@ -213,39 +213,43 @@ def get_default_options():
 
     options.append(enable_apu_slow_limit)
 
-    if bool(ryzenadj._set_ryzenadj_undervolt(0)):
-      enable_ryzenadj_undervolt = {
-        'name': '(Experimental) Enable undervolting via ryzenadj',
-        'type': AdvancedOptionsType.BOOLEAN.value,
-        'defaultValue': False,
-        'description': 'Enables the --set-coall value for ryzenadj',
-        'currentValue': get_value(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT, False),
-        'statePath': DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value,
-        'disabled': {
-          'ifTruthy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value],
-          'hideIfDisabled': True
+    try:
+      settings = get_saved_settings()
+      if settings.get('supportsRyzenadjCoall', False):
+        enable_ryzenadj_undervolt = {
+          'name': '(Experimental) Enable undervolting via ryzenadj',
+          'type': AdvancedOptionsType.BOOLEAN.value,
+          'defaultValue': False,
+          'description': 'Enables the --set-coall value for ryzenadj',
+          'currentValue': get_value(DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT, False),
+          'statePath': DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value,
+          'disabled': {
+            'ifTruthy': [RogAllySettings.USE_WMI.value, LegionGoSettings.CUSTOM_TDP_MODE.value],
+            'hideIfDisabled': True
+          }
         }
-      }
 
-      options.append(enable_ryzenadj_undervolt)
+        options.append(enable_ryzenadj_undervolt)
 
-      ryzenadj_undervolt_slider = {
-        'name': 'Ryzenadj undervolt',
-        'type': AdvancedOptionsType.NUMBER_RANGE.value,
-        'range': [0, 30],
-        'defaultValue': 0,
-        'step': 1,
-        'valueSuffix': '',
-        'description': 'Warning, use carefully. Value for the ryzenadj --set-coall flag',
-        'currentValue': get_number_value(DefaultSettings.RYZENADJ_UNDERVOLT, 0),
-        'statePath': DefaultSettings.RYZENADJ_UNDERVOLT.value,
-        'disabled': {
-          'ifFalsy': [DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value],
-          'hideIfDisabled': True
+        ryzenadj_undervolt_slider = {
+          'name': 'Ryzenadj undervolt',
+          'type': AdvancedOptionsType.NUMBER_RANGE.value,
+          'range': [0, 30],
+          'defaultValue': 0,
+          'step': 1,
+          'valueSuffix': '',
+          'description': 'Warning, use carefully. Value for the ryzenadj --set-coall flag',
+          'currentValue': get_number_value(DefaultSettings.RYZENADJ_UNDERVOLT, 0),
+          'statePath': DefaultSettings.RYZENADJ_UNDERVOLT.value,
+          'disabled': {
+            'ifFalsy': [DefaultSettings.ENABLE_RYZENADJ_UNDERVOLT.value],
+            'hideIfDisabled': True
+          }
         }
-      }
 
-      options.append(ryzenadj_undervolt_slider)
+        options.append(ryzenadj_undervolt_slider)
+    except Exception as e:
+      decky_plugin.logger.error(f"{__name__} error while checking for ryzenadj undervolt {e}")
 
     max_tdp_on_game_profile_change = {
       'name': 'Temp Max TDP Profile',

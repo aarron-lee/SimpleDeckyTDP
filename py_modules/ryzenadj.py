@@ -79,6 +79,8 @@ def set_tdp(tdp: int):
       commands.append('--apu-slow-limit')
       commands.append(f"{tdp}")
 
+    set_undervolt()
+
     decky_plugin.logger.info(f'setting TDP via ryzenadj with args {commands}')
 
     results = subprocess.call(commands)

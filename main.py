@@ -243,4 +243,5 @@ class Plugin:
 
     # migrations.migrate_smt()
     # migrations.disable_steam_patch()
-    migrations.migrate_gpu_mode()
+    # migrations.migrate_gpu_mode()
+    migrations.check_ryzenadj_coall_support()
