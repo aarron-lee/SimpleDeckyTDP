@@ -10,10 +10,17 @@ body:
           required: true
   - type: checkboxes
     attributes:
-      label: Have you updated to the lateset version of the plugin?
+      label: Have you updated to the latest version of the plugin?
       description: You can update the plugin via the Update/Reinstall button
       options:
         - label: I am on the latest version of the plugin
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Did you already try resetting your plugin settings?
+      description: You can delete plugin settings via `rm $HOME/homebrew/settings/SimpleDeckyTDP/settings.json`, and then rebooting your device
+      options:
+        - label: I can confirm that the issue is still present after fully deleting plugin settings
           required: true
   - type: textarea
     attributes:
