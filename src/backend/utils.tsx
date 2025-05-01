@@ -54,6 +54,7 @@ export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.RYZENADJ_UNDERVOLT,
   AdvancedOptionsEnum.AC_POWER_PROFILES,
   AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME,
+  AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS,
   AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING,
   AdvancedOptionsEnum.ENABLE_AUTOMATIC_CPU_MANAGEMENT,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
