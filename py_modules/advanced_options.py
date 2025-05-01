@@ -29,6 +29,7 @@ class DefaultSettings(Enum):
   MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange'
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
+  FORCE_DISABLE_SUSPEND_ACTIONS = 'forceDisableSuspendActions'
 
 class RogAllySettings(Enum):
   USE_PLATFORM_PROFILE = 'platformProfile'
@@ -180,6 +181,20 @@ def get_default_options():
   }
 
   options.append(force_disable_tdp_on_resume)
+
+  force_disable_suspend_actions = {
+    'name': 'Force Disable Any Suspend actions',
+    'type': AdvancedOptionsType.BOOLEAN.value,
+    'defaultValue': False,
+    'description': 'Disable any suspend-related changes, etc, when you suspend your device',
+    'currentValue': get_value(DefaultSettings.FORCE_DISABLE_SUSPEND_ACTIONS, False),
+    'statePath': DefaultSettings.FORCE_DISABLE_SUSPEND_ACTIONS.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+    }
+  }
+
+  options.append(force_disable_suspend_actions)
 
   max_tdp_on_resume = {
     'name': 'Temporarily Set Max TDP on Resume',

@@ -26,6 +26,7 @@ export enum AdvancedOptionsEnum {
   MAX_TDP_ON_GAME_PROFILE_CHANGE = "maxTdpOnGameProfileChange",
   AC_POWER_PROFILES = "acPowerProfiles",
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
+  FORCE_DISABLE_SUSPEND_ACTIONS = "forceDisableSuspendActions",
   USE_PLATFORM_PROFILE = "platformProfile",
 }
 
@@ -137,21 +138,21 @@ export const saveTdpProfiles = ({
 };
 
 export const getLatestVersionNum = callable(
-  ServerAPIMethods.GET_LATEST_VERSION_NUM,
+  ServerAPIMethods.GET_LATEST_VERSION_NUM
 );
 
 export const otaUpdate = callable(ServerAPIMethods.OTA_UPDATE);
 
 export const getPowerControlInfo = callable(
-  ServerAPIMethods.GET_POWER_CONTROL_INFO,
+  ServerAPIMethods.GET_POWER_CONTROL_INFO
 );
 
 export const getSupportsCustomAcPower = callable(
-  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT,
+  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT
 );
 
 export const getCurrentAcPowerStatus = callable(
-  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS,
+  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS
 );
 
 export const setPowerGovernor = ({

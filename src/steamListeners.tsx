@@ -78,7 +78,13 @@ function handleTempMaxTdpProfile(compareId: string, advanced: any) {
 
 export const suspendEventListener = () => {
   const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {
-    store.dispatch(suspendAction());
+    const state = store.getState();
+
+    const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+    if (!advancedState[AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS]) {
+      store.dispatch(suspendAction());
+    }
   });
   return unregister;
 };
