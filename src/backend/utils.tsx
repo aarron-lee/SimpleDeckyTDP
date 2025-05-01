@@ -45,10 +45,12 @@ export enum LegionGoAdvancedOptions {
 export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_TDP_CONTROL,
   AdvancedOptionsEnum.ENABLE_GPU_CONTROL,
+  AdvancedOptionsEnum.ENABLE_APU_SLOW_LIMIT,
   AdvancedOptionsEnum.ENABLE_POWER_CONTROL,
   AdvancedOptionsEnum.AC_POWER_PROFILES,
   AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME,
   AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING,
+  AdvancedOptionsEnum.ENABLE_AUTOMATIC_CPU_MANAGEMENT,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
   RogAllyAdvancedOptions.USE_WMI,
@@ -131,21 +133,21 @@ export const saveTdpProfiles = ({
 };
 
 export const getLatestVersionNum = callable(
-  ServerAPIMethods.GET_LATEST_VERSION_NUM
+  ServerAPIMethods.GET_LATEST_VERSION_NUM,
 );
 
 export const otaUpdate = callable(ServerAPIMethods.OTA_UPDATE);
 
 export const getPowerControlInfo = callable(
-  ServerAPIMethods.GET_POWER_CONTROL_INFO
+  ServerAPIMethods.GET_POWER_CONTROL_INFO,
 );
 
 export const getSupportsCustomAcPower = callable(
-  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT
+  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT,
 );
 
 export const getCurrentAcPowerStatus = callable(
-  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS
+  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS,
 );
 
 export const setPowerGovernor = ({
