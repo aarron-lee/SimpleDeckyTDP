@@ -154,7 +154,9 @@ class Plugin:
       plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
 
   async def on_suspend(self):
+    decky_plugin.logger.info(f'main#on_suspend started')
     cpu_utils.set_smt(True)
+    decky_plugin.logger.info(f'main#on_suspend complete')
 
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {
