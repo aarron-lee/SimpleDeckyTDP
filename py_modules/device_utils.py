@@ -84,3 +84,10 @@ def is_legion_go():
   if device_name == Devices.LEGION_GO.value:
     return True
   return False
+
+def is_steam_deck():
+  device_name = get_device_name()
+
+  if Devices.STEAM_DECK_LCD.value in device_name or Devices.STEAM_DECK_OLED.value in device_name:
+    return True
+  return False
