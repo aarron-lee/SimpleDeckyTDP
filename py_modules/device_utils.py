@@ -11,6 +11,8 @@ class Devices(Enum):
   GPD_WM2 = "G1619-04"
   GPD_WIN4 = "G1618-04"
   ASUS_FLOW_Z13 = "ROG Flow Z13 GZ302EA_GZ302EA"
+  STEAM_DECK_LCD = "Jupiter"
+  STEAM_DECK_OLED = "Galileo"
 
 class CpuVendors(Enum):
   INTEL = "GenuineIntel"
