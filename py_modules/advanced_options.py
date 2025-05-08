@@ -316,7 +316,7 @@ def steam_deck_advanced_options(options):
   options.append({
     'name': 'Enable TDP slider min/max adjustment',
     'type': AdvancedOptionsType.BOOLEAN.value,
-    'description': 'Warning, this should only be used with TDP polling',
+    'description': 'Warning, this probably needs a custom bios',
     'defaultValue': False,
     'currentValue': get_value(SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS, False),
     'statePath': SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS.value,
