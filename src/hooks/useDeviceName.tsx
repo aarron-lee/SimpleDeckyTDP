@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectDeviceName } from "../redux-modules/uiSlice";
 import { Devices } from "../backend/utils";
 
-const useDeviceName = () => {
+export const useDeviceName = () => {
   return useSelector(selectDeviceName);
 };
 

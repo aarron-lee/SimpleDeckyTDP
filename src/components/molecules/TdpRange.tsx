@@ -7,12 +7,13 @@ import { MIN_TDP_RANGE } from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
-import { useIsSteamDeck } from "../../hooks/useDeviceName";
+import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
 import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 
 const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
+
   const deviceName = useDeviceName();
 
   if (
