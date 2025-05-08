@@ -24,6 +24,8 @@ INTEL_TDP_PATH = None
 INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
 INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
 
+STEAM_DECK_TDP_PATH="/sys/class/hwmon/hwmon*/power*_cap"
+
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
   INTEL_PSTATE = "intel_pstate"
@@ -58,6 +60,9 @@ def set_tdp(tdp: int):
   if not advanced_options.tdp_control_enabled():
     return
 
+  if device_utils.is_steam_deck():
+    return execute_tdp_command(tdp, STEAM_DECK_TDP_PATH)
+
   if device_utils.is_intel():
     tdp_path = intel_tdp_path()
 
@@ -66,13 +71,7 @@ def set_tdp(tdp: int):
       decky_plugin.logger.info("No Known Path for to set TDP on this Intel chipset")
       return
 
-    tdp_microwatts = tdp * 1000000
-    try:
-      cmd = f"echo '{tdp_microwatts}' | sudo tee {tdp_path}"
-      result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-      return result
-    except Exception as e:
-      decky_plugin.logger.error(f'{__name__} Error: set_tdp intel {e}')
+    return execute_tdp_command(tdp, tdp_path)
   else:
     return set_amd_tdp(tdp)
 
@@ -328,3 +327,12 @@ def get_intel_tdp_limits():
 
   # default to reasonably safe value for TDP limits
   return [min_tdp, 15]
+
+def execute_tdp_command(tdp, tdp_path):
+  tdp_microwatts = tdp * 1000000
+  try:
+    cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return result
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} Error: execute_tdp_command {e}')
