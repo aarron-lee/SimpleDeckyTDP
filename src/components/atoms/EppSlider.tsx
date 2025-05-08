@@ -4,6 +4,7 @@ import {
   updateEpp,
 } from "../../redux-modules/settingsSlice";
 import {
+  DEFAULT_POWER_CONTROLS,
   EppOption,
   EppOptions,
   PowerControlInfo,
@@ -61,7 +62,9 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
     return dispatch(updateEpp({ epp: eppOption, scalingDriver }));
   };
 
-  let sliderValue = optionToIdx[epp || "power"];
+  const defaultEpp = DEFAULT_POWER_CONTROLS[scalingDriver]?.epp || "power";
+
+  let sliderValue = optionToIdx[epp || defaultEpp];
 
   if (
     powerGovernor === "performance" &&
