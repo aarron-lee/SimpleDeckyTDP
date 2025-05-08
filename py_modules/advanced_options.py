@@ -39,6 +39,9 @@ class RogAllySettings(Enum):
 class LegionGoSettings(Enum):
   CUSTOM_TDP_MODE = 'lenovoCustomTdpMode'
 
+class SteamDeckSettings(Enum):
+  DECK_CUSTOM_TDP_LIMITS = 'deckCustomTdpLimits'
+
 def modprobe_acpi_call():
   # legion go currently requires acpi_call for using WMI to set TDP
   # using WMI to set TDP is safer on the Legion Go, ryzenadj is dangerous on the LGO
@@ -304,9 +307,23 @@ def get_advanced_options():
     })
   if device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
     rog_ally_advanced_options(options)
-
+  if device_utils.is_steam_deck():
+    steam_deck_advanced_options(options)
 
   return options
+
+def steam_deck_advanced_options(options):
+    options.append({
+      'name': 'Enable TDP slider min/max adjustment',
+      'type': AdvancedOptionsType.BOOLEAN.value,
+      'description': 'Warning, this should only be used with a custom bios',
+      'defaultValue': False,
+      'currentValue': get_value(SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS, False),
+      'statePath': SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      }
+    })
 
 def rog_ally_advanced_options(options):
   if os.path.exists(PLATFORM_PROFILE_PATH):

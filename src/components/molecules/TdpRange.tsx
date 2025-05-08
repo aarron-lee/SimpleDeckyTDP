@@ -7,8 +7,9 @@ import { MIN_TDP_RANGE } from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
-import useDeviceName from "../../hooks/useDeviceName";
-import { Devices } from "../../backend/utils";
+import { useIsSteamDeck } from "../../hooks/useDeviceName";
+import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
+import { useAdvancedOption } from "../../hooks/useAdvanced";
 
 const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
@@ -29,11 +30,20 @@ const TdpRange = () => {
   const [maxTdp, setMaxTdp] = useMaxTdp();
 
   const steamPatchEnabled = useIsSteamPatchEnabled();
+  const isSteamDeck = useIsSteamDeck();
+  const tdpRangeSlidersEnabled = useAdvancedOption(
+    SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS
+  );
   const isIntel = useIsIntel();
   const maxSupportedTdpValue = useMaxSupportedTdpValue();
 
   if (isIntel) {
     // intel provides TDP limit values, custom TDP range is unnecessary
+    return null;
+  }
+
+  if (isSteamDeck && tdpRangeSlidersEnabled) {
+    // no tdp range slider for Deck
     return null;
   }
 

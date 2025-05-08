@@ -47,6 +47,10 @@ export enum LegionGoAdvancedOptions {
   CUSTOM_TDP_MODE = "lenovoCustomTdpMode",
 }
 
+export enum SteamDeckAdvancedOptions {
+  DECK_CUSTOM_TDP_LIMITS = "deckCustomTdpLimits",
+}
+
 export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_TDP_CONTROL,
   AdvancedOptionsEnum.ENABLE_GPU_CONTROL,
