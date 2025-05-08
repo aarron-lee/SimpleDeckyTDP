@@ -48,7 +48,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 
 ## Compatibility
 
-Tested on ChimeraOS, NobaraOS, SteamFork, and Bazzite. Also usable on official SteamSO + non-deck devices.
+Tested on SteamOS, ChimeraOS, NobaraOS, SteamFork, and Bazzite.
 
 Other distros not tested. Intel support is experimental and still a work in progress.
 
@@ -58,9 +58,9 @@ Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin 
 
 ### AMD
 
-### Note: This plugin builds + ships ryzenadj for TDP control, but will prioritize any pre-installed ryzenadj binary that can be located in your PATH
+This plugin builds + ships ryzenadj for TDP control, but will prioritize any pre-installed ryzenadj binary that can be located in your PATH. ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
-ChimeraOS, Bazzite Deck Edition, SteamFork, and NobaraOS Deck edition, should already have ryzenadj pre-installed. The ROG Ally and Ally X do not need ryzenadj.
+Certain devices, such as the Steam Deck, ROG Ally, and Ally X, do not need ryzenadj for TDP control.
 
 ### Intel (experimental)
 
@@ -143,7 +143,7 @@ sudo systemctl restart plugin_loader.service
 
 ### Desktop App
 
-[SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Desktop port of SimpleDeckyTDP
+(Experimental) [SimpleDeckyTDP-Desktop App](https://github.com/aarron-lee/SimpleDeckyTDP-Desktop) - Desktop port of SimpleDeckyTDP
 
 Intel support is still a work in progress for the Desktop app
 
@@ -205,7 +205,7 @@ The ROG ally has some known issues related to CPU Boost and SMT.
   - SDTDP ships a workaround for the SMT bug on the Ally and Ally X, where it will temporarily turn on SMT before suspend
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
 
-Extreme Power Save (aka MCU Powersave)
+#### Extreme Power Save (aka MCU Powersave)
 
 After enabling Extreme Powersave mode (aka MCU powersave), make sure you're on the latest MCU firmware (119 if original ROG Ally).
 
