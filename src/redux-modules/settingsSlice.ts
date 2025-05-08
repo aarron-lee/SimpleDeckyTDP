@@ -7,6 +7,7 @@ import {
   DEFAULT_START_TDP,
   EppOption,
   MIN_TDP_RANGE,
+  PowerControlsType,
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
@@ -48,12 +49,7 @@ export type TdpProfile = {
   maxGpuFrequency?: number;
   fixedGpuFrequency?: number;
   gpuMode: GpuModes;
-  powerControls: {
-    [key: string]: {
-      powerGovernor?: PowerGovernorOption;
-      epp?: EppOption;
-    };
-  };
+  powerControls: PowerControlsType;
 };
 
 export type TdpProfiles = {

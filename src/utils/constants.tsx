@@ -83,7 +83,11 @@ const addReverseMapping = (options: { [key: string]: string }) => {
 addReverseMapping(PowerGovernorOptions);
 addReverseMapping(EppOptions);
 
-export const DEFAULT_POWER_CONTROLS = {
+export type PowerControlsType = {
+  [key: string]: { epp?: EppOption; powerGovernor: PowerGovernorOption };
+};
+
+export const DEFAULT_POWER_CONTROLS: PowerControlsType = {
   [ScalingDrivers.INTEL_CPUFREQ]: {
     powerGovernor: PowerGovernorOptions.POWER_SAVE,
   },
