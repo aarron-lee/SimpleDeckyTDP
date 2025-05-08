@@ -21,8 +21,8 @@ const getOptions = (eppOptions: EppOption[]) => {
   let notchIdx = 0;
   eppOptions.forEach((option, idx) => {
     if (EppOptions[option]) {
-      idxToOption[idx] = option;
-      optionToIdx[option] = idx;
+      idxToOption[notchIdx] = option;
+      optionToIdx[option] = notchIdx;
 
       const label = EppOptions[option];
       notchLabels.push({
