@@ -181,7 +181,7 @@ def set_amd_gpu_frequency_range(new_min, new_max):
         execute_gpu_frequency_command(f"s 1 {new_max}")
         execute_gpu_frequency_command("c")
       except Exception as e:
-        decky_plugin.logger.error(f"{__name__} error while trying to write frequency range")
+        decky_plugin.logger.error(f"{__name__} error while trying to write frequency range {e} {new_min} {new_max}")
       # decky_plugin.logger.info(f'gpu freq range end')
 
       return True
