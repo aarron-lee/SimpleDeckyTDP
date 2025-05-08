@@ -28,6 +28,10 @@ def get_gpu_frequency_range():
       return GPU_FREQUENCY_RANGE
   else:
     try:
+      if device_utils.is_steam_deck():
+        # Steam Deck pp_od_clk_voltage is empty, so min/max values can't be automatically detected
+        return [200, 1600]
+
       freq_string = open(GPU_FREQUENCY_PATH,"r").read()
       od_sclk_matches = re.findall(r"OD_RANGE:\s*SCLK:\s*(\d+)Mhz\s*(\d+)Mhz", freq_string)
 
