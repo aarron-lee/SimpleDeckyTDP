@@ -19,7 +19,7 @@ const getOptions = (eppOptions: EppOption[]) => {
   const notchLabels: NotchLabel[] = [];
 
   let notchIdx = 0;
-  eppOptions.forEach((option, idx) => {
+  eppOptions.forEach((option) => {
     if (EppOptions[option]) {
       idxToOption[notchIdx] = option;
       optionToIdx[option] = notchIdx;
