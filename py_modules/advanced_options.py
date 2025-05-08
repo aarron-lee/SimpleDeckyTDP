@@ -321,7 +321,8 @@ def steam_deck_advanced_options(options):
     'currentValue': get_value(SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS, False),
     'statePath': SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS.value,
     'disabled': {
-      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value],
+      "hideIfDisabled": True
     }
   })
 
