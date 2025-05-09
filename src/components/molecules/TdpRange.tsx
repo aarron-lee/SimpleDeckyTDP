@@ -43,7 +43,7 @@ const TdpRange = () => {
     return null;
   }
 
-  if (isSteamDeck && tdpRangeSlidersEnabled) {
+  if (isSteamDeck && tdpRangeSlidersEnabled === false) {
     // no tdp range slider for Deck
     return null;
   }
