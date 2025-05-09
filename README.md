@@ -19,6 +19,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
   - [Custom Device Settings](#custom-device-settings)
   - [CPU Boost Controls](#are-there-cpu-boost-controls)
 - [Troubleshooting](#troubleshooting)
+  - [Steam Deck Troubleshooting](#steam-deck-troubleshooting)
   - [ROG Ally Troubleshooting](#rog-ally-troubleshooting)
   - [Ryzenadj Troubleshooting](#ryzenadj-troubleshooting)
 - [Attribution](#attribution)
@@ -197,6 +198,19 @@ Note that this will delete any of your saved TDP profiles, so you could optional
 
 The Steam GPU slider reportedly affects eGPUs, if you are using an eGPU you should disable Steam's GPU toggle.
 
+### Steam Deck troubleshooting
+
+Valve changed the scaling driver from `acpi-cpufreq` to `amd-pstate-epp` in SteamOS version 3.7.5.
+
+This change reportedly causes issues with EPP and CPU boost controls if you already had SDTDP installed. The solution is to fully reset the SDTDP settings via deleting the settings file.
+
+NOTE: this will reset any per-game profiles you have previously made.
+
+```bash
+# run this to remove the old settings.json
+rm $HOME/homebrew/settings/SimpleDeckyTDP/settings.json
+```
+
 ### ROG Ally Troubleshooting
 
 The ROG ally has some known issues related to CPU Boost and SMT.
@@ -205,7 +219,7 @@ The ROG ally has some known issues related to CPU Boost and SMT.
   - SDTDP ships a workaround for the SMT bug on the Ally and Ally X, where it will temporarily turn on SMT before suspend
 - CPU boost is reportedly misconfigured on the Ally and causes excessive power usage, disabling CPU boost is recommended
 
-#### Extreme Power Save (aka MCU Powersave)
+#### Rog Ally Extreme Power Save (aka MCU Powersave)
 
 After enabling Extreme Powersave mode (aka MCU powersave), make sure you're on the latest MCU firmware (119 if original ROG Ally).
 
