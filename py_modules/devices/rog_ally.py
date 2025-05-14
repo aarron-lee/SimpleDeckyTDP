@@ -92,9 +92,7 @@ def set_platform_profile(tdp):
 def set_tdp(tdp):
   try:
     wmi_methods = supports_bios_wmi_tdp()
-    if bool(wmi_methods):
-      set_tdp_via_fwupdmgr(wmi_methods, tdp)
-    elif (
+    if (
       (
         os.path.exists(ASUS_ARMORY_FAST_WMI_PATH)
         or os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
@@ -103,6 +101,8 @@ def set_tdp(tdp):
       and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
     ):
       set_tdp_via_asus_armoury(tdp)
+    elif bool(wmi_methods):
+      set_tdp_via_fwupdmgr(wmi_methods, tdp)
     else:
       decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Legacy WMI")
       # fast limit
