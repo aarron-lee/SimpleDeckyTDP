@@ -13,7 +13,7 @@ def has_fwupdmgr():
 
 def get_bios_settings():
   try:
-    with file_timeout(2):
+    with file_timeout.time_limit(2):
       cmd = 'fwupdmgr get-bios-setting --json'
       result = subprocess.run(
           cmd,
