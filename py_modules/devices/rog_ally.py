@@ -233,6 +233,13 @@ def get_asus_armoury_tdp_values(tdp):
       slow_tdp = 15
     if stapm_tdp < 7:
       stapm_tdp = 7
+
+    if fast_tdp > 53:
+      fast_tdp = 53
+    if slow_tdp > 43:
+      slow_tdp = 43
+    if stapm_tdp > 30:
+      stapm_tdp = 30
   
   return [fast_tdp, slow_tdp, stapm_tdp]
 
