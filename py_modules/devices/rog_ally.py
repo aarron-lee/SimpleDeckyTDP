@@ -177,9 +177,17 @@ def set_tdp_via_fwupdmgr(wmi_methods, tdp):
   decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via fwupdmgr WMI")
   fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
 
+  methods_to_tdp = {
+    'ppt_pl3_fppt': fast_tdp,
+    'ppt_fppt': fast_tdp,
+    'ppt_pl2_sppt': slow_tdp,
+    'ppt_pl1_spl': stapm_tdp
+  }
+
   for wmi_method in wmi_methods:
-    decky_plugin.logger.info(f'set fwupdmgr tdp {wmi_method} {tdp}')
-    cmd = f'sudo fwupdmgr set-bios-setting {wmi_method} {tdp}'
+    wmi_method_tdp = methods_to_tdp.get(wmi_method, tdp)
+    decky_plugin.logger.info(f'set fwupdmgr tdp {wmi_method} {wmi_method_tdp}')
+    cmd = f'sudo fwupdmgr set-bios-setting {wmi_method} {wmi_method_tdp}'
     subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     sleep(0.1)
 
