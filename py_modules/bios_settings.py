@@ -2,6 +2,14 @@ import subprocess
 import json
 import decky_plugin
 import file_timeout
+import shutil
+
+def has_fwupdmgr():
+  fwupdmgr_path = shutil.which('fwupdmgr')
+
+  if fwupdmgr_path is None:
+    return False
+  return True
 
 def get_bios_settings():
   try:

@@ -24,6 +24,8 @@ UPDATED_ASUS_ARMORY_FAST_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl3_fppt/curren
 LEGACY_MCU_POWERSAVE_PATH = "/sys/devices/platform/asus-nb-wmi/mcu_powersave"
 ASUS_ARMORY_MCU_POWERSAVE_PATH = f"{ASUS_ARMORY_WMI_BASE}/mcu_powersave"
 
+PLATFORM_PROFILE_CHOICES_PATH = '/sys/firmware/acpi/platform_profile_choices'
+
 def set_mcu_powersave(enabled):
   try:
     if os.path.exists(LEGACY_MCU_POWERSAVE_PATH):
@@ -38,6 +40,9 @@ def set_mcu_powersave(enabled):
     decky_plugin.logger.error(f"{__name__} mcu_powersave error {e}")
 
 def supports_bios_wmi_tdp():
+  if bios_settings.has_fwupdmgr() == False:
+    return False
+
   tdp_methods = {"ppt_fppt", 'ppt_pl3_fppt', "ppt_pl2_sppt", "ppt_pl1_spl"}
 
   settings = bios_settings.get_bios_settings()
@@ -66,18 +71,20 @@ def supports_wmi_tdp():
   return False
 
 def set_platform_profile(tdp):
-  command = 'quiet'
+  platform_profile_choices = get_platform_profile_options()
+
+  command = platform_profile_choices[0]
   if tdp < 13:
-    command = 'quiet'
+    command = platform_profile_choices[0]
   elif tdp < 20:
-    command = 'balanced'
+    command =  platform_profile_choices[1]
   else:
-    command = 'performance'
+    command =  platform_profile_choices[2]
   try:
     with open(PLATFORM_PROFILE_PATH, 'w') as file:
       file.write(command)
   except Exception as e:
-    decky_plugin.logger.error(f"{__name__} platform_profile error {e}")
+    decky_plugin.logger.error(f"{__name__} platform_profile {command} error {e}")
         
   sleep(1.0)
   return True
@@ -99,29 +106,7 @@ def set_tdp(tdp):
       and os.path.exists(ASUS_ARMORY_SLOW_WMI_PATH)
       and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
     ):
-      decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Asus Armoury WMI")
-
-      # fast limit
-      fast_limit_path = ASUS_ARMORY_FAST_WMI_PATH
-      if (
-        os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
-      ):
-        fast_limit_path = UPDATED_ASUS_ARMORY_FAST_WMI_PATH
-
-      with open(fast_limit_path, 'w') as file:
-        file.write(f'{tdp}')
-      sleep(0.1)
-
-      # slow limit
-      with open(ASUS_ARMORY_SLOW_WMI_PATH, 'w') as file:
-        file.write(f'{tdp}')
-      sleep(0.1)
-
-      # stapm limit
-      with open(ASUS_ARMORY_STAPM_WMI_PATH, 'w') as file:
-        file.write(f'{tdp}')
-      sleep(0.1)
-
+      set_tdp_via_asus_armoury(tdp)
     else:
       decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Legacy WMI")
       # fast limit
@@ -191,3 +176,53 @@ def get_mcu_version():
     decky_plugin.logger.error(f'{__name__} error getting mcu version {e}')
 
     return 0
+
+def set_tdp_via_asus_armoury(tdp):
+  decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Asus Armoury WMI")
+
+  # fast limit
+  fast_limit_path = ASUS_ARMORY_FAST_WMI_PATH
+  if (
+    os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH)
+  ):
+    fast_limit_path = UPDATED_ASUS_ARMORY_FAST_WMI_PATH
+
+  fast_tdp = tdp
+  slow_tdp = tdp
+  stapm_tdp = tdp
+
+  platform_profile_choices = get_platform_profile_options()
+
+  if 'low-power' in platform_profile_choices:
+    # newer asus armoury enforces different min/max values
+    if fast_tdp < 15:
+      fast_tdp = 15
+    if slow_tdp < 15:
+      slow_tdp = 15
+    if stapm_tdp < 7:
+      stapm_tdp = 7
+
+  with open(fast_limit_path, 'w') as file:
+    file.write(f'{fast_tdp}')
+  sleep(0.1)
+
+  # slow limit
+  with open(ASUS_ARMORY_SLOW_WMI_PATH, 'w') as file:
+    file.write(f'{slow_tdp}')
+  sleep(0.1)
+
+  # stapm limit
+  with open(ASUS_ARMORY_STAPM_WMI_PATH, 'w') as file:
+    file.write(f'{stapm_tdp}')
+  sleep(0.1)
+
+def get_platform_profile_options():
+  try:
+    if os.path.exists(PLATFORM_PROFILE_CHOICES_PATH):
+      with open(PLATFORM_PROFILE_CHOICES_PATH, 'r') as file:
+        available_options = file.read().strip().split(' ') or []
+        file.close()
+        return available_options
+  except Exception as e:
+    decky_plugin.logger.error(f'error getting platform_profile_choices {e}')
+  return []
