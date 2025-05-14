@@ -93,11 +93,7 @@ def set_tdp(tdp):
   try:
     wmi_methods = supports_bios_wmi_tdp()
     if bool(wmi_methods):
-      decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via fwupdmgr WMI")
-      for wmi_method in wmi_methods:
-        cmd = f'fwupdmgr set-bios-setting {wmi_method} {tdp}'
-        subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        sleep(0.1)
+      set_tdp_via_fwupdmgr(wmi_methods, tdp)
     elif (
       (
         os.path.exists(ASUS_ARMORY_FAST_WMI_PATH)
@@ -177,6 +173,17 @@ def get_mcu_version():
 
     return 0
 
+def set_tdp_via_fwupdmgr(wmi_methods, tdp):
+  decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via fwupdmgr WMI")
+  fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
+
+  for wmi_method in wmi_methods:
+    decky_plugin.logger.info(f'set fwupdmgr tdp {wmi_method} {tdp}')
+    cmd = f'sudo fwupdmgr set-bios-setting {wmi_method} {tdp}'
+    subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sleep(0.1)
+
+
 def set_tdp_via_asus_armoury(tdp):
   decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Asus Armoury WMI")
 
@@ -187,20 +194,7 @@ def set_tdp_via_asus_armoury(tdp):
   ):
     fast_limit_path = UPDATED_ASUS_ARMORY_FAST_WMI_PATH
 
-  fast_tdp = tdp
-  slow_tdp = tdp
-  stapm_tdp = tdp
-
-  platform_profile_choices = get_platform_profile_options()
-
-  if 'low-power' in platform_profile_choices:
-    # newer asus armoury enforces different min/max values
-    if fast_tdp < 15:
-      fast_tdp = 15
-    if slow_tdp < 15:
-      slow_tdp = 15
-    if stapm_tdp < 7:
-      stapm_tdp = 7
+  fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
 
   with open(fast_limit_path, 'w') as file:
     file.write(f'{fast_tdp}')
@@ -215,6 +209,24 @@ def set_tdp_via_asus_armoury(tdp):
   with open(ASUS_ARMORY_STAPM_WMI_PATH, 'w') as file:
     file.write(f'{stapm_tdp}')
   sleep(0.1)
+
+def get_asus_armoury_tdp_values(tdp):
+  fast_tdp = tdp
+  slow_tdp = tdp
+  stapm_tdp = tdp
+
+  platform_profile_choices = get_platform_profile_options()
+
+  if 'low-power' in platform_profile_choices:
+    # newer asus armoury enforces different min/max values
+    if fast_tdp < 15:
+      fast_tdp = 15
+    if slow_tdp < 15:
+      slow_tdp = 15
+    if stapm_tdp < 7:
+      stapm_tdp = 7
+  
+  return [fast_tdp, slow_tdp, stapm_tdp]
 
 def get_platform_profile_options():
   try:
