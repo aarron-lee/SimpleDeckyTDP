@@ -174,8 +174,9 @@ def get_mcu_version():
     return 0
 
 def set_tdp_via_fwupdmgr(wmi_methods, tdp):
-  decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via fwupdmgr WMI")
   fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
+
+  decky_plugin.logger.info(f"{__name__} Setting TDP via fwupdmgr WMI - fast {fast_tdp} slow {slow_tdp} stapm {stapm_tdp}")
 
   methods_to_tdp = {
     'ppt_pl3_fppt': fast_tdp,
@@ -193,8 +194,6 @@ def set_tdp_via_fwupdmgr(wmi_methods, tdp):
 
 
 def set_tdp_via_asus_armoury(tdp):
-  decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Asus Armoury WMI")
-
   # fast limit
   fast_limit_path = ASUS_ARMORY_FAST_WMI_PATH
   if (
@@ -203,6 +202,8 @@ def set_tdp_via_asus_armoury(tdp):
     fast_limit_path = UPDATED_ASUS_ARMORY_FAST_WMI_PATH
 
   fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
+
+  decky_plugin.logger.info(f"{__name__} Setting TDP via Asus Armoury WMI - fast {fast_tdp} slow {slow_tdp} stapm {stapm_tdp}")
 
   with open(fast_limit_path, 'w') as file:
     file.write(f'{fast_tdp}')
