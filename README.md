@@ -221,7 +221,7 @@ The ROG ally has some known issues related to CPU Boost and SMT.
 
 #### Rog Ally Extreme Power Save (aka MCU Powersave)
 
-After enabling Extreme Powersave mode (aka MCU powersave), make sure you're on the latest MCU firmware (119 if original ROG Ally).
+After enabling Extreme Powersave mode (aka MCU powersave), make sure you're on the latest MCU firmware (319 if original ROG Ally, 314 for the Ally X).
 
 If you encounter issues with suspend, or back buttons not working after suspend-resume, it is likely due to your MCU firmware not being up to date.
 
