@@ -11,7 +11,12 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { AdvancedOptionsEnum, GpuModes } from "../backend/utils";
+import {
+  AdvancedOptionsEnum,
+  GpuModes,
+  SteamDeckAdvancedOptions,
+} from "../backend/utils";
+import { selectIsSteamDeck } from "./uiSlice";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -578,6 +583,8 @@ function handleAdvancedOptionsEdgeCases(
   statePath: string,
   value: boolean
 ) {
+  handleSteamDeckAdvancedOptions(state, statePath, value);
+
   if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
     set(
       state,
@@ -607,6 +614,38 @@ function handleAdvancedOptionsEdgeCases(
     set(
       state,
       `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
+      false
+    );
+  }
+}
+
+function handleSteamDeckAdvancedOptions(
+  state: any,
+  statePath: string,
+  value: boolean
+) {
+  const isSteamDeck = selectIsSteamDeck(state);
+
+  if (
+    isSteamDeck &&
+    statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+    Boolean(value) == true
+  ) {
+    // polling must be forced on when using custom TDP limits on deck
+    set(
+      state,
+      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+      true
+    );
+  }
+  if (
+    isSteamDeck &&
+    statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+    Boolean(value) == false
+  ) {
+    set(
+      state,
+      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
       false
     );
   }
