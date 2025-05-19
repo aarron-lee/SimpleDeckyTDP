@@ -626,9 +626,20 @@ function handleSteamDeckAdvancedOptions(
 ) {
   const isSteamDeck = selectIsSteamDeck(state);
 
+  const disableCustomGpuLimit = () => {
+    set(
+      state,
+      `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
+      false
+    );
+    // force maxGpuFrequency back to 1600 max for Steam Deck
+    state.settings.maxGpuFrequency = 1600;
+  };
+
   if (isSteamDeck) {
     if (
-      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+      (statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS ||
+        statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED) &&
       Boolean(value) == true
     ) {
       // polling must be forced on when using custom TDP limits on deck
@@ -639,7 +650,8 @@ function handleSteamDeckAdvancedOptions(
       );
     }
     if (
-      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+      (statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS ||
+        statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED) &&
       Boolean(value) == false
     ) {
       set(
@@ -658,19 +670,14 @@ function handleSteamDeckAdvancedOptions(
         `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS}`,
         false
       );
-      set(
-        state,
-        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
-        false
-      );
+      disableCustomGpuLimit();
     }
 
     if (
       statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED &&
       Boolean(value) == false
     ) {
-      // force maxGpuFrequency back to 1600 max for Steam Deck
-      state.settings.maxGpuFrequency = 1600;
+      disableCustomGpuLimit();
     } else {
       const customGpuLimitEnabled = get(
         state,
@@ -681,13 +688,12 @@ function handleSteamDeckAdvancedOptions(
       if (customGpuLimitEnabled) {
         if (
           statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX &&
-          value
+          Number(value) >= 1600
         ) {
           state.settings.maxGpuFrequency = value;
         }
       } else {
-        // force maxGpuFrequency back to 1600 max for Steam Deck
-        state.settings.maxGpuFrequency = 1600;
+        disableCustomGpuLimit();
       }
     }
   } // end ifSteamDeck
