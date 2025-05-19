@@ -209,11 +209,12 @@ def get_deck_gpu_range():
     )
 
     if custom_max_enabled:
-      custom_max = advanced_options.get_setting(
-        advanced_options.SteamDeckSettings.DECK_CUSTOM_GPU_MAX.value
-      )
+        custom_max = advanced_options.get_setting(
+          advanced_options.SteamDeckSettings.DECK_CUSTOM_GPU_MAX.value
+        )
 
-      return [200, custom_max or 1600]
+        if isinstance(custom_max, int):
+            return [200, custom_max or 1600]
 
     return GPU_FREQUENCY_RANGE
 
