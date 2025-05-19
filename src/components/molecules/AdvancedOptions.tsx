@@ -23,6 +23,7 @@ import {
   AdvancedOptionsType,
   DesktopAdvancedOptions,
 } from "../../backend/utils";
+import useDeviceName from "../../hooks/useDeviceName";
 
 export const useIsSteamPatchEnabled = () => {
   const steamPatchEnabled = useSelector(getSteamPatchEnabledSelector);
@@ -65,6 +66,7 @@ const calculateDisabled = (
 
 const AdvancedOptions = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const deviceName = useDeviceName();
   const isDesktop = useIsDesktop();
   const { advancedState, advancedOptions } = useSelector(
     getAdvancedOptionsInfoSelector
@@ -122,7 +124,11 @@ const AdvancedOptions = () => {
                     bottomSeparator="none"
                     onChange={(enabled: boolean) => {
                       return dispatch(
-                        updateAdvancedOption({ statePath, value: enabled })
+                        updateAdvancedOption({
+                          statePath,
+                          value: enabled,
+                          deviceName,
+                        })
                       );
                     }}
                     disabled={disabled}
@@ -164,7 +170,11 @@ const AdvancedOptions = () => {
                     description={showDescription ? description : undefined}
                     onChange={(newValue: number) => {
                       return dispatch(
-                        updateAdvancedOption({ statePath, value: newValue })
+                        updateAdvancedOption({
+                          statePath,
+                          value: newValue,
+                          deviceName,
+                        })
                       );
                     }}
                     valueSuffix={valueSuffix}

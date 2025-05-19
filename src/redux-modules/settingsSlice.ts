@@ -10,14 +10,14 @@ import {
   PowerControlsType,
   PowerGovernorOption,
 } from "../utils/constants";
-import { RootState, store } from "./store";
+import { RootState } from "./store";
 import {
   AdvancedOptionsEnum,
   GpuModes,
   logInfo,
   SteamDeckAdvancedOptions,
 } from "../backend/utils";
-import { selectIsSteamDeck } from "../utils/selectors";
+import { isSteamDeck } from "../utils/selectors";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -149,13 +149,17 @@ export const settingsSlice = createSlice({
     },
     updateAdvancedOption: (
       state,
-      action: PayloadAction<{ statePath: string; value: any }>
+      action: PayloadAction<{
+        statePath: string;
+        value: any;
+        deviceName: string;
+      }>
     ) => {
-      const { statePath, value } = action.payload;
+      const { statePath, value, deviceName } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
 
-      handleAdvancedOptionsEdgeCases(state, statePath, value);
+      handleAdvancedOptionsEdgeCases(state, statePath, value, deviceName);
     },
     updatePowerGovernor: (
       state,
@@ -582,10 +586,11 @@ export const supportsCustomAcPowerSelector = (state: RootState) =>
 function handleAdvancedOptionsEdgeCases(
   state: any,
   statePath: string,
-  value: boolean
+  value: boolean,
+  deviceName: string
 ) {
   try {
-    handleSteamDeckAdvancedOptions(state, statePath, value);
+    handleSteamDeckAdvancedOptions(state, statePath, value, deviceName);
 
     if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
       set(
@@ -631,9 +636,10 @@ function handleAdvancedOptionsEdgeCases(
 function handleSteamDeckAdvancedOptions(
   state: any,
   statePath: string,
-  value: boolean
+  value: boolean,
+  deviceName: string
 ) {
-  const isSteamDeck = selectIsSteamDeck(store.getState());
+  const steamDeck = isSteamDeck(deviceName);
 
   const disableCustomGpuLimit = () => {
     set(
@@ -645,7 +651,7 @@ function handleSteamDeckAdvancedOptions(
     set(state, "settings.maxGpuFrequency", 1600);
   };
 
-  if (isSteamDeck) {
+  if (steamDeck) {
     if (
       (statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS ||
         statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED) &&

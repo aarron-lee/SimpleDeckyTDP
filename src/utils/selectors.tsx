@@ -9,6 +9,10 @@ export const selectDeviceName = (state: RootState) => {
 export const selectIsSteamDeck = (state: RootState) => {
   const deviceName = selectDeviceName(state);
 
+  return isSteamDeck(deviceName);
+};
+
+export function isSteamDeck(deviceName: string) {
   if (
     deviceName.includes(Devices.STEAM_DECK_LCD) ||
     deviceName.includes(Devices.STEAM_DECK_OLED)
@@ -16,4 +20,4 @@ export const selectIsSteamDeck = (state: RootState) => {
     return true;
   }
   return false;
-};
+}
