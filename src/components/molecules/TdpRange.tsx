@@ -11,8 +11,12 @@ import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
 import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 
-const useMaxSupportedTdpValue = () => {
+const useMaxSupportedTdpValue = ({ isSteamDeck }: { isSteamDeck: boolean }) => {
   let maxTdp = 40;
+
+  if (isSteamDeck) {
+    return 20;
+  }
 
   const deviceName = useDeviceName();
 
@@ -36,7 +40,7 @@ const TdpRange = () => {
     SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS
   );
   const isIntel = useIsIntel();
-  const maxSupportedTdpValue = useMaxSupportedTdpValue();
+  let maxSupportedTdpValue = useMaxSupportedTdpValue({ isSteamDeck });
 
   if (isIntel) {
     // intel provides TDP limit values, custom TDP range is unnecessary
