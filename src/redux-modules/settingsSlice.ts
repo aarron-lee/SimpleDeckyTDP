@@ -587,7 +587,7 @@ function handleAdvancedOptionsEdgeCases(
   try {
     handleSteamDeckAdvancedOptions(state, statePath, value);
   } catch (err) {
-    logInfo({ info: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+    logInfo({ info: err });
   }
   if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
     set(

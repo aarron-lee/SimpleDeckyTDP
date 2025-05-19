@@ -1,8 +1,9 @@
 import { RootState } from "../redux-modules/store";
 import { Devices } from "../backend/utils";
+import { get } from "lodash";
 
 export const selectDeviceName = (state: RootState) => {
-  return state.ui.powerControlInfo?.deviceName || "";
+  return get(state, "ui.powerControlInfo.deviceName", "");
 };
 
 export const selectIsSteamDeck = (state: RootState) => {
