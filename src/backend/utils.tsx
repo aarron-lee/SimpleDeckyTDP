@@ -69,6 +69,9 @@ export const DesktopAdvancedOptions = [
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
   RogAllyAdvancedOptions.USE_WMI,
   RogAllyAdvancedOptions.USE_EXTREME_POWERSAVE,
+  SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS,
+  SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED,
+  SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX,
 ] as string[];
 
 export enum GpuModes {
