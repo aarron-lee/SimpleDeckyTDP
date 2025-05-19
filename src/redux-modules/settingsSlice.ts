@@ -650,17 +650,6 @@ function handleSteamDeckAdvancedOptions(
       );
     }
     if (
-      (statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS ||
-        statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED) &&
-      Boolean(value) == false
-    ) {
-      set(
-        state,
-        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-        false
-      );
-    }
-    if (
       statePath == AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING &&
       Boolean(value) == false
     ) {
