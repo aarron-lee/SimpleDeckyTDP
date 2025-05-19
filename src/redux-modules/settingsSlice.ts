@@ -648,6 +648,22 @@ function handleSteamDeckAdvancedOptions(
         false
       );
     }
+    if (
+      statePath == AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING &&
+      Boolean(value) == false
+    ) {
+      // turn off custom TDP and GPU limits if background polling turned off
+      set(
+        state,
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS}`,
+        false
+      );
+      set(
+        state,
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
+        false
+      );
+    }
 
     if (
       statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED &&
@@ -669,6 +685,9 @@ function handleSteamDeckAdvancedOptions(
         ) {
           state.settings.maxGpuFrequency = value;
         }
+      } else {
+        // force maxGpuFrequency back to 1600 max for Steam Deck
+        state.settings.maxGpuFrequency = 1600;
       }
     }
   } // end ifSteamDeck
