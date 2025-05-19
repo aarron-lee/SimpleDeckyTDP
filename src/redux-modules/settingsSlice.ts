@@ -626,29 +626,52 @@ function handleSteamDeckAdvancedOptions(
 ) {
   const isSteamDeck = selectIsSteamDeck(state);
 
-  if (
-    isSteamDeck &&
-    statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
-    Boolean(value) == true
-  ) {
-    // polling must be forced on when using custom TDP limits on deck
-    set(
-      state,
-      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-      true
-    );
-  }
-  if (
-    isSteamDeck &&
-    statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
-    Boolean(value) == false
-  ) {
-    set(
-      state,
-      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-      false
-    );
-  }
+  if (isSteamDeck) {
+    if (
+      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+      Boolean(value) == true
+    ) {
+      // polling must be forced on when using custom TDP limits on deck
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+        true
+      );
+    }
+    if (
+      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS &&
+      Boolean(value) == false
+    ) {
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+        false
+      );
+    }
+
+    if (
+      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED &&
+      Boolean(value) == false
+    ) {
+      // force maxGpuFrequency back to 1600 max for Steam Deck
+      state.settings.maxGpuFrequency = 1600;
+    } else {
+      const customGpuLimitEnabled = get(
+        state,
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
+        false
+      );
+
+      if (customGpuLimitEnabled) {
+        if (
+          statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX &&
+          value
+        ) {
+          state.settings.maxGpuFrequency = value;
+        }
+      }
+    }
+  } // end ifSteamDeck
 }
 
 // Action creators are generated for each case reducer function

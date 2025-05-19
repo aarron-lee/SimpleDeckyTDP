@@ -49,6 +49,8 @@ export enum LegionGoAdvancedOptions {
 
 export enum SteamDeckAdvancedOptions {
   DECK_CUSTOM_TDP_LIMITS = "deckCustomTdpLimits",
+  DECK_CUSTOM_GPU_MAX_ENABLED = "deckCustomGpuMaxEnabled",
+  DECK_CUSTOM_GPU_MAX = "deckCustomGpuMax",
 }
 
 export const DesktopAdvancedOptions = [
