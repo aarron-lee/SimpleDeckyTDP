@@ -633,7 +633,7 @@ function handleSteamDeckAdvancedOptions(
       false
     );
     // force maxGpuFrequency back to 1600 max for Steam Deck
-    state.settings.maxGpuFrequency = 1600;
+    set(state, "settings.maxGpuFrequency", 1600);
   };
 
   if (isSteamDeck) {
@@ -668,22 +668,13 @@ function handleSteamDeckAdvancedOptions(
     ) {
       disableCustomGpuLimit();
     } else {
-      const customGpuLimitEnabled = get(
+      const newMax = get(
         state,
-        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
-        false
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX}`,
+        1600
       );
 
-      if (customGpuLimitEnabled) {
-        if (
-          statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX &&
-          Number(value) >= 1600
-        ) {
-          state.settings.maxGpuFrequency = value;
-        }
-      } else {
-        disableCustomGpuLimit();
-      }
+      set(state, "settings.maxGpuFrequency", newMax || 1600);
     }
   } // end ifSteamDeck
 }
