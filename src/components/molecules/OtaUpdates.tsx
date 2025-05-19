@@ -2,16 +2,14 @@ import { useEffect, useState } from "react";
 import { getLatestVersionNum, otaUpdate } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
-import {
-  selectDeviceName,
-  selectScalingDriver,
-} from "../../redux-modules/uiSlice";
+import { selectScalingDriver } from "../../redux-modules/uiSlice";
 import {
   DeckyButton,
   DeckyField,
   DeckyRow,
   DeckySection,
 } from "../atoms/DeckyFrontendLib";
+import { selectDeviceName } from "../../utils/selectors";
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");

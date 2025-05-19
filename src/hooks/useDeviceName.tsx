@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectDeviceName, selectIsSteamDeck } from "../redux-modules/uiSlice";
+import { selectDeviceName, selectIsSteamDeck } from "../utils/selectors";
 
 export const useDeviceName = () => {
   return useSelector(selectDeviceName);

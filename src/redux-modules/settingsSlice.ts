@@ -16,7 +16,7 @@ import {
   GpuModes,
   SteamDeckAdvancedOptions,
 } from "../backend/utils";
-import { selectIsSteamDeck } from "./uiSlice";
+import { selectIsSteamDeck } from "../utils/selectors";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
