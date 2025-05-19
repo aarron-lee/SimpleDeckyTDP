@@ -10,7 +10,7 @@ import {
   PowerControlsType,
   PowerGovernorOption,
 } from "../utils/constants";
-import { RootState } from "./store";
+import { RootState, store } from "./store";
 import {
   AdvancedOptionsEnum,
   GpuModes,
@@ -586,40 +586,45 @@ function handleAdvancedOptionsEdgeCases(
 ) {
   try {
     handleSteamDeckAdvancedOptions(state, statePath, value);
+
+    if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+        false
+      );
+    }
+    if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
+      if (typeof state?.advanced?.platformProfile === "boolean") {
+        set(
+          state,
+          `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`,
+          false
+        );
+      }
+    }
+    if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
+      set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
+    }
+    if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
+      set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
+    }
+    if (
+      statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
+      value === true
+    ) {
+      set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
+    }
+
+    if (statePath === AdvancedOptionsEnum.MAX_TDP_ON_RESUME && value === true) {
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
+        false
+      );
+    }
   } catch (err) {
     logInfo({ info: err });
-  }
-  if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
-    set(
-      state,
-      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-      false
-    );
-  }
-  if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
-    if (typeof state?.advanced?.platformProfile === "boolean") {
-      set(state, `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`, false);
-    }
-  }
-  if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
-    set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
-  }
-  if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
-    set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
-  }
-  if (
-    statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
-    value === true
-  ) {
-    set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
-  }
-
-  if (statePath === AdvancedOptionsEnum.MAX_TDP_ON_RESUME && value === true) {
-    set(
-      state,
-      `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
-      false
-    );
   }
 }
 
@@ -628,7 +633,7 @@ function handleSteamDeckAdvancedOptions(
   statePath: string,
   value: boolean
 ) {
-  const isSteamDeck = selectIsSteamDeck(state);
+  const isSteamDeck = selectIsSteamDeck(store.getState());
 
   const disableCustomGpuLimit = () => {
     set(
