@@ -9,7 +9,7 @@ import {
   DeckyRow,
   DeckySection,
 } from "../atoms/DeckyFrontendLib";
-import { selectDeviceName } from "../../utils/selectors";
+import useDeviceName from "../../hooks/useDeviceName";
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
@@ -17,7 +17,7 @@ const OtaUpdates = () => {
 
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
-  const deviceName = useSelector(selectDeviceName);
+  const deviceName = useDeviceName();
 
   const isUpdated =
     installedVersionNum === latestVersionNum && Boolean(latestVersionNum);
