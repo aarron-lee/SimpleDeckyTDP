@@ -11,7 +11,13 @@ import {
   PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
-import { AdvancedOptionsEnum, GpuModes } from "../backend/utils";
+import {
+  AdvancedOptionsEnum,
+  GpuModes,
+  logInfo,
+  SteamDeckAdvancedOptions,
+} from "../backend/utils";
+import { isSteamDeck } from "../utils/selectors";
 
 type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -143,13 +149,17 @@ export const settingsSlice = createSlice({
     },
     updateAdvancedOption: (
       state,
-      action: PayloadAction<{ statePath: string; value: any }>
+      action: PayloadAction<{
+        statePath: string;
+        value: any;
+        deviceName: string;
+      }>
     ) => {
-      const { statePath, value } = action.payload;
+      const { statePath, value, deviceName } = action.payload;
 
       set(state, `advanced.${statePath}`, value);
 
-      handleAdvancedOptionsEdgeCases(state, statePath, value);
+      handleAdvancedOptionsEdgeCases(state, statePath, value, deviceName);
     },
     updatePowerGovernor: (
       state,
@@ -576,40 +586,112 @@ export const supportsCustomAcPowerSelector = (state: RootState) =>
 function handleAdvancedOptionsEdgeCases(
   state: any,
   statePath: string,
-  value: boolean
+  value: boolean,
+  deviceName: string
 ) {
-  if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
-    set(
-      state,
-      `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-      false
-    );
-  }
-  if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
-    if (typeof state?.advanced?.platformProfile === "boolean") {
-      set(state, `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`, false);
-    }
-  }
-  if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
-    set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
-  }
-  if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
-    set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
-  }
-  if (
-    statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
-    value === true
-  ) {
-    set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
-  }
+  try {
+    handleSteamDeckAdvancedOptions(state, statePath, value, deviceName);
 
-  if (statePath === AdvancedOptionsEnum.MAX_TDP_ON_RESUME && value === true) {
+    if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+        false
+      );
+    }
+    if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
+      if (typeof state?.advanced?.platformProfile === "boolean") {
+        set(
+          state,
+          `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`,
+          false
+        );
+      }
+    }
+    if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
+      set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
+    }
+    if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
+      set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
+    }
+    if (
+      statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
+      value === true
+    ) {
+      set(state, `advanced.${AdvancedOptionsEnum.MAX_TDP_ON_RESUME}`, false);
+    }
+
+    if (statePath === AdvancedOptionsEnum.MAX_TDP_ON_RESUME && value === true) {
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
+        false
+      );
+    }
+  } catch (err) {
+    logInfo({ info: err });
+  }
+}
+
+function handleSteamDeckAdvancedOptions(
+  state: any,
+  statePath: string,
+  value: boolean,
+  deviceName: string
+) {
+  const steamDeck = isSteamDeck(deviceName);
+
+  const disableCustomGpuLimit = () => {
     set(
       state,
-      `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
+      `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
       false
     );
-  }
+    // force maxGpuFrequency back to 1600 max for Steam Deck
+    set(state, "settings.maxGpuFrequency", 1600);
+  };
+
+  if (steamDeck) {
+    if (
+      (statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS ||
+        statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED) &&
+      Boolean(value) == true
+    ) {
+      // polling must be forced on when using custom TDP limits on deck
+      set(
+        state,
+        `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
+        true
+      );
+    }
+    if (
+      statePath == AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING &&
+      Boolean(value) == false
+    ) {
+      // turn off custom TDP and GPU limits if background polling turned off
+      set(
+        state,
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS}`,
+        false
+      );
+      disableCustomGpuLimit();
+    }
+
+    if (
+      statePath == SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED &&
+      Boolean(value) == false
+    ) {
+      disableCustomGpuLimit();
+    } else {
+      const newMax = get(
+        state,
+        `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX}`,
+        1600
+      );
+
+      set(state, "settings.maxGpuFrequency", newMax || 1600);
+    }
+  } // end ifSteamDeck
 }
 
 // Action creators are generated for each case reducer function

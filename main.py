@@ -152,6 +152,8 @@ class Plugin:
       cpu_utils.set_smt(smt)
       time.sleep(0.3)
       plugin_utils.set_power_governor_for_tdp_profile(tdp_profile)
+      plugin_utils.set_cpu_boost_for_tdp_profile(tdp_profile)
+
 
   async def on_suspend(self):
     decky_plugin.logger.info(f'main#on_suspend started')

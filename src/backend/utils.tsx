@@ -49,6 +49,8 @@ export enum LegionGoAdvancedOptions {
 
 export enum SteamDeckAdvancedOptions {
   DECK_CUSTOM_TDP_LIMITS = "deckCustomTdpLimits",
+  DECK_CUSTOM_GPU_MAX_ENABLED = "deckCustomGpuMaxEnabled",
+  DECK_CUSTOM_GPU_MAX = "deckCustomGpuMax",
 }
 
 export const DesktopAdvancedOptions = [
@@ -122,6 +124,11 @@ export const setMaxTdp = callable(ServerAPIMethods.SET_MAX_TDP);
 export const isSteamRunning = callable(ServerAPIMethods.GET_IS_STEAM_RUNNING);
 
 export const logInfo = ({ info }: { info: any }) => {
+  if (info instanceof Error) {
+    const errorInfo = JSON.stringify(info, Object.getOwnPropertyNames(info));
+    return call(ServerAPIMethods.LOG_INFO, { info: errorInfo });
+  }
+
   return call(ServerAPIMethods.LOG_INFO, { info });
 };
 

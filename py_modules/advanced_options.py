@@ -14,7 +14,6 @@ class AdvancedOptionsType(Enum):
   BOOLEAN = 'boolean'
   NUMBER_RANGE = 'number_range'
 
-
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
   ENABLE_GPU_CONTROL = 'enableGpuControl'
@@ -41,6 +40,8 @@ class LegionGoSettings(Enum):
 
 class SteamDeckSettings(Enum):
   DECK_CUSTOM_TDP_LIMITS = 'deckCustomTdpLimits'
+  DECK_CUSTOM_GPU_MAX_ENABLED = 'deckCustomGpuMaxEnabled'
+  DECK_CUSTOM_GPU_MAX = 'deckCustomGpuMax'
 
 def modprobe_acpi_call():
   # legion go currently requires acpi_call for using WMI to set TDP
@@ -316,7 +317,7 @@ def steam_deck_advanced_options(options):
   options.append({
     'name': 'Enable TDP slider min/max adjustment',
     'type': AdvancedOptionsType.BOOLEAN.value,
-    'description': 'Warning, this probably needs a custom bios',
+    'description': 'Warning, this needs a custom bios on the Steam Deck',
     'defaultValue': False,
     'currentValue': get_value(SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS, False),
     'statePath': SteamDeckSettings.DECK_CUSTOM_TDP_LIMITS.value,
@@ -325,6 +326,39 @@ def steam_deck_advanced_options(options):
       "hideIfDisabled": True
     }
   })
+
+  enable_deck_custom_gpu_clock = {
+    'name': 'Enable custom GPU Max Clock',
+    'type': AdvancedOptionsType.BOOLEAN.value,
+    'defaultValue': False,
+    'description': 'Warning, this needs a custom bios on the Steam Deck',
+    'currentValue': get_value(SteamDeckSettings.DECK_CUSTOM_GPU_MAX_ENABLED, False),
+    'statePath': SteamDeckSettings.DECK_CUSTOM_GPU_MAX_ENABLED.value,
+    'disabled': {
+      'ifFalsy': [DefaultSettings.ENABLE_GPU_CONTROL.value],
+      'hideIfDisabled': True
+    }
+  }
+
+  options.append(enable_deck_custom_gpu_clock)
+
+  custom_gpu_clock = {
+    'name': 'Custom GPU Max Clock',
+    'type': AdvancedOptionsType.NUMBER_RANGE.value,
+    'range': [1600, 2200],
+    'defaultValue': 1600,
+    'step': 50,
+    'valueSuffix': 'MHz',
+    'description': 'Requires Custom Bios',
+    'currentValue': get_number_value(SteamDeckSettings.DECK_CUSTOM_GPU_MAX, 1600),
+    'statePath': SteamDeckSettings.DECK_CUSTOM_GPU_MAX.value,
+    'disabled': {
+      'ifFalsy': [SteamDeckSettings.DECK_CUSTOM_GPU_MAX_ENABLED.value],
+      'hideIfDisabled': True
+    }
+  }
+
+  options.append(custom_gpu_clock)
 
 def rog_ally_advanced_options(options):
   if os.path.exists(PLATFORM_PROFILE_PATH):

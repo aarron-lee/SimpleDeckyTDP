@@ -33,8 +33,8 @@ def set_values_for_tdp_profile(tdp_profile, set_tdp = True, set_gpu = True, set_
   if not manual_cpu_management_enabled and not automatic_cpu_management_enabled:
     return
 
-  set_cpu_boost_for_tdp_profile(profile)
   set_smt_for_tdp_profile(profile)
+  set_cpu_boost_for_tdp_profile(profile)
 
   # if user has manual CPU controls disabled, use default CPU profile instead
   if not manual_cpu_management_enabled:

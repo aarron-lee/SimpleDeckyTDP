@@ -35,10 +35,6 @@ export const selectPowerControlInfo = (state: RootState) => {
   return state.ui.powerControlInfo;
 };
 
-export const selectDeviceName = (state: RootState) => {
-  return state.ui.powerControlInfo?.deviceName || "";
-};
-
 export const selectScalingDriver = (state: RootState) => {
   return state.ui.powerControlInfo?.scalingDriver || "";
 };

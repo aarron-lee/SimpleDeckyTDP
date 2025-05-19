@@ -1,22 +1,14 @@
 import { useSelector } from "react-redux";
-
-import { selectDeviceName } from "../redux-modules/uiSlice";
-import { Devices } from "../backend/utils";
+import { selectDeviceName, selectIsSteamDeck } from "../utils/selectors";
 
 export const useDeviceName = () => {
   return useSelector(selectDeviceName);
 };
 
 export const useIsSteamDeck = () => {
-  const deviceName = useSelector(selectDeviceName);
+  const isSteamDeck = useSelector(selectIsSteamDeck);
 
-  if (
-    deviceName.includes(Devices.STEAM_DECK_LCD) ||
-    deviceName.includes(Devices.STEAM_DECK_OLED)
-  ) {
-    return true;
-  }
-  return false;
+  return isSteamDeck;
 };
 
 export default useDeviceName;

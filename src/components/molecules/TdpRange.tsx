@@ -15,6 +15,11 @@ const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
 
   const deviceName = useDeviceName();
+  const isSteamDeck = useIsSteamDeck();
+
+  if (isSteamDeck) {
+    return 20;
+  }
 
   if (
     deviceName.includes(Devices.ASUS_FLOW_Z13) ||
