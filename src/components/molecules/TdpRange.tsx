@@ -11,14 +11,15 @@ import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
 import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 
-const useMaxSupportedTdpValue = ({ isSteamDeck }: { isSteamDeck: boolean }) => {
+const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
+
+  const deviceName = useDeviceName();
+  const isSteamDeck = useIsSteamDeck();
 
   if (isSteamDeck) {
     return 20;
   }
-
-  const deviceName = useDeviceName();
 
   if (
     deviceName.includes(Devices.ASUS_FLOW_Z13) ||
@@ -40,7 +41,7 @@ const TdpRange = () => {
     SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS
   );
   const isIntel = useIsIntel();
-  let maxSupportedTdpValue = useMaxSupportedTdpValue({ isSteamDeck });
+  const maxSupportedTdpValue = useMaxSupportedTdpValue();
 
   if (isIntel) {
     // intel provides TDP limit values, custom TDP range is unnecessary
