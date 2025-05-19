@@ -348,7 +348,7 @@ def steam_deck_advanced_options(options):
     'range': [1600, 2200],
     'defaultValue': 1600,
     'step': 50,
-    'valueSuffix': '',
+    'valueSuffix': 'MHz',
     'description': 'Requires Custom Bios',
     'currentValue': get_number_value(SteamDeckSettings.DECK_CUSTOM_GPU_MAX, 1600),
     'statePath': SteamDeckSettings.DECK_CUSTOM_GPU_MAX.value,
