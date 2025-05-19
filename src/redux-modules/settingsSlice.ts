@@ -14,6 +14,7 @@ import { RootState } from "./store";
 import {
   AdvancedOptionsEnum,
   GpuModes,
+  logInfo,
   SteamDeckAdvancedOptions,
 } from "../backend/utils";
 import { selectIsSteamDeck } from "../utils/selectors";
@@ -583,8 +584,11 @@ function handleAdvancedOptionsEdgeCases(
   statePath: string,
   value: boolean
 ) {
-  handleSteamDeckAdvancedOptions(state, statePath, value);
-
+  try {
+    handleSteamDeckAdvancedOptions(state, statePath, value);
+  } catch (err) {
+    logInfo({ info: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+  }
   if (statePath === AdvancedOptionsEnum.USE_PLATFORM_PROFILE && value) {
     set(
       state,
