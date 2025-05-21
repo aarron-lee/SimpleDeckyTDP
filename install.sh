@@ -15,11 +15,14 @@ sudo rm -rf $HOME/homebrew/plugins/SimpleDeckyTDP
 
 echo "installing SimpleDeckyTDP plugin for TDP control"
 # download + install simple decky tdp
-curl -L $(curl -s https://api.github.com/repos/aarron-lee/SimpleDeckyTDP/releases/latest | grep "browser_download_url" | cut -d '"' -f 4) -o $HOME/SimpleDeckyTDP.tar.gz
-sudo tar -xzf SimpleDeckyTDP.tar.gz -C $HOME/homebrew/plugins
+curl -L $(curl -s https://api.github.com/repos/aarron-lee/SimpleDeckyTDP/releases/latest | grep "browser_download_url" | cut -d '"' -f 4) -o $HOME/SimpleDeckyTDP.zip
+
+# sudo tar -xzf SimpleDeckyTDP.tar.gz -C $HOME/homebrew/plugins
+# sudo ark -ba ./SimpleDeckyTDP.zip -o $HOME/homebrew/plugins
+sudo 7z x ./SimpleDeckyTDP.zip  -o$HOME/homebrew/plugins
 
 # install complete, remove build dir
-rm  $HOME/SimpleDeckyTDP.tar.gz
+rm  $HOME/SimpleDeckyTDP.zip
 sudo systemctl restart plugin_loader.service
 
 echo "Installation complete"
