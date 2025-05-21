@@ -13,6 +13,7 @@ import plugin_utils
 import migrations
 import steam_info
 import device_utils
+import charge_limit
 
 class Plugin:
 
@@ -235,6 +236,8 @@ class Plugin:
   # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
   async def _main(self):
     decky_plugin.logger.info("SimpleDeckyTDP Starting")
+    if charge_limit.supports_charge_limit():
+      charge_limit.initialize_charge_limit()
 
   # Function called first during the unload process, utilize this to handle your plugin being removed
   async def _unload(self):

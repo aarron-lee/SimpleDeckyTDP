@@ -1,5 +1,7 @@
 from devices import rog_ally
+from plugin_settings import get_nested_setting
 import device_utils
+from time import sleep
 
 def get_range_info():
   if device_utils.is_rog_ally_series():
@@ -28,3 +30,15 @@ def set_charge_limit(limit):
   if device_utils.is_rog_ally_series():
     return rog_ally.set_charge_limit(limit)
   return False
+
+def get_expected_charge_limit():
+  # CHARGE_LIMIT = 'chargeLimit'
+  return get_nested_setting('advanced.chargeLimit')
+
+def initialize_charge_limit():
+  if supports_charge_limit():
+    current_limit = get_current_charge_limit()
+    expected_limit = get_expected_charge_limit()
+
+    if current_limit != expected_limit:
+      set_charge_limit(expected_limit)
