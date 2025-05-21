@@ -40,5 +40,5 @@ def initialize_charge_limit():
     current_limit = get_current_charge_limit()
     expected_limit = get_expected_charge_limit()
 
-    if current_limit != expected_limit:
+    if isinstance(expected_limit, int) and current_limit != expected_limit:
       set_charge_limit(expected_limit)
