@@ -24,7 +24,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
   - [Ryzenadj Troubleshooting](#ryzenadj-troubleshooting)
 - [Attribution](#attribution)
 
-![plugin image](./img/plugin_image_updated.png)
+![plugin image](./img/recent.jpg)
 
 <!-- ![steam patch](./img/steam-patch2.png) -->
 
