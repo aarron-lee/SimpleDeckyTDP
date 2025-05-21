@@ -78,6 +78,9 @@ def is_rog_ally():
     return True
   return False
 
+def is_rog_ally_series():
+  return is_rog_ally() or is_rog_ally_x()
+
 def is_legion_go():
   device_name = get_device_name()
 

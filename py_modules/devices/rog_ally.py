@@ -9,6 +9,8 @@ import device_utils
 
 PLATFORM_PROFILE_PATH  = '/sys/firmware/acpi/platform_profile'
 
+CHARGE_LIMIT_PATH = '/sys/class/power_supply/BAT0/charge_control_end_threshold'
+
 FAST_WMI_PATH  = '/sys/devices/platform/asus-nb-wmi/ppt_fppt'
 SLOW_WMI_PATH  = '/sys/devices/platform/asus-nb-wmi/ppt_pl2_sppt'
 STAPM_WMI_PATH = '/sys/devices/platform/asus-nb-wmi/ppt_pl1_spl'
@@ -254,3 +256,41 @@ def get_platform_profile_options():
   except Exception as e:
     decky_plugin.logger.error(f'error getting platform_profile_choices {e}')
   return []
+
+def supports_charge_limit():
+  return os.path.exists(CHARGE_LIMIT_PATH)
+
+def set_charge_limit(limit: int):
+  try:
+    if os.path.exists(CHARGE_LIMIT_PATH):
+      decky_plugin.logger.info(f"Setting charge limit to {limit} %.")
+      with open(
+          CHARGE_LIMIT_PATH, "w"
+      ) as f:
+          f.write(f"{limit}\n")
+          f.close()
+      return True
+    else:
+      decky_plugin.logger.info(f'{__name__} rog_ally charge limit path doesnt exist')
+      return False
+  except Exception as e:
+      decky_plugin.logger.error(f"Failed to write charge limit with error:\n{e}")
+      return False
+
+def get_current_charge_limit():
+  try:
+    if os.path.exists(CHARGE_LIMIT_PATH):
+      with open(
+          CHARGE_LIMIT_PATH, "r"
+      ) as f:
+          limit = int(f.read().strip())
+          decky_plugin.logger.info(f"current charge limit {limit}%")
+          f.close()
+          return limit
+      return None
+    else:
+      decky_plugin.logger.info(f'{__name__} rog_ally charge limit path doesnt exist')
+      return None
+  except Exception as e:
+      decky_plugin.logger.error(f"Failed to get charge limit with error:\n{e}")
+      return None

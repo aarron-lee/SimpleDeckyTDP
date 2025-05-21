@@ -7,6 +7,7 @@ from enum import Enum
 from devices import rog_ally
 import device_utils
 import ryzenadj
+import charge_limit
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
@@ -29,6 +30,7 @@ class DefaultSettings(Enum):
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
   FORCE_DISABLE_SUSPEND_ACTIONS = 'forceDisableSuspendActions'
+  CHARGE_LIMIT = 'chargeLimit'
 
 class RogAllySettings(Enum):
   USE_PLATFORM_PROFILE = 'platformProfile'
@@ -157,6 +159,23 @@ def get_default_options():
   }
 
   options.append(ac_power_profiles)
+
+  if charge_limit.supports_charge_limit():
+    range, default_value, step = charge_limit.get_range_info()
+
+    set_charge_limit_option = {
+      'name': 'Set Charge Limit',
+      'type': AdvancedOptionsType.NUMBER_RANGE.value,
+      'range': range,
+      'defaultValue': default_value,
+      'step': step,
+      'valueSuffix': '%',
+      'description': 'Sets max battery limit',
+      'currentValue': get_number_value(DefaultSettings.CHARGE_LIMIT, default_value),
+      'statePath': DefaultSettings.CHARGE_LIMIT.value,
+    }
+
+    options.append(set_charge_limit_option)
 
   enable_background_polling = {
     'name': 'Enable Background Polling',
@@ -407,6 +426,13 @@ def handle_advanced_option_change(new_values):
 
       if isinstance(powersave_enabled, bool):
         rog_ally.set_mcu_powersave(powersave_enabled)
+    if charge_limit.supports_charge_limit():
+      new_charge_limit = new_values.get(DefaultSettings.CHARGE_LIMIT.value, None)
+      if (isinstance(new_charge_limit, int)
+        and new_charge_limit >= charge_limit.charge_limit_min()
+        and new_charge_limit != charge_limit.get_current_charge_limit()
+      ):
+        charge_limit.set_charge_limit(new_charge_limit)
 
   new_undervolt_value = new_values.get(DefaultSettings.RYZENADJ_UNDERVOLT.value, 0)
   if (
