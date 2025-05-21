@@ -4,8 +4,8 @@
   "flags": ["root"],
   "api_version": 1,
   "publish": {
-    "tags": ["tdp", "root", "non-deck"],
-    "description": "Simple TDP slider for non-Deck PC handhelds",
+    "tags": ["tdp", "root"],
+    "description": "Simple TDP plugin for PC handhelds",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }
