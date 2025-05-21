@@ -25,7 +25,10 @@ def download_latest_build():
 
   download_url = json_data.get("assets")[0].get("browser_download_url")
 
-  file_path = '/tmp/SimpleDeckyTDP.tar.gz'
+  file_path = "/tmp/SimpleDeckyTDP.tar.gz"
+
+  if download_url.endswith(".zip"):
+    file_path = "/tmp/SimpleDeckyTDP.zip"
 
   with urllib.request.urlopen(download_url, context=gcontext) as response, open(file_path, 'wb') as output_file:
     output_file.write(response.read())
@@ -47,7 +50,7 @@ def ota_update():
       decky_plugin.logger.error(f'ota error during removal of old plugin {e}')
 
     try:
-      shutil.unpack_archive(downloaded_filepath, f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins')
+      shutil.unpack_archive(downloaded_filepath, f"{decky_plugin.DECKY_USER_HOME}/homebrew/plugins")
       os.remove(downloaded_filepath)
     except Exception as e:
       decky_plugin.logger.error(f'error during install {e}')
