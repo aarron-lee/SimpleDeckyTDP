@@ -49,13 +49,8 @@ jobs:
           $(pwd)/cli/decky plugin build $(pwd)
           unzip "out/SimpleDeckyTDP.zip" -d "out/SimpleDeckyTDP"
 
-      - name: Package plugin as TAR GZ
-        run: |
-          tar -czvf SimpleDeckyTDP.tar.gz --transform 's|out/SimpleDeckyTDP/SimpleDeckyTDP|SimpleDeckyTDP|' out/SimpleDeckyTDP/SimpleDeckyTDP/*
-
       - name: show files
         run: |
-          tar -tzvf SimpleDeckyTDP.tar.gz
           7z l out/SimpleDeckyTDP.zip
 
       - name: Publish Artifact
