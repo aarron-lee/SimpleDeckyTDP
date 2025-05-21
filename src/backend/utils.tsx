@@ -31,6 +31,7 @@ export enum AdvancedOptionsEnum {
   FORCE_DISABLE_SUSPEND_ACTIONS = "forceDisableSuspendActions",
   USE_PLATFORM_PROFILE = "platformProfile",
   CHARGE_LIMIT = "chargeLimit",
+  ENABLE_SIMPLE_EPP_LABELS = "enableSimpleEppLabels",
 }
 
 export enum AdvancedOptionsType {
@@ -67,6 +68,7 @@ export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING,
   AdvancedOptionsEnum.ENABLE_AUTOMATIC_CPU_MANAGEMENT,
   AdvancedOptionsEnum.CHARGE_LIMIT,
+  AdvancedOptionsEnum.ENABLE_SIMPLE_EPP_LABELS,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
   RogAllyAdvancedOptions.USE_WMI,

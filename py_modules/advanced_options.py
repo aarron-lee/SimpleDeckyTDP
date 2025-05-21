@@ -31,6 +31,7 @@ class DefaultSettings(Enum):
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
   FORCE_DISABLE_SUSPEND_ACTIONS = 'forceDisableSuspendActions'
   CHARGE_LIMIT = 'chargeLimit'
+  ENABLE_SIMPLE_EPP_LABELS = 'enableSimpleEppLabels'
 
 class RogAllySettings(Enum):
   USE_PLATFORM_PROFILE = 'platformProfile'
@@ -133,6 +134,22 @@ def get_default_options():
   }
 
   options.append(manual_cpu_controls)
+
+  if not device_utils.is_intel():
+    simple_epp_labels = {
+      'name': 'Enable simple Governor + Epp Labels',
+      'type': AdvancedOptionsType.BOOLEAN.value,
+      'defaultValue': True,
+      'description': 'Enables more intuitive labels for EPP and Power Governor',
+      'currentValue': get_value(DefaultSettings.ENABLE_SIMPLE_EPP_LABELS, True),
+      'statePath': DefaultSettings.ENABLE_SIMPLE_EPP_LABELS.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_POWER_CONTROL.value],
+        'hideIfDisabled': True
+      }
+    }
+
+    options.append(simple_epp_labels)
 
   enable_automatic_cpu_management = {
     'name': 'Enable Automatic CPU management',

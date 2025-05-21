@@ -41,6 +41,18 @@ export const EppOptions: { [optionName: string]: EppOption } = {
   PERFORM_ANCE: "performance",
 };
 
+export const simplePowerGovernorLabels: { [optionName: string]: string } = {
+  POWER_SAVE: "Manual",
+  PERFORM_ANCE: "Prefer CPU",
+};
+
+export const simpleEppLabels: { [optionName: string]: string } = {
+  POWER_SAVE: "Prefer GPU",
+  BALANCE_POWER_SAVE: "Balance GPU",
+  BALANCE_PERFORMANCE: "Balance CPU",
+  PERFORM_ANCE: "Prefer CPU",
+};
+
 export type ScalingDriverOption =
   | "intel_cpufreq"
   | "intel_pstate"

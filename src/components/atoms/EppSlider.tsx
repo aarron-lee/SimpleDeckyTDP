@@ -9,12 +9,15 @@ import {
   EppOptions,
   PowerControlInfo,
   ScalingDrivers,
+  simpleEppLabels,
 } from "../../utils/constants";
 import { capitalize } from "lodash";
 import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
+import { useAdvancedOption } from "../../hooks/useAdvanced";
+import { AdvancedOptionsEnum } from "../../backend/utils";
 
-const getOptions = (eppOptions: EppOption[]) => {
+const getOptions = (eppOptions: EppOption[], simpleLabelsEnabled = false) => {
   const idxToOption: { [key: string]: any } = {};
   const optionToIdx: { [key: string]: any } = {};
   const notchLabels: NotchLabel[] = [];
@@ -25,10 +28,17 @@ const getOptions = (eppOptions: EppOption[]) => {
       idxToOption[notchIdx] = option;
       optionToIdx[option] = notchIdx;
 
-      const label = EppOptions[option];
+      let label = EppOptions[option] as string;
+
+      if (simpleLabelsEnabled && simpleEppLabels[label]) {
+        label = simpleEppLabels[label];
+      } else {
+        label = capitalize(label.replace(/_/g, " "));
+      }
+
       notchLabels.push({
         notchIndex: notchIdx,
-        label: capitalize(label.replace(/_/g, " ")),
+        label,
         value: notchIdx,
       });
       notchIdx++;
@@ -45,6 +55,9 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
   const { powerGovernor, epp } = useSelector(
     getPowerControlInfoSelector(scalingDriver)
   );
+  const simpleLabelsEnabled = useAdvancedOption(
+    AdvancedOptionsEnum.ENABLE_SIMPLE_EPP_LABELS
+  );
 
   const dispatch = useDispatch();
 
@@ -52,7 +65,10 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
     return null;
   }
 
-  const { idxToOption, optionToIdx, notchLabels } = getOptions(eppOptions);
+  const { idxToOption, optionToIdx, notchLabels } = getOptions(
+    eppOptions,
+    simpleLabelsEnabled
+  );
 
   let handleSliderChange = (value: number) => {
     if (powerGovernor === "performance" && pstateStatus === "active") {
@@ -80,9 +96,15 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
     return null;
   }
 
+  let label = "CPU Energy Performance Preference";
+
+  if (simpleLabelsEnabled) {
+    label = "Energy Performance Preference";
+  }
+
   return (
     <DeckySlider
-      label="CPU Energy Performance Preference"
+      label={label}
       value={sliderValue}
       min={0}
       max={notchLabels.length - 1}

@@ -7,12 +7,18 @@ import {
   PowerControlInfo,
   PowerGovernorOption,
   PowerGovernorOptions,
+  simplePowerGovernorLabels,
 } from "../../utils/constants";
 import { capitalize } from "lodash";
 import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
+import { useAdvancedOption } from "../../hooks/useAdvanced";
+import { AdvancedOptionsEnum } from "../../backend/utils";
 
-const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
+const getOptions = (
+  powerGovernorOptions: PowerGovernorOption[],
+  simpleLabelsEnabled: boolean
+) => {
   const idxToOption: { [key: string]: any } = {};
   const optionToIdx: { [key: string]: any } = {};
   const notchLabels: NotchLabel[] = [];
@@ -24,12 +30,18 @@ const getOptions = (powerGovernorOptions: PowerGovernorOption[]) => {
       idxToOption[idx] = option;
       optionToIdx[option] = idx;
 
-      const label = PowerGovernorOptions[option];
+      let label = PowerGovernorOptions[option] as string;
+
+      if (simpleLabelsEnabled && simplePowerGovernorLabels[label]) {
+        label = simplePowerGovernorLabels[label];
+      } else {
+        label = capitalize(label.replace(/_/g, " "));
+      }
 
       notchLabels.push({
         notchIndex: notchIdx,
         value: notchIdx,
-        label: capitalize(label.replace(/_/g, " ")),
+        label,
       });
       notchIdx++;
     }
@@ -42,14 +54,19 @@ const PowerGovernorSlider: FC<{
   powerControlInfo: PowerControlInfo;
 }> = ({ powerControlInfo }) => {
   const { powerGovernorOptions, scalingDriver } = powerControlInfo;
+  const simpleLabelsEnabled = useAdvancedOption(
+    AdvancedOptionsEnum.ENABLE_SIMPLE_EPP_LABELS
+  );
 
   const { powerGovernor } = useSelector(
     getPowerControlInfoSelector(scalingDriver)
   );
   const dispatch = useDispatch();
 
-  const { idxToOption, optionToIdx, notchLabels } =
-    getOptions(powerGovernorOptions);
+  const { idxToOption, optionToIdx, notchLabels } = getOptions(
+    powerGovernorOptions,
+    simpleLabelsEnabled
+  );
 
   const handleSliderChange = (value: number) => {
     const powerGovernorOption = idxToOption[value];
@@ -60,9 +77,15 @@ const PowerGovernorSlider: FC<{
 
   const sliderValue = optionToIdx[powerGovernor || "powersave"];
 
+  let label = "CPU Power Governor";
+
+  if (simpleLabelsEnabled) {
+    label = "Power Governor";
+  }
+
   return (
     <DeckySlider
-      label="CPU Power Governor"
+      label={label}
       value={sliderValue}
       min={0}
       max={notchLabels.length - 1}
