@@ -244,6 +244,10 @@ class Plugin:
     decky_plugin.logger.info("SimpleDeckyTDP Unloading")
     pass
 
+  async def _uninstall(self):
+    decky_plugin.logger.info("SimpleDeckyTDP Uninstalling")
+    pass
+
   # Migrations that should be performed before entering `_main()`.
   async def _migration(self):
     decky_plugin.logger.info("Migrating")
