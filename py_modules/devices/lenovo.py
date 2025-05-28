@@ -2,7 +2,7 @@ import decky_plugin
 import os
 from time import sleep
 
-LENOVO_WMI_PATH = "/sys/class/firmware-attributes/lenovo-wmi-other-0/attributes/"
+LENOVO_WMI_PATH = "/sys/class/firmware-attributes/lenovo-wmi-other-0/attributes"
 LENOVO_WMI_FAST_PATH = f"{LENOVO_WMI_PATH}/ppt_pl3_fppt/current_value"
 LENOVO_WMI_SLOW_PATH = f"{LENOVO_WMI_PATH}/ppt_pl2_sppt/current_value"
 LENOVO_WMI_STAPM_PATH = f"{LENOVO_WMI_PATH}/ppt_pl1_spl/current_value"
