@@ -3,7 +3,6 @@ import shutil
 from time import sleep
 import os
 import decky_plugin
-import bios_settings
 import json
 import device_utils
 
@@ -41,24 +40,8 @@ def set_mcu_powersave(enabled):
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} mcu_powersave error {e}")
 
-def supports_bios_wmi_tdp():
-  if bios_settings.has_fwupdmgr() == False:
-    return False
-
-  tdp_methods = {"ppt_fppt", 'ppt_pl3_fppt', "ppt_pl2_sppt", "ppt_pl1_spl"}
-
-  settings = bios_settings.get_bios_settings()
-  filtered_data = [item for item in settings.get("BiosSettings") if item.get("Name") in tdp_methods]
-
-  if len(filtered_data) == 3:
-    return list(map(lambda x: x.get('Name'), filtered_data))
-
-  return None
 
 def supports_wmi_tdp():
-  if bool(supports_bios_wmi_tdp()):
-    return True
-
   if os.path.exists(FAST_WMI_PATH) and os.path.exists(SLOW_WMI_PATH) and os.path.exists(STAPM_WMI_PATH):
     return True
   elif (
@@ -102,8 +85,6 @@ def set_tdp(tdp):
       and os.path.exists(ASUS_ARMORY_STAPM_WMI_PATH)
     ):
       set_tdp_via_asus_armoury(tdp)
-    elif bool(supports_bios_wmi_tdp()):
-      set_tdp_via_fwupdmgr(tdp)
     else:
       decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Legacy WMI")
       # fast limit
@@ -173,31 +154,6 @@ def get_mcu_version():
     decky_plugin.logger.error(f'{__name__} error getting mcu version {e}')
 
     return 0
-
-def set_tdp_via_fwupdmgr(tdp):
-  wmi_methods = supports_bios_wmi_tdp()
-
-  if not wmi_methods:
-    return False
-
-  fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
-
-  decky_plugin.logger.info(f"{__name__} Setting TDP via fwupdmgr WMI - fast {fast_tdp} slow {slow_tdp} stapm {stapm_tdp}")
-
-  methods_to_tdp = {
-    'ppt_pl3_fppt': fast_tdp,
-    'ppt_fppt': fast_tdp,
-    'ppt_pl2_sppt': slow_tdp,
-    'ppt_pl1_spl': stapm_tdp
-  }
-
-  for wmi_method in wmi_methods:
-    wmi_method_tdp = methods_to_tdp.get(wmi_method, tdp)
-    decky_plugin.logger.info(f'set fwupdmgr tdp {wmi_method} {wmi_method_tdp}')
-    cmd = f'sudo fwupdmgr set-bios-setting {wmi_method} {wmi_method_tdp}'
-    subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    sleep(0.1)
-
 
 def set_tdp_via_asus_armoury(tdp):
   # fast limit
