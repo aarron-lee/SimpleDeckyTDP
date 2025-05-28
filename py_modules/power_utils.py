@@ -2,7 +2,7 @@ import os
 from time import sleep
 import decky_plugin
 import advanced_options
-import file_timeout
+import plugin_timeout
 from enum import Enum
 import cpu_utils
 
@@ -121,7 +121,7 @@ def set_epp(epp_option):
     decky_plugin.logger.error(f'{__name__} error setting epp {e}')
 
 def write_command(command, paths):
-  with file_timeout.time_limit(2):
+  with plugin_timeout.time_limit(2):
     for p in paths:
       try:
         with open(p, 'w') as file:
@@ -137,7 +137,7 @@ def write_command(command, paths):
         continue
 
 def power_controls_enabled():
-  with file_timeout.time_limit(1):
+  with plugin_timeout.time_limit(1):
     return advanced_options.get_setting(
       advanced_options.DefaultSettings.ENABLE_POWER_CONTROL.value
     )

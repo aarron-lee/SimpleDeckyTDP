@@ -1,5 +1,5 @@
 from enum import Enum
-import file_timeout
+import plugin_timeout
 import decky_plugin
 import re
 
@@ -55,7 +55,7 @@ def get_device_name():
 
   if not DEVICE_NAME:
     try:
-      with file_timeout.time_limit(2):
+      with plugin_timeout.time_limit(2):
         with open("/sys/devices/virtual/dmi/id/product_name", "r") as file:
           device_name = file.read().strip()
           file.close()

@@ -2,7 +2,7 @@ import ac_power
 import decky_plugin
 import plugin_update
 import time
-import file_timeout
+import plugin_timeout
 import advanced_options
 import power_utils
 import cpu_utils
@@ -33,7 +33,7 @@ class Plugin:
       'deviceName': ''
     }
     try:
-      with file_timeout.time_limit(5):
+      with plugin_timeout.time_limit(5):
         pstate_status = cpu_utils.get_pstate_status()
         response['pstateStatus'] = pstate_status
         if pstate_status == 'passive' and device_utils.is_intel():
@@ -56,7 +56,7 @@ class Plugin:
     try:
       settings = get_saved_settings()
       try:
-        with file_timeout.time_limit(5):
+        with plugin_timeout.time_limit(5):
           settings['advancedOptions'] = advanced_options.get_advanced_options()
 
           settings['supportsCustomAcPowerManagement'] = ac_power.supports_custom_ac_power_management()
@@ -182,7 +182,7 @@ class Plugin:
       tdp_profile = get_tdp_profile(currentGameId) or tdp_profile
 
     try:
-      with file_timeout.time_limit(3):
+      with plugin_timeout.time_limit(3):
         plugin_utils.set_values_for_tdp_profile(tdp_profile)
     except Exception as e:
       decky_plugin.logger.error(f'main#poll_tdp file timeout {e}')
@@ -198,7 +198,7 @@ class Plugin:
       tdp_profile = get_active_tdp_profile(currentGameId)
 
       try:
-        with file_timeout.time_limit(3):
+        with plugin_timeout.time_limit(3):
           plugin_utils.set_values_for_tdp_profile(tdp_profile)
       except Exception as e:
         decky_plugin.logger.error(f'main#save_tdp file timeout {e}')
@@ -215,7 +215,7 @@ class Plugin:
   async def ota_update(self):
     # trigger ota update
     try:
-      with file_timeout.time_limit(15):
+      with plugin_timeout.time_limit(15):
         return plugin_update.ota_update()
     except Exception as e:
       decky_plugin.logger.error(e)

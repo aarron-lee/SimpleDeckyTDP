@@ -4,7 +4,7 @@ import re
 import subprocess
 import shutil
 import decky_plugin
-import file_timeout
+import plugin_timeout
 import advanced_options
 from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
@@ -77,7 +77,7 @@ def set_tdp(tdp: int):
 
 def set_amd_tdp(tdp: int):
   try:
-    with file_timeout.time_limit(4):
+    with plugin_timeout.time_limit(4):
       if (
         device_utils.is_legion_go()
         and advanced_options.get_setting(
@@ -125,7 +125,7 @@ def set_cpb_boost(enabled):
     paths = get_cpb_boost_paths()
     if len(paths) > 0 and os.path.exists(paths[0]):
       try:
-        with file_timeout.time_limit(4):
+        with plugin_timeout.time_limit(4):
           for p in paths:
             try:
               with open(p, 'w') as file:
@@ -143,7 +143,7 @@ def set_cpb_boost(enabled):
 
 def supports_cpu_boost():
   try:
-    with file_timeout.time_limit(4):
+    with plugin_timeout.time_limit(4):
       cpu_boost_paths = get_cpb_boost_paths()
       if len(cpu_boost_paths) > 0 and os.path.exists(cpu_boost_paths[0]):
         return True
@@ -158,7 +158,7 @@ def supports_cpu_boost():
 
 def set_cpu_boost(enabled = True):
   try:
-    with file_timeout.time_limit(3):
+    with plugin_timeout.time_limit(3):
       if os.path.exists(AMD_LEGACY_CPU_BOOST_PATH):
         with open(AMD_LEGACY_CPU_BOOST_PATH, 'w') as file:
           if enabled:
@@ -300,7 +300,7 @@ def get_scaling_driver_devices():
 def get_scaling_driver():
   SCALING_DRIVER_DEVICES = get_scaling_driver_devices()
   try:
-    with file_timeout.time_limit(1):
+    with plugin_timeout.time_limit(1):
       if os.path.exists(SCALING_DRIVER_DEVICES[0]):
         with open(SCALING_DRIVER_DEVICES[0], 'r') as file:
           scaling_driver = file.read().strip()
@@ -316,7 +316,7 @@ def get_intel_tdp_limits():
   MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_max_power_uw'
 
   try:
-    with file_timeout.time_limit(1):
+    with plugin_timeout.time_limit(1):
       if os.path.exists(MAX_TDP_PATH):
         with open(MAX_TDP_PATH, 'r') as file:
           max_tdp = int(file.read().strip()) / 1000000
