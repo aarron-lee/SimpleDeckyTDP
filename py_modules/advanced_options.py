@@ -122,14 +122,12 @@ def get_default_options():
 
     options.append(enable_gpu_control)
 
-  manual_cpu_controls_default = True if device_utils.is_intel() else False
-
   manual_cpu_controls = {
     'name': 'Enable manual CPU Controls',
     'type': AdvancedOptionsType.BOOLEAN.value,
-    'defaultValue': manual_cpu_controls_default,
+    'defaultValue': True,
     'description': 'Enables manual CPU boost, SMT, Power Governor, and EPP controls',
-    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, manual_cpu_controls_default),
+    'currentValue': get_value(DefaultSettings.ENABLE_POWER_CONTROL, True),
     'statePath': DefaultSettings.ENABLE_POWER_CONTROL.value
   }
 
@@ -154,9 +152,9 @@ def get_default_options():
   enable_automatic_cpu_management = {
     'name': 'Enable Automatic CPU management',
     'type': AdvancedOptionsType.BOOLEAN.value,
-    'defaultValue': True,
+    'defaultValue': False,
     'description': 'Enables automatic management of CPU Boost, EPP, SMT, and Governor',
-    'currentValue': get_value(DefaultSettings.ENABLE_AUTOMATIC_CPU_MANAGEMENT, True),
+    'currentValue': get_value(DefaultSettings.ENABLE_AUTOMATIC_CPU_MANAGEMENT, False),
     'statePath': DefaultSettings.ENABLE_AUTOMATIC_CPU_MANAGEMENT.value,
     'disabled': {
       'ifTruthy': [DefaultSettings.ENABLE_POWER_CONTROL.value],
