@@ -4,7 +4,7 @@ import subprocess
 import decky_plugin
 from plugin_settings import get_nested_setting, get_saved_settings
 from enum import Enum
-from devices import rog_ally
+from devices import rog_ally, lenovo
 import device_utils
 import ryzenadj
 import charge_limit
@@ -45,21 +45,6 @@ class SteamDeckSettings(Enum):
   DECK_CUSTOM_TDP_LIMITS = 'deckCustomTdpLimits'
   DECK_CUSTOM_GPU_MAX_ENABLED = 'deckCustomGpuMaxEnabled'
   DECK_CUSTOM_GPU_MAX = 'deckCustomGpuMax'
-
-def modprobe_acpi_call():
-  return False
-  # legion go currently requires acpi_call for using WMI to set TDP
-  # using WMI to set TDP is safer on the Legion Go, ryzenadj is dangerous on the LGO
-  # there is upstream work to formally add the wmi calls to a /sys endpoint, but it's not available yet
-  if device_utils.is_legion_go():
-    os.system("modprobe acpi_call")
-    result = subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-    if result.stderr:
-      decky_plugin.logger.error(f"modprobe_acpi_call error: {result.stderr}")
-      return False
-    return True
-  return False
 
 # e.g. get_setting(LegionGoSettings.CUSTOM_TDP_MODE.value)
 def get_setting(setting_name = ''):
@@ -327,13 +312,12 @@ def get_default_options():
 
 def get_advanced_options():
   options = get_default_options()
-  supports_acpi_call = modprobe_acpi_call()
 
-  if device_utils.is_legion_go() and supports_acpi_call:
+  if device_utils.is_legion_go() and lenovo.supports_wmi_tdp():
     options.append({
       'name': 'Lenovo Custom TDP Mode',
       'type': AdvancedOptionsType.BOOLEAN.value,
-      'description': 'Use WMI for TDP control. Requires Bios with TDP fixes (Bios version v29.1 or newer)',
+      'description': 'Use WMI for TDP control.',
       'defaultValue': True,
       'currentValue': get_value(LegionGoSettings.CUSTOM_TDP_MODE, True),
       'statePath': LegionGoSettings.CUSTOM_TDP_MODE.value,
