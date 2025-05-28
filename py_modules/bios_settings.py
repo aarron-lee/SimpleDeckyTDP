@@ -5,13 +5,20 @@ import file_timeout
 import shutil
 
 def has_fwupdmgr():
+  return False
   fwupdmgr_path = shutil.which('fwupdmgr')
 
-  if fwupdmgr_path is None:
-    return False
-  return True
+  # if fwupdmgr_path is None:
+  #   return False
+  # return True
 
 def get_bios_settings():
+  if has_fwupdmgr() == False:
+    decky_plugin.logger.error(f'Error get_bios_settings no fwupdmgr {e}')
+    return {
+      "BiosSettings": []
+    }
+
   try:
     with file_timeout.time_limit(2):
       cmd = 'sudo fwupdmgr get-bios-setting --json'

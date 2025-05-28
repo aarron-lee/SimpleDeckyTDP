@@ -176,6 +176,10 @@ def get_mcu_version():
 
 def set_tdp_via_fwupdmgr(tdp):
   wmi_methods = supports_bios_wmi_tdp()
+
+  if not wmi_methods:
+    return False
+
   fast_tdp, slow_tdp, stapm_tdp = get_asus_armoury_tdp_values(tdp)
 
   decky_plugin.logger.info(f"{__name__} Setting TDP via fwupdmgr WMI - fast {fast_tdp} slow {slow_tdp} stapm {stapm_tdp}")
