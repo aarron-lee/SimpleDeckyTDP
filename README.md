@@ -43,7 +43,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
-- Legion Go TDP via WMI calls (allows for TDP control with secure boot, requires acpi_call)
+- Legion Go TDP via WMI calls (allows for TDP control with secure boot)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
 - (For ROG Ally) Battery Charge Limit
 - etc
@@ -228,12 +228,11 @@ If you encounter issues with suspend, or back buttons not working after suspend-
 
 ### Legion Go Troubleshooting
 
-The Legion Go requires using Lenovo's built-in WMI methods for device stability. There are currently only two ways to do so:
+The Legion Go requires using Lenovo's built-in WMI methods for device stability.
 
-1. use the `acpi_call` kernel module for wmi calls, which is supported in SDTDP. If this is working, you should see a `Use Lenovo WMI` option in SDTDP
-2. use a WIP Legion Go driver that adds TDP controls in the kernel. While this is the proper solution, it currently isn't finished + stable yet.
+This use the Legion Go driver that adds TDP controls in the kernel.
 
-- initial implementation for the driver has been added to SDTDP, so theoretically it should just work once the driver is installed.
+This should also work for the Legion Go S.
 
 ### Ryzenadj troubleshooting
 
