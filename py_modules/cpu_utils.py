@@ -78,13 +78,13 @@ def set_tdp(tdp: int):
 def set_amd_tdp(tdp: int):
   try:
     with file_timeout.time_limit(4):
-      if wmi_tdp.supports_wmi_tdp():
-        return wmi_tdp.set_tdp(tdp)
-      elif device_utils.is_legion_go() and advanced_options.get_setting(
+      if device_utils.is_legion_go() and advanced_options.get_setting(
         LegionGoSettings.CUSTOM_TDP_MODE.value
       ):
         # legacy acpi_call tdp for legion go
         return legion_go.set_tdp(tdp)
+      elif device_utils.is_legion_go() and wmi_tdp.supports_wmi_tdp():
+        return wmi_tdp.set_tdp(tdp)
       elif device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
