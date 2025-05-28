@@ -63,9 +63,11 @@ def supports_wmi_tdp():
   return False
 
 def set_platform_profile(profile: str) -> None:
-  if os.path.exists(os.path.join(get_platform_profile_path(), "profile")):
+  set_profile_path = os.path.join(get_platform_profile_path(), "profile")
+  if os.path.exists(set_profile_path):
+    decky_plugin.logger.info(f'setting profile {profile} to path {set_profile_path}')
     try:
-      with open(os.path.join(get_platform_profile_path(), "profile"), "w") as f:
+      with open(set_profile_path, "w") as f:
         f.write(profile)
     except Exception as e:
       decky_plugin.logger.error(f"{__name__} Failed to set platform profile {profile}: {e}")
