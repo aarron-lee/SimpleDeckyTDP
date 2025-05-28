@@ -29,9 +29,6 @@ jobs:
         with:
           version: "10.11.0"
 
-      - name: Update submodules
-        run: git submodule update --init --recursive
-
       - name: Build frontend from source
         run: |
           pnpm i
