@@ -55,7 +55,7 @@ def ota_update():
     except Exception as e:
       decky_plugin.logger.error(f'error during install {e}')
 
-    cmd = f'echo "systemctl restart plugin_loader.service" | sh'
+    cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
 
     result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
