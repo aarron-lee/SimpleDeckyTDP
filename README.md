@@ -45,6 +45,7 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
 - Legion Go TDP via WMI calls (allows for TDP control with secure boot, requires acpi_call)
 - ROG Ally TDP via WMI calls (allows for TDP control with secure boot)
+- (For ROG Ally) Battery Charge Limit
 - etc
 
 ## Compatibility
