@@ -10,12 +10,9 @@ import {
   useIsInitiallyLoading,
 } from "./hooks/useInitialState";
 import Gpu from "./components/molecules/Gpu";
-import AdvancedOptions, {
-  useIsSteamPatchEnabled,
-} from "./components/molecules/AdvancedOptions";
+import AdvancedOptions from "./components/molecules/AdvancedOptions";
 import OtaUpdates from "./components/molecules/OtaUpdates";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { SteamPatchDefaultTdpSlider } from "./components/molecules/SteamPatchDefaultTdpSlider";
 import PowerControl from "./components/molecules/PowerControl";
 import { DeckySection } from "./components/atoms/DeckyFrontendLib";
 import { useIsDesktop } from "./hooks/desktopHooks";
@@ -28,7 +25,6 @@ const App: FC = memo(({}) => {
   const loading = useIsInitiallyLoading();
 
   const isDesktop = useIsDesktop();
-  const steamPatchEnabled = useIsSteamPatchEnabled();
   const tdpControlEnabled = useAdvancedOption(
     AdvancedOptionsEnum.ENABLE_TDP_CONTROL
   );
@@ -42,7 +38,7 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {tdpControlEnabled && (!steamPatchEnabled || isDesktop) && (
+            {tdpControlEnabled && isDesktop && (
               <>
                 <TdpSlider />
               </>
@@ -50,9 +46,6 @@ const App: FC = memo(({}) => {
             {gpuControlEnabled && <Gpu />}
           </DeckySection>
           <PowerControl />
-          {tdpControlEnabled && !isDesktop && steamPatchEnabled && (
-            <SteamPatchDefaultTdpSlider />
-          )}
           {tdpControlEnabled && (
             <>
               <TdpRange />

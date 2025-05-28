@@ -12,7 +12,6 @@ import { updateInitialLoad } from "./redux-modules/settingsSlice";
 
 import { cleanupAction } from "./redux-modules/extraActions";
 
-// import steamPatch from "./steamPatch/steamPatch";
 import { fetchPowerControlInfo } from "./redux-modules/thunks";
 import AppContainer from "./App";
 import { initializePollingStore } from "./redux-modules/pollingMiddleware";
@@ -35,8 +34,6 @@ export default definePlugin(() => {
       setValuesForGameId({ gameId: "default" });
     }, 0);
   });
-
-  // const unpatch = steamPatch();
 
   const unregisterCurrentGameListener = currentGameInfoListener();
   const unregisterResumeFromSuspendListener = resumeFromSuspendEventListener();

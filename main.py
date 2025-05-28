@@ -91,10 +91,6 @@ class Plugin:
 
   async def set_values_for_game_id(self, gameId):
     plugin_utils.set_values_for_game_id(gameId)
-
-  async def set_steam_patch_values_for_game_id(self, gameId):
-    enabled = per_game_profiles_enabled()
-    plugin_utils.set_steam_patch_values_for_game_id(gameId, enabled)
   
   async def persist_tdp(self, tdp, gameId):
     plugin_utils.persist_tdp(tdp, gameId)
@@ -253,6 +249,5 @@ class Plugin:
     decky_plugin.logger.info("Migrating")
 
     # migrations.migrate_smt()
-    # migrations.disable_steam_patch()
     # migrations.migrate_gpu_mode()
     migrations.check_ryzenadj_coall_support()

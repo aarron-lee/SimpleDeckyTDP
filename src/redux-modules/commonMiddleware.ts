@@ -2,7 +2,6 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   getAdvancedOptionsInfoSelector,
-  getSteamPatchEnabledSelector,
   setCpuBoost,
   setEnableTdpProfiles,
   setSmt,
@@ -21,7 +20,6 @@ import {
   onSuspend,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { extractCurrentGameId } from "../utils/constants";
 import { suspendAction } from "./extraActions";
 
 export const commonMiddleware =
@@ -30,11 +28,7 @@ export const commonMiddleware =
 
     const state = store.getState();
 
-    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
-
-    const activeGameId = steamPatchEnabled
-      ? extractCurrentGameId()
-      : activeGameIdSelector(state);
+    const activeGameId = activeGameIdSelector(state);
 
     if (action.type === suspendAction.type) {
       onSuspend();

@@ -21,7 +21,6 @@ class DefaultSettings(Enum):
   ENABLE_APU_SLOW_LIMIT = 'enableApuSlowLimit'
   ENABLE_RYZENADJ_UNDERVOLT = 'enableRyzenadjUndervolt'
   RYZENADJ_UNDERVOLT = 'ryzenadjUndervolt'
-  ENABLE_STEAM_PATCH = 'steamPatch'
   ENABLE_POWER_CONTROL = 'enablePowercontrol'
   ENABLE_BACKGROUND_POLLING = 'enableBackgroundPolling'
   ENABLE_AUTOMATIC_CPU_MANAGEMENT = 'enableAutomaticEppManagement'
@@ -72,17 +71,6 @@ def get_number_value(setting, default_value):
 
 def get_default_options():
   options = []
-
-  # enable_steam_patch = {
-  #   'name': 'Fix Steam Hardware Controls (Experimental)',
-  #   'type': AdvancedOptionsType.BOOLEAN.value,
-  #   'defaultValue': False,
-  #   'description': 'Fixes Steam TDP Slider (and GPU Slider on some distros). Note, cannot be used with per-game AC profiles',
-  #   'currentValue': get_value(DefaultSettings.ENABLE_STEAM_PATCH),
-  #   'statePath': DefaultSettings.ENABLE_STEAM_PATCH.value
-  # }
-
-  # options.append(enable_steam_patch)
 
   enable_tdp_control = {
     'name': 'Enable TDP Controls',

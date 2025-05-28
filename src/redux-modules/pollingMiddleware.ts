@@ -1,11 +1,9 @@
 import {
   activeGameIdSelector,
-  getSteamPatchEnabledSelector,
   pollEnabledSelector,
   pollRateSelector,
 } from "./settingsSlice";
-import { setSteamPatchValuesForGameId, setPollTdp } from "../backend/utils";
-import { extractCurrentGameId } from "../utils/constants";
+import { setPollTdp } from "../backend/utils";
 import { debounce } from "lodash";
 
 let store: any;
@@ -15,10 +13,6 @@ let pollIntervalId: undefined | number;
 
 const DEBOUNCE_TIME = 1000; // milliseconds
 
-const debouncedSetSteamPatchValuesForGameId = debounce(
-  setSteamPatchValuesForGameId,
-  DEBOUNCE_TIME
-);
 const debouncedSetPollTdp = debounce(setPollTdp, DEBOUNCE_TIME);
 
 export const setPolling = () => {
@@ -29,36 +23,15 @@ export const setPolling = () => {
     const pollEnabled = pollEnabledSelector(state);
     const pollRate = pollRateSelector(state);
 
-    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
-
     if (pollEnabled) {
       pollIntervalId = window.setInterval(() => {
-        if (steamPatchEnabled) {
-          // steam patch value
-          const id = extractCurrentGameId();
+        const activeGameId = activeGameIdSelector(store.getState());
 
-          debouncedSetSteamPatchValuesForGameId({ gameId: id });
-        } else {
-          const activeGameId = activeGameIdSelector(store.getState());
-
-          debouncedSetPollTdp({ currentGameId: activeGameId });
-        }
+        debouncedSetPollTdp({ currentGameId: activeGameId });
       }, pollRate);
     }
   }
 };
-
-let previousSteamPatchEnabled: boolean | undefined;
-
-export function clearIntervalOnSteamPatchChange(steamPatchEnabled: boolean) {
-  if (previousSteamPatchEnabled === undefined) {
-    previousSteamPatchEnabled = steamPatchEnabled;
-  }
-  if (steamPatchEnabled !== previousSteamPatchEnabled) {
-    clearPollingInterval();
-    previousSteamPatchEnabled = steamPatchEnabled;
-  }
-}
 
 export function clearPollingInterval() {
   if (pollIntervalId) {

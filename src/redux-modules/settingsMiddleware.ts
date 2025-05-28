@@ -2,7 +2,6 @@ import { Dispatch } from "redux";
 import {
   activeGameIdSelector,
   getAdvancedOptionsInfoSelector,
-  getSteamPatchEnabledSelector,
   setCurrentGameInfo,
   setEnableTdpProfiles,
   setFixedGpuFrequency,
@@ -23,11 +22,7 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { debounce } from "lodash";
-import {
-  clearIntervalOnSteamPatchChange,
-  clearPollingInterval,
-  setPolling,
-} from "./pollingMiddleware";
+import { clearPollingInterval, setPolling } from "./pollingMiddleware";
 
 const resetTdpActionTypes = [
   setEnableTdpProfiles.type,
@@ -55,59 +50,54 @@ export const settingsMiddleware =
     const state = store.getState();
 
     const { advancedState } = getAdvancedOptionsInfoSelector(state);
-    const steamPatchEnabled = getSteamPatchEnabledSelector(state);
 
-    if (steamPatchEnabled) {
-      clearIntervalOnSteamPatchChange(steamPatchEnabled);
-    } else {
-      const activeGameId = activeGameIdSelector(state);
+    const activeGameId = activeGameIdSelector(state);
 
-      if (action.type === resumeAction.type) {
-        // pollTdp simply tells backend to set TDP according to settings.json
-        setPollTdp({ currentGameId: activeGameId });
-      }
+    if (action.type === resumeAction.type) {
+      // pollTdp simply tells backend to set TDP according to settings.json
+      setPollTdp({ currentGameId: activeGameId });
+    }
 
-      if (
-        action.type === setGpuMode.type ||
-        action.type === setGpuFrequency.type ||
-        action.type === setFixedGpuFrequency.type
-      ) {
-        debouncedPersistGpu({
-          state,
-          activeGameId,
-          advancedState,
-        });
-      }
+    if (
+      action.type === setGpuMode.type ||
+      action.type === setGpuFrequency.type ||
+      action.type === setFixedGpuFrequency.type
+    ) {
+      debouncedPersistGpu({
+        state,
+        activeGameId,
+        advancedState,
+      });
+    }
 
-      if (action.type === setReduxTdp.type) {
-        debouncedPersistTdp({ tdp: action.payload, gameId: activeGameId });
-      }
+    if (action.type === setReduxTdp.type) {
+      debouncedPersistTdp({ tdp: action.payload, gameId: activeGameId });
+    }
 
-      if (action.type === updatePollRate.type) {
-        // action.type == number (rate in ms)
-        setSetting({
-          name: "pollRate",
-          value: action.payload,
-        });
-        setPolling();
-      }
+    if (action.type === updatePollRate.type) {
+      // action.type == number (rate in ms)
+      setSetting({
+        name: "pollRate",
+        value: action.payload,
+      });
+      setPolling();
+    }
 
-      if (action.type === updateAdvancedOption.type) {
-        setPolling();
-      }
+    if (action.type === updateAdvancedOption.type) {
+      setPolling();
+    }
 
-      if (resetTdpActionTypes.includes(action.type)) {
-        saveTdpProfiles({
-          tdpProfiles: state.settings.tdpProfiles,
-          currentGameId: activeGameId,
-          advanced: advancedState,
-        });
-        setPolling();
-      }
+    if (resetTdpActionTypes.includes(action.type)) {
+      saveTdpProfiles({
+        tdpProfiles: state.settings.tdpProfiles,
+        currentGameId: activeGameId,
+        advanced: advancedState,
+      });
+      setPolling();
+    }
 
-      if (action.type === cleanupAction.type) {
-        clearPollingInterval();
-      }
+    if (action.type === cleanupAction.type) {
+      clearPollingInterval();
     }
 
     return result;

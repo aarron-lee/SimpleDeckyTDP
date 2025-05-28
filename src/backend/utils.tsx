@@ -20,7 +20,6 @@ export enum AdvancedOptionsEnum {
   ENABLE_APU_SLOW_LIMIT = "enableApuSlowLimit",
   ENABLE_RYZENADJ_UNDERVOLT = "enableRyzenadjUndervolt",
   RYZENADJ_UNDERVOLT = "ryzenadjUndervolt",
-  STEAM_PATCH = "steamPatch",
   ENABLE_POWER_CONTROL = "enablePowercontrol",
   ENABLE_BACKGROUND_POLLING = "enableBackgroundPolling",
   ENABLE_AUTOMATIC_CPU_MANAGEMENT = "enableAutomaticEppManagement",
@@ -99,7 +98,6 @@ export enum ServerAPIMethods {
   OTA_UPDATE = "ota_update",
   PERSIST_CPU_BOOST = "persist_cpu_boost",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
-  SET_STEAM_PATCH_VALUES_FOR_GAME_ID = "set_steam_patch_values_for_game_id",
   SET_POWER_GOVERNOR = "set_power_governor",
   SET_EPP = "set_epp",
   GET_POWER_CONTROL_INFO = "get_power_control_info",
@@ -227,20 +225,6 @@ export const setValuesForGameId = ({ gameId }: { gameId: string }) => {
   }
 
   return call(ServerAPIMethods.SET_VALUES_FOR_GAME_ID, gameId);
-};
-
-export const setSteamPatchValuesForGameId = ({
-  gameId,
-}: {
-  gameId: string;
-}) => {
-  if (IS_DESKTOP) {
-    return call(ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID, {
-      gameId,
-    });
-  }
-
-  return call(ServerAPIMethods.SET_STEAM_PATCH_VALUES_FOR_GAME_ID, gameId);
 };
 
 export const persistGpu = ({

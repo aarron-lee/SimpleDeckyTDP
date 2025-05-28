@@ -132,7 +132,7 @@ def persist_tdp(tdp, game_id):
     with plugin_timeout.time_limit(3):
       set_values_for_game_id(game_id)
   except Exception as e:
-    decky_plugin.logger.error(f'main#set_steam_patch timeout {e}')
+    decky_plugin.logger.error(f'{__name__} timeout {e}')
 
 
 def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
@@ -168,19 +168,4 @@ def persist_gpu(minGpuFrequency, maxGpuFrequency, game_id):
     with plugin_timeout.time_limit(3):
       set_gpu_frequency_range(minGpuFrequency, maxGpuFrequency)
   except Exception as e:
-    decky_plugin.logger.error(f'main#steam_patch_gpu error {e}')
-
-def set_steam_patch_values_for_game_id(game_id, per_game_profiles_enabled):
-  tdp_profile = get_tdp_profile(game_id)
-  if tdp_profile:
-    # always set tdp + gpu from the tdp profile, since TDP and GPU values are cached from steam per-profile
-    set_tdp_for_tdp_profile(tdp_profile)
-    set_gpu_for_tdp_profile(tdp_profile)
-
-    # set boost and governor based on if Plugin's per-game profiles enabled, NOT steam's per-game profiles
-    if per_game_profiles_enabled:
-      set_values_for_tdp_profile(tdp_profile, set_tdp=False, set_gpu=False)
-    else:
-      # use default profile
-      default_profile = get_tdp_profile('default')
-      set_values_for_tdp_profile(default_profile, set_tdp=False, set_gpu=False)
+    decky_plugin.logger.error(f'{__name__} error {e}')

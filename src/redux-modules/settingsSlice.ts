@@ -80,7 +80,6 @@ export interface SettingsState extends TdpRangeState, PollState, GpuState {
   enableTdpProfiles: boolean;
   advancedOptions: AdvancedOption[];
   advanced: { [optionName: string]: any };
-  steamPatchDefaultTdp: number;
   pluginVersionNum: string;
   supportsCustomAcPowerManagement?: boolean;
   cpuVendor?: string;
@@ -114,7 +113,6 @@ const initialState: SettingsState = {
     },
   },
   pollRate: DEFAULT_POLL_RATE, // milliseconds
-  steamPatchDefaultTdp: 12,
   pluginVersionNum: "",
 };
 
@@ -209,7 +207,6 @@ export const settingsSlice = createSlice({
         maxGpuFrequency,
         advancedOptions,
         pluginVersionNum,
-        steamPatchDefaultTdp,
         supportsCustomAcPowerManagement,
         cpuVendor,
       } = action.payload;
@@ -222,9 +219,6 @@ export const settingsSlice = createSlice({
       state.pollRate = action.payload.pollRate || DEFAULT_POLL_RATE;
       if (action.payload.tdpProfiles) {
         merge(state.tdpProfiles, action.payload.tdpProfiles);
-      }
-      if (typeof steamPatchDefaultTdp === "number") {
-        state.steamPatchDefaultTdp = steamPatchDefaultTdp;
       }
       if (pluginVersionNum) {
         state.pluginVersionNum = pluginVersionNum;
@@ -341,13 +335,6 @@ export const settingsSlice = createSlice({
     },
     setEnableTdpProfiles: (state, action: PayloadAction<boolean>) => {
       state.enableTdpProfiles = action.payload;
-    },
-    setSteamPatchDefaultTdp: (state, action: PayloadAction<number>) => {
-      const { minTdp, maxTdp } = state;
-      let defaultTdp = action.payload;
-      if (defaultTdp < minTdp) defaultTdp = minTdp;
-      if (defaultTdp > maxTdp) defaultTdp = maxTdp;
-      state.steamPatchDefaultTdp = defaultTdp;
     },
     setCurrentGameInfo: (
       state,
@@ -542,27 +529,6 @@ export const getInstalledVersionNumSelector = (state: RootState) => {
   return pluginVersionNum;
 };
 
-export const getSteamPatchEnabledSelector = (state: RootState) => {
-  const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const steamPatchEnabled = Boolean(
-    advancedState[AdvancedOptionsEnum.STEAM_PATCH]
-  );
-  return steamPatchEnabled;
-};
-
-export const getSteamPatchDefaultTdpSelector = (state: RootState) => {
-  const { steamPatchDefaultTdp } = state.settings;
-
-  return steamPatchDefaultTdp;
-};
-
-export const getCachedSteamPatchProfile =
-  (gameId: string) => (state: RootState) => {
-    const { tdpProfiles } = state.settings;
-
-    return tdpProfiles[gameId];
-  };
-
 export const getPowerControlInfoSelector =
   (scalingDriver?: string) => (state: RootState) => {
     const {
@@ -607,12 +573,6 @@ function handleAdvancedOptionsEdgeCases(
           false
         );
       }
-    }
-    if (statePath === AdvancedOptionsEnum.AC_POWER_PROFILES) {
-      set(state, `advanced.${AdvancedOptionsEnum.STEAM_PATCH}`, false);
-    }
-    if (statePath === AdvancedOptionsEnum.STEAM_PATCH) {
-      set(state, `advanced.${AdvancedOptionsEnum.AC_POWER_PROFILES}`, false);
     }
     if (
       statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
@@ -709,7 +669,6 @@ export const {
   setGpuFrequency,
   setFixedGpuFrequency,
   updateAdvancedOption,
-  setSteamPatchDefaultTdp,
   updatePowerGovernor,
   setReduxTdp,
   updateEpp,

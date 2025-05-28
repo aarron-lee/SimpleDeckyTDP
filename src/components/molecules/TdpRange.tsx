@@ -2,7 +2,6 @@
 // import { useEffect } from 'react'
 import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
-import { useIsSteamPatchEnabled } from "./AdvancedOptions";
 import { MIN_TDP_RANGE } from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
@@ -35,7 +34,6 @@ const TdpRange = () => {
   const [minTdp, setMinTdp] = useMinTdp();
   const [maxTdp, setMaxTdp] = useMaxTdp();
 
-  const steamPatchEnabled = useIsSteamPatchEnabled();
   const isSteamDeck = useIsSteamDeck();
   const tdpRangeSlidersEnabled = useAdvancedOption(
     SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS
@@ -53,7 +51,7 @@ const TdpRange = () => {
     return null;
   }
 
-  const title = steamPatchEnabled ? "Steam TDP Slider range" : "TDP Range";
+  const title = "TDP Range";
 
   return (
     <DeckySection title={title}>

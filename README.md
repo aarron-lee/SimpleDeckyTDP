@@ -26,8 +26,6 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 
 ![plugin image](./img/recent.jpg)
 
-<!-- ![steam patch](./img/steam-patch2.png) -->
-
 ## Features
 
 - per game TDP Profiles (and optional separate AC Power Profiles)
@@ -39,7 +37,6 @@ This is a Linux TDP Decky Plugin with support for AMD and experimental Intel sup
 - CPU Boost control\*
   - note, AMD devices require a newer kernel for CPU boost controls
   - CPU boost controls appear automatically if it's available
-  <!-- - (optional) Fix Steam Client TDP and GPU Sliders -->
 - set TDP on AC Power events and suspend-resume events
 - TDP Polling - useful for devices that change TDP in the background
 - Desktop App - see [Desktop App Section](#desktop-app) for more details
@@ -62,7 +59,7 @@ Currently NOT compatible with Nvidia or other discrete GPU systems, this plugin 
 
 This plugin builds + ships ryzenadj for TDP control, but will prioritize any pre-installed ryzenadj binary that can be located in your PATH. ChimeraOS, Bazzite Deck Edition, and NobaraOS Deck edition, should already have ryzenadj pre-installed.
 
-Certain devices, such as the Steam Deck, ROG Ally, and Ally X, do not need ryzenadj for TDP control.
+Certain devices, such as the Steam Deck, Legion Go + S, ROG Ally, and Ally X, do not need ryzenadj for TDP control.
 
 ### Intel (experimental)
 
