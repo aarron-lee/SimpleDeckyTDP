@@ -232,6 +232,7 @@ class Plugin:
   # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
   async def _main(self):
     decky_plugin.logger.info("SimpleDeckyTDP Starting")
+    migrations.check_ryzenadj_coall_support()
     if charge_limit.supports_charge_limit():
       charge_limit.initialize_charge_limit()
 
@@ -250,4 +251,3 @@ class Plugin:
 
     # migrations.migrate_smt()
     # migrations.migrate_gpu_mode()
-    migrations.check_ryzenadj_coall_support()
