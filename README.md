@@ -93,7 +93,7 @@ curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
 Download the latest release from the [releases page](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
 
-Unzip the `tar.gz` file, and move the `SimpleDeckyTDP` folder to your `$HOME/homebrew/plugins` directory
+Unzip the zip file, and move the `SimpleDeckyTDP` folder to your `$HOME/homebrew/plugins` directory
 
 then run:
 
