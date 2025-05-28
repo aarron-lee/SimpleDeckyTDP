@@ -51,13 +51,14 @@ jobs:
 
       - name: show files
         run: |
+          ls out/SimpleDeckyTDP.zip
           7z l out/SimpleDeckyTDP.zip
 
       - name: Publish Artifact
         uses: actions/upload-artifact@v4
         with:
           name: SimpleDeckyTDP
-          path: out/SimpleDeckyTDP/*
+          path: out/SimpleDeckyTDP.zip
 
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -77,7 +78,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            /tmp/artifacts/SimpleDeckyTDP-Release/out/SimpleDeckyTDP.zip
+            /tmp/artifacts/SimpleDeckyTDP/SimpleDeckyTDP.zip
           tag_name: ${{ github.ref_name }}
           body: |
             SimpleDeckyTDP
