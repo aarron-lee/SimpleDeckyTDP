@@ -55,3 +55,8 @@ out/*
 cli/
 cli/*
 cli/decky
+
+.history
+cli/
+.pnpm-store/
+out/
