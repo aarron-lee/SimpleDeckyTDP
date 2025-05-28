@@ -47,6 +47,7 @@ class SteamDeckSettings(Enum):
   DECK_CUSTOM_GPU_MAX = 'deckCustomGpuMax'
 
 def modprobe_acpi_call():
+  return False
   # legion go currently requires acpi_call for using WMI to set TDP
   # using WMI to set TDP is safer on the Legion Go, ryzenadj is dangerous on the LGO
   # there is upstream work to formally add the wmi calls to a /sys endpoint, but it's not available yet
