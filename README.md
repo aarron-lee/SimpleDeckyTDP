@@ -99,8 +99,6 @@ then run:
 sudo systemctl restart plugin_loader.service
 ```
 
-then reboot your machine.
-
 ## Manual build
 
 Dependencies:
@@ -125,8 +123,6 @@ Afterwards, you can place the entire `SimpleDeckyTDP` folder in the `~/homebrew/
 
 ```bash
 sudo systemctl restart plugin_loader.service
-
-sudo systemctl reboot
 ```
 
 ### Uninstall Instructions
