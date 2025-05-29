@@ -3,6 +3,7 @@ import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
 
 export enum Devices {
   LEGION_GO = "83E1",
+  LEGION_GO_S = "83L3",
   ROG_ALLY = "ROG Ally RC71",
   ROG_ALLY_X = "ROG Ally X RC72",
   MINISFORUM_V3 = "V3",
