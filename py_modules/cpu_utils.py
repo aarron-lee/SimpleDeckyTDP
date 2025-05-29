@@ -8,7 +8,7 @@ import plugin_timeout
 import advanced_options
 from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
-from devices import lenovo, rog_ally
+from devices import lenovo, rog_ally, steam_deck
 import device_utils
 import ryzenadj
 
@@ -23,8 +23,6 @@ SMT_PATH= "/sys/devices/system/cpu/smt/control"
 INTEL_TDP_PATH = None
 INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
 INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
-
-STEAM_DECK_TDP_PATH="/sys/class/hwmon/hwmon*/power*_cap"
 
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
@@ -61,7 +59,7 @@ def set_tdp(tdp: int):
     return
 
   if device_utils.is_steam_deck():
-    return execute_tdp_command(tdp, STEAM_DECK_TDP_PATH)
+    return steam_deck.set_tdp(tdp)
 
   if device_utils.is_intel():
     tdp_path = intel_tdp_path()

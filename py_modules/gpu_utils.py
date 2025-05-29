@@ -8,6 +8,7 @@ import subprocess
 import advanced_options
 from plugin_enums import GpuModes, GpuRange
 from plugin_settings import get_saved_settings
+from devices import steam_deck
 
 GPU_FREQUENCY_PATH = None
 GPU_LEVEL_PATH = None
@@ -29,7 +30,7 @@ def get_gpu_frequency_range():
   else:
     try:
       if device_utils.is_steam_deck():
-        return get_deck_gpu_range()
+        return steam_deck.get_gpu_range()
 
       freq_string = open(GPU_FREQUENCY_PATH,"r").read()
       od_sclk_matches = re.findall(r"OD_RANGE:\s*SCLK:\s*(\d+)Mhz\s*(\d+)Mhz", freq_string)
@@ -199,24 +200,6 @@ def get_intel_gpu_clocks():
   except Exception as e:
     decky_plugin.logger.error('error while getting intel gpu clocks')
     return [None, None]
-
-def get_deck_gpu_range():
-  # Steam Deck pp_od_clk_voltage is empty, so min/max values can't be automatically detected
-  GPU_FREQUENCY_RANGE = [200, 1600]
-
-  custom_max_enabled = advanced_options.get_setting(
-    advanced_options.SteamDeckSettings.DECK_CUSTOM_GPU_MAX_ENABLED.value
-  )
-
-  if custom_max_enabled:
-    custom_max = advanced_options.get_setting(
-      advanced_options.SteamDeckSettings.DECK_CUSTOM_GPU_MAX.value
-    )
-
-    if isinstance(custom_max, int):
-      return [200, custom_max or 1600]
-
-  return GPU_FREQUENCY_RANGE
 
 def execute_gpu_frequency_command(command):
   cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
