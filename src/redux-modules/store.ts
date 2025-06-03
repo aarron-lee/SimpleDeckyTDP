@@ -3,7 +3,6 @@ import settingsReducer from "./settingsSlice";
 import { settingsMiddleware } from "./settingsMiddleware";
 import { commonMiddleware } from "./commonMiddleware";
 import { uiSlice } from "./uiSlice";
-// import logger from "./logger";
 
 export const store = configureStore({
   reducer: {
@@ -11,12 +10,7 @@ export const store = configureStore({
     settings: settingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([
-      settingsMiddleware,
-      commonMiddleware,
-      // dev only
-      // logger,
-    ]),
+    getDefaultMiddleware().concat([settingsMiddleware, commonMiddleware]),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

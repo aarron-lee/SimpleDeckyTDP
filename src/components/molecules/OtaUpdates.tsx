@@ -24,9 +24,9 @@ const OtaUpdates = () => {
 
   useEffect(() => {
     const fn = async () => {
-      const fetchedVersionNum = await getLatestVersionNum();
+      const fetchedVersionNum: unknown = await getLatestVersionNum();
 
-      setLatestVersionNum(fetchedVersionNum);
+      setLatestVersionNum(fetchedVersionNum as string);
     };
 
     fn();

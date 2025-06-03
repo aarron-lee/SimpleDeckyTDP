@@ -3,6 +3,7 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { DeckyButton, DeckyRow } from "./DeckyFrontendLib";
 
 type Props = {
+  children: any;
   cacheKey: string;
   defaultOpen?: boolean;
 };
@@ -36,9 +37,9 @@ const ArrowToggleButton: FC<Props> = ({
           style={{
             width: "100%",
             height: "20px",
-            display: "flex", // Set the display to flex
-            justifyContent: "center", // Center align horizontally
-            alignItems: "center", // Center align vertically
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
           onClick={toggleState}
         >

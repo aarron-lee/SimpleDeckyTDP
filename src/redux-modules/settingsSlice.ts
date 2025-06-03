@@ -5,10 +5,8 @@ import {
   DEFAULT_POLL_RATE,
   DEFAULT_POWER_CONTROLS,
   DEFAULT_START_TDP,
-  EppOption,
   MIN_TDP_RANGE,
   PowerControlsType,
-  PowerGovernorOption,
 } from "../utils/constants";
 import { RootState } from "./store";
 import {
@@ -490,15 +488,19 @@ export const getCurrentGpuFrequencySelector = (state: RootState) => {
   const activeGameId = activeGameIdSelector(state);
 
   return {
-    currentMin: state.settings.tdpProfiles[activeGameId].minGpuFrequency,
-    currentMax: state.settings.tdpProfiles[activeGameId].maxGpuFrequency,
+    currentMin: Number(
+      state.settings.tdpProfiles[activeGameId].minGpuFrequency
+    ),
+    currentMax: Number(
+      state.settings.tdpProfiles[activeGameId].maxGpuFrequency
+    ),
   };
 };
 
 export const getCurrentFixedGpuFrequencySelector = (state: RootState) => {
   const activeGameId = activeGameIdSelector(state);
 
-  return state.settings.tdpProfiles[activeGameId].fixedGpuFrequency;
+  return Number(state.settings.tdpProfiles[activeGameId].fixedGpuFrequency);
 };
 
 export const getGpuFrequencyRangeSelector = (state: RootState) => {
