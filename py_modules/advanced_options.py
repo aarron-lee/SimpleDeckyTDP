@@ -1,6 +1,4 @@
 import os
-import shutil
-import subprocess
 import decky_plugin
 from plugin_settings import get_nested_setting, get_saved_settings
 from enum import Enum

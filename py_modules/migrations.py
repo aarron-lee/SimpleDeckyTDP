@@ -1,5 +1,4 @@
 import decky_plugin
-import power_utils
 from plugin_settings import merge_tdp_profiles, get_saved_settings, set_setting
 import device_utils
 import ryzenadj

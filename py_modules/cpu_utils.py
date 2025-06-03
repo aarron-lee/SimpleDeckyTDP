@@ -1,8 +1,6 @@
 from enum import Enum
 import os
-import re
 import subprocess
-import shutil
 import decky_plugin
 import plugin_timeout
 import advanced_options

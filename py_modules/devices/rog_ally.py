@@ -1,5 +1,4 @@
 import subprocess
-import shutil
 from time import sleep
 import os
 import decky_plugin
