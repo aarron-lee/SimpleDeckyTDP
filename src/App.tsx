@@ -38,11 +38,7 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {tdpControlEnabled && (
-              <>
-                <TdpSlider />
-              </>
-            )}
+            {tdpControlEnabled && <TdpSlider />}
             {gpuControlEnabled && <Gpu />}
           </DeckySection>
           <PowerControl />

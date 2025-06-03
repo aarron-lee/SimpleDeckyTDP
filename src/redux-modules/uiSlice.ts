@@ -23,7 +23,7 @@ export const uiSlice = createSlice({
     // },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchPowerControlInfo.fulfilled, (state, action) => {
+    builder.addCase(fetchPowerControlInfo.fulfilled, (state, action: any) => {
       if (action.payload) {
         state.powerControlInfo = action.payload as PowerControlInfo;
       }

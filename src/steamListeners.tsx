@@ -47,7 +47,7 @@ export const currentGameInfoListener = () => {
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
     }
-  }, 1000);
+  }, 2000);
 
   return () => {
     if (currentGameInfoListenerIntervalId) {
@@ -144,20 +144,22 @@ let debouncedSetAcPower = debounce(setAcState, 1000);
 
 export const acPowerEventListener = async () => {
   try {
-    const supportsCustomAcPowerManagement = await getSupportsCustomAcPower();
+    const supportsCustomAcPowerManagement: unknown =
+      await getSupportsCustomAcPower();
 
-    if (supportsCustomAcPowerManagement) {
+    if (supportsCustomAcPowerManagement as boolean) {
       const intervalId = window.setInterval(async () => {
-        const current_ac_power_status = await getCurrentAcPowerStatus();
+        const current_ac_power_status: unknown =
+          await getCurrentAcPowerStatus();
 
         let newACState = 1;
 
-        if (current_ac_power_status === "1") {
+        if ((current_ac_power_status as string) === "1") {
           newACState = 2;
         }
 
         setAcState(newACState);
-      }, 1000);
+      }, 2000);
 
       const unregister = () => {
         window.clearInterval(intervalId);

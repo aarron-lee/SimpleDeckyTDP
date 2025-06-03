@@ -36,8 +36,8 @@ export default definePlugin(() => {
   });
 
   const unregisterCurrentGameListener = currentGameInfoListener();
-  const unregisterResumeFromSuspendListener = resumeFromSuspendEventListener();
-  const unregisterSuspendListener = suspendEventListener();
+  resumeFromSuspendEventListener();
+  suspendEventListener();
 
   let unregisterAcPowerListener: any;
 
@@ -54,16 +54,6 @@ export default definePlugin(() => {
         store.dispatch(cleanupAction());
         // if (unpatch) unpatch();
         if (unregisterCurrentGameListener) unregisterCurrentGameListener();
-        if (
-          unregisterSuspendListener &&
-          typeof unregisterSuspendListener === "function"
-        )
-          unregisterSuspendListener();
-        if (
-          unregisterResumeFromSuspendListener &&
-          typeof unregisterResumeFromSuspendListener === "function"
-        )
-          unregisterResumeFromSuspendListener();
         if (
           unregisterAcPowerListener &&
           typeof unregisterAcPowerListener === "function"
