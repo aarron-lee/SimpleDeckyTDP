@@ -5,7 +5,7 @@
   "api_version": 1,
   "publish": {
     "tags": ["tdp", "root"],
-    "description": "TDP plugin for PC handhelds",
+    "description": "Hardware control plugin for PC handhelds, including TDP, GPU, etc",
     "image": "https://raw.githubusercontent.com/aarron-lee/SimpleDeckyTDP/refs/heads/main/img/plugin-image.jpg"
   }
 }
