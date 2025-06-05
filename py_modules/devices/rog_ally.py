@@ -128,13 +128,16 @@ def supports_mcu_powersave():
     if is_bazzite_deck():
       return True
 
-    # check MCU version
-    mc_version = get_mcu_version()
+    if device_utils.is_rog_ally_series():
+      return True
 
-    if device_utils.is_rog_ally() and mc_version >= 319:
-      return True
-    if device_utils.is_rog_ally_x() and mc_version >= 314:
-      return True
+    # check MCU version
+    # mc_version = get_mcu_version()
+
+    # if device_utils.is_rog_ally() and mc_version >= 319:
+    #   return True
+    # if device_utils.is_rog_ally_x() and mc_version >= 314:
+    #   return True
 
   return False
 
