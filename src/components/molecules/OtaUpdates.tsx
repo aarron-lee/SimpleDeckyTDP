@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  getLatestVersionNum,
-  // otaUpdate
-} from "../../backend/utils";
+import { getLatestVersionNum, otaUpdate } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
 import {
-  // DeckyButton,
+  DeckyButton,
   DeckyField,
   DeckyRow,
   DeckySection,
@@ -16,7 +13,7 @@ import useDeviceName from "../../hooks/useDeviceName";
 
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
-  // const [updateInProgress, setUpdateInProgress] = useState(false);
+  const [updateInProgress, setUpdateInProgress] = useState(false);
 
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
@@ -72,7 +69,7 @@ const OtaUpdates = () => {
       )}
       {Boolean(latestVersionNum) && (
         <>
-          {/* <DeckyRow>
+          <DeckyRow>
             <DeckyField label={"Info"} bottomSeparator="none">
               {isUpdated ? "Reinstall" : "Update"} can take up to 1 minute
             </DeckyField>
@@ -94,7 +91,7 @@ const OtaUpdates = () => {
             >
               {updateInProgress ? "Updating..." : buttonText}
             </DeckyButton>
-          </DeckyRow> */}
+          </DeckyRow>
         </>
       )}
     </DeckySection>
