@@ -15,6 +15,8 @@ sed -i "s/__version__ = '[0-9]\+\.[0-9]\+\.[0-9]\+'/__version__ = '$NEW_TAG'/" .
 
 git add ./package.json
 
+git add ./decky.pyi
+
 git commit -m "Release version $NEW_TAG"
 
 git tag v$NEW_TAG
