@@ -27,6 +27,9 @@ def supports_charge_limit():
   return False
 
 def set_charge_limit(limit):
+  if not charge_limit_enabled():
+    return
+
   if device_utils.is_rog_ally_series():
     return rog_ally.set_charge_limit(limit)
   return False
@@ -35,8 +38,11 @@ def get_expected_charge_limit():
   # CHARGE_LIMIT = 'chargeLimit'
   return get_nested_setting('advanced.chargeLimit')
 
+def charge_limit_enabled():
+  return get_nested_setting('advanced.enableChargeLimit')
+
 def initialize_charge_limit():
-  if supports_charge_limit():
+  if supports_charge_limit() and charge_limit_enabled():
     current_limit = get_current_charge_limit()
     expected_limit = get_expected_charge_limit()
 

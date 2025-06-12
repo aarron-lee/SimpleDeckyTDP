@@ -30,6 +30,7 @@ export enum AdvancedOptionsEnum {
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
   FORCE_DISABLE_SUSPEND_ACTIONS = "forceDisableSuspendActions",
   USE_PLATFORM_PROFILE = "platformProfile",
+  ENABLE_CHARGE_LIMIT = "enableChargeLimit",
   CHARGE_LIMIT = "chargeLimit",
   ENABLE_SIMPLE_EPP_LABELS = "enableSimpleEppLabels",
 }

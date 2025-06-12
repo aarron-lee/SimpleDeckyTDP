@@ -27,6 +27,7 @@ class DefaultSettings(Enum):
   AC_POWER_PROFILES = 'acPowerProfiles'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
   FORCE_DISABLE_SUSPEND_ACTIONS = 'forceDisableSuspendActions'
+  ENABLE_CHARGE_LIMIT = 'enableChargeLimit'
   CHARGE_LIMIT = 'chargeLimit'
   ENABLE_SIMPLE_EPP_LABELS = 'enableSimpleEppLabels'
 
@@ -150,8 +151,16 @@ def get_default_options():
   if charge_limit.supports_charge_limit():
     range, default_value, step = charge_limit.get_range_info()
 
+    options.append({
+      'name': 'Enable Battery Charge Limit',
+      'type': AdvancedOptionsType.BOOLEAN.value,
+      'defaultValue': False,
+      'currentValue': get_value(DefaultSettings.ENABLE_CHARGE_LIMIT, False),
+      'statePath': DefaultSettings.ENABLE_CHARGE_LIMIT.value
+    })
+
     set_charge_limit_option = {
-      'name': 'Set Charge Limit',
+      'name': 'Set Battery Charge Limit',
       'type': AdvancedOptionsType.NUMBER_RANGE.value,
       'range': range,
       'defaultValue': default_value,
@@ -160,6 +169,10 @@ def get_default_options():
       'description': 'Sets max battery limit',
       'currentValue': get_number_value(DefaultSettings.CHARGE_LIMIT, default_value),
       'statePath': DefaultSettings.CHARGE_LIMIT.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_CHARGE_LIMIT.value],
+        'hideIfDisabled': True
+      }
     }
 
     options.append(set_charge_limit_option)
