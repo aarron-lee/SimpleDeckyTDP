@@ -393,7 +393,7 @@ def rog_ally_advanced_options(options):
   if rog_ally.supports_mcu_powersave():
     options.append({
       'name': 'Enable Asus extreme Powersave',
-      'description': 'Warning, requires updated MCU firmware. Reduces power consumption during suspend',
+      'description': 'WARNING, this requires updated MCU firmware and updated Asus-Linux kernel modules. Reduces power consumption during suspend',
       'type': AdvancedOptionsType.BOOLEAN.value,
       'defaultValue': False,
       'currentValue': get_value(RogAllySettings.USE_EXTREME_POWERSAVE, False),
