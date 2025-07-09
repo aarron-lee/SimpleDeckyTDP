@@ -106,6 +106,7 @@ def get_cpb_boost_paths():
 def set_cpb_boost(enabled):
   if device_utils.is_intel():
     if os.path.exists(INTEL_CPU_BOOST_PATH):
+      decky_plugin.logger.info(f'setting CPU boost {enabled} on Intel')
       try:
         with open(INTEL_CPU_BOOST_PATH, 'w') as file:
           # sys endpoint is named 'no_turbo'
@@ -120,6 +121,8 @@ def set_cpb_boost(enabled):
     # AMD CPU boost global cpb boost toggle doesn't exist, set it per-cpu
     paths = get_cpb_boost_paths()
     if len(paths) > 0 and os.path.exists(paths[0]):
+      decky_plugin.logger.info(f'setting CPU boost {enabled} on AMD')
+
       try:
         with plugin_timeout.time_limit(4):
           for p in paths:
@@ -135,6 +138,7 @@ def set_cpb_boost(enabled):
         decky_plugin.logger.error(e)
     else:
       # fallback to legacy cpu boost
+      decky_plugin.logger.info(f'setting Legacy CPU boost {enabled}')
       set_cpu_boost(enabled)
 
 def supports_cpu_boost():
