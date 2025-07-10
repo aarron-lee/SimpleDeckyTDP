@@ -311,6 +311,12 @@ def get_intel_tdp_limits():
   min_tdp = 4
   MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_max_power_uw'
 
+  if device_utils.is_msi_claw_ai():
+    # MSI Claw 8 AI+ A2VM
+    # max TDP detection has issues, manually hardcode to override
+    # see https://github.com/aarron-lee/SimpleDeckyTDP/issues/76
+    return [min_tdp, 30]
+
   try:
     with plugin_timeout.time_limit(1):
       if os.path.exists(MAX_TDP_PATH):

@@ -14,6 +14,7 @@ class Devices(Enum):
   ASUS_FLOW_Z13 = "ROG Flow Z13 GZ302EA_GZ302EA"
   STEAM_DECK_LCD = "Jupiter"
   STEAM_DECK_OLED = "Galileo"
+  MSI_CLAW_8_AI ="Claw 8 AI+ A2VM"
 
 class CpuVendors(Enum):
   INTEL = "GenuineIntel"
@@ -64,6 +65,13 @@ def get_device_name():
     except Exception as e:
       decky_plugin.logger.error(f'{__name__} error while trying to read device name')
   return DEVICE_NAME or ''
+
+def is_msi_claw_ai():
+  device_name = get_device_name()
+
+  if Devices.MSI_CLAW_8_AI.value in device_name:
+    return True
+  return False
 
 def is_rog_ally_x():
   device_name = get_device_name()
