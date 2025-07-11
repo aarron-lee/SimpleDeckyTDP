@@ -88,7 +88,7 @@ def set_tdp(tdp):
       decky_plugin.logger.info(f"{__name__} Setting TDP {tdp} via Legacy WMI")
       # fast limit
       with open(FAST_WMI_PATH, 'w') as file:
-        file.write(f'{tdp+2}')
+        file.write(f'{tdp}')
       sleep(0.1)
 
       # slow limit
