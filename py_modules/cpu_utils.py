@@ -309,8 +309,11 @@ def get_scaling_driver():
 def get_intel_tdp_limits():
   # while there is a max TDP provided by intel, there is no min
   min_tdp = 4
-  MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_max_power_uw'
-  ALTERNATIVE_MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_power_limit_uw'
+
+  tdp_prefix = INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX
+
+  MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_max_power_uw'
+  ALTERNATIVE_MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_power_limit_uw'
 
   if device_utils.is_msi_claw_ai():
     # MSI Claw 8 AI+ A2VM
