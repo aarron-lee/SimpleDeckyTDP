@@ -310,6 +310,7 @@ def get_intel_tdp_limits():
   # while there is a max TDP provided by intel, there is no min
   min_tdp = 4
   MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_max_power_uw'
+  ALTERNATIVE_MAX_TDP_PATH = f'{INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX}/constraint_0_power_limit_uw'
 
   if device_utils.is_msi_claw_ai():
     # MSI Claw 8 AI+ A2VM
@@ -319,12 +320,21 @@ def get_intel_tdp_limits():
 
   try:
     with plugin_timeout.time_limit(1):
+      max_tdp = 0
+      alt_max_tdp = 0
+
       if os.path.exists(MAX_TDP_PATH):
         with open(MAX_TDP_PATH, 'r') as file:
           max_tdp = int(file.read().strip()) / 1000000
           file.close()
+      if os.path.exists(ALTERNATIVE_MAX_TDP_PATH):
+        with open(ALTERNATIVE_MAX_TDP_PATH, 'r') as file:
+          alt_max_tdp = int(file.read().strip()) / 1000000
+          file.close()
+      if alt_max_tdp >= max_tdp:
+        return [min_tdp, alt_max_tdp]
 
-          return [min_tdp, max_tdp]
+      return [min_tdp, max_tdp]
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error: get_intel_tdp_limits {e}')
 
