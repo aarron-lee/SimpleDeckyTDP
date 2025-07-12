@@ -315,11 +315,11 @@ def get_intel_tdp_limits():
   MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_max_power_uw'
   ALTERNATIVE_MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_power_limit_uw'
 
-  if device_utils.is_msi_claw_ai():
+  # if device_utils.is_msi_claw_ai():
     # MSI Claw 8 AI+ A2VM
     # max TDP detection has issues, manually hardcode to override
     # see https://github.com/aarron-lee/SimpleDeckyTDP/issues/76
-    return [min_tdp, 30]
+    # return [min_tdp, 30]
 
   try:
     with plugin_timeout.time_limit(1):
