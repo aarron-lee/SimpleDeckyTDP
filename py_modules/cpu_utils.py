@@ -67,6 +67,18 @@ def set_tdp(tdp: int):
       decky_plugin.logger.info("No Known Path for to set TDP on this Intel chipset")
       return
 
+    try:
+      tdp_min, tdp_max = get_intel_tdp_limits()
+
+      if tdp < tdp_min:
+        decky_plugin.logger.info(f"{tdp}w tdp lower than min {tdp_min}w")
+        tdp = tdp_min;
+      if tdp > tdp_max:
+        decky_plugin.logger.info(f"{tdp}w tdp greater than max {tdp_max}w")
+        tdp = tdp_max;
+    except Exception as e:
+      decky_plugin.logger.error(f'{__name__} error while getting TDP limits {e}')
+
     return execute_tdp_command(tdp, tdp_path)
   else:
     return set_amd_tdp(tdp)
