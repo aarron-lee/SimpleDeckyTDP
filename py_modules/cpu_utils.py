@@ -22,6 +22,10 @@ INTEL_TDP_PATH = None
 INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
 INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
 
+# arbitrary values can be set on Intel devices, likely a bug in intel-rapl
+# as a safety mitigation, 40W to be used as as a ceiling for PC handheld devices
+INTEL_MAX_TDP = 40
+
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
   INTEL_PSTATE = "intel_pstate"
@@ -315,11 +319,7 @@ def get_intel_tdp_limits():
   MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_max_power_uw'
   ALTERNATIVE_MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_power_limit_uw'
 
-  if device_utils.is_msi_claw_ai():
-    # MSI Claw 8 AI+ A2VM
-    # max TDP detection has issues, manually hardcode to override
-    # see https://github.com/aarron-lee/SimpleDeckyTDP/issues/76
-    return [min_tdp, 30]
+  maximum_tdp = 15
 
   try:
     with plugin_timeout.time_limit(1):
@@ -334,15 +334,18 @@ def get_intel_tdp_limits():
         with open(ALTERNATIVE_MAX_TDP_PATH, 'r') as file:
           alt_max_tdp = int(file.read().strip()) / 1000000
           file.close()
-      if alt_max_tdp >= max_tdp:
-        return [min_tdp, alt_max_tdp]
 
-      return [min_tdp, max_tdp]
+      if alt_max_tdp >= max_tdp:
+        maximum_tdp = alt_max_tdp
+      else:
+        maximum_tdp = max_tdp
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error: get_intel_tdp_limits {e}')
 
-  # default to reasonably safe value for TDP limits
-  return [min_tdp, 15]
+  if maximum_tdp > INTEL_MAX_TDP:
+    maximum_tdp = INTEL_MAX_TDP
+
+  return [min_tdp, maximum_tdp]
 
 def execute_tdp_command(tdp, tdp_path):
   tdp_microwatts = tdp * 1000000
