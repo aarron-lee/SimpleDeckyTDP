@@ -1,6 +1,6 @@
 {
   "name": "simple-decky-tdp",
-  "version": "0.8.5",
+  "version": "0.8.7",
   "description": "Hardware Control plugin for PC handhelds, including TDP, GPU, EPP, etc",
   "type": "module",
   "scripts": {
