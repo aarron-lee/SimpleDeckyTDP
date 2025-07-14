@@ -7,6 +7,7 @@ import advanced_options
 from time import sleep
 from advanced_options import LegionGoSettings, RogAllySettings
 from devices import lenovo, rog_ally, steam_deck
+from plugin_settings import set_setting, get_saved_settings
 import device_utils
 import ryzenadj
 
@@ -21,6 +22,8 @@ SMT_PATH= "/sys/devices/system/cpu/smt/control"
 INTEL_TDP_PATH = None
 INTEL_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0"
 INTEL_LEGACY_TDP_PREFIX="/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0"
+
+INTEL_MAX_TDP_SETTING = 'INTEL_MAX_TDP_SETTING'
 
 # arbitrary values can be set on Intel devices, likely a bug in intel-rapl
 # as a safety mitigation, 40W to be used as as a ceiling for PC handheld devices
@@ -313,7 +316,17 @@ def get_scaling_driver():
 def get_intel_tdp_limits():
   # while there is a max TDP provided by intel, there is no min
   min_tdp = 4
+  max_tdp = 15
 
+  saved_max_tdp = get_saved_settings().get(INTEL_MAX_TDP_SETTING, None)
+
+  if saved_max_tdp:
+    max_tdp = saved_max_tdp
+  else:
+    max_tdp = get_intel_max_tdp()
+  return [min_tdp, max_tdp]
+
+def get_intel_max_tdp():
   tdp_prefix = INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX
 
   MAX_TDP_PATH = f'{tdp_prefix}/constraint_0_max_power_uw'
@@ -340,12 +353,14 @@ def get_intel_tdp_limits():
       else:
         maximum_tdp = max_tdp
   except Exception as e:
-    decky_plugin.logger.error(f'{__name__} error: get_intel_tdp_limits {e}')
+    decky_plugin.logger.error(f'{__name__} error: get_intel_max_tdp {e}')
 
   if maximum_tdp > INTEL_MAX_TDP:
     maximum_tdp = INTEL_MAX_TDP
+  
+  set_setting(INTEL_MAX_TDP_SETTING, maximum_tdp)
 
-  return [min_tdp, maximum_tdp]
+  return maximum_tdp
 
 def execute_tdp_command(tdp, tdp_path):
   tdp_microwatts = tdp * 1000000
