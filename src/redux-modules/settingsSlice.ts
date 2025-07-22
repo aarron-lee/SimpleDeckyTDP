@@ -101,7 +101,7 @@ const initialState: SettingsState = {
   tdpProfiles: {
     default: {
       tdp: DEFAULT_START_TDP,
-      cpuBoost: true,
+      cpuBoost: false,
       smt: true,
       gpuMode: GpuModes.BALANCE,
       minGpuFrequency: undefined,
