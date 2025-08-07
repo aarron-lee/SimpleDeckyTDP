@@ -22,7 +22,7 @@ ASUS_ARMORY_STAPM_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl1_spl/current_value"
 UPDATED_ASUS_ARMORY_FAST_WMI_PATH = f"{ASUS_ARMORY_WMI_BASE}/ppt_pl3_fppt/current_value"
 
 LEGACY_MCU_POWERSAVE_PATH = "/sys/devices/platform/asus-nb-wmi/mcu_powersave"
-ASUS_ARMORY_MCU_POWERSAVE_PATH = f"{ASUS_ARMORY_WMI_BASE}/mcu_powersave"
+ASUS_ARMORY_MCU_POWERSAVE_PATH = f"{ASUS_ARMORY_WMI_BASE}/mcu_powersave/current_value"
 
 PLATFORM_PROFILE_CHOICES_PATH = '/sys/firmware/acpi/platform_profile_choices'
 
