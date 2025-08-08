@@ -48,7 +48,9 @@ def _set_ryzenadj_undervolt(new_undervolt_value):
   cmd = f'{get_ryzenadj_path()} --set-coall={hex(baseline-new_undervolt_value)}'
   decky_plugin.logger.info(f'ryzenadj undervolt with command: {cmd}')
   try:
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
     sleep(0.1)
     return result
   except Exception as e:

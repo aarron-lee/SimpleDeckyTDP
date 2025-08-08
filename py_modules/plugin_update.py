@@ -57,7 +57,10 @@ def ota_update():
 
     cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
 
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 
     return result
 

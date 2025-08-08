@@ -67,13 +67,16 @@ def set_intel_gpu_frequency(current_game_id):
   set_intel_gpu_frequency_range(new_min, new_max)
 
 def set_intel_gpu_frequency_range(new_min, new_max):
+  env = os.environ.copy()
+  env["LD_LIBRARY_PATH"] = ""
+
   # intel only supports setting GPU clocks, no auto/high/low
   max_cmd = 'ls /sys/class/drm/card*/gt_RP0_freq_mhz'
-  max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
   max_gpu_filepath = max_result.stdout.strip()
 
   min_cmd = 'ls /sys/class/drm/card*/gt_RPn_freq_mhz'
-  min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
   min_gpu_filepath = min_result.stdout.strip()
 
   try:
@@ -188,19 +191,27 @@ def set_amd_gpu_frequency_range(new_min, new_max):
 
 def get_intel_gpu_clocks():
   try:
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+
     max_cmd = 'cat /sys/class/drm/card?/gt_max_freq_mhz'
-    max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
     max_gpu_clock = int(max_result.stdout.strip())
 
     min_cmd = 'cat /sys/class/drm/card?/gt_min_freq_mhz'
-    min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
     min_gpu_clock = int(min_result.stdout.strip())
 
     return [min_gpu_clock, max_gpu_clock]
   except Exception as e:
     decky_plugin.logger.error('error while getting intel gpu clocks')
     return [None, None]
+  
+def get_env():
+  env = os.environ.copy()
+  env["LD_LIBRARY_PATH"] = ""
+  return env
 
 def execute_gpu_frequency_command(command):
   cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
-  result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
