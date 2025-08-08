@@ -363,13 +363,17 @@ def get_intel_max_tdp():
   return maximum_tdp
 
 def execute_tdp_command(tdp, tdp_path):
-  env = os.environ.copy()
-  env["LD_LIBRARY_PATH"] = ""
-
   tdp_microwatts = tdp * 1000000
   try:
-    cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
-    return result
+    if os.path.exists(tdp_path):
+      with open(tdp_path, 'w') as file:
+        file.write(tdp_microwatts)
+        file.close()
+
+  # env = os.environ.copy()
+  # env["LD_LIBRARY_PATH"] = ""
+    # cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
+    # result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    # return result
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} Error: execute_tdp_command {e}')
