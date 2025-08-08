@@ -213,5 +213,12 @@ def get_env():
   return env
 
 def execute_gpu_frequency_command(command):
-  cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
-  result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
+  try:
+    if os.path.exists(GPU_FREQUENCY_PATH):
+      with open(GPU_FREQUENCY_PATH, 'w') as file:
+        file.write(command)
+        file.close()
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error execute frequency control {command}")
+  # cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
+  # result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
