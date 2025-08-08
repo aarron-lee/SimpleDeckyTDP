@@ -103,14 +103,6 @@ def set_tdp(tdp):
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} asus wmi tdp {tdp} error {e}")
 
-def execute_bash_command(command, path):
-  env = os.environ.copy()
-  env["LD_LIBRARY_PATH"] = ""
-
-  cmd = f"echo '{command}' | tee {path}"
-  result = subprocess.run(cmd, timeout=1, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
-  return result
-
 def is_bazzite_deck():
   IMAGE_INFO = "/usr/share/ublue-os/image-info.json"
   if os.path.exists(IMAGE_INFO):
