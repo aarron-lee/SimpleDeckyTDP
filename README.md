@@ -229,6 +229,10 @@ This should also work for the Legion Go S.
 
 ### Ryzenadj troubleshooting
 
+Note, SimpleDeckyTDP now ships it's own bundled ryzenadj, but by default the plugin will try to use ryzenadj that is already on the system. if `which ryzenadj` in terminal outputs a value, that will be used by the plugin.
+
+The bundled ryzenadj can be found at `$HOME/homebrew/plugins/SimpleDeckyTDP/bin/ryzenadj`
+
 To test your ryzenadj, try the following:
 
 ```
