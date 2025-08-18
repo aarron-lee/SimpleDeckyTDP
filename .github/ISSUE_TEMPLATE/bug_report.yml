@@ -10,10 +10,10 @@ body:
           required: true
   - type: checkboxes
     attributes:
-      label: Have you updated to the latest version of the plugin?
-      description: You can update the plugin via the Update/Reinstall button
+      label: Did you try a full reinstall of the plugin?
+      description: You can reinstall via the quick install script in the README
       options:
-        - label: I am on the latest version of the plugin
+        - label: The issue still exists even after a reinstall
           required: true
   - type: checkboxes
     attributes:
