@@ -7,10 +7,8 @@ def check_ryzenadj_coall_support():
   if not device_utils.is_intel():
     try:
       settings = get_saved_settings()
-      if settings.get('supportsRyzenadjCoall', None) == None:
-        undervolt_supported = bool(ryzenadj._set_ryzenadj_undervolt(0))
-
-        set_setting('supportsRyzenadjCoall', undervolt_supported)
+      undervolt_supported = bool(ryzenadj._set_ryzenadj_undervolt(0))
+      set_setting('supportsRyzenadjCoall', undervolt_supported)
     except Exception as e:
       decky_plugin.logger.error(f"{__name__} error while checking undervolt support {e}")
 
