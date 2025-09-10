@@ -108,6 +108,7 @@ export enum ServerAPIMethods {
   GET_CURRENT_AC_POWER_STATUS = "get_ac_power_status",
   SET_MAX_TDP = "set_max_tdp",
   GET_LATEST_VERSION_NUM = "get_latest_version_num",
+  RESET_SETTINGS = "reset_settings"
 }
 
 export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
@@ -163,6 +164,8 @@ export const getLatestVersionNum = callable(
 );
 
 export const otaUpdate = callable(ServerAPIMethods.OTA_UPDATE);
+
+export const resetSettings = callable(ServerAPIMethods.RESET_SETTINGS)
 
 export const getPowerControlInfo = callable(
   ServerAPIMethods.GET_POWER_CONTROL_INFO

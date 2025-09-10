@@ -65,13 +65,28 @@ def ota_update():
     return result
 
 def get_latest_version():
-    gcontext = ssl.SSLContext()
+  gcontext = ssl.SSLContext()
 
-    response = urllib.request.urlopen(API_URL, context=gcontext)
-    json_data = json.load(response)
+  response = urllib.request.urlopen(API_URL, context=gcontext)
+  json_data = json.load(response)
 
-    tag = json_data.get("tag_name")
-    # if tag is a v* tag, remove the v
-    if tag.startswith("v"):
-        tag = tag[1:]
-    return tag
+  tag = json_data.get("tag_name")
+  # if tag is a v* tag, remove the v
+  if tag.startswith("v"):
+      tag = tag[1:]
+  return tag
+
+def reset_settings():
+  try:
+    os.remove(f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json')
+
+    cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
+
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+
+    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+
+    return result
+  except Exception as e:
+    decky_plugin.logger.error(f'error during plugin settings reset {e}')

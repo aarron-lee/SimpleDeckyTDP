@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLatestVersionNum, otaUpdate } from "../../backend/utils";
+import { getLatestVersionNum, otaUpdate, resetSettings } from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
@@ -14,6 +14,7 @@ import useDeviceName from "../../hooks/useDeviceName";
 const OtaUpdates = () => {
   const [latestVersionNum, setLatestVersionNum] = useState("");
   const [updateInProgress, setUpdateInProgress] = useState(false);
+  const [resetSetttingsInProgress, setResetSettingsInProgress] = useState(false);
 
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
@@ -78,7 +79,7 @@ const OtaUpdates = () => {
             <DeckyButton
               onClick={async () => {
                 setUpdateInProgress(true);
-                await otaUpdate();
+                await resetSettings();
                 setUpdateInProgress(false);
               }}
               style={{
@@ -94,6 +95,29 @@ const OtaUpdates = () => {
           </DeckyRow>
         </>
       )}
+      <DeckyRow>
+        <DeckyField label={"Info"} bottomSeparator="none">
+          WARNING! This permanently deletes your current plugin settings and resets them to the default. This will also restart the Steam client.
+        </DeckyField>
+      </DeckyRow>
+      <DeckyRow>
+        <DeckyButton
+          onClick={async () => {
+            setResetSettingsInProgress(true);
+            await otaUpdate();
+            setResetSettingsInProgress(false);
+          }}
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          layout={"below"}
+        >
+          {resetSetttingsInProgress ? "Resetting..." : 'Delete settings'}
+        </DeckyButton>
+      </DeckyRow>
     </DeckySection>
   );
 };
