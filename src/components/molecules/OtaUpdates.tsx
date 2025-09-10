@@ -96,8 +96,8 @@ const OtaUpdates = () => {
         </>
       )}
       <DeckyRow>
-        <DeckyField label={"Info"} bottomSeparator="none">
-          WARNING! This permanently deletes your current plugin settings and resets them to the default. This will also restart the Steam client.
+        <DeckyField label={"Reset Plugin Settings"} bottomSeparator="none">
+          WARNING! This permanently deletes your current settings. This will also restart the Steam client, no Steam data will be affected.
         </DeckyField>
       </DeckyRow>
       <DeckyRow>
