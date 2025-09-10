@@ -82,9 +82,7 @@ def reset_settings():
     env["LD_LIBRARY_PATH"] = ""
 
     settings_file = f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json'
-    cmd = f'rm {settings_file}'
-
-    subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    os.remove(settings_file)
 
     decky_plugin.logger.info(f'removed settings file at {settings_file}')
 

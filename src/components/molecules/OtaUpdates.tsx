@@ -79,7 +79,7 @@ const OtaUpdates = () => {
             <DeckyButton
               onClick={async () => {
                 setUpdateInProgress(true);
-                await resetSettings();
+                await otaUpdate();
                 setUpdateInProgress(false);
               }}
               style={{
@@ -104,7 +104,7 @@ const OtaUpdates = () => {
         <DeckyButton
           onClick={async () => {
             setResetSettingsInProgress(true);
-            await otaUpdate();
+            await resetSettings();
             setResetSettingsInProgress(false);
           }}
           style={{
