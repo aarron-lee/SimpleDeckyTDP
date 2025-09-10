@@ -78,7 +78,10 @@ def get_latest_version():
 
 def reset_settings():
   try:
-    os.remove(f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json')
+    settings_file = f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json'
+    os.remove(settings_file)
+
+    decky_plugin.logger.info(f'removed settings file at {settings_file}')
 
     cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
 
