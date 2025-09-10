@@ -38,6 +38,7 @@ export enum AdvancedOptionsEnum {
 export enum AdvancedOptionsType {
   BOOLEAN = "boolean",
   NUMBER_RANGE = "number_range",
+  BUTTON = 'button'
 }
 
 export enum RogAllyAdvancedOptions {
@@ -162,6 +163,17 @@ export const saveTdpProfiles = ({
 export const getLatestVersionNum = callable(
   ServerAPIMethods.GET_LATEST_VERSION_NUM
 );
+
+function isServerAPIMethod(value: string): value is ServerAPIMethods {
+  return Object.values(ServerAPIMethods).includes(value as ServerAPIMethods);
+}
+
+export const createServerApiCallback = (apiMethod: string) => {
+  if (isServerAPIMethod(apiMethod)) {
+    return callable(apiMethod)
+  }
+  return async () => {}
+}
 
 export const otaUpdate = callable(ServerAPIMethods.OTA_UPDATE);
 

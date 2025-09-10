@@ -29,6 +29,7 @@ export type AdvancedOption = {
   statePath: string;
   description?: string;
   disabled?: { [k: string]: any };
+  serverApiMethod?: string;
 };
 
 export interface RangedAdvancedOption extends AdvancedOption {

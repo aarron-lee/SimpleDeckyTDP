@@ -11,6 +11,7 @@ import { get } from "lodash";
 import ErrorBoundary from "../ErrorBoundary";
 import ArrowToggleButton from "../atoms/ArrowToggleButton";
 import {
+  DeckyButton,
   DeckyRow,
   DeckySection,
   DeckySlider,
@@ -20,6 +21,7 @@ import { useIsDesktop } from "../../hooks/desktopHooks";
 import {
   AdvancedOptionsEnum,
   AdvancedOptionsType,
+  createServerApiCallback,
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 import useDeviceName from "../../hooks/useDeviceName";
@@ -80,7 +82,7 @@ const AdvancedOptions = () => {
           defaultOpen
         >
           {advancedOptions.map((option, idx) => {
-            const { name, type, statePath, defaultValue, description } = option;
+            const { name, type, statePath, defaultValue, description, serverApiMethod } = option;
             const value = get(advancedState, statePath, defaultValue);
 
             if (isDesktop) {
@@ -177,6 +179,17 @@ const AdvancedOptions = () => {
                   />
                 </DeckyRow>
               );
+            }
+            if (type === AdvancedOptionsType.BUTTON) {
+              // use serverApiMethod
+              const onClick = createServerApiCallback(serverApiMethod || "")
+              return (
+                <DeckyRow>
+                  <DeckyButton onClick={onClick}>
+                    {name}
+                  </DeckyButton>
+                </DeckyRow>
+              )
             }
 
             return null;

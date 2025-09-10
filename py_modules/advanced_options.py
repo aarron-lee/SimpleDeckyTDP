@@ -6,12 +6,14 @@ from devices import rog_ally, lenovo
 import device_utils
 import ryzenadj
 import charge_limit
+from plugin_enums import ServerAPIMethods
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
 class AdvancedOptionsType(Enum):
   BOOLEAN = 'boolean'
   NUMBER_RANGE = 'number_range'
+  BUTTON = 'button'
 
 class DefaultSettings(Enum):
   ENABLE_TDP_CONTROL = 'enableTdpControl'
@@ -305,6 +307,12 @@ def get_default_options():
     }
 
     options.append(max_tdp_on_game_profile_change)
+
+  options.append({
+    'name': 'Reset Plugin Settings',
+    'type': AdvancedOptionsType.BUTTON.value,
+    'serverApiMethod': ServerAPIMethods.RESET_SETTINGS.value
+  })
 
   return options
 
