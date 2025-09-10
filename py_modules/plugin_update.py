@@ -78,15 +78,17 @@ def get_latest_version():
 
 def reset_settings():
   try:
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+
     settings_file = f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json'
-    os.remove(settings_file)
+    cmd = f'rm {settings_file}'
+
+    subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 
     decky_plugin.logger.info(f'removed settings file at {settings_file}')
 
     cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
-
-    env = os.environ.copy()
-    env["LD_LIBRARY_PATH"] = ""
 
     result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 
