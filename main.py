@@ -223,6 +223,14 @@ class Plugin:
     except Exception as e:
       decky_plugin.logger.error(e)
 
+  async def check_ryzenadj_coall(self):
+    try:
+      with plugin_timeout.time_limit(15):
+        migrations.check_ryzenadj_coall_support(force_check=True)
+        return plugin_update.restart_decky_loader()
+    except Exception as e:
+      decky_plugin.logger.error(e)
+
   async def supports_custom_ac_power_management(self):
     return ac_power.supports_custom_ac_power_management()
 

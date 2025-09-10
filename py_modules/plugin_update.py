@@ -9,6 +9,13 @@ import shutil
 
 API_URL = "https://api.github.com/repos/aarron-lee/SimpleDeckyTDP/releases/latest"
 
+def restart_decky_loader():
+  env = os.environ.copy()
+  env["LD_LIBRARY_PATH"] = ""
+  cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
+
+  return subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+
 def recursive_chmod(path, perms):
   for dirpath, dirnames, filenames in os.walk(path):
     current_perms = os.stat(dirpath).st_mode
@@ -55,12 +62,7 @@ def ota_update():
     except Exception as e:
       decky_plugin.logger.error(f'error during install {e}')
 
-    cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
-
-    env = os.environ.copy()
-    env["LD_LIBRARY_PATH"] = ""
-
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    restart_decky_loader()
 
     return result
 
@@ -78,17 +80,12 @@ def get_latest_version():
 
 def reset_settings():
   try:
-    env = os.environ.copy()
-    env["LD_LIBRARY_PATH"] = ""
-
     settings_file = f'{decky_plugin.DECKY_USER_HOME}/homebrew/settings/SimpleDeckyTDP/settings.json'
     os.remove(settings_file)
 
     decky_plugin.logger.info(f'removed settings file at {settings_file}')
 
-    cmd = f'echo "sudo systemctl restart plugin_loader.service" | sh'
-
-    result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    restart_decky_loader()
 
     return result
   except Exception as e:
