@@ -1,8 +1,9 @@
 import { FC, useEffect } from "react";
 import { DeckyRow, DeckyToggle } from "./DeckyFrontendLib";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTdpUncapEnabled, TDP_CACHE_KEY, uiSlice } from "../../redux-modules/uiSlice";
+import { selectTdpUncapEnabled, uiSlice } from "../../redux-modules/uiSlice";
 
+export const TDP_CACHE_KEY = 'SimpleDeckyTDP-enable-max-tdp-override';
 
 const TdpUncapToggle: FC = () => {
   const overrideEnabled = useSelector(selectTdpUncapEnabled)
@@ -21,7 +22,8 @@ const TdpUncapToggle: FC = () => {
         description="Warning, only use this if you know what you are doing. Sets 120W max TDP limit"
         checked={overrideEnabled}
         onChange={(enabled: boolean) => {
-          dispatch(uiSlice.actions.setTdpOverride(!!enabled));
+          window.localStorage.setItem(TDP_CACHE_KEY, `${enabled}}`);
+          dispatch(uiSlice.actions.setTdpOverride(enabled));
         }}
         highlightOnFocus
       />

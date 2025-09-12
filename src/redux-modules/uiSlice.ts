@@ -3,8 +3,6 @@ import { RootState } from "./store";
 import { fetchPowerControlInfo } from "./thunks";
 import { PowerControlInfo } from "../utils/constants";
 
-export const TDP_CACHE_KEY = 'SimpleDeckyTDP-enable-max-tdp-override';
-
 type UiStateType = {
   powerControlInfo?: PowerControlInfo;
   isDesktop: boolean;
@@ -25,7 +23,6 @@ export const uiSlice = createSlice({
     //   state.isDesktop = action.payload;
     // },
     setTdpOverride(state, action: PayloadAction<boolean>) {
-      window.localStorage.setItem(TDP_CACHE_KEY, `${action.payload}}`);
       state.tdpOverrideEnabled = action.payload;
     }
   },
