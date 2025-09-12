@@ -7,17 +7,17 @@ import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
 import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
-import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
+import { AdvancedOptionsEnum, Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
-import { useSelector } from "react-redux";
-import { selectTdpUncapEnabled } from "../../redux-modules/uiSlice";
 
 const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
 
   const deviceName = useDeviceName();
   const isSteamDeck = useIsSteamDeck();
-  const tdpOverride = useSelector(selectTdpUncapEnabled)
+  const tdpOverride = useAdvancedOption(
+    AdvancedOptionsEnum.ENABLE_MAX_TDP_OVERRIDE
+  );
 
   if (isSteamDeck) {
     return 20;

@@ -30,6 +30,7 @@ class DefaultSettings(Enum):
   ENABLE_CHARGE_LIMIT = 'enableChargeLimit'
   CHARGE_LIMIT = 'chargeLimit'
   ENABLE_SIMPLE_EPP_LABELS = 'enableSimpleEppLabels'
+  ENABLE_MAX_TDP_OVERRIDE = 'enableMaxTdpOverride'
 
 class RogAllySettings(Enum):
   USE_PLATFORM_PROFILE = 'platformProfile'
@@ -328,6 +329,20 @@ def get_advanced_options():
     rog_ally_advanced_options(options)
   if device_utils.is_steam_deck():
     steam_deck_advanced_options(options)
+
+  if not device_utils.is_intel():
+    options.append({
+      'name': '(DANGER) Force Override Max TDP limit',
+      'type': AdvancedOptionsType.BOOLEAN.value,
+      'description': 'Warning, only use this if you know what you are doing. Sets 120W max TDP limit',
+      'defaultValue': False,
+      'currentValue': get_value(DefaultSettings.ENABLE_MAX_TDP_OVERRIDE, False),
+      'statePath': DefaultSettings.ENABLE_MAX_TDP_OVERRIDE.value,
+      'disabled': {
+        'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value],
+        'hideIfDisabled': True
+      }
+    })
 
   return options
 

@@ -33,6 +33,7 @@ export enum AdvancedOptionsEnum {
   ENABLE_CHARGE_LIMIT = "enableChargeLimit",
   CHARGE_LIMIT = "chargeLimit",
   ENABLE_SIMPLE_EPP_LABELS = "enableSimpleEppLabels",
+  ENABLE_MAX_TDP_OVERRIDE = 'enableMaxTdpOverride',
 }
 
 export enum AdvancedOptionsType {

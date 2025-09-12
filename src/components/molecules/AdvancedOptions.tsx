@@ -23,8 +23,6 @@ import {
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 import useDeviceName from "../../hooks/useDeviceName";
-import TdpUncapToggle from "../atoms/TdpUncapToggle";
-import useIsIntel from "../../hooks/useIsIntel";
 
 const calculateDisabled = (
   option: AdvancedOption,
@@ -69,7 +67,6 @@ const AdvancedOptions = () => {
   const supportsCustomAcPowerManagement = useSelector(
     supportsCustomAcPowerSelector
   );
-  const isIntel = useIsIntel()
 
   if (advancedOptions.length === 0) {
     return null;
@@ -184,7 +181,6 @@ const AdvancedOptions = () => {
 
             return null;
           })}
-          {!isIntel && <TdpUncapToggle/>}
         </ArrowToggleButton>
       </ErrorBoundary>
     </DeckySection>

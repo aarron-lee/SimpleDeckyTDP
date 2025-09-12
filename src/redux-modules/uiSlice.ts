@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { fetchPowerControlInfo } from "./thunks";
 import { PowerControlInfo } from "../utils/constants";
@@ -6,13 +6,11 @@ import { PowerControlInfo } from "../utils/constants";
 type UiStateType = {
   powerControlInfo?: PowerControlInfo;
   isDesktop: boolean;
-  tdpOverrideEnabled: boolean;
 };
 
 const initialState: UiStateType = {
   powerControlInfo: undefined,
   isDesktop: false,
-  tdpOverrideEnabled: false,
 };
 
 export const uiSlice = createSlice({
@@ -22,9 +20,6 @@ export const uiSlice = createSlice({
     // setIsDesktop(state, action: PayloadAction<boolean>) {
     //   state.isDesktop = action.payload;
     // },
-    setTdpOverride(state, action: PayloadAction<boolean>) {
-      state.tdpOverrideEnabled = action.payload;
-    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPowerControlInfo.fulfilled, (state, action: any) => {
@@ -34,10 +29,6 @@ export const uiSlice = createSlice({
     });
   },
 });
-
-export const selectTdpUncapEnabled = (state: RootState) => {
-  return state.ui.tdpOverrideEnabled;
-}
 
 export const selectPowerControlInfo = (state: RootState) => {
   return state.ui.powerControlInfo;
