@@ -1,16 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { fetchPowerControlInfo } from "./thunks";
 import { PowerControlInfo } from "../utils/constants";
 
+const TDP_CACHE_KEY = 'SimpleDeckyTDP-enable-max-tdp-override';
+
 type UiStateType = {
   powerControlInfo?: PowerControlInfo;
   isDesktop: boolean;
+  tdpOverrideEnabled: boolean;
 };
 
 const initialState: UiStateType = {
   powerControlInfo: undefined,
   isDesktop: false,
+  tdpOverrideEnabled:  window.localStorage.getItem(TDP_CACHE_KEY) === "true" || false,
 };
 
 export const uiSlice = createSlice({
@@ -20,6 +24,10 @@ export const uiSlice = createSlice({
     // setIsDesktop(state, action: PayloadAction<boolean>) {
     //   state.isDesktop = action.payload;
     // },
+    setTdpOverride(state, action: PayloadAction<boolean>) {
+      window.localStorage.setItem(TDP_CACHE_KEY, `${action.payload}}`);
+      state.tdpOverrideEnabled = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPowerControlInfo.fulfilled, (state, action: any) => {
@@ -29,6 +37,10 @@ export const uiSlice = createSlice({
     });
   },
 });
+
+export const selectTdpUncapEnabled = (state: RootState) => {
+  return state.ui.tdpOverrideEnabled;
+}
 
 export const selectPowerControlInfo = (state: RootState) => {
   return state.ui.powerControlInfo;

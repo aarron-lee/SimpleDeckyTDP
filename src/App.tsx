@@ -18,6 +18,8 @@ import { DeckySection } from "./components/atoms/DeckyFrontendLib";
 import { useIsDesktop } from "./hooks/desktopHooks";
 import { AdvancedOptionsEnum } from "./backend/utils";
 import { useAdvancedOption } from "./hooks/useAdvanced";
+import TdpUncapToggle from "./components/atoms/TdpUncapToggle";
+import useIsIntel from "./hooks/useIsIntel";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
@@ -31,6 +33,7 @@ const App: FC = memo(({}) => {
   const gpuControlEnabled = useAdvancedOption(
     AdvancedOptionsEnum.ENABLE_GPU_CONTROL
   );
+  const isIntel = useIsIntel()
 
   return (
     <>
@@ -49,6 +52,7 @@ const App: FC = memo(({}) => {
             </>
           )}
           <AdvancedOptions />
+          {!isIntel && <TdpUncapToggle/>}
           {!isDesktop && (
             <ErrorBoundary title="OTA Updates">
               <OtaUpdates />

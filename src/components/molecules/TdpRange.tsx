@@ -9,18 +9,22 @@ import useIsIntel from "../../hooks/useIsIntel";
 import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
 import { Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
+import { useSelector } from "react-redux";
+import { selectTdpUncapEnabled } from "../../redux-modules/uiSlice";
 
 const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
 
   const deviceName = useDeviceName();
   const isSteamDeck = useIsSteamDeck();
+  const tdpOverride = useSelector(selectTdpUncapEnabled)
 
   if (isSteamDeck) {
     return 20;
   }
 
   if (
+    tdpOverride ||
     deviceName.includes(Devices.ASUS_FLOW_Z13) ||
     deviceName.includes(Devices.ASUS_FLOW_Z13_SHORT)
   ) {
