@@ -1,12 +1,18 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { DeckyRow, DeckyToggle } from "./DeckyFrontendLib";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTdpUncapEnabled, uiSlice } from "../../redux-modules/uiSlice";
+import { selectTdpUncapEnabled, TDP_CACHE_KEY, uiSlice } from "../../redux-modules/uiSlice";
 
 
 const TdpUncapToggle: FC = () => {
   const overrideEnabled = useSelector(selectTdpUncapEnabled)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    // initialize value from localstorage
+    const v = window.localStorage.getItem(TDP_CACHE_KEY) === "true";
+    dispatch(uiSlice.actions.setTdpOverride(v));
+  }, [])
 
   return (
     <DeckyRow>
