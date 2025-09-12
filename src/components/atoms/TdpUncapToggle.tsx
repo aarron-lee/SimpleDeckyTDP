@@ -20,7 +20,7 @@ const TdpUncapToggle: FC = () => {
       <DeckyToggle
         label="(DANGER) Force Override Max TDP limit"
         description="Warning, only use this if you know what you are doing. Sets 120W max TDP limit"
-        checked={overrideEnabled}
+        checked={window.localStorage.getItem(TDP_CACHE_KEY) === "true" || overrideEnabled}
         onChange={(enabled: boolean) => {
           window.localStorage.setItem(TDP_CACHE_KEY, `${enabled}}`);
           dispatch(uiSlice.actions.setTdpOverride(enabled));
