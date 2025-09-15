@@ -36,6 +36,7 @@ def _execute_tdp_command(tdp, tdp_path):
       env["LD_LIBRARY_PATH"] = ""
       cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+      decky_plugin.logger.info(f'tdp set with: {cmd}')
       return result
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} Error: execute_tdp_command {e}')
