@@ -2,6 +2,7 @@ import advanced_options
 import subprocess
 import os
 import decky_plugin
+import plugin_timeout
 
 STEAM_DECK_TDP_PATH="/sys/class/hwmon/hwmon*/power*_cap"
 
@@ -30,15 +31,11 @@ def get_gpu_range():
 def _execute_tdp_command(tdp, tdp_path):
   tdp_microwatts = tdp * 1000000
   try:
-    if os.path.exists(tdp_path):
-      with open(tdp_path, 'w') as file:
-        file.write(tdp_microwatts)
-        file.close()
-
-    # env = os.environ.copy()
-    # env["LD_LIBRARY_PATH"] = ""
-    # cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
-    # result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
-    # return result
+    with plugin_timeout.time_limit(5):
+      env = os.environ.copy()
+      env["LD_LIBRARY_PATH"] = ""
+      cmd = f"echo '{tdp_microwatts}' | tee {tdp_path}"
+      result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+      return result
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} Error: execute_tdp_command {e}')
