@@ -44,12 +44,10 @@ body:
       description: |
         examples:
           - **Distro**: SteamOS 3.6.15 (`cat /etc/os-release`)
-          - **CPU**: 32-core AMD Ryzen Threadripper 7970X (`inxi` or `cat /proc/cpuinfo`)
-          - **GPU**: Advanced Micro Devices [AMD/ATI] Navi 31 [Radeon RX 7900 XT/7900 XTX/7900M] (`lspci -nn | grep VGA` or `lshw -C display -numeric` or `vulkaninfo --summary | grep deviceName`
+          - **Device**: ROG Ally X Z1E
       value: |
         - Distro:
-        - CPU:
-        - GPU:
+        - Device:
       render: markdown
     validations:
       required: true
