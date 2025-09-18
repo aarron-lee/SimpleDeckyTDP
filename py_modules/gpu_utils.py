@@ -218,7 +218,9 @@ def execute_gpu_frequency_command(command):
       with open(GPU_FREQUENCY_PATH, 'w') as file:
         file.write(command)
         file.close()
+    else:
+      # fallback to subprocess
+      cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
+      result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} error execute frequency control {command}")
-  # cmd = f"echo '{command}' | tee {GPU_FREQUENCY_PATH}"
-  # result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
