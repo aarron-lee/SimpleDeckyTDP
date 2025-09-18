@@ -77,60 +77,84 @@ function handleTempMaxTdpProfile(compareId: string, advanced: any) {
 }
 
 export const suspendEventListener = () => {
+  const onSuspend = () => {
+    const state = store.getState();
+
+    const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+    if (!advancedState[AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS]) {
+      store.dispatch(suspendAction());
+    }
+  };
+
   try {
-    const unregister = SteamClient.System.RegisterForOnSuspendRequest(() => {
-      const state = store.getState();
-
-      const { advancedState } = getAdvancedOptionsInfoSelector(state);
-
-      if (!advancedState[AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS]) {
-        store.dispatch(suspendAction());
-      }
-    });
+    const unregister =
+      SteamClient.System.RegisterForOnSuspendRequest(onSuspend);
     return unregister;
   } catch (e) {
-    console.log(e)
+    console.log(e);
+  }
+  // fallback to a different path for suspend if SteamClient.System option not available
+  try {
+    const unregisterOnSuspend =
+      SteamClient.User.RegisterForPrepareForSystemSuspendProgress(
+        onSuspend,
+      ).unregister;
+    return unregisterOnSuspend;
+  } catch (e) {
+    console.error(e);
   }
 };
 
 export const resumeFromSuspendEventListener = () => {
-  try {
-    const unregister = SteamClient.System.RegisterForOnResumeFromSuspend(
-      async () => {
-        setTimeout(() => {
-          const state = store.getState();
+  const onResume = async () => {
+    setTimeout(() => {
+      const state = store.getState();
 
-          const { advancedState } = getAdvancedOptionsInfoSelector(state);
+      const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
-          if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
-            return;
-          }
-
-          if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
-            setMaxTdp();
-          } else {
-            store.dispatch(resumeAction());
-          }
-        }, 2000);
-
-        const state = store.getState();
-
-        const { advancedState } = getAdvancedOptionsInfoSelector(state);
-
-        if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
-          return;
-        }
-
-        // sets TDP, etc, to default expected values
-        setTimeout(() => {
-          store.dispatch(resumeAction());
-        }, 10000);
+      if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
+        return;
       }
-    );
 
+      if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+        setMaxTdp();
+      } else {
+        store.dispatch(resumeAction());
+      }
+    }, 2000);
+
+    const state = store.getState();
+
+    const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+    if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
+      return;
+    }
+
+    // sets TDP, etc, to default expected values
+    setTimeout(() => {
+      store.dispatch(resumeAction());
+    }, 10000);
+  };
+
+  try {
+    const unregister =
+      SteamClient.System.RegisterForOnResumeFromSuspend(onResume);
     return unregister;
   } catch (e) {
     console.log(e);
+  }
+
+  // fallback to a different path for resume if SteamClient.System option not available
+  try {
+    const unregisterOnResume =
+      SteamClient.User.RegisterForResumeSuspendedGamesProgress(
+        onResume,
+      ).unregister;
+    return unregisterOnResume;
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -175,7 +199,7 @@ export const acPowerEventListener = async () => {
       const unregister = SteamClient.System.RegisterForBatteryStateChanges(
         (e: any) => {
           debouncedSetAcPower(e.eACState);
-        }
+        },
       );
       return unregister;
     }
