@@ -89,7 +89,7 @@ export const suspendEventListener = () => {
 
   try {
     const unregister =
-      SteamClient.System.RegisterForOnSuspendRequest(onSuspend);
+      SteamClient.System.RegisterForOnSuspendRequest(onSuspend).unregister;
     return unregister;
   } catch (e) {
     console.log(e);
@@ -140,7 +140,7 @@ export const resumeFromSuspendEventListener = () => {
 
   try {
     const unregister =
-      SteamClient.System.RegisterForOnResumeFromSuspend(onResume);
+      SteamClient.System.RegisterForOnResumeFromSuspend(onResume).unregister;
     return unregister;
   } catch (e) {
     console.log(e);
@@ -200,7 +200,7 @@ export const acPowerEventListener = async () => {
         (e: any) => {
           debouncedSetAcPower(e.eACState);
         },
-      );
+      ).unregister;
       return unregister;
     }
   } catch (e) {

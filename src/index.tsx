@@ -26,7 +26,7 @@ export default definePlugin(() => {
     store.dispatch(
       updateInitialLoad({
         ...results,
-      })
+      }),
     );
     store.dispatch(fetchPowerControlInfo());
 
@@ -36,8 +36,8 @@ export default definePlugin(() => {
   });
 
   const unregisterCurrentGameListener = currentGameInfoListener();
-  resumeFromSuspendEventListener();
-  suspendEventListener();
+  const unregisterResumeListener = resumeFromSuspendEventListener();
+  const unregisterSuspendListener = suspendEventListener();
 
   let unregisterAcPowerListener: any;
 
@@ -59,6 +59,16 @@ export default definePlugin(() => {
           typeof unregisterAcPowerListener === "function"
         )
           unregisterAcPowerListener();
+        if (
+          unregisterSuspendListener &&
+          typeof unregisterSuspendListener === "function"
+        )
+          unregisterSuspendListener();
+        if (
+          unregisterResumeListener &&
+          typeof unregisterResumeListener === "function"
+        )
+          unregisterResumeListener();
       } catch (e) {
         console.error(e);
       }
