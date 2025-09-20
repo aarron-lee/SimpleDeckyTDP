@@ -106,6 +106,8 @@ export const suspendEventListener = () => {
     const unregister = suspendObservable?.observe_((change) => {
       const { newValue } = change;
 
+      logInfo({ info: `mobX suspend triggered with ${newValue}` });
+
       if (!newValue) {
         return;
       }
@@ -175,6 +177,7 @@ export const resumeFromSuspendEventListener = () => {
 
     const unregister = resumeObservable?.observe_((change) => {
       const { newValue } = change;
+      logInfo({ info: `mobX resume triggered with ${newValue}` });
 
       if (!newValue) {
         return;
