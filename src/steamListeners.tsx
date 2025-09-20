@@ -80,17 +80,17 @@ function handleTempMaxTdpProfile(compareId: string, advanced: any) {
   }
 }
 
+const onSuspend = () => {
+  const state = store.getState();
+
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+  if (!advancedState[AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS]) {
+    store.dispatch(suspendAction());
+  }
+};
+
 export const suspendEventListener = () => {
-  const onSuspend = () => {
-    const state = store.getState();
-
-    const { advancedState } = getAdvancedOptionsInfoSelector(state);
-
-    if (!advancedState[AdvancedOptionsEnum.FORCE_DISABLE_SUSPEND_ACTIONS]) {
-      store.dispatch(suspendAction());
-    }
-  };
-
   try {
     const unregister =
       SteamClient.System.RegisterForOnSuspendRequest(onSuspend).unregister;
@@ -104,7 +104,7 @@ export const suspendEventListener = () => {
     const suspendObservable = getSuspendObservable();
 
     if (suspendObservable) {
-      const unregister = suspendObservable?.observe_((change) => {
+      const unregister = suspendObservable.observe_((change) => {
         const { newValue } = change;
 
         logInfo({ info: `mobX suspend triggered with ${newValue}` });
@@ -133,24 +133,8 @@ export const suspendEventListener = () => {
   }
 };
 
-export const resumeFromSuspendEventListener = () => {
-  const onResume = async () => {
-    setTimeout(() => {
-      const state = store.getState();
-
-      const { advancedState } = getAdvancedOptionsInfoSelector(state);
-
-      if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
-        return;
-      }
-
-      if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
-        setMaxTdp();
-      } else {
-        store.dispatch(resumeAction());
-      }
-    }, 2000);
-
+const onResume = async () => {
+  setTimeout(() => {
     const state = store.getState();
 
     const { advancedState } = getAdvancedOptionsInfoSelector(state);
@@ -159,12 +143,28 @@ export const resumeFromSuspendEventListener = () => {
       return;
     }
 
-    // sets TDP, etc, to default expected values
-    setTimeout(() => {
+    if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+      setMaxTdp();
+    } else {
       store.dispatch(resumeAction());
-    }, 10000);
-  };
+    }
+  }, 2000);
 
+  const state = store.getState();
+
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+
+  if (advancedState[AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME]) {
+    return;
+  }
+
+  // sets TDP, etc, to default expected values
+  setTimeout(() => {
+    store.dispatch(resumeAction());
+  }, 10000);
+};
+
+export const resumeFromSuspendEventListener = () => {
   try {
     const unregister =
       SteamClient.System.RegisterForOnResumeFromSuspend(onResume).unregister;
@@ -178,7 +178,7 @@ export const resumeFromSuspendEventListener = () => {
     const resumeObservable = getResumeObservable();
 
     if (resumeObservable) {
-      const unregister = resumeObservable?.observe_((change) => {
+      const unregister = resumeObservable.observe_((change) => {
         const { newValue } = change;
         logInfo({ info: `mobX resume triggered with ${newValue}` });
 
