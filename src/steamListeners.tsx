@@ -17,6 +17,10 @@ import {
   setMaxTdp,
   setPollTdp,
 } from "./backend/utils";
+import {
+  getSuspendObservable,
+  getResumeObservable,
+} from "./suspendResumeObservable/suspendResumeObservables";
 import { debounce } from "lodash";
 
 let currentGameInfoListenerIntervalId: undefined | number;
@@ -94,6 +98,25 @@ export const suspendEventListener = () => {
   } catch (e) {
     console.log(e);
   }
+
+  // try mobx suspend observable
+  try {
+    const suspendObservable = getSuspendObservable();
+
+    const unregister = suspendObservable?.observe_((change) => {
+      const { newValue } = change;
+
+      if (!newValue) {
+        return;
+      }
+
+      onSuspend();
+    });
+    return unregister;
+  } catch (e) {
+    console.error(e);
+  }
+
   // fallback to a different path for suspend if SteamClient.System option not available
   try {
     const unregisterOnSuspend =
@@ -144,6 +167,24 @@ export const resumeFromSuspendEventListener = () => {
     return unregister;
   } catch (e) {
     console.log(e);
+  }
+
+  // try mobx resume observable
+  try {
+    const resumeObservable = getResumeObservable();
+
+    const unregister = resumeObservable?.observe_((change) => {
+      const { newValue } = change;
+
+      if (!newValue) {
+        return;
+      }
+
+      onResume();
+    });
+    return unregister;
+  } catch (e) {
+    console.error(e);
   }
 
   // fallback to a different path for resume if SteamClient.System option not available
