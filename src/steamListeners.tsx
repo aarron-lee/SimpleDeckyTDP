@@ -103,18 +103,20 @@ export const suspendEventListener = () => {
   try {
     const suspendObservable = getSuspendObservable();
 
-    const unregister = suspendObservable?.observe_((change) => {
-      const { newValue } = change;
+    if (suspendObservable) {
+      const unregister = suspendObservable?.observe_((change) => {
+        const { newValue } = change;
 
-      logInfo({ info: `mobX suspend triggered with ${newValue}` });
+        logInfo({ info: `mobX suspend triggered with ${newValue}` });
 
-      if (!newValue) {
-        return;
-      }
+        if (!newValue) {
+          return;
+        }
 
-      onSuspend();
-    });
-    return unregister;
+        onSuspend();
+      });
+      if (unregister) return unregister;
+    }
   } catch (e) {
     console.error(e);
   }
@@ -175,17 +177,19 @@ export const resumeFromSuspendEventListener = () => {
   try {
     const resumeObservable = getResumeObservable();
 
-    const unregister = resumeObservable?.observe_((change) => {
-      const { newValue } = change;
-      logInfo({ info: `mobX resume triggered with ${newValue}` });
+    if (resumeObservable) {
+      const unregister = resumeObservable?.observe_((change) => {
+        const { newValue } = change;
+        logInfo({ info: `mobX resume triggered with ${newValue}` });
 
-      if (!newValue) {
-        return;
-      }
+        if (!newValue) {
+          return;
+        }
 
-      onResume();
-    });
-    return unregister;
+        onResume();
+      });
+      if (unregister) return unregister;
+    }
   } catch (e) {
     console.error(e);
   }
