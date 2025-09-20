@@ -1,7 +1,8 @@
 import { getMobxObservable } from "./getMobxObservable";
 
 /*
-Credit: https://github.com/0u73r-h34v3n/SDH-PlayTime/blob/ed25e1bc134b62be4127c8dd4156855b66e86545/src/app/middlewares/sleep.ts#L67
+Credit:
+https://github.com/0u73r-h34v3n/SDH-PlayTime/blob/ed25e1bc134b62be4127c8dd4156855b66e86545/src/app/middlewares/sleep.ts#L67
 */
 
 const mobxAdministrationSymbol = Symbol("mobx administration");
