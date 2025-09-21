@@ -7,7 +7,7 @@ type Nullable<T> = T | null | undefined;
 
 /*
 Credit:
-https://github.com/0u73r-h34v3n/SDH-PlayTime/blob/ed25e1bc134b62be4127c8dd4156855b66e86545/src/app/middlewares/sleep.ts#L67
+https://github.com/0u73r-h34v3n/SDH-PlayTime/blob/ed25e1bc134b62be4127c8dd4156855b66e86545/src/utils/mobx.ts#L24
 */
 
 export function isNil<T>(data: T): data is Extract<T, null | undefined> {
