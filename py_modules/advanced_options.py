@@ -181,9 +181,9 @@ def get_default_options():
   enable_background_polling = {
     'name': 'Enable Background Polling',
     'type': AdvancedOptionsType.BOOLEAN.value,
-    'defaultValue': False,
+    'defaultValue': True,
     'description': 'Polling will set TDP every few seconds',
-    'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, False),
+    'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, True),
     'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value,
     'disabled': {
       'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]

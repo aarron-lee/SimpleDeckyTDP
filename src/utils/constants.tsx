@@ -9,7 +9,7 @@ export const CpuVendors = {
 };
 
 export const MIN_TDP_RANGE = 4;
-export const DEFAULT_POLL_RATE = 10000;
+export const DEFAULT_POLL_RATE = 15000;
 export const DEFAULT_START_TDP = 12;
 
 export const extractCurrentGameId = getCurrentGameId;
