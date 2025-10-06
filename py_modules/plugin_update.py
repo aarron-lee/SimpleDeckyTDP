@@ -90,3 +90,15 @@ def reset_settings():
     return result
   except Exception as e:
     decky_plugin.logger.error(f'error during plugin settings reset {e}')
+
+def delete_logs():
+  try:
+    logs_dir = f'{decky_plugin.DECKY_USER_HOME}/homebrew/logs/SimpleDeckyTDP/'
+
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = ""
+    cmd = f'echo "sudo rm -rf {logs_dir}" | sh'
+
+    return subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+  except Exception as e:
+    decky_plugin.logger.error(f'Error deleting logs: {e}')

@@ -251,6 +251,12 @@ class Plugin:
     if charge_limit.supports_charge_limit():
       charge_limit.initialize_charge_limit()
 
+    opts = advanced_options.get_advanced_options()
+
+    if opts.get(advanced_options.DefaultSettings.ALWAYS_CLEAR_LOGS_ON_APP_START.value, False):
+      # clear out logs
+      return plugin_update.delete_logs()
+
   # Function called first during the unload process, utilize this to handle your plugin being removed
   async def _unload(self):
     decky_plugin.logger.info("SimpleDeckyTDP Unloading")
@@ -264,5 +270,3 @@ class Plugin:
   async def _migration(self):
     decky_plugin.logger.info("Migrating")
 
-    # migrations.migrate_smt()
-    # migrations.migrate_gpu_mode()

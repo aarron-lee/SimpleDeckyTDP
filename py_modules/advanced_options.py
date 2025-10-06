@@ -14,6 +14,7 @@ class AdvancedOptionsType(Enum):
   NUMBER_RANGE = 'number_range'
 
 class DefaultSettings(Enum):
+  ALWAYS_CLEAR_LOGS_ON_APP_START = 'alwaysClearLogsOnAppStart'
   ENABLE_TDP_CONTROL = 'enableTdpControl'
   ENABLE_GPU_CONTROL = 'enableGpuControl'
   ENABLE_APU_SLOW_LIMIT = 'enableApuSlowLimit'
@@ -329,6 +330,15 @@ def get_advanced_options():
     rog_ally_advanced_options(options)
   if device_utils.is_steam_deck():
     steam_deck_advanced_options(options)
+  
+  options.append({
+    'name': 'Always Clear Logs on Plugin Start',
+    'type': AdvancedOptionsType.BOOLEAN.value,
+    'defaultValue': True,
+    'description': 'Deletes log files after any restart of the plugin',
+    'currentValue': get_value(DefaultSettings.ALWAYS_CLEAR_LOGS_ON_APP_START, True),
+    'statePath': DefaultSettings.ALWAYS_CLEAR_LOGS_ON_APP_START.value
+  })
 
   if not device_utils.is_intel():
     options.append({
