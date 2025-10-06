@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getLatestVersionNum, otaUpdate, resetSettings, checkRyzenadjCoall } from "../../backend/utils";
+import {
+  getLatestVersionNum,
+  otaUpdate,
+  resetSettings,
+  checkRyzenadjCoall,
+} from "../../backend/utils";
 import { useSelector } from "react-redux";
 import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
@@ -21,7 +26,7 @@ const OtaUpdates = () => {
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
   const scalingDriver = useSelector(selectScalingDriver);
   const deviceName = useDeviceName();
-  const isIntel = useIsIntel()
+  const isIntel = useIsIntel();
 
   const isUpdated =
     installedVersionNum === latestVersionNum && Boolean(latestVersionNum);
@@ -71,6 +76,30 @@ const OtaUpdates = () => {
           </DeckyField>
         </DeckyRow>
       )}
+      <DeckyRow>
+        <DeckyField label={"Reset Plugin Settings"} bottomSeparator="none">
+          WARNING! This permanently deletes your current settings. This will
+          also restart the Steam client, no Steam data will be affected.
+        </DeckyField>
+      </DeckyRow>
+      <DeckyRow>
+        <DeckyButton
+          onClick={async () => {
+            setResetSettingsInProgress(true);
+            await resetSettings();
+            setResetSettingsInProgress(false);
+          }}
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          layout={"below"}
+        >
+          {resetSettingsInProgress ? "Resetting..." : "Delete settings"}
+        </DeckyButton>
+      </DeckyRow>
       {Boolean(latestVersionNum) && (
         <>
           <DeckyRow>
@@ -98,34 +127,13 @@ const OtaUpdates = () => {
           </DeckyRow>
         </>
       )}
-      <DeckyRow>
-        <DeckyField label={"Reset Plugin Settings"} bottomSeparator="none">
-          WARNING! This permanently deletes your current settings. This will also restart the Steam client, no Steam data will be affected.
-        </DeckyField>
-      </DeckyRow>
-      <DeckyRow>
-        <DeckyButton
-          onClick={async () => {
-            setResetSettingsInProgress(true);
-            await resetSettings();
-            setResetSettingsInProgress(false);
-          }}
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          layout={"below"}
-        >
-          {resetSettingsInProgress ? "Resetting..." : 'Delete settings'}
-        </DeckyButton>
-      </DeckyRow>
       {!isIntel && (
         <>
           <DeckyRow>
             <DeckyField label={"Detect AMD undervolt"} bottomSeparator="none">
-              Check if your device supports ryzenadj-based CPU undervolting. If it does, you should see a toggle appear in the advanced options. This will reboot Steam.
+              Check if your device supports ryzenadj-based CPU undervolting. If
+              it does, you should see a toggle appear in the advanced options.
+              This will reboot Steam.
             </DeckyField>
           </DeckyRow>
           <DeckyRow>
@@ -143,7 +151,7 @@ const OtaUpdates = () => {
               }}
               layout={"below"}
             >
-              {checkAmdUndervolt ? "Updating..." : 'Check AMD undervolt'}
+              {checkAmdUndervolt ? "Updating..." : "Check AMD undervolt"}
             </DeckyButton>
           </DeckyRow>
         </>
