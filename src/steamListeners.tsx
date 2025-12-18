@@ -22,6 +22,10 @@ import {
   getResumeObservable,
 } from "./suspendResumeObservable/suspendResumeObservables";
 import { debounce } from "lodash";
+import {
+  clearPollingInterval,
+  setPolling,
+} from "./redux-modules/pollingMiddleware";
 
 let currentGameInfoListenerIntervalId: undefined | number;
 let previousIsAcPower: boolean | undefined;
@@ -71,10 +75,12 @@ function handleTempMaxTdpProfile(compareId: string, advanced: any) {
 
   if (tempMaxTdpProfileDuration > 0 && !compareId.includes("default")) {
     tempMaxTdpTimeoutId = window.setTimeout(() => {
+      clearPollingInterval();
       setMaxTdp();
 
       tempMaxTdpTimeoutId = window.setTimeout(() => {
         setPollTdp({ currentGameId: compareId });
+        setPolling();
       }, tempMaxTdpProfileDuration * 1000);
     }, 500);
   }
@@ -144,6 +150,7 @@ const onResume = async () => {
     }
 
     if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+      clearPollingInterval();
       setMaxTdp();
     } else {
       store.dispatch(resumeAction());
@@ -158,10 +165,17 @@ const onResume = async () => {
     return;
   }
 
+  let t = 10000;
+
+  if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+    setPolling();
+    t = 15000;
+  }
+
   // sets TDP, etc, to default expected values
   setTimeout(() => {
     store.dispatch(resumeAction());
-  }, 10000);
+  }, t);
 };
 
 export const resumeFromSuspendEventListener = () => {
