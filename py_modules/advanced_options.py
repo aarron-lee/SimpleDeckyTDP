@@ -228,7 +228,9 @@ def get_default_options():
     'currentValue': get_value(DefaultSettings.MAX_TDP_ON_RESUME, True),
     'statePath': DefaultSettings.MAX_TDP_ON_RESUME.value,
     'disabled': {
-      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
+      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value],
+      'ifTruthy': [DefaultSettings.FORCE_DISABLE_TDP_ON_RESUME.value],
+      'hideIfDisabled': True
     }
   }
 
