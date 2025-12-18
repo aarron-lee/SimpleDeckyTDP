@@ -155,7 +155,7 @@ const onResume = async () => {
     } else {
       store.dispatch(resumeAction());
     }
-  }, 2000);
+  }, 3500);
 
   const state = store.getState();
 
@@ -168,12 +168,14 @@ const onResume = async () => {
   let t = 10000;
 
   if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
-    setPolling();
     t = 15000;
   }
 
   // sets TDP, etc, to default expected values
   setTimeout(() => {
+    if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
+      setPolling();
+    }
     store.dispatch(resumeAction());
   }, t);
 };
