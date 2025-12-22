@@ -22,6 +22,29 @@ class CpuVendors(Enum):
 
 CPU_VENDOR = None
 DEVICE_NAME = None
+CPU_MODEL = None
+
+def get_cpu_model():
+  global CPU_MODEL
+
+  if not CPU_MODEL:
+    try:
+      with open("/proc/cpuinfo", "r") as file:
+          cpuinfo = file.read().strip()
+          file.close()
+
+          pattern = r'model name\s*:\s*(.*)'
+          match = re.search(pattern, cpuinfo)
+
+          if match:
+              vendor_id = match.group(1)
+              CPU_MODEL = vendor_id.strip()
+              decky_plugin.logger.info(f"cpu model: {CPU_MODEL}")
+          else:
+              decky_plugin.logger.error("No CPU model found")
+    except Exception as e:
+      decky_plugin.logger.error(f'{__name__} error while trying to read cpu model')
+  return CPU_MODEL
 
 def get_cpu_manufacturer():
   global CPU_VENDOR
