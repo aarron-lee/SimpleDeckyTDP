@@ -333,12 +333,17 @@ def get_advanced_options():
     steam_deck_advanced_options(options)
 
   if not device_utils.is_intel():
+    default_force_tdp = False
+
+    if device_utils.is_amd_strix_halo():
+      default_force_tdp = True
+
     options.append({
       'name': '(DANGER) Force Override Max TDP limit',
       'type': AdvancedOptionsType.BOOLEAN.value,
       'description': 'Warning, only use this if you know what you are doing. Sets 120W max TDP limit',
-      'defaultValue': False,
-      'currentValue': get_value(DefaultSettings.ENABLE_MAX_TDP_OVERRIDE, False),
+      'defaultValue': default_force_tdp,
+      'currentValue': get_value(DefaultSettings.ENABLE_MAX_TDP_OVERRIDE, default_force_tdp),
       'statePath': DefaultSettings.ENABLE_MAX_TDP_OVERRIDE.value,
       'disabled': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value],

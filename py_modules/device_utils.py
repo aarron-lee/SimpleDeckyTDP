@@ -20,6 +20,9 @@ class CpuVendors(Enum):
   INTEL = "GenuineIntel"
   AMD = "AuthenticAMD"
 
+class CpuModels(Enum):
+  STRIX_HALO = "AI MAX+ 395 w/ Radeon 8060S"
+
 CPU_VENDOR = None
 DEVICE_NAME = None
 CPU_MODEL = None
@@ -126,5 +129,12 @@ def is_steam_deck():
   device_name = get_device_name()
 
   if Devices.STEAM_DECK_LCD.value in device_name or Devices.STEAM_DECK_OLED.value in device_name:
+    return True
+  return False
+
+def is_amd_strix_halo():
+  cpu_model = get_cpu_model()
+
+  if CpuModels.STRIX_HALO.value in cpu_model:
     return True
   return False
