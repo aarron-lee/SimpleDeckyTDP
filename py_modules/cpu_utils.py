@@ -315,7 +315,7 @@ def get_scaling_driver():
 
 def get_intel_tdp_limits():
   # while there is a max TDP provided by intel, there is no min
-  min_tdp = 4
+  min_tdp = 3
   max_tdp = 15
 
   saved_max_tdp = get_saved_settings().get(INTEL_MAX_TDP_SETTING, None)

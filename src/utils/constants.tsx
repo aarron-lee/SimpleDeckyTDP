@@ -8,7 +8,7 @@ export const CpuVendors = {
   AMD: "AuthenticAMD",
 };
 
-export const MIN_TDP_RANGE = 4;
+export const MIN_TDP_RANGE = 3;
 export const DEFAULT_POLL_RATE = 15000;
 export const DEFAULT_START_TDP = 12;
 
