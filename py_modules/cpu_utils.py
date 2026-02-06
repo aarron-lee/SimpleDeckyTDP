@@ -88,14 +88,17 @@ def set_amd_tdp(tdp: int):
         )
         and lenovo.supports_wmi_tdp()
       ):
-        return lenovo.set_tdp(tdp)
+        result = lenovo.set_tdp(tdp)
+        if not result:
+          decky_plugin.logger.error(f"{__name__} Lenovo WMI TDP failed, not falling back to ryzenadj")
+        return result
       elif device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
           return rog_ally.set_tdp(tdp)
 
-    # use ryzenadj by default
+    # use ryzenadj by default (only for non-WMI devices)
     return ryzenadj.set_tdp(tdp)
   except Exception as e:
     decky_plugin.logger.error(e)
