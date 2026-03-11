@@ -13,11 +13,10 @@ export const LANGS: {
     name: '한국어',
     strings: ko,
   },
-  en: {
+  ja: {
     name: '日本語',
     strings: ja,
   },
-  
 };
 
 let cachedLang: string | undefined;
