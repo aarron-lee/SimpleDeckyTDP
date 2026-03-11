@@ -10,18 +10,35 @@ STEAM_CONFIG_PATHS = [
 I18N_DIR = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/i18n'
 
 # Language metadata
-LANGS = {
-    'ko': {'name': '한국어'},
-    'en': {'name': 'English'},
-    'ja': {'name': '日本語'},
-    'zh': {'name': '中文'}
-}
+LANGS = None
+STEAM_LANGUAGE_MAP = None
 
-STEAM_LANGUAGE_MAP = {}
+def load_configs():
+    global LANGS
+    global STEAM_LANGUAGE_MAP
+
+    if LANGS and STEAM_LANGUAGE_MAP:
+        return
+
+    if not os.path.exists(I18N_DIR):
+        return
+
+    try:
+        with open(os.path.join(I18N_DIR, 'language_metadata.json'), 'r', encoding='utf-8') as f:
+            LANGS = json.load(f)
+    except Exception as e:
+        print(f"Error loading language metadata: {e}")
+
+    try:
+        with open(os.path.join(I18N_DIR, 'steam_language_map.json'), 'r', encoding='utf-8') as f:
+            STEAM_LANGUAGE_MAP = json.load(f)
+    except Exception as e:
+        print(f"Error loading language metadata: {e}")
+
+load_configs()
 
 # Load translation files
 def load_translations():
-    global STEAM_LANGUAGE_MAP
     """Load all translation files from the i18n directory"""
     translations = {}
 
@@ -36,11 +53,6 @@ def load_translations():
 
             # extract language map
             if filename.startswith('steam_language_map') and filename.endswith('.json'):
-                try:
-                    with open(os.path.join(I18N_DIR, filename), 'r', encoding='utf-8') as f:
-                        STEAM_LANGUAGE_MAP = json.load(f)
-                except Exception as e:
-                    print(f"Error loading steam language map file {filename}: {e}")
                 continue
 
             if filename.endswith('.json'):
