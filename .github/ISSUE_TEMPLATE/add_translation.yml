@@ -1,0 +1,10 @@
+name: Add a Language Translation
+description: Contribute a language translation
+body:
+  - type: textarea
+    attributes:
+      label: Translations
+      description: Please write all required info here. Guide on how to do so here https://github.com/aarron-lee/SimpleDeckyTDP/blob/main/documentation/add_language.md
+body:
+    validations:
+      required: true
