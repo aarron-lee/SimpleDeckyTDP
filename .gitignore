@@ -60,3 +60,5 @@ cli/decky
 cli/
 .pnpm-store/
 out/
+
+src/i18n/languages.json
