@@ -52,7 +52,7 @@ def load_translations():
                 continue
 
             # extract language map
-            if filename.startswith('steam_language_map') and filename.endswith('.json'):
+            if filename.startswith('steam_language_map'):
                 continue
 
             if filename.endswith('.json'):
@@ -104,7 +104,6 @@ def get_current_language():
     """
     global _cached_lang
     global _cached_steam_lang
-    global STEAM_LANGUAGE_MAP
     
     # Return cached language if available
     if _cached_lang:
