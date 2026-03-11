@@ -33,7 +33,7 @@ def load_configs():
         with open(os.path.join(I18N_DIR, 'steam_language_map.json'), 'r', encoding='utf-8') as f:
             STEAM_LANGUAGE_MAP = json.load(f)
     except Exception as e:
-        print(f"Error loading language metadata: {e}")
+        print(f"Error loading steam language map: {e}")
 
 load_configs()
 
