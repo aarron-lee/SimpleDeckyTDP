@@ -5,11 +5,14 @@ import * as languages from "./languages.json";
 function getLangs() {
   const langs = languages.language_metadata;
 
-  Object.entries(languages).map(([lang, strs]) => {
+  Object.keys(languages).map((lang) => {
     if (lang === "language_metadata") {
       return;
     }
-    langs[lang].strings = strs;
+    const strs = languages[lang];
+    if (lang && strs && langs[lang]?.name) {
+      langs[lang].strings = strs;
+    }
   });
 
   return langs;
