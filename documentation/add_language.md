@@ -2,7 +2,7 @@
 
 ## For Non-Developers
 
-Please open a Github issue with the following info:
+Please open a Github issue with the following information:
 
 1. Your System language
 
