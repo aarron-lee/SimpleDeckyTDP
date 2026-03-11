@@ -1,5 +1,6 @@
-import * as ko from '../../defaults/i18n/ko.json';
-import * as ja from '../../defaults/i18n/ja.json';
+// languages.json build via CI build
+// to generate for localhost/dev, run `build_i18n_json.sh` script
+import * as languages from "./languages.json";
 
 export const LANGS: {
   [key: string]: {
@@ -10,12 +11,12 @@ export const LANGS: {
   };
 } = {
   ko: {
-    name: '한국어',
-    strings: ko,
+    name: "한국어",
+    strings: languages["ko"],
   },
   ja: {
-    name: '日本語',
-    strings: ja,
+    name: "日本語",
+    strings: languages["ja"],
   },
 };
 
@@ -48,7 +49,7 @@ const t = (key: string, originalString: string): string => {
   const lang = getCurrentLanguage();
 
   // English always returns the original text
-  if (lang === 'en') return originalString;
+  if (lang === "en") return originalString;
 
   // Return translation if exists, otherwise return original text
   return LANGS[lang]?.strings?.[key] ?? originalString;
