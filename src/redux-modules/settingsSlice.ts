@@ -82,6 +82,7 @@ export interface SettingsState extends TdpRangeState, PollState, GpuState {
   supportsCustomAcPowerManagement?: boolean;
   cpuVendor?: string;
   isAcPower?: boolean;
+  systemLanguage?: string;
 }
 
 export type InitialStateType = Partial<SettingsState>;
@@ -207,9 +208,11 @@ export const settingsSlice = createSlice({
         pluginVersionNum,
         supportsCustomAcPowerManagement,
         cpuVendor,
+        systemLanguage,
       } = action.payload;
       state.initialLoad = false;
       state.cpuVendor = cpuVendor;
+      state.systemLanguage = systemLanguage;
       state.supportsCustomAcPowerManagement = supportsCustomAcPowerManagement;
       state.minTdp = action.payload.minTdp || MIN_TDP_RANGE;
       state.maxTdp = action.payload.maxTdp || 15;
@@ -529,6 +532,12 @@ export const getInstalledVersionNumSelector = (state: RootState) => {
   const { pluginVersionNum } = state.settings;
 
   return pluginVersionNum;
+};
+
+export const getSystemLangSelector = (state: RootState) => {
+  const { systemLanguage } = state.settings;
+
+  return systemLanguage;
 };
 
 export const getPowerControlInfoSelector =

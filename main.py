@@ -14,6 +14,7 @@ import migrations
 import steam_info
 import device_utils
 import charge_limit
+import i18n
 
 class Plugin:
 
@@ -75,6 +76,7 @@ class Plugin:
       except Exception as e:
         decky_plugin.logger.error(f"main#get_settings failed to get info {e}")
 
+      settings['systemLanguage'] = i18n.get_current_language()
       settings['pluginVersionNum'] = f'{decky_plugin.DECKY_PLUGIN_VERSION}'
       return settings
     except Exception as e:

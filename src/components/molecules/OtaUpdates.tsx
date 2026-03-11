@@ -6,7 +6,10 @@ import {
   checkRyzenadjCoall,
 } from "../../backend/utils";
 import { useSelector } from "react-redux";
-import { getInstalledVersionNumSelector } from "../../redux-modules/settingsSlice";
+import {
+  getInstalledVersionNumSelector,
+  getSystemLangSelector,
+} from "../../redux-modules/settingsSlice";
 import { selectScalingDriver } from "../../redux-modules/uiSlice";
 import {
   DeckyButton,
@@ -24,6 +27,7 @@ const OtaUpdates = () => {
   const [checkAmdUndervolt, setCheckAmdUndervolt] = useState(false);
 
   const installedVersionNum = useSelector(getInstalledVersionNumSelector);
+  const systemLang = useSelector(getSystemLangSelector);
   const scalingDriver = useSelector(selectScalingDriver);
   const deviceName = useDeviceName();
   const isIntel = useIsIntel();
@@ -49,6 +53,11 @@ const OtaUpdates = () => {
 
   return (
     <DeckySection title="System Info">
+      <DeckyRow>
+        <DeckyField label={"System Language"} bottomSeparator="none">
+          {systemLang || "Error: None Found"}
+        </DeckyField>
+      </DeckyRow>
       <DeckyRow>
         <DeckyField label={"Installed Version"} bottomSeparator="none">
           {installedVersionNum}
