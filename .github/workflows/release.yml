@@ -32,6 +32,7 @@ jobs:
       - name: Build frontend from source
         run: |
           ./scripts/build_i18n_json.sh
+          ls src/i18n/languages.json
           pnpm i
           pnpm run build
         continue-on-error: true

@@ -48,6 +48,13 @@ TRANSLATIONS = load_translations()
 
 # Cached language
 _cached_lang = None
+_cached_steam_lang = None
+
+def get_steam_lang():
+    # this initializes the _cached_steam_lang
+    get_current_language()
+
+    return _cached_steam_lang
 
 def get_current_language():
     """
@@ -100,6 +107,7 @@ def get_current_language():
                             match = re.search(r'"language"\s+"(\w+)"', hkcu_content, re.IGNORECASE)
                             if match:
                                 steam_lang = match.group(1).lower()
+                                _cached_steam_lang = steam_lang
                                 # Convert Steam language code to standard language code
                                 steam_lang_map = {
                                     'korean': 'ko',
