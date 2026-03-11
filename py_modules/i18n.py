@@ -7,7 +7,7 @@ STEAM_CONFIG_PATHS = [
     f'{decky_plugin.DECKY_USER_HOME}/.steam/registry.vdf',
 ]
 
-I18N_DIR = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/defaults/i18n'
+I18N_DIR = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/i18n'
 
 # Language metadata
 LANGS = {
