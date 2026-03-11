@@ -10,6 +10,8 @@ import { useDeviceName, useIsSteamDeck } from "../../hooks/useDeviceName";
 import { AdvancedOptionsEnum, Devices, SteamDeckAdvancedOptions } from "../../backend/utils";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 
+import t from '../../i18n/i18n';
+
 const useMaxSupportedTdpValue = () => {
   let maxTdp = 40;
 
@@ -63,7 +65,7 @@ const TdpRange = () => {
         <DeckyRow>
           <TdpRangeSlider
             tdpRange={[MIN_TDP_RANGE, 12]}
-            label="Minimum TDP"
+            label={t('TDP_RANGE_MIN_TDP','Minimum TDP')}
             value={minTdp}
             onChange={setMinTdp}
           />
@@ -71,7 +73,7 @@ const TdpRange = () => {
         <DeckyRow>
           <TdpRangeSlider
             tdpRange={[15, maxSupportedTdpValue]}
-            label="Max TDP"
+            label={t('TDP_RANGE_MAX_TDP','Max TDP')}
             value={maxTdp}
             onChange={setMaxTdp}
           />
