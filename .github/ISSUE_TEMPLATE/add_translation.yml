@@ -4,7 +4,6 @@ body:
   - type: textarea
     attributes:
       label: Translations
-      description: Please write all required info here. Guide on how to do so here https://github.com/aarron-lee/SimpleDeckyTDP/blob/main/documentation/add_language.md
-body:
+      description: Please write all required info here, you can find a guide here https://github.com/aarron-lee/SimpleDeckyTDP/blob/main/documentation/add_language.md
     validations:
       required: true

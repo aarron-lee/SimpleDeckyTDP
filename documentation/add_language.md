@@ -6,6 +6,8 @@ Please open a Github issue with the following info:
 
 1. Your System language
 
+You can find out your system language in the plugin:
+
 ![](./system_language.png)
 
 2. Translations for your language, you can find examples in the [i18n folder](../defaults/i18n/).
