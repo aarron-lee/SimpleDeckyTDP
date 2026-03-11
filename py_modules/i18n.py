@@ -1,6 +1,13 @@
 import json
 import os
 import locale
+import decky_plugin
+
+STEAM_CONFIG_PATHS = [
+    f'{decky_plugin.DECKY_USER_HOME}/.steam/registry.vdf',
+]
+
+I18N_DIR = f'{decky_plugin.DECKY_USER_HOME}/homebrew/plugins/SimpleDeckyTDP/defaults/i18n'
 
 # Language metadata
 LANGS = {
@@ -14,39 +21,22 @@ LANGS = {
 def load_translations():
     """Load all translation files from the i18n directory"""
     translations = {}
-    
-    # Find i18n directory path
-    # Priority:
-    # 1. DECKY_PLUGIN_DIR/i18n (Decky Plugin environment)
-    # 2. Same directory as i18n_py.py (default)
-    
-    i18n_dir = None
-    
-    # 1. Check Decky Plugin environment
-    if os.environ.get('DECKY_PLUGIN_DIR'):
-        plugin_dir = os.environ.get('DECKY_PLUGIN_DIR')
-        i18n_dir = os.path.join(plugin_dir, 'i18n')
-    
-    # 2. Same directory as i18n_py.py (default)
-    else:
-        current_file = os.path.abspath(__file__)
-        i18n_dir = os.path.dirname(current_file)
-    
-    if not i18n_dir or not os.path.exists(i18n_dir):
+
+    if not os.path.exists(I18N_DIR):
         # Translation files not found - return empty dictionary
         return translations
     
     try:
-        for filename in os.listdir(i18n_dir):
+        for filename in os.listdir(I18N_DIR):
             if filename.endswith('.json'):
                 lang = filename.replace('.json', '')
                 try:
-                    with open(os.path.join(i18n_dir, filename), 'r', encoding='utf-8') as f:
+                    with open(os.path.join(I18N_DIR, filename), 'r', encoding='utf-8') as f:
                         translations[lang] = json.load(f)
                 except Exception as e:
                     print(f"Error loading translation file {filename}: {e}")
     except Exception as e:
-        print(f"Error reading i18n directory {i18n_dir}: {e}")
+        print(f"Error reading i18n directory {I18N_DIR}: {e}")
     
     return translations
 
@@ -83,13 +73,8 @@ def get_current_language():
     
     # 1. Read language from Steam config file (most accurate)
     try:
-        # Use /home/deck explicitly in Decky Plugin environment
-        steam_config_paths = [
-            '/home/deck/.steam/registry.vdf',
-            os.path.expanduser('~/.steam/registry.vdf'),
-        ]
         
-        for config_path in steam_config_paths:
+        for config_path in STEAM_CONFIG_PATHS:
             if os.path.exists(config_path):
                 try:
                     with open(config_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -332,13 +317,7 @@ def get_language_debug_info():
         
         debug_info['i18n_paths_checked'].append(path_info)
     
-    # Check Steam config files
-    steam_config_paths = [
-        '/home/deck/.steam/registry.vdf',
-        os.path.expanduser('~/.steam/registry.vdf'),        
-    ]
-    
-    for path in steam_config_paths:
+    for path in STEAM_CONFIG_PATHS:
         exists = os.path.exists(path)
         language_found = None
         
