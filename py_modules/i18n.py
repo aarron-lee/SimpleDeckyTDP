@@ -63,6 +63,11 @@ _cached_lang = None
 _cached_steam_lang = None
 
 def get_steam_lang():
+    global _cached_steam_lang
+
+    if _cached_steam_lang:
+        return _cached_steam_lang
+
     # this initializes the _cached_steam_lang
     get_current_language()
 
@@ -86,6 +91,7 @@ def get_current_language():
         6. Default to 'en'
     """
     global _cached_lang
+    global _cached_steam_lang
     global STEAM_LANGUAGE_MAP
     
     # Return cached language if available
