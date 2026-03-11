@@ -1,4 +1,3 @@
-import sys
 import os
 import decky_plugin
 from plugin_settings import get_nested_setting, get_saved_settings
@@ -8,8 +7,7 @@ import device_utils
 import ryzenadj
 import charge_limit
 
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from i18n.i18n_py import t
+from i18n import t
 
 PLATFORM_PROFILE_PATH = '/sys/firmware/acpi/platform_profile'
 
