@@ -3,7 +3,8 @@ import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
 
 export enum Devices {
   LEGION_GO = "83E1",
-  LEGION_GO_S = "83L3",
+  LEGION_GO_S_Z2_GO = "83L3",
+  LEGION_GO_S_Z1_EXTREME = "83N6",
   ROG_ALLY = "ROG Ally RC71",
   ROG_ALLY_X = "ROG Ally X RC72",
   MINISFORUM_V3 = "V3",
@@ -98,6 +99,7 @@ export enum ServerAPIMethods {
   PERSIST_GPU = "persist_gpu",
   PERSIST_SMT = "persist_smt",
   ON_SUSPEND = "on_suspend",
+  ON_RESUME = "on_resume",
   OTA_UPDATE = "ota_update",
   PERSIST_CPU_BOOST = "persist_cpu_boost",
   SET_VALUES_FOR_GAME_ID = "set_values_for_game_id",
@@ -122,6 +124,7 @@ export const setSetting = ({ name, value }: { name: string; value: any }) => {
   return call(ServerAPIMethods.SET_SETTING, name, value);
 };
 export const onSuspend = callable(ServerAPIMethods.ON_SUSPEND);
+export const onResume = callable(ServerAPIMethods.ON_RESUME);
 
 export const setPollTdp = ({ currentGameId }: { currentGameId: string }) => {
   if (IS_DESKTOP) {

@@ -13,6 +13,7 @@ import plugin_utils
 import migrations
 import steam_info
 import device_utils
+from devices import lenovo
 import charge_limit
 import i18n
 
@@ -158,6 +159,13 @@ class Plugin:
     decky_plugin.logger.info(f'main#on_suspend started')
     cpu_utils.set_smt(True)
     decky_plugin.logger.info(f'main#on_suspend complete')
+
+  async def on_resume(self):
+    decky_plugin.logger.info(f'main#on_resume started')
+    if device_utils.is_legion_go():
+      lenovo.invalidate_platform_profile_cache()
+      lenovo.wait_for_wmi_ready(timeout_seconds=10)
+    decky_plugin.logger.info(f'main#on_resume complete')
 
   async def persist_cpu_boost(self, cpuBoost, gameId):
     tdp_profiles = {

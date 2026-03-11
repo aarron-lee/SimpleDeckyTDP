@@ -14,6 +14,7 @@ import {
   getCurrentAcPowerStatus,
   getSupportsCustomAcPower,
   logInfo,
+  onResume as backendOnResume,
   setMaxTdp,
   setPollTdp,
 } from "./backend/utils";
@@ -140,6 +141,12 @@ export const suspendEventListener = () => {
 };
 
 const onResume = async () => {
+  try {
+    await backendOnResume();
+  } catch (e) {
+    logInfo({ info: `backend onResume error: ${e}` });
+  }
+
   setTimeout(() => {
     const state = store.getState();
 
