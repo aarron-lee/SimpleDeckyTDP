@@ -28,6 +28,9 @@ def load_translations():
     
     try:
         for filename in os.listdir(I18N_DIR):
+            if filename.startswith('language_metadata'):
+                continue
+
             if filename.endswith('.json'):
                 lang = filename.replace('.json', '')
                 try:

@@ -2,14 +2,23 @@
 // to generate for localhost/dev, run `build_i18n_json.sh` script
 import * as languages from "./languages.json";
 
-export const LANGS: {
-  [key: string]: {
-    name: string;
-    strings: {
-      [key: string]: string;
-    };
-  };
-} = {
+function getLangs() {
+  const langs = languages.language_metadata;
+
+  Object.entries(languages).map(([lang, strs]) => {
+    if (lang === "language_metadata") {
+      return;
+    }
+    langs[lang].strings = strs;
+  });
+
+  return langs;
+}
+
+/*
+LANGS example:
+
+{
   ko: {
     name: "한국어",
     strings: languages["ko"],
@@ -19,6 +28,16 @@ export const LANGS: {
     strings: languages["ja"],
   },
 };
+
+*/
+export const LANGS: {
+  [key: string]: {
+    name: string;
+    strings: {
+      [key: string]: string;
+    };
+  };
+} = getLangs();
 
 let cachedLang: string | undefined;
 
