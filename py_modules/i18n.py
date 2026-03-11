@@ -17,8 +17,11 @@ LANGS = {
     'zh': {'name': '中文'}
 }
 
+STEAM_LANGUAGE_MAP = {}
+
 # Load translation files
 def load_translations():
+    global STEAM_LANGUAGE_MAP
     """Load all translation files from the i18n directory"""
     translations = {}
 
@@ -29,6 +32,15 @@ def load_translations():
     try:
         for filename in os.listdir(I18N_DIR):
             if filename.startswith('language_metadata'):
+                continue
+
+            # extract language map
+            if filename.startswith('steam_language_map') and filename.endswith('.json'):
+                try:
+                    with open(os.path.join(I18N_DIR, filename), 'r', encoding='utf-8') as f:
+                        STEAM_LANGUAGE_MAP = json.load(f)
+                except Exception as e:
+                    print(f"Error loading steam language map file {filename}: {e}")
                 continue
 
             if filename.endswith('.json'):
@@ -74,6 +86,7 @@ def get_current_language():
         6. Default to 'en'
     """
     global _cached_lang
+    global STEAM_LANGUAGE_MAP
     
     # Return cached language if available
     if _cached_lang:
@@ -109,21 +122,19 @@ def get_current_language():
                                 steam_lang = match.group(1).lower()
                                 _cached_steam_lang = steam_lang
                                 # Convert Steam language code to standard language code
-                                steam_lang_map = {
-                                    'korean': 'ko',
-                                    'koreana': 'ko',
-                                    'english': 'en',
-                                    'japanese': 'ja',
-                                    'schinese': 'zh',  # Simplified Chinese
-                                    'tchinese': 'zh',  # Traditional Chinese
-                                    'spanish': 'es',
-                                    'french': 'fr',
-                                    'german': 'de',
-                                    'italian': 'it',
-                                    'portuguese': 'pt',
-                                    'russian': 'ru',
-                                }
-                                lang_code = steam_lang_map.get(steam_lang, steam_lang[:2])
+                                # e.g.
+                                # STEAM_LANGUAGE_MAP = {
+                                #     'korean': 'ko',
+                                #     'koreana': 'ko',
+                                #     'english': 'en',
+                                #     'japanese': 'ja',
+                                #     'schinese': 'zh',  # Simplified Chinese
+                                #     'tchinese': 'zh',  # Traditional Chinese
+                                #     'spanish': 'es',
+                                #     'german': 'de',
+                                # }
+
+                                lang_code = STEAM_LANGUAGE_MAP.get(steam_lang, steam_lang[:2])
                                 if lang_code in LANGS:
                                     lang = lang_code
                                     break

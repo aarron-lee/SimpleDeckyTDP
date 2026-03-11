@@ -6,7 +6,7 @@ function getLangs() {
   const langs = languages.language_metadata;
 
   Object.keys(languages).map((lang) => {
-    if (lang === "language_metadata") {
+    if (lang === "language_metadata" || lang == "steam_language_map") {
       return;
     }
     const strs = languages[lang];
