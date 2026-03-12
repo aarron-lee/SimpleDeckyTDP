@@ -3,6 +3,7 @@ import { capitalize } from "lodash";
 import useGpuMode from "../../hooks/useGpuMode";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
+import t from '../../i18n/i18n';
 
 enum Mode {
   BATTERY = 0,
@@ -41,7 +42,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   return (
     <>
       <DeckySlider
-        label="GPU Mode"
+        label={t('GPU_MODE_LABEL', 'GPU Mode')}
         value={sliderValue}
         min={0}
         max={MODES.length - 1}

@@ -7,6 +7,7 @@ import {
 } from "../../redux-modules/settingsSlice";
 import { FC } from "react";
 import { DeckySlider } from "./DeckyFrontendLib";
+import t from '../../i18n/i18n';
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -29,13 +30,13 @@ const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
   const { setMinFreq, setMaxFreq } = useSetGpuFrequency();
 
   if (!(min && max) || currentMin < 1) {
-    return <span>Unsupported on this device.</span>;
+    return <span>{t('GPU_UNSUPPORTED', 'Unsupported on this device.')}</span>;
   }
 
   return (
     <>
       <DeckySlider
-        label={"Minimum Frequency Limit"}
+        label={t('GPU_RANGE_MIN_FREQ', 'Minimum Frequency Limit')}
         value={currentMin}
         step={50}
         description={`${currentMin} MHz`}
@@ -48,7 +49,7 @@ const GpuRangeSliders: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
         }}
       />
       <DeckySlider
-        label={"Maximum Frequency Limit"}
+        label={t('GPU_RANGE_MAX_FREQ', 'Maximum Frequency Limit')}
         value={currentMax}
         step={50}
         description={`${currentMax} MHz`}

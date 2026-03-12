@@ -14,6 +14,7 @@ import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 import { AdvancedOptionsEnum } from "../../backend/utils";
+import t from '../../i18n/i18n';
 
 const getOptions = (
   powerGovernorOptions: PowerGovernorOption[],
@@ -77,10 +78,10 @@ const PowerGovernorSlider: FC<{
 
   const sliderValue = optionToIdx[powerGovernor || "powersave"];
 
-  let label = "CPU Power Governor";
+  let label = t('CPU_GOVERNOR_LABEL', 'CPU Power Governor');
 
   if (simpleLabelsEnabled) {
-    label = "Power Governor";
+    label = t('CPU_GOVERNOR_SIMPLE_LABEL', 'Power Governor');
   }
 
   return (

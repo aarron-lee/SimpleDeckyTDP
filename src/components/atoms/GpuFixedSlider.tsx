@@ -6,6 +6,7 @@ import {
   setFixedGpuFrequency,
 } from "../../redux-modules/settingsSlice";
 import { DeckySlider } from "./DeckyFrontendLib";
+import t from '../../i18n/i18n';
 
 const useSetGpuFrequency = () => {
   const dispatch = useDispatch();
@@ -24,12 +25,12 @@ const GpuFixedSlider = () => {
   const setFreq = useSetGpuFrequency();
 
   if (!(min && max) || currentFrequency < 1) {
-    return <span>Unsupported on this device.</span>;
+    return <span>{t('GPU_UNSUPPORTED', 'Unsupported on this device.')}</span>;
   }
 
   return (
     <DeckySlider
-      label={"Frequency"}
+      label={t('GPU_FIXED_FREQUENCY', 'Frequency')}
       value={currentFrequency}
       description={`${currentFrequency} MHz`}
       step={50}

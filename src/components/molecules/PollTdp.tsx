@@ -1,6 +1,7 @@
 import { usePollInfo, useSetPollRate } from "../../hooks/usePollState";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection, DeckySlider } from "../atoms/DeckyFrontendLib";
+import t from '../../i18n/i18n';
 
 export function PollTdp() {
   const { enabled, pollRate } = usePollInfo();
@@ -11,12 +12,12 @@ export function PollTdp() {
   }
 
   return (
-    <DeckySection title="Poll TDP">
+    <DeckySection title={t('POLL_TDP_TITLE', 'Poll TDP')}>
       <ErrorBoundary title="Poll TDP">
         <DeckyRow>
           <DeckySlider
-            label="Poll Rate"
-            description={`Set TDP every ${pollRate / 1000} seconds`}
+            label={t('POLL_TDP_RATE_LABEL', 'Poll Rate')}
+            description={`${t('POLL_TDP_RATE_DESC_PREFIX', 'Set TDP every')} ${pollRate / 1000} ${t('POLL_TDP_RATE_DESC_SUFFIX', 'seconds')}`}
             value={pollRate / 1000}
             step={1}
             showValue
