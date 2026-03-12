@@ -23,6 +23,7 @@ import {
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 import useDeviceName from "../../hooks/useDeviceName";
+import t from '../../i18n/i18n';
 
 const calculateDisabled = (
   option: AdvancedOption,
@@ -73,7 +74,7 @@ const AdvancedOptions = () => {
   }
 
   return (
-    <DeckySection title="Advanced Options">
+    <DeckySection title={t('ADVANCED_OPTIONS_TITLE', 'Advanced Options')}>
       <ErrorBoundary title="Advanced Options">
         <ArrowToggleButton
           cacheKey="simpleDeckyTDP.advancedOptionButton"

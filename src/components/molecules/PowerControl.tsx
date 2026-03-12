@@ -14,6 +14,7 @@ import { selectPowerControlInfo } from "../../redux-modules/uiSlice";
 import { useSmt } from "../../hooks/useSmt";
 import { DeckyRow, DeckySection, DeckyToggle } from "../atoms/DeckyFrontendLib";
 import { useFetchPowerControlInfo } from "../../hooks/useFetchPowerControlInfo";
+import t from '../../i18n/i18n';
 
 export const usePowerControlsEnabled = () => {
   const { advancedState } = useSelector(getAdvancedOptionsInfoSelector);
@@ -44,12 +45,12 @@ const PowerControl = () => {
   }
 
   return (
-    <DeckySection title="CPU Controls">
+    <DeckySection title={t('CPU_CONTROLS_TITLE', 'CPU Controls')}>
       {powerControlInfo.supportsCpuBoost && <CpuFeatureToggles />}
       {powerControlInfo.supportsSmt && (
         <DeckyRow>
           <DeckyToggle
-            label="Enable SMT"
+            label={t('CPU_CONTROLS_ENABLE_SMT', 'Enable SMT')}
             checked={smt}
             onChange={(enabled: boolean) => {
               setSmt(enabled);
