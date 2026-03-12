@@ -65,3 +65,4 @@ src/i18n/languages.json
 
 # i18n dir gets moved from defaults/i18n to top level when building decky plugin in CI
 i18n
+!*/i18n
