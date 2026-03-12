@@ -2,6 +2,7 @@ import { useCpuBoost } from "../../hooks/useCpuBoost";
 import { useEffect } from "react";
 import { DeckyRow, DeckyToggle } from "./DeckyFrontendLib";
 import { useFetchPowerControlInfo } from "../../hooks/useFetchPowerControlInfo";
+import t from '../../i18n/i18n';
 
 export function CpuFeatureToggles() {
   const { cpuBoost, setCpuBoost } = useCpuBoost();
@@ -14,7 +15,7 @@ export function CpuFeatureToggles() {
   return (
     <DeckyRow>
       <DeckyToggle
-        label="Enable CPU Boost"
+        label={t('CPU_ENABLE_BOOST', 'Enable CPU Boost')}
         checked={cpuBoost}
         onChange={(enabled: boolean) => {
           setCpuBoost(enabled);

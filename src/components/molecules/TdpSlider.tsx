@@ -5,6 +5,7 @@ import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
 import { FC } from "react";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySlider } from "../atoms/DeckyFrontendLib";
+import t from '../../i18n/i18n';
 
 export const TdpSlider: FC = () => {
   const [minTdp, maxTdp] = useTdpRange();
@@ -16,7 +17,7 @@ export const TdpSlider: FC = () => {
       <ErrorBoundary title="TDP Slider">
         <DeckySlider
           value={tdp}
-          label="TDP (Watts)"
+          label={t('TDP_SLIDER_LABEL', 'TDP (Watts)')}
           min={minTdp}
           max={maxTdp}
           step={1}

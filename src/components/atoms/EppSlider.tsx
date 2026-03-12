@@ -16,6 +16,7 @@ import { FC } from "react";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 import { useAdvancedOption } from "../../hooks/useAdvanced";
 import { AdvancedOptionsEnum } from "../../backend/utils";
+import t from '../../i18n/i18n';
 
 const getOptions = (eppOptions: EppOption[], simpleLabelsEnabled = false) => {
   const idxToOption: { [key: string]: any } = {};
@@ -96,10 +97,10 @@ const EppSlider: FC<{ powerControlInfo: PowerControlInfo }> = ({
     return null;
   }
 
-  let label = "CPU Energy Performance Preference";
+  let label = t('EPP_LABEL', 'CPU Energy Performance Preference');
 
   if (simpleLabelsEnabled) {
-    label = "Energy Performance Preference";
+    label = t('EPP_LABEL_SIMPLE', 'Energy Performance Preference');
   }
 
   return (
