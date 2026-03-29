@@ -28,6 +28,7 @@ export enum AdvancedOptionsEnum {
   MAX_TDP_ON_RESUME = "maxTdpOnResume",
   MAX_TDP_ON_GAME_PROFILE_CHANGE = "maxTdpOnGameProfileChange",
   AC_POWER_PROFILES = "acPowerProfiles",
+  MAX_TDP_ON_AC_POWER = "maxTdpOnAcPower",
   FORCE_DISABLE_TDP_ON_RESUME = "forceDisableTdpOnResume",
   FORCE_DISABLE_SUSPEND_ACTIONS = "forceDisableSuspendActions",
   USE_PLATFORM_PROFILE = "platformProfile",

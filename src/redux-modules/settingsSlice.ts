@@ -528,6 +528,13 @@ export const getAdvancedOptionsInfoSelector = (state: RootState) => {
   return { advancedState: advanced, advancedOptions };
 };
 
+export const maxTdpAcProfilesEnabledSelector = (state: any) => {
+  const { advancedState } = getAdvancedOptionsInfoSelector(state);
+  const {isAcPower} = state;
+
+  return isAcPower && advancedState[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER]
+}
+
 export const getInstalledVersionNumSelector = (state: RootState) => {
   const { pluginVersionNum } = state.settings;
 

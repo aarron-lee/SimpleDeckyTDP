@@ -3,7 +3,7 @@ import TdpRange from "./components/molecules/TdpRange";
 import { TdpSlider } from "./components/molecules/TdpSlider";
 import { PollTdp } from "./components/molecules/PollTdp";
 import { store } from "./redux-modules/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { TdpProfiles } from "./components/molecules/TdpProfiles";
 import {
   useFetchInitialStateEffect,
@@ -18,6 +18,7 @@ import { DeckySection } from "./components/atoms/DeckyFrontendLib";
 import { useIsDesktop } from "./hooks/desktopHooks";
 import { AdvancedOptionsEnum } from "./backend/utils";
 import { useAdvancedOption } from "./hooks/useAdvanced";
+import { maxTdpAcProfilesEnabledSelector } from "./redux-modules/settingsSlice";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
@@ -28,6 +29,9 @@ const App: FC = memo(({}) => {
   const tdpControlEnabled = useAdvancedOption(
     AdvancedOptionsEnum.ENABLE_TDP_CONTROL
   );
+  const maxTdpAcProfileEnabled = useSelector(
+    maxTdpAcProfilesEnabledSelector
+  )
   const gpuControlEnabled = useAdvancedOption(
     AdvancedOptionsEnum.ENABLE_GPU_CONTROL
   );
@@ -38,7 +42,7 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {tdpControlEnabled && <TdpSlider />}
+            {tdpControlEnabled && <TdpSlider disabled={maxTdpAcProfileEnabled} />}
             {gpuControlEnabled && <Gpu />}
           </DeckySection>
           <PowerControl />

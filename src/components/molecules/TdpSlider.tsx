@@ -2,12 +2,11 @@ import { useTdpRange } from "../../hooks/useTdpRange";
 import { useSetTdp } from "../../hooks/useTdpProfiles";
 import { useSelector } from "react-redux";
 import { getCurrentTdpInfoSelector } from "../../redux-modules/settingsSlice";
-import { FC } from "react";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySlider } from "../atoms/DeckyFrontendLib";
 import t from '../../i18n/i18n';
 
-export const TdpSlider: FC = () => {
+export const TdpSlider = ({ disabled = false }: { disabled: boolean }) => {
   const [minTdp, maxTdp] = useTdpRange();
   const setTdp = useSetTdp();
   const { tdp } = useSelector(getCurrentTdpInfoSelector);
@@ -21,6 +20,7 @@ export const TdpSlider: FC = () => {
           min={minTdp}
           max={maxTdp}
           step={1}
+          disabled={disabled}
           onChange={(newTdp) => setTdp(newTdp)}
           notchTicksVisible
           showValue
