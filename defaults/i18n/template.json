@@ -52,6 +52,8 @@
   "ADVANCED_ENABLE_AUTO_CPU_MANAGEMENT_DESC": "Enable automatic management of CPU boost, EPP, SMT, and governor",
   "ADVANCED_ENABLE_AC_POWER_PROFILES": "Enable per-game AC Power TDP Profiles",
   "ADVANCED_ENABLE_AC_POWER_PROFILES_DESC": "Use separate per-game TDP profiles when connected to AC power. Requires per-game profiles to be enabled",
+  "MAX_TDP_ON_AC_POWER": "Always use Max TDP on AC power",
+  "MAX_TDP_ON_AC_POWER_DESC": "When plugged into AC power, always use max TDP. Per-game profiles must be enabled",
   "ADVANCED_ENABLE_CHARGE_LIMIT": "Enable Battery Charge Limit",
   "ADVANCED_SET_CHARGE_LIMIT": "Set Battery Charge Limit",
   "ADVANCED_SET_CHARGE_LIMIT_DESC": "Set maximum battery limit",

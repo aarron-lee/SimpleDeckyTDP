@@ -52,6 +52,8 @@
   "ADVANCED_ENABLE_AUTO_CPU_MANAGEMENT_DESC": "CPUブースト、EPP、SMT、ガバナーの自動管理を有効化",
   "ADVANCED_ENABLE_AC_POWER_PROFILES": "ゲーム別AC電源TDPプロファイルを有効化",
   "ADVANCED_ENABLE_AC_POWER_PROFILES_DESC": "AC電源接続時に個別のゲーム別TDPプロファイルを使用。ゲーム別プロファイルが有効化されている必要があります",
+  "MAX_TDP_ON_AC_POWER": "ゲームごとのAC電源TDPプロファイルを有効にする",
+  "MAX_TDP_ON_AC_POWER_DESC": "AC電源接続時に、ゲームごとに個別のTDPプロファイルを使用します。ゲームごとのプロファイルが有効になっている必要があります。",
   "ADVANCED_ENABLE_CHARGE_LIMIT": "バッテリー充電制限を有効化",
   "ADVANCED_SET_CHARGE_LIMIT": "バッテリー充電制限を設定",
   "ADVANCED_SET_CHARGE_LIMIT_DESC": "最大バッテリー制限を設定",

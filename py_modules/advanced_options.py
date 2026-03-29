@@ -27,6 +27,7 @@ class DefaultSettings(Enum):
   MAX_TDP_ON_RESUME = 'maxTdpOnResume'
   MAX_TDP_ON_GAME_PROFILE_CHANGE = 'maxTdpOnGameProfileChange'
   AC_POWER_PROFILES = 'acPowerProfiles'
+  MAX_TDP_ON_AC_POWER = 'maxTdpOnAcPower'
   FORCE_DISABLE_TDP_ON_RESUME = 'forceDisableTdpOnResume'
   FORCE_DISABLE_SUSPEND_ACTIONS = 'forceDisableSuspendActions'
   ENABLE_CHARGE_LIMIT = 'enableChargeLimit'
@@ -150,6 +151,21 @@ def get_default_options():
   }
 
   options.append(ac_power_profiles)
+
+  max_tdp_on_ac_power = {
+    'name': t('MAX_TDP_ON_AC_POWER', 'Always use Max TDP on AC power'),
+    'type': AdvancedOptionsType.BOOLEAN.value,
+    'defaultValue': False,
+    'description': t('MAX_TDP_ON_AC_POWER_DESC', 'When plugged into AC power, always use max TDP. Per-game profiles must be enabled'),
+    'currentValue': get_value(DefaultSettings.MAX_TDP_ON_AC_POWER, False),
+    'disabled': {
+      'ifFalsy': [DefaultSettings.AC_POWER_PROFILES.value],
+      'hideIfDisabled': True
+    }
+    'statePath': DefaultSettings.MAX_TDP_ON_AC_POWER.value
+  }
+
+  options.append(max_tdp_on_ac_power)
 
   if charge_limit.supports_charge_limit():
     range, default_value, step = charge_limit.get_range_info()
