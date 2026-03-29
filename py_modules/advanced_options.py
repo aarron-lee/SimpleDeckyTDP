@@ -156,7 +156,7 @@ def get_default_options():
     'name': t('MAX_TDP_ON_AC_POWER', 'Always use Max TDP on AC power'),
     'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': False,
-    'description': t('MAX_TDP_ON_AC_POWER_DESC', 'When plugged into AC power, always use max TDP. Per-game profiles must be enabled'),
+    'description': t('MAX_TDP_ON_AC_POWER_DESC', 'When plugged into AC power, always use max TDP. AC power profiles must be enabled'),
     'currentValue': get_value(DefaultSettings.MAX_TDP_ON_AC_POWER, False),
     'disabled': {
       'ifFalsy': [DefaultSettings.AC_POWER_PROFILES.value],

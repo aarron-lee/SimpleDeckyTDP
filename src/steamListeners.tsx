@@ -58,6 +58,7 @@ export const currentGameInfoListener = () => {
       store.dispatch(setCurrentGameInfo(results));
 
       if(
+        advanced[AdvancedOptionsEnum.AC_POWER_PROFILES] &&
         advanced[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER] &&
         isAcPower
       ) {
