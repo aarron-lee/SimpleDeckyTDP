@@ -7,6 +7,7 @@ import {
   getAdvancedOptionsInfoSelector,
   setAcPower,
   setCurrentGameInfo,
+  setReduxTdp,
 } from "./redux-modules/settingsSlice";
 import { resumeAction, suspendAction } from "./redux-modules/extraActions";
 import {
@@ -47,14 +48,22 @@ export const currentGameInfoListener = () => {
 
     if (
       settings.currentGameId !== compareId ||
-      settings.isAcPower !== previousIsAcPower
+      isAcPower !== previousIsAcPower
     ) {
       handleTempMaxTdpProfile(compareId, advanced);
 
-      previousIsAcPower = settings.isAcPower;
+      previousIsAcPower = isAcPower;
 
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
+
+      if(
+        advanced[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER] &&
+        isAcPower
+      ) {
+        // set max TDP on AC TDP Profile
+        store.dispatch(setReduxTdp(settings.maxTdp));
+      }
     }
   }, 2000);
 
