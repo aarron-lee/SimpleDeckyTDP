@@ -528,11 +528,15 @@ export const getAdvancedOptionsInfoSelector = (state: RootState) => {
   return { advancedState: advanced, advancedOptions };
 };
 
-export const maxTdpAcProfilesEnabledSelector = (state: any) => {
+export const maxTdpAcProfilesEnabledSelector = (state: RootState) => {
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
-  const {isAcPower} = state;
+  const { isAcPower } = state.settings;
 
-  return isAcPower && advancedState[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER]
+  return (
+    isAcPower && 
+    Boolean(advancedState[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER]) && 
+    Boolean(advancedState[AdvancedOptionsEnum.AC_POWER_PROFILES])
+  );
 }
 
 export const getInstalledVersionNumSelector = (state: RootState) => {

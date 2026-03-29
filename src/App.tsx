@@ -19,6 +19,7 @@ import { useIsDesktop } from "./hooks/desktopHooks";
 import { AdvancedOptionsEnum } from "./backend/utils";
 import { useAdvancedOption } from "./hooks/useAdvanced";
 import { maxTdpAcProfilesEnabledSelector } from "./redux-modules/settingsSlice";
+import { MaxTdpSlider } from "./components/molecules/MaxTdpSlider";
 
 const App: FC = memo(({}) => {
   useFetchInitialStateEffect();
@@ -42,7 +43,8 @@ const App: FC = memo(({}) => {
         <>
           <DeckySection>
             <TdpProfiles isDesktop={isDesktop} />
-            {tdpControlEnabled && <TdpSlider disabled={maxTdpAcProfileEnabled} />}
+            {tdpControlEnabled && !maxTdpAcProfileEnabled && <TdpSlider />}
+            {tdpControlEnabled && maxTdpAcProfileEnabled && <MaxTdpSlider />}
             {gpuControlEnabled && <Gpu />}
           </DeckySection>
           <PowerControl />

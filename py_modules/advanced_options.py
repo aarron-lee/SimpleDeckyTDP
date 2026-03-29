@@ -161,7 +161,7 @@ def get_default_options():
     'disabled': {
       'ifFalsy': [DefaultSettings.AC_POWER_PROFILES.value],
       'hideIfDisabled': True
-    }
+    },
     'statePath': DefaultSettings.MAX_TDP_ON_AC_POWER.value
   }
 
