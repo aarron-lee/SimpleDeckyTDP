@@ -87,6 +87,16 @@ Run the following in terminal, then reboot. Note that this works both for instal
 curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 ```
 
+### Install An Older Version
+
+Run the following in terminal, then reboot. Make sure to change the version number
+
+
+```bash
+# example: install v1.0.0
+curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | VERSION=v1.0.0 sh
+```
+
 ### Manual Install
 
 Download the latest release from the [releases page](https://github.com/aarron-lee/SimpleDeckyTDP/releases)
