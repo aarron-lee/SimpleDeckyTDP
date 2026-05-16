@@ -35,7 +35,7 @@ export enum AdvancedOptionsEnum {
   ENABLE_CHARGE_LIMIT = "enableChargeLimit",
   CHARGE_LIMIT = "chargeLimit",
   ENABLE_SIMPLE_EPP_LABELS = "enableSimpleEppLabels",
-  ENABLE_MAX_TDP_OVERRIDE = 'enableMaxTdpOverride',
+  ENABLE_MAX_TDP_OVERRIDE = "enableMaxTdpOverride",
 }
 
 export enum AdvancedOptionsType {
@@ -72,6 +72,7 @@ export const DesktopAdvancedOptions = [
   AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING,
   AdvancedOptionsEnum.ENABLE_AUTOMATIC_CPU_MANAGEMENT,
   AdvancedOptionsEnum.CHARGE_LIMIT,
+  AdvancedOptionsEnum.ENABLE_CHARGE_LIMIT,
   AdvancedOptionsEnum.ENABLE_SIMPLE_EPP_LABELS,
   LegionGoAdvancedOptions.CUSTOM_TDP_MODE,
   RogAllyAdvancedOptions.USE_PLATFORM_PROFILE,
@@ -113,7 +114,7 @@ export enum ServerAPIMethods {
   SET_MAX_TDP = "set_max_tdp",
   GET_LATEST_VERSION_NUM = "get_latest_version_num",
   RESET_SETTINGS = "reset_settings",
-  CHECK_RYZENADJ_COALL = 'check_ryzenadj_coall'
+  CHECK_RYZENADJ_COALL = "check_ryzenadj_coall",
 }
 
 export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
@@ -166,25 +167,27 @@ export const saveTdpProfiles = ({
 };
 
 export const getLatestVersionNum = callable(
-  ServerAPIMethods.GET_LATEST_VERSION_NUM
+  ServerAPIMethods.GET_LATEST_VERSION_NUM,
 );
 
 export const otaUpdate = callable(ServerAPIMethods.OTA_UPDATE);
 
-export const resetSettings = callable(ServerAPIMethods.RESET_SETTINGS)
+export const resetSettings = callable(ServerAPIMethods.RESET_SETTINGS);
 
-export const checkRyzenadjCoall = callable(ServerAPIMethods.CHECK_RYZENADJ_COALL)
+export const checkRyzenadjCoall = callable(
+  ServerAPIMethods.CHECK_RYZENADJ_COALL,
+);
 
 export const getPowerControlInfo = callable(
-  ServerAPIMethods.GET_POWER_CONTROL_INFO
+  ServerAPIMethods.GET_POWER_CONTROL_INFO,
 );
 
 export const getSupportsCustomAcPower = callable(
-  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT
+  ServerAPIMethods.GET_SUPPORTS_CUSTOM_AC_POWER_MANAGEMENT,
 );
 
 export const getCurrentAcPowerStatus = callable(
-  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS
+  ServerAPIMethods.GET_CURRENT_AC_POWER_STATUS,
 );
 
 export const setPowerGovernor = ({
