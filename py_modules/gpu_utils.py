@@ -6,7 +6,7 @@ import os
 import time
 import subprocess
 import advanced_options
-from plugin_enums import GpuModes, GpuRange
+from plugin_enums import GpuModes, GpuRange, GpuLevel
 from plugin_settings import get_saved_settings
 from devices import steam_deck
 
@@ -14,8 +14,11 @@ GPU_FREQUENCY_PATH = None
 GPU_LEVEL_PATH = None
 
 if not device_utils.is_intel():
-  GPU_FREQUENCY_PATH = glob.glob("/sys/class/drm/card?/device/pp_od_clk_voltage")[0]
-  GPU_LEVEL_PATH = glob.glob("/sys/class/drm/card?/device/power_dpm_force_performance_level")[0]
+  try:
+    GPU_FREQUENCY_PATH = glob.glob("/sys/class/drm/card?/device/pp_od_clk_voltage")[0]
+    GPU_LEVEL_PATH = glob.glob("/sys/class/drm/card?/device/power_dpm_force_performance_level")[0]
+  except Exception as e:
+    decky_plugin.logger.error(f'Error while getting GPU path info: {e}')
 
 GPU_FREQUENCY_RANGE = None
 
@@ -105,9 +108,7 @@ def set_amd_gpu_frequency(current_game_id):
     try:
       # change back to auto
       decky_plugin.logger.error(f"{__name__} set balance")
-      with open(GPU_LEVEL_PATH,'w') as f:
-        f.write("auto")
-        f.close()
+      set_gpu_level(GpuLevel.AUTO.value)
       return True
     except Exception as e:
       decky_plugin.logger.error(f"{__name__} balance mode error {e}")
@@ -115,9 +116,7 @@ def set_amd_gpu_frequency(current_game_id):
   elif gpu_mode == GpuModes.BATTERY.value:
     try:
       decky_plugin.logger.error(f"{__name__} set battery")
-      with open(GPU_LEVEL_PATH,'w') as f:
-        f.write("low")
-        f.close()
+      set_gpu_level(GpuLevel.LOW.value)
       return True
     except Exception as e:
       decky_plugin.logger.error(f"{__name__} power mode error {e}")
@@ -154,27 +153,22 @@ def set_amd_gpu_frequency_range(new_min, new_max):
     if not (new_min >= min and new_max <= max and new_min <= new_max):
       if (new_min == 0 and new_max == 0):
         decky_plugin.logger.info(f"{__name__} Set GPU balance mode")
-        with open(GPU_LEVEL_PATH,'w') as f:
-          f.write("auto")
-          f.close()
+        set_gpu_level(GpuLevel.AUTO.value)
+
         return True
       elif (new_min == -1 and new_max == 0):
         decky_plugin.logger.info(f"{__name__} Set GPU perform mode")
-        with open(GPU_LEVEL_PATH,'w') as f:
-          f.write("high")
-          f.close()
+        set_gpu_level(GpuLevel.HIGH.value)
+
         return True
       elif (new_min == -1 and new_max == -1):
         decky_plugin.logger.info(f"{__name__} Set GPU power mode")
-        with open(GPU_LEVEL_PATH,'w') as f:
-          f.write("low")
-          f.close()
-        return True
-    # decky_plugin.logger.info(f'manual')
+        set_gpu_level(GpuLevel.LOW.value)
 
-    with open(GPU_LEVEL_PATH,'w') as file:
-      file.write("manual")
-      file.close()
+        return True
+
+    set_gpu_level(GpuLevel.MANUAL.value)
+
     time.sleep(0.1)
     try:
       decky_plugin.logger.info(f"{__name__} Set GPU freq range {new_min} {new_max}")
@@ -224,3 +218,14 @@ def execute_gpu_frequency_command(command):
       result = subprocess.run(cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=get_env())
   except Exception as e:
     decky_plugin.logger.error(f"{__name__} error execute frequency control {command}")
+
+def set_gpu_level(level):
+  if not os.path.exists(GPU_LEVEL_PATH):
+    decky_plugin.logger.error(f"error, GPU_LEVEL_PATH not initialized")
+    return
+  try:
+    with open(GPU_LEVEL_PATH,'w') as f:
+      f.write(level)
+      f.close()
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error setting GPU level: {level}')

@@ -10,3 +10,9 @@ class GpuRange(Enum):
   MIN = "minGpuFrequency"
   MAX = "maxGpuFrequency"
   FIXED = "fixedGpuFrequency"
+
+class GpuLevel(Enum):
+  AUTO = "auto"
+  HIGH = "high"
+  LOW = "low"
+  MANUAL = "manual"
