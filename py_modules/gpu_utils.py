@@ -228,4 +228,4 @@ def set_gpu_level(level):
       f.write(level)
       f.close()
   except Exception as e:
-    decky_plugin.logger.error(f"{__name__} error setting GPU level: {level}')
+    decky_plugin.logger.error(f"{__name__} error setting GPU level: {level}")
