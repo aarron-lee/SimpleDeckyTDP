@@ -167,34 +167,34 @@ def get_default_options():
 
   options.append(max_tdp_on_ac_power)
 
-  if charge_limit.supports_charge_limit():
-    range, default_value, step = charge_limit.get_range_info()
+  # if charge_limit.supports_charge_limit():
+  #   range, default_value, step = charge_limit.get_range_info()
 
-    options.append({
-      'name': t('ADVANCED_ENABLE_CHARGE_LIMIT', 'Enable Battery Charge Limit'),
-      'type': AdvancedOptionsType.BOOLEAN.value,
-      'defaultValue': False,
-      'currentValue': get_value(DefaultSettings.ENABLE_CHARGE_LIMIT, False),
-      'statePath': DefaultSettings.ENABLE_CHARGE_LIMIT.value
-    })
+  #   options.append({
+  #     'name': t('ADVANCED_ENABLE_CHARGE_LIMIT', 'Enable Battery Charge Limit'),
+  #     'type': AdvancedOptionsType.BOOLEAN.value,
+  #     'defaultValue': False,
+  #     'currentValue': get_value(DefaultSettings.ENABLE_CHARGE_LIMIT, False),
+  #     'statePath': DefaultSettings.ENABLE_CHARGE_LIMIT.value
+  #   })
 
-    set_charge_limit_option = {
-      'name': t('ADVANCED_SET_CHARGE_LIMIT', 'Set Battery Charge Limit'),
-      'type': AdvancedOptionsType.NUMBER_RANGE.value,
-      'range': range,
-      'defaultValue': default_value,
-      'step': step,
-      'valueSuffix': '%',
-      'description': t('ADVANCED_SET_CHARGE_LIMIT_DESC', 'Sets max battery limit'),
-      'currentValue': get_number_value(DefaultSettings.CHARGE_LIMIT, default_value),
-      'statePath': DefaultSettings.CHARGE_LIMIT.value,
-      'disabled': {
-        'ifFalsy': [DefaultSettings.ENABLE_CHARGE_LIMIT.value],
-        'hideIfDisabled': True
-      }
-    }
+  #   set_charge_limit_option = {
+  #     'name': t('ADVANCED_SET_CHARGE_LIMIT', 'Set Battery Charge Limit'),
+  #     'type': AdvancedOptionsType.NUMBER_RANGE.value,
+  #     'range': range,
+  #     'defaultValue': default_value,
+  #     'step': step,
+  #     'valueSuffix': '%',
+  #     'description': t('ADVANCED_SET_CHARGE_LIMIT_DESC', 'Sets max battery limit'),
+  #     'currentValue': get_number_value(DefaultSettings.CHARGE_LIMIT, default_value),
+  #     'statePath': DefaultSettings.CHARGE_LIMIT.value,
+  #     'disabled': {
+  #       'ifFalsy': [DefaultSettings.ENABLE_CHARGE_LIMIT.value],
+  #       'hideIfDisabled': True
+  #     }
+  #   }
 
-    options.append(set_charge_limit_option)
+  #   options.append(set_charge_limit_option)
 
   enable_background_polling = {
     'name': t('ADVANCED_ENABLE_BACKGROUND_POLLING', 'Enable Background Polling'),
