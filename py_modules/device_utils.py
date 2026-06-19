@@ -9,6 +9,7 @@ class Devices(Enum):
   LEGION_GO_S_Z1_EXTREME = "83N6"
   ROG_ALLY = "ROG Ally RC71"
   ROG_ALLY_X = "ROG Ally X RC72"
+  ROG_XBOX_ALLY="ROG Xbox Ally"
   MINISFORUM_V3 = "V3"
   GPD_WM2 = "G1619-04"
   GPD_WIN4 = "G1618-04"
@@ -107,6 +108,13 @@ def is_rog_ally_x():
     return True
   return False
 
+def is_rog_xbox_ally():
+  device_name = get_device_name()
+
+  if Devices.ROG_XBOX_ALLY.value in device_name:
+    return True
+  return False
+
 def is_rog_ally():
   device_name = get_device_name()
 
@@ -115,7 +123,7 @@ def is_rog_ally():
   return False
 
 def is_rog_ally_series():
-  return is_rog_ally() or is_rog_ally_x()
+  return is_rog_ally() or is_rog_ally_x() or is_rog_xbox_ally()
 
 def is_legion_go():
   device_name = get_device_name()
