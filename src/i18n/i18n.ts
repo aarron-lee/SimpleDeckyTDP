@@ -70,9 +70,6 @@ export const getLanguageName = (lang?: string): string => {
 const t = (key: string, originalString: string): string => {
   const lang = getCurrentLanguage();
 
-  // English always returns the original text
-  if (lang === "en") return originalString;
-
   // Return translation if exists, otherwise return original text
   return LANGS[lang]?.strings?.[key] ?? originalString;
 };
