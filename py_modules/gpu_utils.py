@@ -185,20 +185,27 @@ def set_amd_gpu_frequency_range(new_min, new_max):
 
 def get_intel_gpu_clocks():
   try:
-    env = os.environ.copy()
-    env["LD_LIBRARY_PATH"] = ""
+    # legacy i915 layout
+    max_files = glob.glob("/sys/class/drm/card?/gt_max_freq_mhz")
+    min_files = glob.glob("/sys/class/drm/card?/gt_min_freq_mhz")
 
-    max_cmd = 'cat /sys/class/drm/card?/gt_max_freq_mhz'
-    max_result = subprocess.run(max_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
-    max_gpu_clock = int(max_result.stdout.strip())
+    # xe driver layout (Arc / Core Ultra iGPUs): no gt_*_freq_mhz at card root,
+    # frequencies live under device/tile*/gt*/freq*/{min,max}_freq
+    if not (max_files and min_files):
+      max_files = glob.glob("/sys/class/drm/card?/device/tile*/gt*/freq*/max_freq")
+      min_files = glob.glob("/sys/class/drm/card?/device/tile*/gt*/freq*/min_freq")
 
-    min_cmd = 'cat /sys/class/drm/card?/gt_min_freq_mhz'
-    min_result = subprocess.run(min_cmd, shell=True, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
-    min_gpu_clock = int(min_result.stdout.strip())
+    if not (max_files and min_files):
+      raise FileNotFoundError("no intel gpu frequency sysfs path found")
+
+    with open(sorted(max_files)[0], 'r') as f:
+      max_gpu_clock = int(f.read().strip())
+    with open(sorted(min_files)[0], 'r') as f:
+      min_gpu_clock = int(f.read().strip())
 
     return [min_gpu_clock, max_gpu_clock]
   except Exception as e:
-    decky_plugin.logger.error('error while getting intel gpu clocks')
+    decky_plugin.logger.error(f'error while getting intel gpu clocks {e}')
     return [None, None]
   
 def get_env():

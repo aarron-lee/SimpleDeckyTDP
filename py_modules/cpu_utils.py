@@ -177,8 +177,14 @@ def set_cpu_boost(enabled = True):
     return False
 
 def supports_smt():
-  if os.path.exists(SMT_PATH):
-    return True
+  try:
+    if os.path.exists(SMT_PATH):
+      with open(SMT_PATH, 'r') as file:
+        state = file.read().strip()
+      # 'notsupported' / 'notimplemented' / 'forceoff' cannot be toggled
+      return state in ('on', 'off')
+  except Exception as e:
+    decky_plugin.logger.error(e)
 
   return False
 
@@ -186,6 +192,13 @@ def set_smt(enabled = True):
   try:
     # SMT_PATH is identical for both AMD and Intel
     if os.path.exists(SMT_PATH):
+      with open(SMT_PATH, 'r') as file:
+        state = file.read().strip()
+      # skip when SMT can't be toggled (CPUs without HyperThreading report
+      # 'notsupported'/'notimplemented'/'forceoff' and the kernel returns
+      # -ENODEV/-EPERM on write)
+      if state not in ('on', 'off'):
+        return True
       with open(SMT_PATH, 'w') as file:
         if enabled:
           file.write('on')
