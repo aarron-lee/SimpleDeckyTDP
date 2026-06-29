@@ -29,6 +29,9 @@ INTEL_MAX_TDP_SETTING = 'INTEL_MAX_TDP_SETTING'
 # as a safety mitigation, 40W to be used as as a ceiling for PC handheld devices
 INTEL_MAX_TDP = 40
 
+# sysfs intel-rapl power limits are in microwatts (path suffix `_uw`)
+MICROWATTS_PER_WATT = 1_000_000
+
 class ScalingDrivers(Enum):
   INTEL_CPUFREQ = "intel_cpufreq"
   INTEL_PSTATE = "intel_pstate"
@@ -357,11 +360,11 @@ def get_intel_max_tdp():
 
       if os.path.exists(MAX_TDP_PATH):
         with open(MAX_TDP_PATH, 'r') as file:
-          max_tdp = int(file.read().strip()) / 1000000
+          max_tdp = int(file.read().strip()) / MICROWATTS_PER_WATT
           file.close()
       if os.path.exists(ALTERNATIVE_MAX_TDP_PATH):
         with open(ALTERNATIVE_MAX_TDP_PATH, 'r') as file:
-          alt_max_tdp = int(file.read().strip()) / 1000000
+          alt_max_tdp = int(file.read().strip()) / MICROWATTS_PER_WATT
           file.close()
 
       if alt_max_tdp >= max_tdp:
@@ -379,7 +382,7 @@ def get_intel_max_tdp():
   return maximum_tdp
 
 def execute_tdp_command(tdp, tdp_path):
-  tdp_microwatts = tdp * 1000000
+  tdp_microwatts = tdp * MICROWATTS_PER_WATT
   try:
     if os.path.exists(tdp_path):
       with open(tdp_path, 'w') as file:
