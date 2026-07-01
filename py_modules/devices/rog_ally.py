@@ -64,6 +64,17 @@ def set_platform_profile(tdp):
     command =  platform_profile_choices[1]
   else:
     command =  platform_profile_choices[2]
+
+  try:
+    with open(PLATFORM_PROFILE_PATH, 'r') as f:
+      current_status = f.read().strip()
+      f.close()
+      if current_status == command.strip():
+        # platform profile already the correct value
+        return True
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} platform_profile error while reading platform profile value: {e}")
+
   try:
     with open(PLATFORM_PROFILE_PATH, 'w') as file:
       file.write(command)
