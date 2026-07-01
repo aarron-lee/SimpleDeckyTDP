@@ -246,10 +246,6 @@ def t(key, default_text, lang=None):
     if lang is None:
         lang = get_current_language()
     
-    # English always returns default text
-    if lang == 'en':
-        return default_text
-    
     # Find translation, return default text if not found
     return TRANSLATIONS.get(lang, {}).get(key, default_text)
 
