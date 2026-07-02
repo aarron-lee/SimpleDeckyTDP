@@ -23,11 +23,11 @@ import {
   DesktopAdvancedOptions,
 } from "../../backend/utils";
 import useDeviceName from "../../hooks/useDeviceName";
-import t from '../../i18n/i18n';
+import t from "../../i18n/i18n";
 
 const calculateDisabled = (
   option: AdvancedOption,
-  advancedState: { [k: string]: boolean }
+  advancedState: { [k: string]: boolean },
 ) => {
   if (option.disabled) {
     // there is component disable logic to parse
@@ -58,15 +58,47 @@ const calculateDisabled = (
   return { disabled: false, hideIfDisabled: false };
 };
 
+const calculateUiHide = (
+  option: AdvancedOption,
+  advancedState: { [k: string]: boolean },
+) => {
+  if (option.uiShouldHideField) {
+    // there is component disable logic to parse
+    const { uiShouldHideField } = option;
+
+    if (uiShouldHideField.ifFalsy) {
+      // ifFalsy = arr of advancedOptions
+      const { ifFalsy } = uiShouldHideField;
+
+      for (let i = 0; i < ifFalsy.length; i++) {
+        if (!advancedState[ifFalsy[i]]) {
+          return { uiShouldHideField: true };
+        }
+      }
+    }
+    if (uiShouldHideField.ifTruthy) {
+      // ifTruthy = arr of advancedOptions
+      const { ifTruthy } = uiShouldHideField;
+
+      for (let i = 0; i < ifTruthy.length; i++) {
+        if (advancedState[ifTruthy[i]]) {
+          return { uiShouldHideField: true };
+        }
+      }
+    }
+  }
+  return { uiShouldHideField: false };
+};
+
 const AdvancedOptions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const deviceName = useDeviceName();
   const isDesktop = useIsDesktop();
   const { advancedState, advancedOptions } = useSelector(
-    getAdvancedOptionsInfoSelector
+    getAdvancedOptionsInfoSelector,
   );
   const supportsCustomAcPowerManagement = useSelector(
-    supportsCustomAcPowerSelector
+    supportsCustomAcPowerSelector,
   );
 
   if (advancedOptions.length === 0) {
@@ -74,7 +106,7 @@ const AdvancedOptions = () => {
   }
 
   return (
-    <DeckySection title={t('ADVANCED_OPTIONS_TITLE', 'Advanced Options')}>
+    <DeckySection title={t("ADVANCED_OPTIONS_TITLE", "Advanced Options")}>
       <ErrorBoundary title="Advanced Options">
         <ArrowToggleButton
           cacheKey="simpleDeckyTDP.advancedOptionButton"
@@ -100,10 +132,16 @@ const AdvancedOptions = () => {
             if (type === AdvancedOptionsType.BOOLEAN) {
               const { disabled, hideIfDisabled } = calculateDisabled(
                 option,
-                advancedState
+                advancedState,
               );
 
-              if (disabled && hideIfDisabled) {
+              // uiShouldHideField only hides the field, it does not set the actual value of the field to 'false'
+              const { uiShouldHideField } = calculateUiHide(
+                option,
+                advancedState,
+              );
+
+              if ((disabled && hideIfDisabled) || uiShouldHideField) {
                 return null;
               }
 
@@ -122,7 +160,7 @@ const AdvancedOptions = () => {
                           statePath,
                           value: enabled,
                           deviceName,
-                        })
+                        }),
                       );
                     }}
                     disabled={disabled}
@@ -145,7 +183,7 @@ const AdvancedOptions = () => {
 
               const { disabled, hideIfDisabled } = calculateDisabled(
                 option,
-                advancedState
+                advancedState,
               );
 
               if (disabled && hideIfDisabled) {
@@ -168,7 +206,7 @@ const AdvancedOptions = () => {
                           statePath,
                           value: newValue,
                           deviceName,
-                        })
+                        }),
                       );
                     }}
                     valueSuffix={valueSuffix}

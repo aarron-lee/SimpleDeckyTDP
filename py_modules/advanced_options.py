@@ -203,7 +203,7 @@ def get_default_options():
     'description': t('ADVANCED_ENABLE_BACKGROUND_POLLING_DESC', 'Polling will set TDP every few seconds'),
     'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, True),
     'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value,
-    'disabled': {
+    'uiShouldHideField': {
       'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
     }
   }
@@ -426,7 +426,7 @@ def rog_ally_advanced_options(options):
       'defaultValue': True,
       'currentValue': get_value(RogAllySettings.USE_PLATFORM_PROFILE, True),
       'statePath': RogAllySettings.USE_PLATFORM_PROFILE.value,
-      'disabled': {
+      'uiShouldHideField': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
@@ -447,7 +447,7 @@ def rog_ally_advanced_options(options):
       'defaultValue': True,
       'currentValue': get_value(RogAllySettings.USE_WMI, True),
       'statePath': RogAllySettings.USE_WMI.value,
-      'disabled': {
+      'uiShouldHideField': {
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })

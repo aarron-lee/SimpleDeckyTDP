@@ -29,6 +29,7 @@ export type AdvancedOption = {
   statePath: string;
   description?: string;
   disabled?: { [k: string]: any };
+  uiShouldHideField?: { [k: string]: any };
 };
 
 export interface RangedAdvancedOption extends AdvancedOption {
@@ -150,7 +151,7 @@ export const settingsSlice = createSlice({
         statePath: string;
         value: any;
         deviceName: string;
-      }>
+      }>,
     ) => {
       const { statePath, value, deviceName } = action.payload;
 
@@ -160,7 +161,7 @@ export const settingsSlice = createSlice({
     },
     updatePowerGovernor: (
       state,
-      action: PayloadAction<{ powerGovernor: string; scalingDriver: string }>
+      action: PayloadAction<{ powerGovernor: string; scalingDriver: string }>,
     ) => {
       const { powerGovernor, scalingDriver } = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
@@ -169,19 +170,19 @@ export const settingsSlice = createSlice({
         set(
           state.tdpProfiles,
           `${currentGameId}.powerControls.${scalingDriver}.powerGovernor`,
-          powerGovernor
+          powerGovernor,
         );
       } else {
         set(
           state.tdpProfiles,
           `default.powerControls.${scalingDriver}.powerGovernor`,
-          powerGovernor
+          powerGovernor,
         );
       }
     },
     updateEpp: (
       state,
-      action: PayloadAction<{ epp: string; scalingDriver: string }>
+      action: PayloadAction<{ epp: string; scalingDriver: string }>,
     ) => {
       const { epp, scalingDriver } = action.payload;
       const { currentGameId, enableTdpProfiles } = state;
@@ -190,13 +191,13 @@ export const settingsSlice = createSlice({
         set(
           state.tdpProfiles,
           `${currentGameId}.powerControls.${scalingDriver}.epp`,
-          epp
+          epp,
         );
       } else {
         set(
           state.tdpProfiles,
           `default.powerControls.${scalingDriver}.epp`,
-          epp
+          epp,
         );
       }
     },
@@ -245,7 +246,7 @@ export const settingsSlice = createSlice({
         maxGpuFrequency
       ) {
         state.tdpProfiles.default.fixedGpuFrequency = Math.floor(
-          (minGpuFrequency + maxGpuFrequency) / 2
+          (minGpuFrequency + maxGpuFrequency) / 2,
         );
       }
     },
@@ -267,7 +268,7 @@ export const settingsSlice = createSlice({
     },
     setGpuFrequency: (
       state,
-      action: PayloadAction<{ min?: number; max?: number }>
+      action: PayloadAction<{ min?: number; max?: number }>,
     ) => {
       const { min, max } = action.payload;
 
@@ -339,7 +340,7 @@ export const settingsSlice = createSlice({
     },
     setCurrentGameInfo: (
       state,
-      action: PayloadAction<{ id: string; displayName: string }>
+      action: PayloadAction<{ id: string; displayName: string }>,
     ) => {
       const { isAcPower, advanced } = state;
       const { id, displayName } = action.payload;
@@ -420,7 +421,7 @@ export const pollEnabledSelector = (state: any) => {
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
   const pollingEnabled = Boolean(
-    advancedState[AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING]
+    advancedState[AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING],
   );
 
   return pollingEnabled;
@@ -492,10 +493,10 @@ export const getCurrentGpuFrequencySelector = (state: RootState) => {
 
   return {
     currentMin: Number(
-      state.settings.tdpProfiles[activeGameId].minGpuFrequency
+      state.settings.tdpProfiles[activeGameId].minGpuFrequency,
     ),
     currentMax: Number(
-      state.settings.tdpProfiles[activeGameId].maxGpuFrequency
+      state.settings.tdpProfiles[activeGameId].maxGpuFrequency,
     ),
   };
 };
@@ -533,11 +534,11 @@ export const maxTdpAcProfilesEnabledSelector = (state: RootState) => {
   const { isAcPower } = state.settings;
 
   return (
-    isAcPower && 
-    Boolean(advancedState[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER]) && 
+    isAcPower &&
+    Boolean(advancedState[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER]) &&
     Boolean(advancedState[AdvancedOptionsEnum.AC_POWER_PROFILES])
   );
-}
+};
 
 export const getInstalledVersionNumSelector = (state: RootState) => {
   const { pluginVersionNum } = state.settings;
@@ -575,7 +576,7 @@ function handleAdvancedOptionsEdgeCases(
   state: any,
   statePath: string,
   value: boolean,
-  deviceName: string
+  deviceName: string,
 ) {
   try {
     handleSteamDeckAdvancedOptions(state, statePath, value, deviceName);
@@ -584,7 +585,7 @@ function handleAdvancedOptionsEdgeCases(
       set(
         state,
         `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-        false
+        false,
       );
     }
     if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
@@ -592,7 +593,7 @@ function handleAdvancedOptionsEdgeCases(
         set(
           state,
           `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`,
-          false
+          false,
         );
       }
     }
@@ -607,7 +608,7 @@ function handleAdvancedOptionsEdgeCases(
       set(
         state,
         `advanced.${AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME}`,
-        false
+        false,
       );
     }
   } catch (err) {
@@ -619,7 +620,7 @@ function handleSteamDeckAdvancedOptions(
   state: any,
   statePath: string,
   value: boolean,
-  deviceName: string
+  deviceName: string,
 ) {
   const steamDeck = isSteamDeck(deviceName);
 
@@ -627,7 +628,7 @@ function handleSteamDeckAdvancedOptions(
     set(
       state,
       `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
-      false
+      false,
     );
     // force maxGpuFrequency back to 1600 max for Steam Deck
     set(state, "settings.maxGpuFrequency", 1600);
@@ -643,7 +644,7 @@ function handleSteamDeckAdvancedOptions(
       set(
         state,
         `advanced.${AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING}`,
-        true
+        true,
       );
     }
     if (
@@ -654,7 +655,7 @@ function handleSteamDeckAdvancedOptions(
       set(
         state,
         `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_TDP_LIMITS}`,
-        false
+        false,
       );
       disableCustomGpuLimit();
     }
@@ -668,7 +669,7 @@ function handleSteamDeckAdvancedOptions(
       const newMax = get(
         state,
         `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX}`,
-        1600
+        1600,
       );
 
       set(state, "settings.maxGpuFrequency", newMax || 1600);
