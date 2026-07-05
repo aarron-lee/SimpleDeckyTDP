@@ -200,12 +200,9 @@ def get_default_options():
     'name': t('ADVANCED_ENABLE_BACKGROUND_POLLING', 'Enable Background Polling'),
     'type': AdvancedOptionsType.BOOLEAN.value,
     'defaultValue': True,
-    'description': t('ADVANCED_ENABLE_BACKGROUND_POLLING_DESC', 'Polling will set TDP every few seconds'),
+    'description': t('ADVANCED_ENABLE_BACKGROUND_POLLING_DESC', 'Polling will set TDP/GPU/etc every few seconds'),
     'currentValue': get_value(DefaultSettings.ENABLE_BACKGROUND_POLLING, True),
-    'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value,
-    'uiShouldHideField': {
-      'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
-    }
+    'statePath': DefaultSettings.ENABLE_BACKGROUND_POLLING.value
   }
 
   options.append(enable_background_polling)
