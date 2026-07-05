@@ -588,15 +588,15 @@ function handleAdvancedOptionsEdgeCases(
         false,
       );
     }
-    if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
-      if (typeof state?.advanced?.platformProfile === "boolean") {
-        set(
-          state,
-          `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`,
-          false,
-        );
-      }
-    }
+    // if (statePath === AdvancedOptionsEnum.ENABLE_BACKGROUND_POLLING && value) {
+    //   if (typeof state?.advanced?.platformProfile === "boolean") {
+    //     set(
+    //       state,
+    //       `advanced.${AdvancedOptionsEnum.USE_PLATFORM_PROFILE}`,
+    //       false,
+    //     );
+    //   }
+    // }
     if (
       statePath === AdvancedOptionsEnum.FORCE_DISABLE_TDP_ON_RESUME &&
       value === true
