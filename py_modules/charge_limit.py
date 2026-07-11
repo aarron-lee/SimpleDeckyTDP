@@ -7,7 +7,15 @@ def uses_boolean_charge_limit():
   # Lenovo Legion exposes a fixed firmware ~80% cap (ideapad conservation_mode or
   # power_supply charge_types) - a boolean toggle, not a percentage slider. Gate
   # on capability (node exists) rather than product id.
-  return (not device_utils.is_rog_ally_series()) and lenovo.supports_charge_limit()
+  # Defer to the native charge-limit interface (charge_control_end_threshold, used
+  # by Steam and the ROG Ally path) when it exists - only fall back to the boolean
+  # toggle when there's no standard threshold node, so we don't overlap if Steam
+  # adds native Legion Go charge-limit support.
+  return (
+    not device_utils.is_rog_ally_series()
+    and not rog_ally.supports_charge_limit()
+    and lenovo.supports_charge_limit()
+  )
 
 def get_range_info():
   if device_utils.is_rog_ally_series():
