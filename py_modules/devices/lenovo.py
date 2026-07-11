@@ -164,78 +164,132 @@ def wait_for_wmi_ready(timeout_seconds=10):
   decky_plugin.logger.warning(f"{__name__} WMI not ready after {timeout_seconds}s timeout")
   return False
 
-# --- Battery charge limit (ideapad conservation mode) ---
-# Lenovo Legion (incl. Legion Go 2) exposes the battery charge limit via the
-# ideapad_acpi "conservation mode" node - a boolean ~80% cap - NOT the ROG Ally
-# charge_control_end_threshold percentage node. It is root-writable, and the
-# Decky backend runs as root, so no acpi_call / WMI evaluation is needed.
+# --- Battery charge limit -------------------------------------------------
+# Lenovo Legion exposes a fixed firmware battery-conservation cap (~80%) through
+# one of two root-writable sysfs interfaces, depending on model / driver:
+#   1. ideapad "conservation_mode"  - boolean "1"/"0"           (some Legion models)
+#   2. power_supply "charge_types"  - "Long_Life"/"Standard"    (Legion Go, exposed
+#                                     by the lenovo-wmi-other battery extension)
+# Both are a firmware on/off cap, NOT a settable percentage, so the plugin drives
+# them as a single boolean toggle. The Decky backend runs as root, so we just
+# read/write sysfs - no acpi_call / WMI evaluation needed.
 
 CONSERVATION_MODE_GLOB = "/sys/bus/platform/devices/VPC2004:*/conservation_mode"
-CONSERVATION_MODE_PATH = None
-# In-memory cache of the last value we wrote. Reading conservation_mode round-trips
-# to the EC and can block for many seconds under contention, so we must NOT read it
-# on the polling hot path - we track our own writes instead.
-_last_conservation_written = None
+CHARGE_TYPES_GLOB = "/sys/class/power_supply/BAT*/charge_types"
+CHARGE_TYPE_LIMITED = "Long_Life"  # firmware ~80% conservation cap
+CHARGE_TYPE_FULL = "Standard"      # normal charge to 100%
+
+# Resolved once: _charge_limit_kind in {"conservation", "charge_types", None}.
+_charge_limit_kind = None
+_charge_limit_path = None
+_charge_limit_resolved = False
+# In-memory cache of the last value we wrote. Reading these nodes can round-trip
+# to the EC / WMI and block for many seconds under contention, so we must NOT
+# read them on the polling hot path - we track our own writes instead.
+_last_charge_limit_written = None
+
+def _charge_types_current_and_options(path):
+  # charge_types mirrors charge_behaviour formatting: "[Standard] Long_Life",
+  # where the bracketed token is the current value. Returns (current, [options]).
+  with open(path, "r") as f:
+    tokens = f.read().split()
+  current = None
+  options = []
+  for tok in tokens:
+    name = tok.strip("[]")
+    options.append(name)
+    if tok.startswith("[") and tok.endswith("]"):
+      current = name
+  return current, options
+
+def _resolve_charge_limit_iface():
+  # Detect which battery-conservation interface this device exposes (once).
+  global _charge_limit_kind, _charge_limit_path, _charge_limit_resolved
+  if _charge_limit_resolved:
+    return _charge_limit_kind, _charge_limit_path
+
+  try:
+    conservation = glob.glob(CONSERVATION_MODE_GLOB)
+    if conservation:
+      _charge_limit_kind = "conservation"
+      _charge_limit_path = conservation[0]
+    else:
+      for path in glob.glob(CHARGE_TYPES_GLOB):
+        try:
+          _, options = _charge_types_current_and_options(path)
+        except Exception:
+          continue
+        if CHARGE_TYPE_LIMITED in options:
+          _charge_limit_kind = "charge_types"
+          _charge_limit_path = path
+          break
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error resolving charge-limit interface: {e}")
+
+  _charge_limit_resolved = True
+  if _charge_limit_kind:
+    decky_plugin.logger.info(f"{__name__} charge-limit interface: {_charge_limit_kind} @ {_charge_limit_path}")
+  return _charge_limit_kind, _charge_limit_path
 
 def get_conservation_mode_path():
-  global CONSERVATION_MODE_PATH
-
-  if not CONSERVATION_MODE_PATH:
-    try:
-      matches = glob.glob(CONSERVATION_MODE_GLOB)
-      if matches:
-        CONSERVATION_MODE_PATH = matches[0]
-    except Exception as e:
-      decky_plugin.logger.error(f"{__name__} error finding conservation_mode path: {e}")
-
-  return CONSERVATION_MODE_PATH
+  # Back-compat shim: resolved charge-limit node path (either interface).
+  return _resolve_charge_limit_iface()[1]
 
 def supports_charge_limit():
-  return get_conservation_mode_path() is not None
+  kind, _ = _resolve_charge_limit_iface()
+  return kind is not None
 
-def get_conservation_mode():
-  # WARNING: reading this node can block for many seconds (EC round-trip), so do
-  # NOT call this from the polling hot path - prefer the cached _last_conservation_written.
-  path = get_conservation_mode_path()
+def _read_charge_limit_enabled():
+  # WARNING: may block (EC / WMI round-trip) - do NOT call on the polling hot
+  # path; prefer the cached _last_charge_limit_written.
+  kind, path = _resolve_charge_limit_iface()
   if not path:
     return None
   try:
-    with open(path, "r") as f:
-      return f.read().strip() == "1"
+    if kind == "conservation":
+      with open(path, "r") as f:
+        return f.read().strip() == "1"
+    current, _ = _charge_types_current_and_options(path)
+    return current == CHARGE_TYPE_LIMITED
   except Exception as e:
-    decky_plugin.logger.error(f"{__name__} error reading conservation_mode: {e}")
+    decky_plugin.logger.error(f"{__name__} error reading charge-limit state: {e}")
     return None
 
 def set_charge_limit(enabled) -> bool:
-  global _last_conservation_written
-  path = get_conservation_mode_path()
+  global _last_charge_limit_written
+  kind, path = _resolve_charge_limit_iface()
   if not path:
-    decky_plugin.logger.info(f"{__name__} conservation_mode path not found")
+    decky_plugin.logger.info(f"{__name__} no charge-limit interface found")
     return False
 
   desired = bool(enabled)
   # Skip if we already wrote this value. This is what makes the per-poll
   # re-assert cheap: no blocking read, and only one write per state change.
-  if _last_conservation_written == desired:
+  if _last_charge_limit_written == desired:
     return True
 
+  if kind == "conservation":
+    value = "1" if desired else "0"
+  else:  # charge_types
+    value = CHARGE_TYPE_LIMITED if desired else CHARGE_TYPE_FULL
+
   try:
-    decky_plugin.logger.info(f"{__name__} setting conservation_mode to {'1' if desired else '0'}")
+    decky_plugin.logger.info(f"{__name__} setting {kind} charge limit to '{value}'")
     with open(path, "w") as f:
-      f.write("1" if desired else "0")
-    _last_conservation_written = desired
+      f.write(value)
+    _last_charge_limit_written = desired
     return True
   except Exception as e:
-    decky_plugin.logger.error(f"{__name__} error writing conservation_mode: {e}")
+    decky_plugin.logger.error(f"{__name__} error writing charge limit ({kind}): {e}")
     return False
 
 def get_current_charge_limit():
   # Return a percentage-like value for API compatibility with the ROG Ally path:
   # ~80 when the conservation cap is on, 100 when off. Prefer the cached state to
   # avoid a potentially-slow sysfs read; only fall back to reading the node once.
-  if _last_conservation_written is not None:
-    return 80 if _last_conservation_written else 100
-  mode = get_conservation_mode()
-  if mode is None:
+  if _last_charge_limit_written is not None:
+    return 80 if _last_charge_limit_written else 100
+  enabled = _read_charge_limit_enabled()
+  if enabled is None:
     return 100
-  return 80 if mode else 100
+  return 80 if enabled else 100
