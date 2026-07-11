@@ -5,6 +5,8 @@ import re
 
 class Devices(Enum):
   LEGION_GO = "83E1"
+  LEGION_GO_2_Z2_EXTREME = "83N0"
+  LEGION_GO_2_Z2 = "83N1"
   LEGION_GO_S_Z2_GO = "83L3"
   LEGION_GO_S_Z1_EXTREME = "83N6"
   ROG_ALLY = "ROG Ally RC71"
@@ -129,6 +131,10 @@ def is_legion_go():
   device_name = get_device_name()
 
   if device_name == Devices.LEGION_GO.value:
+    return True
+  if device_name == Devices.LEGION_GO_2_Z2_EXTREME.value:
+    return True
+  if device_name == Devices.LEGION_GO_2_Z2.value:
     return True
   if device_name == Devices.LEGION_GO_S_Z2_GO.value:
     return True
