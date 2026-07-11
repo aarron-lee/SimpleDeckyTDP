@@ -168,7 +168,7 @@ def get_default_options():
   options.append(max_tdp_on_ac_power)
 
   if charge_limit.supports_charge_limit():
-    if charge_limit.uses_conservation_mode():
+    if charge_limit.uses_boolean_charge_limit():
       # Lenovo Legion: fixed ~80% firmware cap (Conservation Mode), not a settable %
       charge_limit_desc = t('ADVANCED_ENABLE_CHARGE_LIMIT_CONSERVATION_DESC', 'Caps battery charge at ~80%')
     else:
@@ -184,7 +184,7 @@ def get_default_options():
     })
 
     # devices with a percentage range (e.g. ROG Ally) also get a limit slider;
-    # boolean conservation-mode devices (e.g. Legion Go) get only the toggle
+    # boolean charge-limit devices (e.g. Legion Go) get only the toggle
     charge_range_info = charge_limit.get_range_info()
     if charge_range_info:
       charge_range, charge_default, charge_step = charge_range_info
@@ -474,11 +474,11 @@ def handle_advanced_option_change(new_values):
 
   # charge limit applies to any supported device (hoisted out of the ROG Ally branch)
   if charge_limit.supports_charge_limit():
-    if charge_limit.uses_conservation_mode():
-      # Lenovo Legion: boolean conservation toggle driven by enableChargeLimit
+    if charge_limit.uses_boolean_charge_limit():
+      # Lenovo Legion: boolean charge-limit toggle driven by enableChargeLimit
       enable_charge_limit = new_values.get(DefaultSettings.ENABLE_CHARGE_LIMIT.value, None)
       if isinstance(enable_charge_limit, bool):
-        charge_limit.set_conservation(enable_charge_limit)
+        charge_limit.set_boolean_charge_limit(enable_charge_limit)
     else:
       new_charge_limit = new_values.get(DefaultSettings.CHARGE_LIMIT.value, None)
       if (isinstance(new_charge_limit, int)
