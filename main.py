@@ -69,6 +69,14 @@ class Plugin:
             min_tdp, max_tdp = cpu_utils.get_intel_tdp_limits()
             settings['maxTdp'] = max_tdp
             settings['minTdp'] = min_tdp
+          else:
+            # firmware-declared per-device TDP range (e.g. Lenovo Legion WMI).
+            # setdefault so a user's saved custom range is not overwritten.
+            tdp_range = cpu_utils.get_default_tdp_range()
+            if tdp_range:
+              dev_min, dev_max = tdp_range
+              settings.setdefault('minTdp', dev_min)
+              settings.setdefault('maxTdp', dev_max)
 
           gpu_min, gpu_max = get_gpu_frequency_range()
           if (gpu_min and gpu_max):
