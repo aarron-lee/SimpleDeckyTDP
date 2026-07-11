@@ -55,6 +55,8 @@
   "MAX_TDP_ON_AC_POWER": "Always use Max TDP on AC power",
   "MAX_TDP_ON_AC_POWER_DESC": "When plugged into AC power, always use max TDP. Per-game profiles must be enabled",
   "ADVANCED_ENABLE_CHARGE_LIMIT": "Enable Battery Charge Limit",
+  "ADVANCED_ENABLE_CHARGE_LIMIT_DESC": "Limit battery charging to help preserve long-term battery health",
+  "ADVANCED_ENABLE_CHARGE_LIMIT_CONSERVATION_DESC": "Caps battery charge at ~80%",
   "ADVANCED_SET_CHARGE_LIMIT": "Set Battery Charge Limit",
   "ADVANCED_SET_CHARGE_LIMIT_DESC": "Set maximum battery limit",
   "ADVANCED_ENABLE_BACKGROUND_POLLING": "Enable Background Polling",

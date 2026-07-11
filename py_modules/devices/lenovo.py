@@ -1,4 +1,5 @@
 import decky_plugin
+import glob
 import os
 from time import sleep
 
@@ -162,3 +163,79 @@ def wait_for_wmi_ready(timeout_seconds=10):
     elapsed += interval
   decky_plugin.logger.warning(f"{__name__} WMI not ready after {timeout_seconds}s timeout")
   return False
+
+# --- Battery charge limit (ideapad conservation mode) ---
+# Lenovo Legion (incl. Legion Go 2) exposes the battery charge limit via the
+# ideapad_acpi "conservation mode" node - a boolean ~80% cap - NOT the ROG Ally
+# charge_control_end_threshold percentage node. It is root-writable, and the
+# Decky backend runs as root, so no acpi_call / WMI evaluation is needed.
+
+CONSERVATION_MODE_GLOB = "/sys/bus/platform/devices/VPC2004:*/conservation_mode"
+CONSERVATION_MODE_PATH = None
+# In-memory cache of the last value we wrote. Reading conservation_mode round-trips
+# to the EC and can block for many seconds under contention, so we must NOT read it
+# on the polling hot path - we track our own writes instead.
+_last_conservation_written = None
+
+def get_conservation_mode_path():
+  global CONSERVATION_MODE_PATH
+
+  if not CONSERVATION_MODE_PATH:
+    try:
+      matches = glob.glob(CONSERVATION_MODE_GLOB)
+      if matches:
+        CONSERVATION_MODE_PATH = matches[0]
+    except Exception as e:
+      decky_plugin.logger.error(f"{__name__} error finding conservation_mode path: {e}")
+
+  return CONSERVATION_MODE_PATH
+
+def supports_charge_limit():
+  return get_conservation_mode_path() is not None
+
+def get_conservation_mode():
+  # WARNING: reading this node can block for many seconds (EC round-trip), so do
+  # NOT call this from the polling hot path - prefer the cached _last_conservation_written.
+  path = get_conservation_mode_path()
+  if not path:
+    return None
+  try:
+    with open(path, "r") as f:
+      return f.read().strip() == "1"
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error reading conservation_mode: {e}")
+    return None
+
+def set_charge_limit(enabled) -> bool:
+  global _last_conservation_written
+  path = get_conservation_mode_path()
+  if not path:
+    decky_plugin.logger.info(f"{__name__} conservation_mode path not found")
+    return False
+
+  desired = bool(enabled)
+  # Skip if we already wrote this value. This is what makes the per-poll
+  # re-assert cheap: no blocking read, and only one write per state change.
+  if _last_conservation_written == desired:
+    return True
+
+  try:
+    decky_plugin.logger.info(f"{__name__} setting conservation_mode to {'1' if desired else '0'}")
+    with open(path, "w") as f:
+      f.write("1" if desired else "0")
+    _last_conservation_written = desired
+    return True
+  except Exception as e:
+    decky_plugin.logger.error(f"{__name__} error writing conservation_mode: {e}")
+    return False
+
+def get_current_charge_limit():
+  # Return a percentage-like value for API compatibility with the ROG Ally path:
+  # ~80 when the conservation cap is on, 100 when off. Prefer the cached state to
+  # avoid a potentially-slow sysfs read; only fall back to reading the node once.
+  if _last_conservation_written is not None:
+    return 80 if _last_conservation_written else 100
+  mode = get_conservation_mode()
+  if mode is None:
+    return 100
+  return 80 if mode else 100

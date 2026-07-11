@@ -1,13 +1,19 @@
-from devices import rog_ally
+from devices import rog_ally, lenovo
 from plugin_settings import get_nested_setting
 import device_utils
 from time import sleep
+
+def uses_conservation_mode():
+  # Lenovo Legion (ideapad conservation_mode) is a boolean ~80% cap, not a
+  # percentage slider. Gate on capability (node exists) rather than product id.
+  return (not device_utils.is_rog_ally_series()) and lenovo.supports_charge_limit()
 
 def get_range_info():
   if device_utils.is_rog_ally_series():
     default = 100
     step = 5
     return [[charge_limit_min(), 100], default, step]
+  # conservation-mode devices are boolean-only, no percentage range
   return None
 
 def charge_limit_min():
@@ -19,10 +25,14 @@ def charge_limit_min():
 def get_current_charge_limit():
   if device_utils.is_rog_ally_series():
     return rog_ally.get_current_charge_limit()
+  if uses_conservation_mode():
+    return lenovo.get_current_charge_limit()
   return 100
 
 def supports_charge_limit():
   if device_utils.is_rog_ally_series() and rog_ally.supports_charge_limit():
+    return True
+  if uses_conservation_mode():
     return True
   return False
 
@@ -32,6 +42,16 @@ def set_charge_limit(limit):
 
   if device_utils.is_rog_ally_series():
     return rog_ally.set_charge_limit(limit)
+  if uses_conservation_mode():
+    return lenovo.set_charge_limit(True)
+  return False
+
+def set_conservation(enabled):
+  # Boolean charge-limit devices (Lenovo Legion): apply an explicit on/off
+  # state. Used by handle_advanced_option_change, where the persisted setting
+  # is still stale, so the value must be passed in directly.
+  if uses_conservation_mode():
+    return lenovo.set_charge_limit(bool(enabled))
   return False
 
 def get_expected_charge_limit():
@@ -42,7 +62,17 @@ def charge_limit_enabled():
   return get_nested_setting('advanced.enableChargeLimit')
 
 def initialize_charge_limit():
-  if supports_charge_limit() and charge_limit_enabled():
+  if not supports_charge_limit():
+    return
+
+  if uses_conservation_mode():
+    # Only enforce the "on" state automatically. Leave the hardware alone when
+    # the feature is disabled so we don't fight a BIOS/other-tool setting.
+    if charge_limit_enabled():
+      lenovo.set_charge_limit(True)
+    return
+
+  if charge_limit_enabled():
     current_limit = get_current_charge_limit()
     expected_limit = get_expected_charge_limit()
 
