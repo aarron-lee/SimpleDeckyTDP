@@ -345,6 +345,17 @@ def get_intel_tdp_limits():
     max_tdp = get_intel_max_tdp()
   return [min_tdp, max_tdp]
 
+def get_default_tdp_range():
+  # Firmware-declared TDP range for the main slider on non-Intel devices.
+  # Lenovo Legion exposes WMI ppt min/max (e.g. Legion Go 2 = [5, 35]).
+  # Returns None when no device-specific range is known, so the frontend
+  # falls back to its default.
+  if lenovo.supports_wmi_tdp():
+    min_tdp, max_tdp = lenovo.get_tdp_limit(lenovo.STAPM_SUFFIX)
+    if isinstance(min_tdp, int) and isinstance(max_tdp, int):
+      return [min_tdp, max_tdp]
+  return None
+
 def get_intel_max_tdp():
   tdp_prefix = INTEL_LEGACY_TDP_PREFIX if use_legacy_intel_tdp() else INTEL_TDP_PREFIX
 
