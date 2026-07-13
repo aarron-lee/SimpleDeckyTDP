@@ -350,10 +350,14 @@ def get_default_tdp_range():
   # Lenovo Legion exposes WMI ppt min/max (e.g. Legion Go 2 = [5, 35]).
   # Returns None when no device-specific range is known, so the frontend
   # falls back to its default.
-  if lenovo.supports_wmi_tdp():
-    min_tdp, max_tdp = lenovo.get_tdp_limit(lenovo.STAPM_SUFFIX)
-    if isinstance(min_tdp, int) and isinstance(max_tdp, int):
-      return [min_tdp, max_tdp]
+  try:
+    if lenovo.supports_wmi_tdp():
+      min_tdp, max_tdp = lenovo.get_tdp_limit(lenovo.STAPM_SUFFIX)
+      if isinstance(min_tdp, int) and isinstance(max_tdp, int):
+        return [min_tdp, max_tdp]
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error: {e}')
+
   return None
 
 def get_intel_max_tdp():
