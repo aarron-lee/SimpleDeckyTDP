@@ -19,10 +19,7 @@ import {
   setMaxTdp,
   setPollTdp,
 } from "./backend/utils";
-import {
-  getSuspendObservable,
-  getResumeObservable,
-} from "./suspendResumeObservable/suspendResumeObservables";
+import { getSuspendResumeObservable } from "./suspendResumeObservable/suspendResumeObservables";
 import { debounce } from "lodash";
 import {
   clearPollingInterval,
@@ -57,7 +54,7 @@ export const currentGameInfoListener = () => {
       // new currentGameId, dispatch to the store
       store.dispatch(setCurrentGameInfo(results));
 
-      if(
+      if (
         advanced[AdvancedOptionsEnum.AC_POWER_PROFILES] &&
         advanced[AdvancedOptionsEnum.MAX_TDP_ON_AC_POWER] &&
         isAcPower
@@ -118,10 +115,11 @@ export const suspendEventListener = () => {
 
   // try mobx suspend observable
   try {
-    const suspendObservable = getSuspendObservable();
+    const suspendObservable = getSuspendResumeObservable();
 
     if (suspendObservable) {
       const unregister = suspendObservable.observe_((change) => {
+        // Note: If newValue is TRUE then it's suspending, otherwise it's resuming.
         const { newValue } = change;
 
         logInfo({ info: `mobX suspend triggered with ${newValue}` });
@@ -208,14 +206,15 @@ export const resumeFromSuspendEventListener = () => {
 
   // try mobx resume observable
   try {
-    const resumeObservable = getResumeObservable();
+    const resumeObservable = getSuspendResumeObservable();
 
     if (resumeObservable) {
       const unregister = resumeObservable.observe_((change) => {
+        // Note: If newValue is TRUE then it's suspending, otherwise it's resuming.
         const { newValue } = change;
         logInfo({ info: `mobX resume triggered with ${newValue}` });
 
-        if (!newValue) {
+        if (newValue) {
           return;
         }
 

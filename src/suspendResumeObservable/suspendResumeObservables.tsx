@@ -33,7 +33,7 @@ declare global {
   let SuspendResumeStore: SuspendResumeStoreType;
 }
 
-export function getSuspendObservable() {
+export function getSuspendResumeObservable() {
   const suspendingMobXObservable = getMobxObservable(
     SuspendResumeStore,
     "m_bSuspending",
@@ -41,11 +41,13 @@ export function getSuspendObservable() {
   return suspendingMobXObservable;
 }
 
-export function getResumeObservable() {
-  const resumingMobXObservable = getMobxObservable(
-    SuspendResumeStore,
-    "m_bResuming",
-  );
+// m_bResuming seems to be removed on July 22 2026 Steam Client Stable Update.
+// source: https://github.com/wynn1212/SDH-PauseGames/commit/642a0ebe089eeaccc10b64af0eb2fc3912da128a
+// export function getResumeObservable() {
+//   const resumingMobXObservable = getMobxObservable(
+//     SuspendResumeStore,
+//     "m_bResuming",
+//   );
 
-  return resumingMobXObservable;
-}
+//   return resumingMobXObservable;
+// }
