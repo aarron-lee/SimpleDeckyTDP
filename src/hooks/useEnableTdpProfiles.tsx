@@ -18,5 +18,5 @@ export const useUpdateEnableTdpProfiles = () => {
 export const useTdpProfilesEnabled = () => {
   const setter = useUpdateEnableTdpProfiles();
 
-  return [useSelector(tdpProfilesEnabled), setter];
+  return [useSelector(tdpProfilesEnabled), setter] as const;
 };

@@ -17,19 +17,16 @@ import {
 } from "../backend/utils";
 import { isSteamDeck } from "../utils/selectors";
 
-type Partial<T> = {
-  [P in keyof T]?: T[P];
-};
 
 export type AdvancedOption = {
   name: string;
   type: string;
-  defaultValue: any;
-  currentValue: any;
+  defaultValue: unknown;
+  currentValue: unknown;
   statePath: string;
   description?: string;
-  disabled?: { [k: string]: any };
-  uiShouldHideField?: { [k: string]: any };
+  disabled?: Record<string, unknown>;
+  uiShouldHideField?: Record<string, unknown>;
 };
 
 export interface RangedAdvancedOption extends AdvancedOption {
@@ -78,7 +75,7 @@ export interface SettingsState extends TdpRangeState, PollState, GpuState {
   gameDisplayNames: { [key: string]: string };
   enableTdpProfiles: boolean;
   advancedOptions: AdvancedOption[];
-  advanced: { [optionName: string]: any };
+  advanced: Record<string, unknown>;
   pluginVersionNum: string;
   supportsCustomAcPowerManagement?: boolean;
   cpuVendor?: string;
@@ -149,7 +146,7 @@ export const settingsSlice = createSlice({
       state,
       action: PayloadAction<{
         statePath: string;
-        value: any;
+        value: boolean | number | string;
         deviceName: string;
       }>,
     ) => {
@@ -361,7 +358,11 @@ export const settingsSlice = createSlice({
   },
 });
 
-function bootstrapTdpProfile(state: any, id: string, acPowerId?: string) {
+function bootstrapTdpProfile(
+  state: SettingsState,
+  id: string,
+  acPowerId?: string,
+) {
   if (acPowerId && !state.tdpProfiles[acPowerId]) {
     const tdpProfile = getDefaultAcProfile(state, id);
     state.tdpProfiles[acPowerId] = tdpProfile;
@@ -375,7 +376,7 @@ function bootstrapTdpProfile(state: any, id: string, acPowerId?: string) {
   }
 }
 
-function getDefaultAcProfile(state: any, id: string) {
+function getDefaultAcProfile(state: SettingsState, id: string) {
   if (state.tdpProfiles[id]) {
     // return already existing non-ac profile for game id
     return clone(state.tdpProfiles[id]);
@@ -388,36 +389,37 @@ function getDefaultAcProfile(state: any, id: string) {
   }
 }
 
-export const allStateSelector = (state: any) => state;
-export const initialLoadSelector = (state: any) => state.settings.initialLoad;
+export const allStateSelector = (state: RootState) => state;
+export const initialLoadSelector = (state: RootState) =>
+  state.settings.initialLoad;
 
-export const tdpControlEnabledSelector = (state: any) => {
+export const tdpControlEnabledSelector = (state: RootState) => {
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
   return Boolean(advancedState[AdvancedOptionsEnum.ENABLE_TDP_CONTROL]);
 };
 
-export const gpuControlEnabledSelector = (state: any) => {
+export const gpuControlEnabledSelector = (state: RootState) => {
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
   return Boolean(advancedState[AdvancedOptionsEnum.ENABLE_GPU_CONTROL]);
 };
 
 // tdp range selectors
-export const minTdpSelector = (state: any) => state.settings.minTdp;
-export const maxTdpSelector = (state: any) => state.settings.maxTdp;
-export const tdpRangeSelector = (state: any) => [
+export const minTdpSelector = (state: RootState) => state.settings.minTdp;
+export const maxTdpSelector = (state: RootState) => state.settings.maxTdp;
+export const tdpRangeSelector = (state: RootState) => [
   state.settings.minTdp,
   state.settings.maxTdp,
 ];
 
 // tdp profile selectors
-export const defaultTdpSelector = (state: any) =>
+export const defaultTdpSelector = (state: RootState) =>
   state.settings.tdpProfiles.default.tdp;
 
 // poll rate selectors
-export const pollRateSelector = (state: any) => state.settings.pollRate;
-export const pollEnabledSelector = (state: any) => {
+export const pollRateSelector = (state: RootState) => state.settings.pollRate;
+export const pollEnabledSelector = (state: RootState) => {
   const { advancedState } = getAdvancedOptionsInfoSelector(state);
 
   const pollingEnabled = Boolean(
@@ -428,7 +430,7 @@ export const pollEnabledSelector = (state: any) => {
 };
 
 // enableTdpProfiles selectors
-export const tdpProfilesEnabled = (state: any) =>
+export const tdpProfilesEnabled = (state: RootState) =>
   state.settings.enableTdpProfiles;
 
 export const activeGameIdSelector = (state: RootState) => {
@@ -573,9 +575,9 @@ export const supportsCustomAcPowerSelector = (state: RootState) =>
   state.settings.supportsCustomAcPowerManagement;
 
 function handleAdvancedOptionsEdgeCases(
-  state: any,
+  state: SettingsState,
   statePath: string,
-  value: boolean,
+  value: boolean | number | string,
   deviceName: string,
 ) {
   try {
@@ -617,9 +619,9 @@ function handleAdvancedOptionsEdgeCases(
 }
 
 function handleSteamDeckAdvancedOptions(
-  state: any,
+  state: SettingsState,
   statePath: string,
-  value: boolean,
+  value: boolean | number | string,
   deviceName: string,
 ) {
   const steamDeck = isSteamDeck(deviceName);
