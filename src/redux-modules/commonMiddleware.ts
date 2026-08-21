@@ -22,8 +22,11 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { suspendAction } from "./extraActions";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const commonMiddleware =
-  (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
+  (store: { getState: () => any }) =>
+  (dispatch: Dispatch) =>
+  (action: PayloadAction<unknown>) => {
     const result = dispatch(action);
 
     const state = store.getState();
@@ -49,13 +52,19 @@ export const commonMiddleware =
 
     if (action.type === updatePowerGovernor.type) {
       setPowerGovernor({
-        powerGovernorInfo: action.payload,
+        powerGovernorInfo: action.payload as {
+          powerGovernor: string;
+          scalingDriver: string;
+        },
         gameId: activeGameId,
       });
     }
 
     if (action.type === updateEpp.type) {
-      setEpp({ eppInfo: action.payload, gameId: activeGameId });
+      setEpp({
+        eppInfo: action.payload as { epp: string; scalingDriver: string },
+        gameId: activeGameId,
+      });
     }
 
     if (action.type === updateMaxTdp.type) {
@@ -74,11 +83,14 @@ export const commonMiddleware =
     }
 
     if (action.type === setSmt.type) {
-      persistSmt({ smt: action.payload, gameId: activeGameId });
+      persistSmt({ smt: action.payload as boolean, gameId: activeGameId });
     }
 
     if (action.type === setCpuBoost.type) {
-      persistCpuBoost({ cpuBoost: action.payload, gameId: activeGameId });
+      persistCpuBoost({
+        cpuBoost: action.payload as boolean,
+        gameId: activeGameId,
+      });
     }
 
     return result;

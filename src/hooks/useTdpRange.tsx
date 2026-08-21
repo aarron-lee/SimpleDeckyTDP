@@ -17,7 +17,7 @@ export const useMinTdp = () => {
   return [
     useSelector(minTdpSelector),
     (value: number) => dispatch(updateMinTdp(value)),
-  ];
+  ] as const;
 };
 
 export const useMaxTdp = () => {
@@ -26,5 +26,5 @@ export const useMaxTdp = () => {
   return [
     useSelector(maxTdpSelector),
     (value: number) => dispatch(updateMaxTdp(value)),
-  ];
+  ] as const;
 };

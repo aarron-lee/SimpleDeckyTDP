@@ -6,8 +6,11 @@ import {
 import { setPollTdp } from "../backend/utils";
 import { debounce } from "lodash";
 
-let store: any;
-export const initializePollingStore = (s: any) => (store = s);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let store: { getState: () => any } | undefined;
+export const initializePollingStore = (s: { getState: () => any }) => {
+  store = s;
+};
 
 let pollIntervalId: undefined | number;
 
@@ -25,7 +28,7 @@ export const setPolling = () => {
 
     if (pollEnabled) {
       pollIntervalId = window.setInterval(() => {
-        const activeGameId = activeGameIdSelector(store.getState());
+        const activeGameId = activeGameIdSelector(store!.getState());
 
         debouncedSetPollTdp({ currentGameId: activeGameId });
       }, pollRate);

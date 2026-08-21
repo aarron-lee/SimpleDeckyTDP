@@ -117,8 +117,14 @@ export enum ServerAPIMethods {
   CHECK_RYZENADJ_COALL = "check_ryzenadj_coall",
 }
 
-export const getSettings = callable<[], any>(ServerAPIMethods.GET_SETTINGS);
-export const setSetting = ({ name, value }: { name: string; value: any }) => {
+export const getSettings = callable<[], unknown>(ServerAPIMethods.GET_SETTINGS);
+export const setSetting = ({
+  name,
+  value,
+}: {
+  name: string;
+  value: unknown;
+}) => {
   if (IS_DESKTOP) {
     return call(ServerAPIMethods.SET_SETTING, { name, value });
   }
@@ -138,7 +144,7 @@ export const setPollTdp = ({ currentGameId }: { currentGameId: string }) => {
 export const setMaxTdp = callable(ServerAPIMethods.SET_MAX_TDP);
 export const isSteamRunning = callable(ServerAPIMethods.GET_IS_STEAM_RUNNING);
 
-export const logInfo = ({ info }: { info: any }) => {
+export const logInfo = ({ info }: { info: unknown }) => {
   if (info instanceof Error) {
     const errorInfo = JSON.stringify(info, Object.getOwnPropertyNames(info));
     return call(ServerAPIMethods.LOG_INFO, { info: errorInfo });
@@ -152,9 +158,9 @@ export const saveTdpProfiles = ({
   currentGameId,
   advanced,
 }: {
-  tdpProfiles: any;
-  currentGameId: any;
-  advanced: any;
+  tdpProfiles: Record<string, unknown>;
+  currentGameId: string;
+  advanced: Record<string, unknown>;
 }) => {
   if (IS_DESKTOP) {
     return call(ServerAPIMethods.SAVE_TDP, {
@@ -178,7 +184,7 @@ export const checkRyzenadjCoall = callable(
   ServerAPIMethods.CHECK_RYZENADJ_COALL,
 );
 
-export const getPowerControlInfo = callable(
+export const getPowerControlInfo = callable<[], unknown>(
   ServerAPIMethods.GET_POWER_CONTROL_INFO,
 );
 
@@ -194,7 +200,7 @@ export const setPowerGovernor = ({
   powerGovernorInfo,
   gameId,
 }: {
-  powerGovernorInfo: any;
+  powerGovernorInfo: { powerGovernor: string; scalingDriver: string };
   gameId: string;
 }) => {
   if (IS_DESKTOP) {
@@ -211,7 +217,7 @@ export const setEpp = ({
   eppInfo,
   gameId,
 }: {
-  eppInfo: any;
+  eppInfo: { epp: string; scalingDriver: string };
   gameId: string;
 }) => {
   if (IS_DESKTOP) {
@@ -262,7 +268,7 @@ export const persistGpu = ({
 
   return call<
     [minGpuFrequency: number, maxGpuFrequency: number, gameId: string],
-    any
+    void
   >(ServerAPIMethods.PERSIST_GPU, minGpuFrequency, maxGpuFrequency, gameId);
 };
 

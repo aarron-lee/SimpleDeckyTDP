@@ -33,7 +33,13 @@ const resetTdpActionTypes = [
 
 const debouncedPersistTdp = debounce(persistTdp, 1000);
 
-const persistGpu = ({ state, activeGameId, advancedState }: any) => {
+interface PersistGpuArgs {
+  state: { settings: { tdpProfiles: Record<string, unknown> } };
+  activeGameId: string;
+  advancedState: Record<string, unknown>;
+}
+
+const persistGpu = ({ state, activeGameId, advancedState }: PersistGpuArgs) => {
   return saveTdpProfiles({
     tdpProfiles: state.settings.tdpProfiles,
     currentGameId: activeGameId,
@@ -43,8 +49,11 @@ const persistGpu = ({ state, activeGameId, advancedState }: any) => {
 
 const debouncedPersistGpu = debounce(persistGpu, 1000);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const settingsMiddleware =
-  (store: any) => (dispatch: Dispatch) => (action: PayloadAction<any>) => {
+  (store: { getState: () => any }) =>
+  (dispatch: Dispatch) =>
+  (action: PayloadAction<unknown>) => {
     const result = dispatch(action);
 
     const state = store.getState();
@@ -71,7 +80,10 @@ export const settingsMiddleware =
     }
 
     if (action.type === setReduxTdp.type) {
-      debouncedPersistTdp({ tdp: action.payload, gameId: activeGameId });
+      debouncedPersistTdp({
+        tdp: action.payload as number,
+        gameId: activeGameId,
+      });
     }
 
     if (action.type === updatePollRate.type) {

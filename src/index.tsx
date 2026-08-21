@@ -39,7 +39,7 @@ export default definePlugin(() => {
   const unregisterResumeListener = resumeFromSuspendEventListener();
   const unregisterSuspendListener = suspendEventListener();
 
-  let unregisterAcPowerListener: any;
+  let unregisterAcPowerListener: (() => void) | undefined;
 
   acPowerEventListener().then((unregister) => {
     unregisterAcPowerListener = unregister;
