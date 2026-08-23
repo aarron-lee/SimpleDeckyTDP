@@ -11,6 +11,8 @@ export const CpuVendors = {
 export const MIN_TDP_RANGE = 3;
 export const DEFAULT_POLL_RATE = 15000;
 export const DEFAULT_START_TDP = 12;
+export const CPU_BOOST_POLL_DELAY_MS = 700;
+export const MAX_PROFILE_DISPLAY_LENGTH = 20;
 
 export const extractCurrentGameId = getCurrentGameId;
 

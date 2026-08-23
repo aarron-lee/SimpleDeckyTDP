@@ -20,8 +20,8 @@ const getOptions = (
   powerGovernorOptions: PowerGovernorOption[],
   simpleLabelsEnabled: boolean
 ) => {
-  const idxToOption: { [key: string]: any } = {};
-  const optionToIdx: { [key: string]: any } = {};
+  const idxToOption: { [key: number]: string } = {};
+  const optionToIdx: { [key: string]: number } = {};
   const notchLabels: NotchLabel[] = [];
 
   let notchIdx = 0;
