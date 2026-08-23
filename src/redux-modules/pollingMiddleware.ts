@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let store: { getState: () => any } | undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initializePollingStore = (s: { getState: () => any }) => {
   store = s;
 };

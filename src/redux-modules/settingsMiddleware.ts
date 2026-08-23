@@ -23,6 +23,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { debounce } from "lodash";
 import { clearPollingInterval, setPolling } from "./pollingMiddleware";
+import { PERSIST_DEBOUNCE_MS } from "../utils/constants";
 
 const resetTdpActionTypes = [
   setEnableTdpProfiles.type,
@@ -31,7 +32,7 @@ const resetTdpActionTypes = [
   updateInitialLoad.type,
 ] as string[];
 
-const debouncedPersistTdp = debounce(persistTdp, 1000);
+const debouncedPersistTdp = debounce(persistTdp, PERSIST_DEBOUNCE_MS);
 
 interface PersistGpuArgs {
   state: { settings: { tdpProfiles: Record<string, unknown> } };
@@ -47,7 +48,7 @@ const persistGpu = ({ state, activeGameId, advancedState }: PersistGpuArgs) => {
   });
 };
 
-const debouncedPersistGpu = debounce(persistGpu, 1000);
+const debouncedPersistGpu = debounce(persistGpu, PERSIST_DEBOUNCE_MS);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const settingsMiddleware =

@@ -1,5 +1,6 @@
 import { callable, call } from "@decky/api";
 import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
+import { PowerControlInfo } from "../utils/constants";
 
 export enum Devices {
   LEGION_GO = "83E1",
@@ -184,7 +185,7 @@ export const checkRyzenadjCoall = callable(
   ServerAPIMethods.CHECK_RYZENADJ_COALL,
 );
 
-export const getPowerControlInfo = callable<[], unknown>(
+export const getPowerControlInfo = callable<[], PowerControlInfo>(
   ServerAPIMethods.GET_POWER_CONTROL_INFO,
 );
 

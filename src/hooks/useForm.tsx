@@ -8,17 +8,17 @@ export enum Actions {
 type ActionType = {
   field?: string;
   type: Actions;
-  payload?: any;
+  payload?: unknown;
 };
 
-const formReducer = (state: any, action: ActionType) => {
+const formReducer = (state: Record<string, unknown>, action: ActionType): Record<string, unknown> => {
   if (action.type === Actions.SET && action.field) {
-    let newState = { ...state, [action.field]: action.payload };
-    return newState;
+    return { ...state, [action.field]: action.payload };
   }
   if (action.type === Actions.RESET) {
     return {};
   }
+  return state;
 };
 
 function useForm(initialState = {}) {
@@ -36,7 +36,7 @@ function useForm(initialState = {}) {
     value,
   }: {
     name: string;
-    value: any;
+    value: unknown;
   }) => {
     dispatch({
       type: Actions.SET,

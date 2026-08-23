@@ -2,7 +2,12 @@
 // import { useEffect } from 'react'
 import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
-import { MIN_TDP_RANGE } from "../../utils/constants";
+import {
+  MIN_TDP_RANGE,
+  DEFAULT_MAX_TDP,
+  STEAM_DECK_MAX_TDP,
+  MAX_TDP_SLIDER_MIN,
+} from "../../utils/constants";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection } from "../atoms/DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
@@ -13,7 +18,7 @@ import { useAdvancedOption } from "../../hooks/useAdvanced";
 import t from '../../i18n/i18n';
 
 const useMaxSupportedTdpValue = () => {
-  let maxTdp = 40;
+  let maxTdp = DEFAULT_MAX_TDP;
 
   const deviceName = useDeviceName();
   const isSteamDeck = useIsSteamDeck();
@@ -22,7 +27,7 @@ const useMaxSupportedTdpValue = () => {
   );
 
   if (isSteamDeck) {
-    return 20;
+    return STEAM_DECK_MAX_TDP;
   }
 
   if (
@@ -72,7 +77,7 @@ const TdpRange = () => {
         </DeckyRow>
         <DeckyRow>
           <TdpRangeSlider
-            tdpRange={[15, maxSupportedTdpValue]}
+            tdpRange={[MAX_TDP_SLIDER_MIN, maxSupportedTdpValue]}
             label={t('TDP_RANGE_MAX_TDP','Max TDP')}
             value={maxTdp}
             onChange={setMaxTdp}

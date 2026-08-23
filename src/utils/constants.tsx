@@ -13,6 +13,21 @@ export const DEFAULT_POLL_RATE = 15000;
 export const DEFAULT_START_TDP = 12;
 export const CPU_BOOST_POLL_DELAY_MS = 700;
 export const MAX_PROFILE_DISPLAY_LENGTH = 20;
+export const DEFAULT_MAX_TDP = 40;
+export const STEAM_DECK_MAX_TDP = 20;
+export const DEFAULT_MAX_TDP_FALLBACK = 15;
+export const MAX_TDP_SLIDER_MIN = 15;
+export const POLL_RATE_MIN_SEC = 5;
+export const POLL_RATE_MAX_SEC = 60;
+export const STEAM_DECK_MAX_GPU_FREQ_MHZ = 1600;
+export const GAME_INFO_POLL_INTERVAL_MS = 2000;
+export const TEMP_MAX_TDP_DEBOUNCE_MS = 500;
+export const RESUME_INITIAL_DELAY_MS = 3500;
+export const RESUME_TDP_RESTORE_DELAY_MS = 10000;
+export const RESUME_TDP_RESTORE_MAX_DELAY_MS = 15000;
+export const AC_POWER_DEBOUNCE_MS = 1000;
+export const AC_POWER_POLL_INTERVAL_MS = 2000;
+export const PERSIST_DEBOUNCE_MS = 1000;
 
 export const extractCurrentGameId = getCurrentGameId;
 

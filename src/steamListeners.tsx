@@ -1,6 +1,12 @@
 import {
   extractCurrentGameInfo,
-  // DEFAULT_START_TDP,
+  GAME_INFO_POLL_INTERVAL_MS,
+  TEMP_MAX_TDP_DEBOUNCE_MS,
+  RESUME_INITIAL_DELAY_MS,
+  RESUME_TDP_RESTORE_DELAY_MS,
+  RESUME_TDP_RESTORE_MAX_DELAY_MS,
+  AC_POWER_DEBOUNCE_MS,
+  AC_POWER_POLL_INTERVAL_MS,
 } from "./utils/constants";
 import { store } from "./redux-modules/store";
 import {
@@ -63,7 +69,7 @@ export const currentGameInfoListener = () => {
         store.dispatch(setReduxTdp(settings.maxTdp));
       }
     }
-  }, 2000);
+  }, GAME_INFO_POLL_INTERVAL_MS);
 
   return () => {
     if (currentGameInfoListenerIntervalId) {
@@ -72,16 +78,16 @@ export const currentGameInfoListener = () => {
   };
 };
 
-function handleTempMaxTdpProfile(compareId: string, advanced: any) {
+function handleTempMaxTdpProfile(compareId: string, advanced: Record<string, unknown>) {
   if (tempMaxTdpTimeoutId !== undefined) {
     clearTimeout(tempMaxTdpTimeoutId);
     tempMaxTdpTimeoutId = undefined;
   }
 
   const tempMaxTdpProfileDuration =
-    advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE];
+    advanced[AdvancedOptionsEnum.MAX_TDP_ON_GAME_PROFILE_CHANGE] as number | undefined;
 
-  if (tempMaxTdpProfileDuration > 0 && !compareId.includes("default")) {
+  if (tempMaxTdpProfileDuration !== undefined && tempMaxTdpProfileDuration > 0 && !compareId.includes("default")) {
     tempMaxTdpTimeoutId = window.setTimeout(() => {
       clearPollingInterval();
       setMaxTdp();
@@ -90,7 +96,7 @@ function handleTempMaxTdpProfile(compareId: string, advanced: any) {
         setPollTdp({ currentGameId: compareId });
         setPolling();
       }, tempMaxTdpProfileDuration * 1000);
-    }, 500);
+    }, TEMP_MAX_TDP_DEBOUNCE_MS);
   }
 }
 
@@ -170,7 +176,7 @@ const onResume = async () => {
     } else {
       store.dispatch(resumeAction());
     }
-  }, 3500);
+  }, RESUME_INITIAL_DELAY_MS);
 
   const state = store.getState();
 
@@ -180,10 +186,10 @@ const onResume = async () => {
     return;
   }
 
-  let t = 10000;
+  let resumeDelay = RESUME_TDP_RESTORE_DELAY_MS;
 
   if (advancedState[AdvancedOptionsEnum.MAX_TDP_ON_RESUME]) {
-    t = 15000;
+    resumeDelay = RESUME_TDP_RESTORE_MAX_DELAY_MS;
   }
 
   // sets TDP, etc, to default expected values
@@ -192,7 +198,7 @@ const onResume = async () => {
       setPolling();
     }
     store.dispatch(resumeAction());
-  }, t);
+  }, resumeDelay);
 };
 
 export const resumeFromSuspendEventListener = () => {
@@ -248,7 +254,7 @@ const setAcState = (newACState: number) => {
   }
 };
 
-let debouncedSetAcPower = debounce(setAcState, 1000);
+let debouncedSetAcPower = debounce(setAcState, AC_POWER_DEBOUNCE_MS);
 
 export const acPowerEventListener = async () => {
   try {
@@ -267,7 +273,7 @@ export const acPowerEventListener = async () => {
         }
 
         setAcState(newACState);
-      }, 2000);
+      }, AC_POWER_POLL_INTERVAL_MS);
 
       const unregister = () => {
         window.clearInterval(intervalId);
@@ -277,7 +283,7 @@ export const acPowerEventListener = async () => {
     } else {
       // use steam's battery state change
       const unregister = SteamClient.System.RegisterForBatteryStateChanges(
-        (e: any) => {
+        (e: { eACState: number }) => {
           debouncedSetAcPower(e.eACState);
         },
       ).unregister;
