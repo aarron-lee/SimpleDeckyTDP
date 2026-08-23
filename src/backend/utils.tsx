@@ -1,6 +1,17 @@
 import { callable, call } from "@decky/api";
 import { IS_DESKTOP } from "../components/atoms/DeckyFrontendLib";
-import { PowerControlInfo } from "../utils/constants";
+
+export type PowerControlInfo = {
+  powerControlsEnabled: boolean;
+  supportsEpp: boolean;
+  eppOptions: string[];
+  powerGovernorOptions: string[];
+  scalingDriver: string;
+  supportsCpuBoost: boolean;
+  supportsSmt: boolean;
+  pstateStatus?: string;
+  deviceName?: string;
+};
 
 export enum Devices {
   LEGION_GO = "83E1",

@@ -4,6 +4,7 @@ import TdpRangeSlider from "../atoms/TdpRangeSlider";
 import { useMinTdp, useMaxTdp } from "../../hooks/useTdpRange";
 import {
   MIN_TDP_RANGE,
+  MIN_TDP_SLIDER_MAX,
   DEFAULT_MAX_TDP,
   STEAM_DECK_MAX_TDP,
   MAX_TDP_SLIDER_MIN,
@@ -69,7 +70,7 @@ const TdpRange = () => {
       <ErrorBoundary title="Tdp Range">
         <DeckyRow>
           <TdpRangeSlider
-            tdpRange={[MIN_TDP_RANGE, 12]}
+            tdpRange={[MIN_TDP_RANGE, MIN_TDP_SLIDER_MAX]}
             label={t('TDP_RANGE_MIN_TDP','Minimum TDP')}
             value={minTdp}
             onChange={setMinTdp}

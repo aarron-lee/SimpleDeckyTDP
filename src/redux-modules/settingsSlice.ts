@@ -634,7 +634,7 @@ function handleSteamDeckAdvancedOptions(
       `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
       false,
     );
-    // force maxGpuFrequency back to STEAM_DECK_MAX_GPU_FREQ_MHZ max for Steam Deck
+    // reset maxGpuFrequency to the Steam Deck hardware ceiling (1600 MHz)
     set(state, "settings.maxGpuFrequency", STEAM_DECK_MAX_GPU_FREQ_MHZ);
   };
 

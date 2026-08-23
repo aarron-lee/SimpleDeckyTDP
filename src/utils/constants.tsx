@@ -16,6 +16,7 @@ export const MAX_PROFILE_DISPLAY_LENGTH = 20;
 export const DEFAULT_MAX_TDP = 40;
 export const STEAM_DECK_MAX_TDP = 20;
 export const DEFAULT_MAX_TDP_FALLBACK = 15;
+export const MIN_TDP_SLIDER_MAX = 12;
 export const MAX_TDP_SLIDER_MIN = 15;
 export const POLL_RATE_MIN_SEC = 5;
 export const POLL_RATE_MAX_SEC = 60;
@@ -28,22 +29,13 @@ export const RESUME_TDP_RESTORE_MAX_DELAY_MS = 15000;
 export const AC_POWER_DEBOUNCE_MS = 1000;
 export const AC_POWER_POLL_INTERVAL_MS = 2000;
 export const PERSIST_DEBOUNCE_MS = 1000;
+export const POLL_TDP_DEBOUNCE_MS = 1000;
 
 export const extractCurrentGameId = getCurrentGameId;
 
 export const extractCurrentGameInfo = getCurrentGameInfo;
 
-export type PowerControlInfo = {
-  powerControlsEnabled: boolean;
-  supportsEpp: boolean;
-  eppOptions: EppOption[];
-  powerGovernorOptions: PowerGovernorOption[];
-  scalingDriver: string;
-  supportsCpuBoost: boolean;
-  supportsSmt: boolean;
-  pstateStatus?: string;
-  deviceName?: string;
-};
+export type { PowerControlInfo } from "../backend/utils";
 
 export type EppOption =
   | "performance"
