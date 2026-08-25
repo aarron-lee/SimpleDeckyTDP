@@ -68,7 +68,11 @@ export const getLanguageName = (lang?: string): string => {
  * t('TDP_PROFILE_ENABLE_DESKTOP', 'Enable Desktop Profile')
  */
 const t = (key: string, originalString: string): string => {
-  const lang = getCurrentLanguage();
+  let lang = getCurrentLanguage();
+  // If there is a hyphenated area code (e.g. en-US), take the en prefix*/
+  if (lang && lang.includes("-")) {
+    lang = lang.split("-")[0];
+  }
 
   // Return translation if exists, otherwise return original text
   return LANGS[lang]?.strings?.[key] ?? originalString;
