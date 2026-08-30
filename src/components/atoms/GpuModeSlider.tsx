@@ -4,6 +4,7 @@ import useGpuMode from "../../hooks/useGpuMode";
 import { DeckySlider, NotchLabel } from "./DeckyFrontendLib";
 import useIsIntel from "../../hooks/useIsIntel";
 import t from '../../i18n/i18n';
+import { GpuModes } from "../../backend/utils";
 
 enum Mode {
   BATTERY = 0,
@@ -23,7 +24,7 @@ const GpuModeSlider: FC<{ showSeparator: boolean }> = ({ showSeparator }) => {
 
   const handleSliderChange = (value: number) => {
     // enum does reverse mapping, including value to key
-    return setGpuMode(Mode[value]);
+    return setGpuMode(Mode[value] as GpuModes);
   };
 
   const MODES: NotchLabel[] = Object.keys(Mode)

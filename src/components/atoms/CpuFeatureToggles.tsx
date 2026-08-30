@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import { DeckyRow, DeckyToggle } from "./DeckyFrontendLib";
 import { useFetchPowerControlInfo } from "../../hooks/useFetchPowerControlInfo";
 import t from '../../i18n/i18n';
+import { CPU_BOOST_POLL_DELAY_MS } from "../../utils/constants";
 
 export function CpuFeatureToggles() {
   const { cpuBoost, setCpuBoost } = useCpuBoost();
   const fetchPowerControlInfo = useFetchPowerControlInfo();
 
   useEffect(() => {
-    setTimeout(() => fetchPowerControlInfo(), 700);
+    setTimeout(() => fetchPowerControlInfo(), CPU_BOOST_POLL_DELAY_MS);
   }, [cpuBoost]);
 
   return (

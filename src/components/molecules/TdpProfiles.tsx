@@ -5,6 +5,7 @@ import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckyToggle } from "../atoms/DeckyFrontendLib";
 
 import t from '../../i18n/i18n';
+import { MAX_PROFILE_DISPLAY_LENGTH } from "../../utils/constants";
 
 export function TdpProfiles({ isDesktop }: { isDesktop: boolean }) {
   const [tdpProfilesEnabled, setTdpProfilesEnabled] = useTdpProfilesEnabled();
@@ -46,7 +47,7 @@ function getDescription(
   if (tdpProfilesEnabled) {
     const formattedDisplayName = isDesktop
       ? displayName
-      : displayName.substring(0, 20);
+      : displayName.substring(0, MAX_PROFILE_DISPLAY_LENGTH);
 
     return Boolean(displayName) && displayName.toLowerCase() !== "default"
       ? `Using - ${formattedDisplayName}...`

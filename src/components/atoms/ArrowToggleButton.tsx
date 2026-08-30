@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { DeckyButton, DeckyRow } from "./DeckyFrontendLib";
 
 type Props = {
-  children: any;
+  children: ReactNode;
   cacheKey: string;
   defaultOpen?: boolean;
 };
