@@ -35,7 +35,17 @@ export const extractCurrentGameId = getCurrentGameId;
 
 export const extractCurrentGameInfo = getCurrentGameInfo;
 
-export type { PowerControlInfo } from "../backend/utils";
+export type PowerControlInfo = {
+  powerControlsEnabled: boolean;
+  supportsEpp: boolean;
+  eppOptions: string[];
+  powerGovernorOptions: string[];
+  scalingDriver: string;
+  supportsCpuBoost: boolean;
+  supportsSmt: boolean;
+  pstateStatus?: string;
+  deviceName?: string;
+};
 
 export type EppOption =
   | "performance"
