@@ -5,7 +5,6 @@ import {
 } from "../../redux-modules/settingsSlice";
 import {
   DEFAULT_POWER_CONTROLS,
-  EppOption,
   EppOptions,
   PowerControlInfo,
   ScalingDrivers,
@@ -18,9 +17,9 @@ import { useAdvancedOption } from "../../hooks/useAdvanced";
 import { AdvancedOptionsEnum } from "../../backend/utils";
 import t from '../../i18n/i18n';
 
-const getOptions = (eppOptions: EppOption[], simpleLabelsEnabled = false) => {
-  const idxToOption: { [key: string]: any } = {};
-  const optionToIdx: { [key: string]: any } = {};
+const getOptions = (eppOptions: string[], simpleLabelsEnabled = false) => {
+  const idxToOption: { [key: number]: string } = {};
+  const optionToIdx: { [key: string]: number } = {};
   const notchLabels: NotchLabel[] = [];
 
   let notchIdx = 0;

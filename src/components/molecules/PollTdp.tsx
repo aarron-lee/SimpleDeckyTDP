@@ -2,6 +2,7 @@ import { usePollInfo, useSetPollRate } from "../../hooks/usePollState";
 import ErrorBoundary from "../ErrorBoundary";
 import { DeckyRow, DeckySection, DeckySlider } from "../atoms/DeckyFrontendLib";
 import t from '../../i18n/i18n';
+import { POLL_RATE_MIN_SEC, POLL_RATE_MAX_SEC } from "../../utils/constants";
 
 export function PollTdp() {
   const { enabled, pollRate } = usePollInfo();
@@ -21,8 +22,8 @@ export function PollTdp() {
             value={pollRate / 1000}
             step={1}
             showValue
-            min={5}
-            max={60}
+            min={POLL_RATE_MIN_SEC}
+            max={POLL_RATE_MAX_SEC}
             bottomSeparator="none"
             onChange={(rate_in_sec: number) => setPollRate(rate_in_sec * 1000)}
           />

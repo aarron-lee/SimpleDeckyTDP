@@ -5,7 +5,7 @@ type PropType = {
   tdpRange: number[];
   label: string;
   value: number;
-  onChange: any;
+  onChange: (value: number) => void;
 };
 
 const TdpRangeSlider = ({ tdpRange, label, value, onChange }: PropType) => {

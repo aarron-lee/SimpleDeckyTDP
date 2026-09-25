@@ -5,7 +5,9 @@ import {
   DEFAULT_POLL_RATE,
   DEFAULT_POWER_CONTROLS,
   DEFAULT_START_TDP,
+  DEFAULT_MAX_TDP_FALLBACK,
   MIN_TDP_RANGE,
+  STEAM_DECK_MAX_GPU_FREQ_MHZ,
   PowerControlsType,
 } from "../utils/constants";
 import { RootState } from "./store";
@@ -94,7 +96,7 @@ const initialState: SettingsState = {
   advanced: {},
   advancedOptions: [],
   minTdp: MIN_TDP_RANGE,
-  maxTdp: 15,
+  maxTdp: DEFAULT_MAX_TDP_FALLBACK,
   initialLoad: true,
   enableTdpProfiles: false,
   tdpProfiles: {
@@ -213,7 +215,7 @@ export const settingsSlice = createSlice({
       state.systemLanguage = systemLanguage;
       state.supportsCustomAcPowerManagement = supportsCustomAcPowerManagement;
       state.minTdp = action.payload.minTdp || MIN_TDP_RANGE;
-      state.maxTdp = action.payload.maxTdp || 15;
+      state.maxTdp = action.payload.maxTdp || DEFAULT_MAX_TDP_FALLBACK;
       state.enableTdpProfiles = action.payload.enableTdpProfiles || false;
       state.pollRate = action.payload.pollRate || DEFAULT_POLL_RATE;
       if (action.payload.tdpProfiles) {
@@ -632,8 +634,8 @@ function handleSteamDeckAdvancedOptions(
       `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX_ENABLED}`,
       false,
     );
-    // force maxGpuFrequency back to 1600 max for Steam Deck
-    set(state, "settings.maxGpuFrequency", 1600);
+    // reset maxGpuFrequency to the Steam Deck hardware ceiling (1600 MHz)
+    set(state, "settings.maxGpuFrequency", STEAM_DECK_MAX_GPU_FREQ_MHZ);
   };
 
   if (steamDeck) {
@@ -671,10 +673,10 @@ function handleSteamDeckAdvancedOptions(
       const newMax = get(
         state,
         `advanced.${SteamDeckAdvancedOptions.DECK_CUSTOM_GPU_MAX}`,
-        1600,
+        STEAM_DECK_MAX_GPU_FREQ_MHZ,
       );
 
-      set(state, "settings.maxGpuFrequency", newMax || 1600);
+      set(state, "settings.maxGpuFrequency", newMax || STEAM_DECK_MAX_GPU_FREQ_MHZ);
     }
   } // end ifSteamDeck
 }
