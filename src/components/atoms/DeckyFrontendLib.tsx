@@ -2,6 +2,7 @@
   Components in this file will be replaced in different frontends,
   such as the Electron SimpleDeckyTDP frontend
 */
+import type { ComponentProps, CSSProperties, FC } from "react";
 import {
   ButtonItem,
   Field,
@@ -22,7 +23,10 @@ export const DeckyToggle = ToggleField;
 
 export const DeckySlider = SliderField;
 
-export const DeckyButton = ButtonItem;
+// @decky/ui types omit `style`, but it is passed through to the underlying element
+export const DeckyButton = ButtonItem as FC<
+  ComponentProps<typeof ButtonItem> & { style?: CSSProperties }
+>;
 
 export const DeckyField = Field;
 
