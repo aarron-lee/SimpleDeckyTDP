@@ -5,12 +5,11 @@ import {
 } from "./settingsSlice";
 import { setPollTdp } from "../backend/utils";
 import { debounce } from "lodash";
+import type { RootState } from "./store";
 import { POLL_TDP_DEBOUNCE_MS } from "../utils/constants";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let store: { getState: () => any } | undefined;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initializePollingStore = (s: { getState: () => any }) => {
+let store: { getState: () => RootState } | undefined;
+export const initializePollingStore = (s: { getState: () => RootState }) => {
   store = s;
 };
 

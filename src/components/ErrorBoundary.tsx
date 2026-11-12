@@ -1,10 +1,10 @@
 //@ts-nocheck
-import { Component } from "react";
+import { Component, ReactNode } from "react";
 import { logInfo } from "../backend/utils";
 import { DeckyField } from "./atoms/DeckyFrontendLib";
 
 type PropsType = {
-  children: any;
+  children: ReactNode;
   title?: string;
 };
 type StateType = {

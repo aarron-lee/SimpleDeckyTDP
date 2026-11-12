@@ -5,6 +5,7 @@ import {
 } from "../../redux-modules/settingsSlice";
 import {
   PowerControlInfo,
+  PowerGovernorOption,
   PowerGovernorOptions,
   simplePowerGovernorLabels,
 } from "../../utils/constants";
@@ -16,7 +17,7 @@ import { AdvancedOptionsEnum } from "../../backend/utils";
 import t from '../../i18n/i18n';
 
 const getOptions = (
-  powerGovernorOptions: string[],
+  powerGovernorOptions: PowerGovernorOption[],
   simpleLabelsEnabled: boolean
 ) => {
   const idxToOption: { [key: number]: string } = {};

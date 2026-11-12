@@ -38,8 +38,8 @@ export const extractCurrentGameInfo = getCurrentGameInfo;
 export type PowerControlInfo = {
   powerControlsEnabled: boolean;
   supportsEpp: boolean;
-  eppOptions: string[];
-  powerGovernorOptions: string[];
+  eppOptions: EppOption[];
+  powerGovernorOptions: PowerGovernorOption[];
   scalingDriver: string;
   supportsCpuBoost: boolean;
   supportsSmt: boolean;

@@ -20,11 +20,11 @@ import {
   onSuspend,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "./store";
 import { suspendAction } from "./extraActions";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const commonMiddleware =
-  (store: { getState: () => any }) =>
+  (store: { getState: () => RootState }) =>
   (dispatch: Dispatch) =>
   (action: PayloadAction<unknown>) => {
     const result = dispatch(action);

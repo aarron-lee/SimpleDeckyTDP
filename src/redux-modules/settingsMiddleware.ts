@@ -20,6 +20,7 @@ import {
   saveTdpProfiles,
 } from "../backend/utils";
 import { PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "./store";
 import { cleanupAction, resumeAction } from "./extraActions";
 import { debounce } from "lodash";
 import { clearPollingInterval, setPolling } from "./pollingMiddleware";
@@ -50,9 +51,8 @@ const persistGpu = ({ state, activeGameId, advancedState }: PersistGpuArgs) => {
 
 const debouncedPersistGpu = debounce(persistGpu, PERSIST_DEBOUNCE_MS);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const settingsMiddleware =
-  (store: { getState: () => any }) =>
+  (store: { getState: () => RootState }) =>
   (dispatch: Dispatch) =>
   (action: PayloadAction<unknown>) => {
     const result = dispatch(action);
