@@ -20,6 +20,13 @@ import {
 import { isSteamDeck } from "../utils/selectors";
 
 
+// ifFalsy / ifTruthy are lists of advanced option keys to check
+export type AdvancedOptionCondition = {
+  ifFalsy?: string[];
+  ifTruthy?: string[];
+  hideIfDisabled?: boolean;
+};
+
 export type AdvancedOption = {
   name: string;
   type: string;
@@ -27,8 +34,8 @@ export type AdvancedOption = {
   currentValue: unknown;
   statePath: string;
   description?: string;
-  disabled?: Record<string, unknown>;
-  uiShouldHideField?: Record<string, unknown>;
+  disabled?: AdvancedOptionCondition;
+  uiShouldHideField?: AdvancedOptionCondition;
 };
 
 export interface RangedAdvancedOption extends AdvancedOption {

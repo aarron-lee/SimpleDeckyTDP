@@ -152,6 +152,8 @@ export const suspendEventListener = () => {
   } catch (e) {
     console.error(e);
   }
+
+  return undefined;
 };
 
 const onResume = async () => {
@@ -242,6 +244,8 @@ export const resumeFromSuspendEventListener = () => {
   } catch (e) {
     console.error(e);
   }
+
+  return undefined;
 };
 
 let eACState: number | undefined;
@@ -292,4 +296,6 @@ export const acPowerEventListener = async () => {
   } catch (e) {
     logInfo({ info: `error in ac power listener ${e}` });
   }
+
+  return undefined;
 };
