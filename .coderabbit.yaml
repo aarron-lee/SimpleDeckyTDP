@@ -1,0 +1,15 @@
+language: "en-US"
+reviews:
+  profile: chill
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "src/**"
+    - "py_modules/**"
+    - "!**/*.json"
+  path_instructions:
+    - path: "src/**"
+      instructions: "Keep the existing structure (Redux slices and middleware, Decky callable wrappers, types and constants in utils/constants.tsx). Flag loosened types and new `any`."
+    - path: "py_modules/**"
+      instructions: "Linux sysfs/kernel interaction and device-specific code. Flag changes that could break fallbacks on unsupported devices."
