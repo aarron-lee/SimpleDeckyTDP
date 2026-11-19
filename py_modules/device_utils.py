@@ -113,7 +113,8 @@ def is_rog_ally_x():
 def is_rog_xbox_ally():
   device_name = get_device_name()
 
-  if Devices.ROG_XBOX_ALLY.value in device_name:
+  # X20_SIMPLEDECKYTDP_V1: DMI on ROG Xbox Ally X is "ROG XBOX Ally X RC74XA"
+  if Devices.ROG_XBOX_ALLY.value.lower() in device_name.lower():
     return True
   return False
 
