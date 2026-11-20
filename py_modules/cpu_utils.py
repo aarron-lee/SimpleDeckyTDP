@@ -95,7 +95,7 @@ def set_amd_tdp(tdp: int):
         if not result:
           decky_plugin.logger.error(f"{__name__} Lenovo WMI TDP failed, not falling back to ryzenadj")
         return result
-      elif device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
+      elif device_utils.is_rog_ally_series():
         if advanced_options.get_setting(RogAllySettings.USE_PLATFORM_PROFILE.value):
           rog_ally.set_platform_profile(tdp)
         if advanced_options.get_setting(RogAllySettings.USE_WMI.value) and rog_ally.supports_wmi_tdp():
@@ -355,6 +355,15 @@ def get_default_tdp_range():
       min_tdp, max_tdp = lenovo.get_tdp_limit(lenovo.STAPM_SUFFIX)
       if isinstance(min_tdp, int) and isinstance(max_tdp, int):
         return [min_tdp, max_tdp]
+  except Exception as e:
+    decky_plugin.logger.error(f'{__name__} error: {e}')
+
+  try:
+    # X20_SIMPLEDECKYTDP_V1: asus-armoury declares ppt_pl1_spl min/max
+    if device_utils.is_rog_ally_series():
+      armoury_range = rog_ally.get_asus_armoury_limits('ppt_pl1_spl')
+      if armoury_range:
+        return list(armoury_range)
   except Exception as e:
     decky_plugin.logger.error(f'{__name__} error: {e}')
 

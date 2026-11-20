@@ -342,7 +342,7 @@ def get_advanced_options():
         'ifFalsy': [DefaultSettings.ENABLE_TDP_CONTROL.value]
       }
     })
-  if device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
+  if device_utils.is_rog_ally_series():
     rog_ally_advanced_options(options)
   if device_utils.is_steam_deck():
     steam_deck_advanced_options(options)
@@ -456,7 +456,7 @@ def gpu_control_enabled():
   return get_setting(DefaultSettings.ENABLE_GPU_CONTROL.value)
 
 def handle_advanced_option_change(new_values):
-  if device_utils.is_rog_ally() or device_utils.is_rog_ally_x():
+  if device_utils.is_rog_ally_series():
     if rog_ally.supports_mcu_powersave():
       powersave_enabled = new_values.get(RogAllySettings.USE_EXTREME_POWERSAVE.value, None)
 

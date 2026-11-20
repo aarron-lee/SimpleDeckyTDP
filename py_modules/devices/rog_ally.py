@@ -192,10 +192,35 @@ def set_tdp_via_asus_armoury(tdp):
     file.write(f'{stapm_tdp}')
   sleep(0.1)
 
+def get_asus_armoury_limits(attr):
+  # X20_SIMPLEDECKYTDP_V1: firmware-declared min/max for an asus-armoury attribute
+  try:
+    base = f"{ASUS_ARMORY_WMI_BASE}/{attr}"
+    with open(f"{base}/min_value") as f:
+      lo = int(f.read().strip())
+    with open(f"{base}/max_value") as f:
+      hi = int(f.read().strip())
+    return (lo, hi)
+  except Exception:
+    return None
+
+def _clamp(value, limits):
+  if not limits:
+    return value
+  return max(limits[0], min(limits[1], value))
+
 def get_asus_armoury_tdp_values(tdp):
   fast_tdp = tdp
   slow_tdp = tdp
   stapm_tdp = tdp
+
+  # X20_SIMPLEDECKYTDP_V1: prefer firmware min/max when exposed (Xbox Ally X: spl 7-35, sppt 13-45, fppt 19-55)
+  fast_attr = 'ppt_pl3_fppt' if os.path.exists(UPDATED_ASUS_ARMORY_FAST_WMI_PATH) else 'ppt_fppt'
+  fast_lim = get_asus_armoury_limits(fast_attr)
+  slow_lim = get_asus_armoury_limits('ppt_pl2_sppt')
+  stapm_lim = get_asus_armoury_limits('ppt_pl1_spl')
+  if fast_lim and slow_lim and stapm_lim:
+    return [_clamp(fast_tdp, fast_lim), _clamp(slow_tdp, slow_lim), _clamp(stapm_tdp, stapm_lim)]
 
   platform_profile_choices = get_platform_profile_options()
 
