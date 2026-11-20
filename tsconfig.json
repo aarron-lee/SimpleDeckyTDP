@@ -15,6 +15,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strict": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },

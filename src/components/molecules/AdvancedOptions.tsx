@@ -27,7 +27,7 @@ import t from "../../i18n/i18n";
 
 const calculateDisabled = (
   option: AdvancedOption,
-  advancedState: { [k: string]: boolean },
+  advancedState: Record<string, unknown>,
 ) => {
   if (option.disabled) {
     // there is component disable logic to parse
@@ -60,7 +60,7 @@ const calculateDisabled = (
 
 const calculateUiHide = (
   option: AdvancedOption,
-  advancedState: { [k: string]: boolean },
+  advancedState: Record<string, unknown>,
 ) => {
   if (option.uiShouldHideField) {
     // there is component disable logic to parse
@@ -150,7 +150,7 @@ const AdvancedOptions = () => {
                   <DeckyToggle
                     key={idx}
                     label={name}
-                    checked={value}
+                    checked={value as boolean}
                     description={description}
                     highlightOnFocus
                     bottomSeparator="none"

@@ -2,14 +2,29 @@
 // to generate for localhost/dev, run `build_i18n_json.sh` script
 import * as languages from "./languages.json";
 
-function getLangs() {
-  const langs = languages.language_metadata;
+type LangMap = {
+  [key: string]: {
+    name: string;
+    strings: {
+      [key: string]: string;
+    };
+  };
+};
 
-  Object.keys(languages).map((lang) => {
+// languages.json is generated at build time, so its keys are only known at runtime
+const allLanguages = languages as unknown as Record<
+  string,
+  { [key: string]: string }
+>;
+
+function getLangs() {
+  const langs = languages.language_metadata as unknown as LangMap;
+
+  Object.keys(allLanguages).map((lang) => {
     if (lang === "language_metadata" || lang == "steam_language_map") {
       return;
     }
-    const strs = languages[lang];
+    const strs = allLanguages[lang];
     if (lang && strs && langs[lang]?.name) {
       langs[lang].strings = strs;
     }
@@ -33,14 +48,7 @@ LANGS example:
 };
 
 */
-export const LANGS: {
-  [key: string]: {
-    name: string;
-    strings: {
-      [key: string]: string;
-    };
-  };
-} = getLangs();
+export const LANGS: LangMap = getLangs();
 
 let cachedLang: string | undefined;
 
